@@ -1,0 +1,38 @@
+#cunaguaro {
+  background-color: gray;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 140%;
+  transition: background-size 40s linear;
+}
+div.404 {
+  @include make-row();
+}
+
+.full {
+  min-height: 100%;
+}
+
+.status {
+  @include make-md-column(4);
+  @include make-md-column-offset(4);
+  background-color: rgba(255, 255, 255, .50);
+  border-radius: 25px;
+  color: #333;
+  padding: 0 10px 10px;
+  text-align: center;
+
+  h1 {
+    font-size: 72px;
+    font-weight: 100;
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  p {
+    font-size: 18px;
+  }
+}

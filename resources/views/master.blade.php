@@ -21,17 +21,17 @@
   <![endif]-->
 </head>
 <body>
-  @include('parciales.navbar')
+  @include('partials.navbar')
 
   <div class="container">
     @include('flash::message')
   </div>
 
-  @yield('contenido')
+  @yield('content')
 
   <!-- javascript -->
-  <script src="{!! asset('vendor/js/jquery/jquery.min.js') !!}"></script>
-  <script src="{!! asset('vendor/js/bootstrap/bootstrap.min.js') !!}"></script>
+  <script src="{!! asset('js/vendor/jquery.min.js') !!}"></script>
+  <script src="{!! asset('js/vendor/bootstrap.min.js') !!}"></script>
   {{-- js de una libreria en alguna vista --}}
   @yield('js')
 </body>
