@@ -3,7 +3,8 @@ var elixir      = require('laravel-elixir'),
     git         = require('gulp-git'),
     bump        = require('gulp-bump'),
     filter      = require('gulp-filter'),
-    tag_version = require('gulp-tag-version');
+    tag_version = require('gulp-tag-version'),
+    imagemin    = require('gulp-imagemin');
 
 /**
  * Bumping version number and tagging the repository with it.
@@ -40,6 +41,20 @@ gulp.task('patch',   function() { return inc('patch'); });
 gulp.task('feature', function() { return inc('minor'); });
 gulp.task('release', function() { return inc('major'); });
 
+elixir.extend('imgOptimizer', function() {
+
+  gulp.task('img', function(){
+    gulp.src('public/img/originals/*')
+    .pipe(imagemin({
+        progressive: true,
+        svgoPlugins: [{removeViewBox: false}]
+    }))
+    .pipe(gulp.dest('public/img'));
+  });
+  return this.queueTask('img');
+
+});
+
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
@@ -52,7 +67,8 @@ gulp.task('release', function() { return inc('major'); });
  */
 
 elixir(function(mix) {
-  mix.sass('app.scss');
+  mix.sass('app.scss')
+     .imgOptimizer();
   mix.copy('vendor/bower_components/jquery/dist/jquery.min.js',
       'public/js/vendor/jquery.min.js')
      .copy('vendor/bower_components/jquery/dist/jquery.min.map',
