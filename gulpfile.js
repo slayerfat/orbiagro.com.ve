@@ -35,6 +35,7 @@ function inc(importance) {
     .pipe(tag_version());
 }
 
+gulp.task('pre',     function() { return inc('prerelease'); });
 gulp.task('patch',   function() { return inc('patch'); });
 gulp.task('feature', function() { return inc('minor'); });
 gulp.task('release', function() { return inc('major'); });
