@@ -136,6 +136,12 @@ return [
     'Illuminate\Validation\ValidationServiceProvider',
     'Illuminate\View\ViewServiceProvider',
 
+    /**
+     * Custom Service Providers:
+     */
+    'Illuminate\Html\HtmlServiceProvider',
+    'Jenssegers\Date\DateServiceProvider',
+
     /*
      * Application Service Providers...
      */
@@ -192,6 +198,15 @@ return [
     'URL'       => 'Illuminate\Support\Facades\URL',
     'Validator' => 'Illuminate\Support\Facades\Validator',
     'View'      => 'Illuminate\Support\Facades\View',
+
+    /**
+     * Custom Aliases:
+     */
+    'Form'      => 'Illuminate\Html\FormFacade',
+    'Html'      => 'Illuminate\Html\HtmlFacade',
+    'Flash'     => 'Laracasts\Flash\Flash',
+    'Faker'     => 'Faker\Factory',
+    'Date'      => 'Jenssegers\Date\Date'
 
   ],
 
