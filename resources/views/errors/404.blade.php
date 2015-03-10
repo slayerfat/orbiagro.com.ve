@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('contenido')
+@section('content')
   <div class="container-fluid full" id="cunaguaro">
     <div class="404">
       <div class="status">
