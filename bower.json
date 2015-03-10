@@ -1,0 +1,18 @@
+{
+  "name": "orbiagro",
+  "version": "0.0.0",
+  "authors": [
+    "slayerfat <slayerfat@gmail.com>"
+  ],
+  "description": "Orbiagro",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/bower_components",
+    "test",
+    "tests"
+  ]
+}
