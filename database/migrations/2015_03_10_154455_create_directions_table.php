@@ -15,9 +15,11 @@ class CreateDirectionsTable extends Migration {
     Schema::create('directions', function(Blueprint $table)
     {
       $table->increments('id');
+      $table->integer('directionable_id')->unsigned();
+      $table->string('directionable_type');
       $table->integer('parish_id')->unsigned();
       $table->foreign('parish_id')->references('id')->on('parishes');
-      $table->string('exact_direction')->nullable();
+      $table->string('details')->nullable();
       $table->timestamps();
       $table->integer('created_by')->unsigned();
       $table->foreign('created_by')->references('id')->on('users');
