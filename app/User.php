@@ -35,9 +35,5 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   /**
    * Relaciones
    */
-  public function sex()
-  {
-    return $this->belongsTo('App\Sex');
-  }
 
 }

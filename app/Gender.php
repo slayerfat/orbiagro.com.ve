@@ -2,15 +2,15 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Sex extends Model {
+class Gender extends Model {
 
   //
 
   /**
    * Relaciones
    */
-  public function persons()
+  public function people()
   {
-    return $this->hasMany('App\User');
+    return $this->hasMany('App\Person');
   }
 }

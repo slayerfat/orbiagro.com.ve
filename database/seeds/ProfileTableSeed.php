@@ -11,15 +11,15 @@ class ProfileTableSeeder extends Seeder {
    */
   public function run()
   {
-    $tipos = [
+    $types = [
       'Administrador',
       'Usuario',
       'Desactivado'
     ];
 
-    foreach($tipos as $perfil):
+    foreach($types as $profile):
       App\Profile::create([
-        'description' => $perfil
+        'description' => $profile
       ]);
     endforeach;
     $this->command->info('El Elegido necesita un perfil...');
