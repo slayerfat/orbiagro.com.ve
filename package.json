@@ -2,6 +2,27 @@
   "private": true,
   "devDependencies": {
     "gulp": "^3.8.8",
+    "gulp-bump": "^0.2.2",
+    "gulp-filter": "^2.0.2",
+    "gulp-git": "^1.1.0",
+    "gulp-tag-version": "^1.2.1",
     "laravel-elixir": "*"
-  }
+  },
+  "name": "orbiagro",
+  "version": "0.0.0",
+  "description": "orbiagro",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:slayerfat/orbiagro.com.ve.git"
+  },
+  "author": "slayerfat@gmail.com",
+  "license": "MIT",
+  "dependencies": {}
 }
