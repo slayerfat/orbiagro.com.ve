@@ -68,6 +68,7 @@ elixir.extend('imgOptimizer', function() {
 
 elixir(function(mix) {
   mix.sass('app.scss')
+     .phpUnit()
      .imgOptimizer();
   mix.copy('vendor/bower_components/jquery/dist/jquery.min.js',
       'public/js/vendor/jquery.min.js')
