@@ -13,7 +13,7 @@ INSERT INTO "migrations" VALUES('2015_03_10_173459_create_nationalities_table',1
 INSERT INTO "migrations" VALUES('2015_03_10_173503_create_people_table',1);
 CREATE TABLE "users" ("id" integer not null primary key autoincrement, "profile_id" integer not null, "name" varchar not null, "email" varchar not null, "password" varchar not null, "remember_token" varchar null, "created_at" datetime not null, "updated_at" datetime not null, "deleted_at" datetime null);
 INSERT INTO "users" VALUES(1,1,'neo','neo@matrix.com','$2y$10$hSYRqy6532ZCNpmS7dlxQODtJTb9e8UosyEH0cMO4YuB5e9N8YRBO',NULL,'2015-03-12 16:18:28','2015-03-12 16:18:28',NULL);
-INSERT INTO "users" VALUES(1,1,'tester','tester@tester.com','$2y$10$T.ZR4bqaGqa1f6K8Y1J9JudraaBaalWDsVmvuZwl.xJTBNE70ZgLa',NULL,'current_timestampt','current_timestampt',NULL);
+INSERT INTO "users" VALUES(2,1,'tester','tester@tester.com','$2y$10$T.ZR4bqaGqa1f6K8Y1J9JudraaBaalWDsVmvuZwl.xJTBNE70ZgLa',NULL,'current_timestampt','current_timestampt',NULL);
 CREATE TABLE "password_resets" ("email" varchar not null, "token" varchar not null, "created_at" datetime not null);
 CREATE TABLE "genders" ("id" integer not null primary key autoincrement, "description" varchar not null, "created_at" datetime not null, "updated_at" datetime not null);
 INSERT INTO "genders" VALUES(1,'Masculino','2015-03-12 16:18:27','2015-03-12 16:18:27');

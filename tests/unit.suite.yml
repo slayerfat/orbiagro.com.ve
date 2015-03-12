@@ -3,7 +3,10 @@
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [Asserts, UnitHelper, Laravel5]
-    config:
-        Laravel5:
-            environment_file: .env.testing
+  enabled: [Db, Asserts, UnitHelper, Laravel5]
+  config:
+    Laravel5:
+      environment_file: .env.testing
+    Db:
+      dsn: 'sqlite:tests/_data/db.sqlite'
+      dump: tests/_data/dump.sql

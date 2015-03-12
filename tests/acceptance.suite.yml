@@ -6,16 +6,16 @@
 
 class_name: AcceptanceTester
 modules:
-    enabled:
-        - Db
-        - PhpBrowser
-        - AcceptanceHelper
-        - Laravel5
-    config:
-        PhpBrowser:
-            url: 'http://dev.orbiagro.com'
-        Laravel5:
-            environment_file: .env.testing
-        Db:
-            dsn: 'sqlite:tests/_data/db.sqlite'
-            dump: tests/_data/dump.sql
+  enabled:
+    - Db
+    - PhpBrowser
+    - AcceptanceHelper
+    - Laravel5
+  config:
+    PhpBrowser:
+      url: 'http://dev.orbiagro.com'
+    Laravel5:
+      environment_file: .env.testing
+    Db:
+      dsn: 'sqlite:tests/_data/db.sqlite'
+      dump: tests/_data/dump.sql
