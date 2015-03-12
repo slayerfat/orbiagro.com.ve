@@ -312,7 +312,10 @@ class ParishTableSeeder extends Seeder {
       (84, 'El Chaparro', current_timestamp, current_timestamp),
       (84, 'Tomás Alfaro', current_timestamp, current_timestamp),
       (84, 'Calatrava', current_timestamp, current_timestamp),
-      (100, 'Achaguas', current_timestamp, current_timestamp),
+      (100, 'Achaguas', current_timestamp, current_timestamp);");
+    DB::statement("INSERT INTO parishes
+      (town_id, description, created_at, updated_at)
+      VALUES
       (100, 'Apurito', current_timestamp, current_timestamp),
       (100, 'El Yagual', current_timestamp, current_timestamp),
       (100, 'Guachara', current_timestamp, current_timestamp),
@@ -513,7 +516,10 @@ class ParishTableSeeder extends Seeder {
       (151, 'El Vínculo', current_timestamp, current_timestamp),
       (151, 'El Hato', current_timestamp, current_timestamp),
       (151, 'Moruy', current_timestamp, current_timestamp),
-      (151, 'Pueblo Nuevo', current_timestamp, current_timestamp),
+      (151, 'Pueblo Nuevo', current_timestamp, current_timestamp);");
+    DB::statement("INSERT INTO parishes
+      (town_id, description, created_at, updated_at)
+      VALUES
       (152, 'Agua Larga', current_timestamp, current_timestamp),
       (152, 'Churuguara', current_timestamp, current_timestamp),
       (152, 'El Paují', current_timestamp, current_timestamp),
@@ -713,7 +719,10 @@ class ParishTableSeeder extends Seeder {
       (237, 'Canelones', current_timestamp, current_timestamp),
       (237, 'Santa Cruz', current_timestamp, current_timestamp),
       (237, 'San Isidro Labrador', current_timestamp, current_timestamp),
-      (238, 'Mariño', current_timestamp, current_timestamp),
+      (238, 'Mariño', current_timestamp, current_timestamp);");
+    DB::statement("INSERT INTO parishes
+      (town_id, description, created_at, updated_at)
+      VALUES
       (238, 'Rómulo Gallegos', current_timestamp, current_timestamp),
       (239, 'San José de Aerocuar', current_timestamp, current_timestamp),
       (239, 'Tavera Acosta', current_timestamp, current_timestamp),

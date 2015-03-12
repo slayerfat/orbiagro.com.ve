@@ -26,7 +26,7 @@ return [
   |
   */
 
-  'default' => env('DB_DEFAULT', 'mysql'),
+  'default' => env('DB_DEFAULT', 'sqlite'),
 
   /*
   |--------------------------------------------------------------------------
@@ -48,8 +48,14 @@ return [
 
     'sqlite' => [
       'driver'   => 'sqlite',
-      'database' => env('DB_DATABASE', storage_path().'/database.sqlite'),
+      'database' => __DIR__.'/../tests/_data/db.sqlite',
       'prefix'   => '',
+    ],
+
+    'codeception'  => [
+        'driver'   => 'sqlite',
+        'database' => __DIR__.'/../tests/_data/db.sqlite',
+        'prefix'   => '',
     ],
 
     'mysql' => [
