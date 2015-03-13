@@ -40,4 +40,30 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return $this->hasOne('App\Person');
   }
 
+  public function profile()
+  {
+    return $this->belongsTo('App\Profile');
+  }
+
+  /**
+   * scopes y mutators
+   */
+  public function isAdmin()
+  {
+    if ($this->profile->description === 'Administrador') return true;
+    return false;
+  }
+
+  public function isUser()
+  {
+    if ($this->profile->description === 'Usuario') return true;
+    return false;
+  }
+
+  public function isDisabled()
+  {
+    if ($this->profile->description === 'Desactivado') return true;
+    return false;
+  }
+
 }

@@ -14,6 +14,50 @@ class Person extends Model {
   ];
 
   /**
+   * Accessors
+   */
+  public function getFirstNameAttribute($value)
+  {
+    return ucfirst($value);
+  }
+
+  public function getLastNameAttribute($value)
+  {
+    return ucfirst($value);
+  }
+
+  public function getFirstSurNameAttribute($value)
+  {
+    return ucfirst($value);
+  }
+
+  public function getLastSurNameAttribute($value)
+  {
+    return ucfirst($value);
+  }
+
+  public function formatted_names()
+  {
+    $names = ucfirst($this->attributes['first_name']).
+      ' '.
+      ucfirst($this->attributes['first_surname']);
+
+    return $names;
+  }
+
+  /**
+   * Mutators
+   */
+  public function setIdentityCardAttribute($value)
+  {
+    if (ctype_digit($value)) :
+      $this->attributes['identity_card'] = trim($value);
+    else:
+      $this->attributes['identity_card'] = null;
+    endif;
+  }
+
+  /**
    * Relaciones
    */
 

@@ -55,7 +55,7 @@ class UserTest extends \Codeception\TestCase\Test
   public function testRelatedDirectionModel()
   {
     $this->assertNotEmpty($this->tester->person->direction);
-    $this->assertEquals(1, $this->tester->person->direction->parish_id);
+    $this->assertEquals(1, $this->tester->person->direction->first()->parish_id);
   }
 
   public function testRelatedProfileModel()

@@ -40,7 +40,7 @@ class PersonTest extends \Codeception\TestCase\Test
   public function testRelatedDirectionModel()
   {
     $this->assertNotEmpty($this->tester->direction);
-    $this->assertEquals(1, $this->tester->direction->parish_id);
+    $this->assertEquals(1, $this->tester->direction->first()->parish_id);
   }
 
   public function testRelatedGenderModel()
@@ -57,7 +57,7 @@ class PersonTest extends \Codeception\TestCase\Test
 
   public function testCorrectFormattedNames()
   {
-    $this->assertEquals('Tester Tester', $this->tester->formatted_names);
+    $this->assertEquals('Tester Tester', $this->tester->formatted_names());
   }
 
   public function testCorrectFormattedFirstNames()
@@ -69,7 +69,7 @@ class PersonTest extends \Codeception\TestCase\Test
 
   public function testCorrectFormattedLastNames()
   {
-    $this->tester->last_name = 'tester';
+    $this->tester->last_surname = 'tester';
     $this->assertEquals('Tester', $this->tester->first_surname);
     $this->assertEquals('Tester', $this->tester->last_surname);
   }

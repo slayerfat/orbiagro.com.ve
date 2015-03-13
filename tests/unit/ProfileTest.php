@@ -25,7 +25,7 @@ class ProfileTest extends \Codeception\TestCase\Test
 
   public function testRelatedPeopleModel()
   {
-    $this->assertNotEmpty($this->tester->people);
+    $this->assertNotEmpty($this->tester->users);
   }
 
 }
