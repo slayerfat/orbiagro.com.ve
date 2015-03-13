@@ -11,7 +11,7 @@ class NationalityTest extends \Codeception\TestCase\Test
 
   protected function _before()
   {
-    $this->tester = Nationality::where('description', 'Venezolano');
+    $this->tester = Nationality::where('description', 'Venezolano')->first();
   }
 
   protected function _after()

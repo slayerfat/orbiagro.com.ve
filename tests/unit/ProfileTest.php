@@ -11,7 +11,7 @@ class ProfileTest extends \Codeception\TestCase\Test
 
   protected function _before()
   {
-    $this->tester = Profile::where('description', 'Administrador');
+    $this->tester = Profile::where('description', 'Administrador')->first();
   }
 
   protected function _after()

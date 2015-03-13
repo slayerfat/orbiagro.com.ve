@@ -11,7 +11,7 @@ class GendersTest extends \Codeception\TestCase\Test
 
   protected function _before()
   {
-    $this->tester = Gender::where('description', 'Masculino');
+    $this->tester = Gender::where('description', 'Masculino')->first();
   }
 
   protected function _after()

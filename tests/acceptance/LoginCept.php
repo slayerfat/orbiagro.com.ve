@@ -10,6 +10,6 @@ $I->submitForm('#form-login', [
   'password' => env('APP_USER_PASSWORD')
 ]);
 $I->seeAuthentication();
-$I->amOnPage('/');
-$I->see('orbiagro.com.ve');
+$I->seeCurrentUrlEquals('/');
+$I->see('orbiagro.com.ve', '.navbar-brand');
 $I->see(env('APP_USER'));
