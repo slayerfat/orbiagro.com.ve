@@ -15,6 +15,8 @@ Route::get('/welcome', 'WelcomeController@index');
 
 Route::get('/', 'HomeController@index');
 
+Route::resource('usuarios', 'UsersController');
+
 Route::get('home', function(){
   return redirect('/');
 });

@@ -60,7 +60,7 @@ class UserTest extends \Codeception\TestCase\Test
 
   public function testRelatedProfileModel()
   {
-    $this->assertNotEmpty($this->tester->person->profile);
+    $this->assertNotEmpty($this->tester->profile);
     $this->assertEquals('Administrador', $this->tester->profile->description);
   }
 
