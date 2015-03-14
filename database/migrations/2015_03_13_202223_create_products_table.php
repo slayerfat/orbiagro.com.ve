@@ -25,7 +25,9 @@ class CreateProductsTable extends Migration {
       $table->text('description');
       $table->double('price', 12, 2)->unsigned();
       $table->integer('quantity')->unsigned();
+      $table->string('slug');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 
