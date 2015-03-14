@@ -18,13 +18,6 @@ class IndexTest extends \Codeception\TestCase\Test
   }
 
   // tests
-  public function testCantSeeIndexPage()
-  {
-    $this->tester->amOnPage('/');
-    $this->tester->dontSee('Whoops, looks like something went wrong.');
-    $this->tester->seeInCurrentUrl('/auth/login');
-  }
-
   public function testCanSeeIndexPage()
   {
     $this->tester->amLoggedAs(['email' => 'tester@tester.com', 'password' => 'tester']);
