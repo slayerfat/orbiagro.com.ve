@@ -43,6 +43,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   }
 
   /**
+   * Has Many
+   */
+  public function billings()
+  {
+    return $this->hasMany('App\Billing');
+  }
+
+  /**
    * Belongs To
    */
   public function profile()
