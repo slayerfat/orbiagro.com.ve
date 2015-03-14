@@ -6,6 +6,8 @@ class Product extends Model {
 
   /**
    * Relaciones
+   *
+   * Belongs To
    */
   public function user()
   {
@@ -28,6 +30,19 @@ class Product extends Model {
   public function purchases()
   {
     return $this->hasMany('App\Purchase');
+  }
+
+  public function features()
+  {
+    return $this->hasMany('App\Feature');
+  }
+
+  /**
+   * Has One
+   */
+  public function characteristics()
+  {
+    return $this->hasOne('App\Characteristic');
   }
 
   /**
@@ -54,6 +69,11 @@ class Product extends Model {
   public function files()
   {
     return $this->morphMany('App\File', 'fileable');
+  }
+
+  public function images()
+  {
+    return $this->morphMany('App\Image', 'imageable');
   }
 
 }
