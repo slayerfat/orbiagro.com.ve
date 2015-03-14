@@ -19,6 +19,10 @@ class CreateFilesTable extends Migration {
       $table->string('fileable_type');
       $table->string('path');
       $table->timestamps();
+      $table->integer('created_by')->unsigned();
+      $table->foreign('created_by')->references('id')->on('users');
+      $table->integer('updated_by')->unsigned();
+      $table->foreign('updated_by')->references('id')->on('users');
     });
   }
 

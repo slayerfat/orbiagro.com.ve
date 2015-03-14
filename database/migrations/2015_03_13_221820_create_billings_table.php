@@ -26,6 +26,10 @@ class CreateBillingsTable extends Migration {
       $table->date('expiration')->nullable();
       $table->string('comments')->nullable();
       $table->timestamps();
+      $table->integer('created_by')->unsigned();
+      $table->foreign('created_by')->references('id')->on('users');
+      $table->integer('updated_by')->unsigned();
+      $table->foreign('updated_by')->references('id')->on('users');
     });
   }
 
