@@ -68,7 +68,6 @@ elixir.extend('imgOptimizer', function() {
 
 elixir(function(mix) {
   mix.sass('app.scss')
-     .phpUnit()
      .imgOptimizer();
   mix.copy('vendor/bower_components/jquery/dist/jquery.min.js',
       'public/js/vendor/jquery.min.js')
@@ -95,5 +94,6 @@ elixir(function(mix) {
      .copy('vendor/bower_components/numeraljs/languages.js',
         'public/js/vendor/languages.js')
      .copy('vendor/bower_components/numeraljs/numeral.js',
-        'public/js/vendor/numeral.js');
+        'public/js/vendor/numeral.js')
+     .copy('storage/1500x1500.gif', 'storage/app/1500x1500.gif');
 });

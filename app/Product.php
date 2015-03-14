@@ -4,6 +4,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model {
 
+  protected $fillable = [
+    'user_id',
+    'maker_id',
+    'title',
+    'description',
+    'price',
+    'quantity',
+    'slug',
+    'created_by',
+    'updated_by',
+  ];
+
+  /**
+   * Mutators
+   */
+  public function setSlugAttribute($value)
+  {
+    $this->attributes['slug'] = str_slug($this->attributes['title']);
+  }
+
   /**
    * Relaciones
    *
