@@ -12,4 +12,12 @@ class Maker extends Model {
     return $this->hasMany('App\Product');
   }
 
+  /**
+   * Belongs To Many
+   */
+  public function sub_categories()
+  {
+    return $this->belongsToMany('App\SubCategory');
+  }
+
 }

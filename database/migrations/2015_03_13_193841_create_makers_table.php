@@ -16,9 +16,11 @@ class CreateMakersTable extends Migration {
     {
       $table->increments('id');
       $table->string('name');
-      $table->string('web_page');
-      $table->string('logo_path');
-      $table->string('logo_alt');
+      $table->string('slug');
+      $table->string('domain')->nullable();
+      $table->string('url')->nullable();
+      $table->string('logo_path')->nullable();
+      $table->string('logo_alt')->nullable();
       $table->timestamps();
     });
   }

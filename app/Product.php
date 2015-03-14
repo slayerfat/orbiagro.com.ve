@@ -14,11 +14,6 @@ class Product extends Model {
     return $this->belongsTo('App\User');
   }
 
-  public function category()
-  {
-    return $this->belongsTo('App\Category');
-  }
-
   public function maker()
   {
     return $this->belongsTo('App\Maker');
@@ -61,6 +56,11 @@ class Product extends Model {
   public function promotions()
   {
     return $this->belongsToMany('App\Promotion');
+  }
+
+  public function sub_categories()
+  {
+    return $this->belongsToMany('App\SubCategory');
   }
 
   /**
