@@ -34,15 +34,33 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
   /**
    * Relaciones
+   *
+   * Has One
    */
   public function person()
   {
     return $this->hasOne('App\Person');
   }
 
+  /**
+   * Belongs To
+   */
   public function profile()
   {
     return $this->belongsTo('App\Profile');
+  }
+
+  /**
+   * Relacion polimorfica
+   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+   *
+   * $a->product()->first()->direction()->save($b)
+   * en donde $a es una instancia de User y
+   * $b es una instancia de Direction
+   */
+  public function visits()
+  {
+    return $this->morphMany('App\Visit', 'visitable');
   }
 
   /**

@@ -45,6 +45,16 @@ class Product extends Model {
     return $this->hasOne('App\Characteristic');
   }
 
+  public function mechanical()
+  {
+    return $this->hasOne('App\MechanicalInfo');
+  }
+
+  public function nutritional()
+  {
+    return $this->hasOne('App\Nutritional');
+  }
+
   /**
    * Belongs to many
    */
@@ -74,6 +84,11 @@ class Product extends Model {
   public function images()
   {
     return $this->morphMany('App\Image', 'imageable');
+  }
+
+  public function visits()
+  {
+    return $this->morphMany('App\Visit', 'visitable');
   }
 
 }
