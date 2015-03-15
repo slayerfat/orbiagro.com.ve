@@ -95,5 +95,6 @@ elixir(function(mix) {
         'public/js/vendor/languages.js')
      .copy('vendor/bower_components/numeraljs/numeral.js',
         'public/js/vendor/numeral.js')
-     .copy('storage/1500x1500.gif', 'storage/app/1500x1500.gif');
+     .copy('storage/1500x1500.gif', 'storage/app/1500x1500.gif')
+     .copy('storage/file.pdf', 'storage/app/file.pdf');
 });

@@ -18,7 +18,6 @@ class FeatureTableSeeder extends Seeder {
    */
   public function run()
   {
-    $file   = new File;
     $faker  = Faker::create('es_ES');
     $user   = User::where('name', 'tester')->first();
 
@@ -42,19 +41,34 @@ class FeatureTableSeeder extends Seeder {
         // primero se elimina si existe
         Storage::deleteDirectory("products/{$product->id}");
         Storage::makeDirectory("products/{$product->id}");
+
         // el nombre del archivo
-        $name = date('Ymdhmmss-').'1500x1500.gif';
+        $name = date('Ymdhmmss-').str_random(20);
         // se copia el archivo
-        Storage::copy('1500x1500.gif', "products/{$product->id}/{$name}");
-        $this->command->info("Creada carpeta products/{$product->id}/{$name}");
-        // se ajusta el modelo
-        $image  = new Image;
-        $image->path = "products/{$product->id}/{$name}";
-        $image->alt  = $feature->title;
-        $image->created_by  = $user->id;
-        $image->updated_by  = $user->id;
-        // se guarda
+        Storage::copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
+        $this->command->info("Creado products/{$product->id}/{$name}.gif");
+
+        // el modelo
+        $image             = new Image;
+        $image->path       = "products/{$product->id}/{$name}.gif";
+        $image->mime       = 'image/gif';
+        $image->alt        = $feature->title;
+        $image->created_by = $user->id;
+        $image->updated_by = $user->id;
         $feature->images()->save($image);
+
+        // el archivo asociado
+        $name = date('Ymdhmmss-').str_random(20);
+        Storage::copy('file.pdf', "products/{$product->id}/{$name}.pdf");
+        $this->command->info("Creado products/{$product->id}/{$name}.pdf");
+
+        // el modelo
+        $file             = new File;
+        $file->path       = "products/{$product->id}/{$name}.pdf";
+        $file->mime       = "application/pdf";
+        $file->created_by = $user->id;
+        $file->updated_by = $user->id;
+        $feature->files()->save($file);
       endforeach;
     endforeach;
     $this->command->info('Creacion de productos completado.');

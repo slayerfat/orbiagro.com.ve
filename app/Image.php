@@ -5,7 +5,7 @@ use Storage;
 
 class Image extends Model {
 
-  protected $fillable = ['path', 'alt', 'created_by', 'updated_by'];
+  protected $fillable = ['path', 'mime', 'alt', 'created_by', 'updated_by'];
 
   /**
    * Mutators
