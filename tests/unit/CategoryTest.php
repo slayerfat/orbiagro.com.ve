@@ -31,12 +31,12 @@ class CategoryTest extends \Codeception\TestCase\Test
 
   public function testRelatedMakerCollection()
   {
-    $this->assertNotEmpty($this->tester->sub_categories->first()->makers);
+    $this->assertNotEmpty($this->tester->sub_categories()->first()->makers);
   }
 
   public function testRelatedProductCollection()
   {
-    $this->assertNotEmpty($this->tester->sub_categories->first()->products);
+    $this->assertNotEmpty($this->tester->sub_categories()->first()->products);
   }
 
   public function testDescriptionFormat()

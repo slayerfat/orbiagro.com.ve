@@ -48,6 +48,11 @@ return [
       'root'   => storage_path().'/app',
     ],
 
+    'test' => [
+      'driver' => 'local',
+      'root'   => base_path().'/tests/_output',
+    ],
+
     's3' => [
       'driver' => 's3',
       'key'    => 'your-key',

@@ -38,7 +38,13 @@ class Image extends Model {
    */
   private function file_exists($path)
   {
-    return Storage::exists($path);
+    if(Storage::exists($path)):
+      return true;
+    elseif(Storage::disk('test')->exists($path)):
+      return true;
+    else:
+      return false;
+    endif;
   }
 
 }

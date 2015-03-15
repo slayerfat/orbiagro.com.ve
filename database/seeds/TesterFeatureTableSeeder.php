@@ -30,8 +30,8 @@ class TesterFeatureTableSeeder extends Seeder {
       foreach(range(1, 5) as $index) :
         $this->command->info("feature {$index}");
         $feature              = new App\Feature;
-        $feature->title       = $faker->sentence(3);
-        $feature->description = $faker->text(100);
+        $feature->title       = 'tester';
+        $feature->description = 'tester';
         $feature->created_by  = $user->id;
         $feature->updated_by  = $user->id;
 
@@ -39,13 +39,13 @@ class TesterFeatureTableSeeder extends Seeder {
 
         // se empieza creado el directorio relacionado con el producto
         // primero se elimina si existe
-        Storage::deleteDirectory("products/{$product->id}");
-        Storage::makeDirectory("products/{$product->id}");
+        Storage::disk('test')->deleteDirectory("products/{$product->id}");
+        Storage::disk('test')->makeDirectory("products/{$product->id}");
 
         // el nombre del archivo
         $name = date('Ymdhmmss-').str_random(20);
         // se copia el archivo
-        Storage::copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
+        Storage::disk('test')->copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
         $this->command->info("Creado products/{$product->id}/{$name}.gif");
 
         // el modelo
@@ -59,7 +59,7 @@ class TesterFeatureTableSeeder extends Seeder {
 
         // el archivo asociado
         $name = date('Ymdhmmss-').str_random(20);
-        Storage::copy('file.pdf', "products/{$product->id}/{$name}.pdf");
+        Storage::disk('test')->copy('file.pdf', "products/{$product->id}/{$name}.pdf");
         $this->command->info("Creado products/{$product->id}/{$name}.pdf");
 
         // el modelo
