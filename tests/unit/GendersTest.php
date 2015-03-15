@@ -18,6 +18,7 @@ class GendersTest extends \Codeception\TestCase\Test
   {
   }
 
+  // tests
   public function testGendersInModelNotNull()
   {
     $this->assertNotNull($this->tester);
@@ -26,6 +27,12 @@ class GendersTest extends \Codeception\TestCase\Test
   public function testRelatedPeopleModel()
   {
     $this->assertNotEmpty($this->tester->people);
+  }
+
+  public function testCorrectFormattedDescription()
+  {
+    $this->tester->description = 'kaneda';
+    $this->assertEquals('Kaneda', $this->tester->description);
   }
 
 }

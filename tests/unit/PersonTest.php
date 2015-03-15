@@ -74,6 +74,24 @@ class PersonTest extends \Codeception\TestCase\Test
     $this->assertEquals('Tester', $this->tester->last_surname);
   }
 
+  public function testReturnNullWhenNamesAreEmpty()
+  {
+    $this->tester->first_name    = '';
+    $this->tester->last_name     = '';
+    $this->tester->first_surname = '';
+    $this->tester->last_surname  = '';
+    $this->assertNull($this->tester->first_name);
+    $this->assertNull($this->tester->last_name);
+    $this->assertNull($this->tester->first_surname);
+    $this->assertNull($this->tester->last_surname);
+  }
+
+  public function testCorrectFormattedPhones()
+  {
+    $this->tester->phone = '02123332211';
+    $this->assertEquals('(212)-333-2211', $this->tester->phone);
+  }
+
   public function testCorrectFormattedIdentityCard()
   {
     $this->assertEquals('10000001', $this->tester->identity_card);

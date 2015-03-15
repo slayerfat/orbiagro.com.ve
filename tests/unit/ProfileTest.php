@@ -28,4 +28,10 @@ class ProfileTest extends \Codeception\TestCase\Test
     $this->assertNotEmpty($this->tester->users);
   }
 
+  public function testCorrectFormattedDescription()
+  {
+    $this->tester->description = 'akira';
+    $this->assertEquals('Akira', $this->tester->description);
+  }
+
 }

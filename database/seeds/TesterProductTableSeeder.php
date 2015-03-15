@@ -4,9 +4,9 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\User;
 use App\SubCategory;
-use App\Image;
-use App\File;
 use App\Maker;
+use App\Parish;
+use App\Direction;
 use App\Product;
 
 class TesterProductTableSeeder extends Seeder {
@@ -27,7 +27,8 @@ class TesterProductTableSeeder extends Seeder {
     foreach($subcat as $subcategory):
       $this->command->info('en bucle de subcat: '.$subcategory->slug);
       if(rand(0,1)):
-        $maker = Maker::orderByRaw('RANDOM()')->first();
+        $maker   = Maker::orderByRaw('RANDOM()')->first();
+        $parish  = Parish::orderByRaw('RANDOM()')->first();
         $product = Product::create([
           'user_id'     => $user->id,
           'maker_id'    => $maker->id,
@@ -40,6 +41,13 @@ class TesterProductTableSeeder extends Seeder {
           'updated_by'  => $user->id,
         ]);
         $this->command->info("Producto {$product->title} creado!");
+        $direction = new Direction;
+        $direction->parish_id  = $parish->id;
+        $direction->details    = $faker->streetAddress();
+        $direction->created_by = $user->id;
+        $direction->updated_by = $user->id;
+        $product->direction()->save($direction);
+        $this->command->info("direccion: {$direction->details}");
         $product->sub_categories()->attach($subcategory->id);
       endif;
     endforeach;

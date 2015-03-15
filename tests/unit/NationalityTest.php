@@ -28,4 +28,10 @@ class NationalityTest extends \Codeception\TestCase\Test
     $this->assertNotEmpty($this->tester->people);
   }
 
+  public function testCorrectFormattedDescription()
+  {
+    $this->tester->description = 'tetsuo';
+    $this->assertEquals('Tetsuo', $this->tester->description);
+  }
+
 }
