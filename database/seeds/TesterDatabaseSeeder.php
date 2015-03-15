@@ -17,9 +17,9 @@ class TesterDatabaseSeeder extends Seeder {
     $this->call('ProfileTableSeeder');
     $this->call('GenderTableSeeder');
     $this->call('NationalityTableSeeder');
-    $this->call('StateTableSeeder');
-    $this->call('TownTableSeeder');
-    $this->call('ParishTableSeeder');
+    $this->call('TesterStateTableSeeder');
+    $this->call('TesterTownTableSeeder');
+    $this->call('TesterParishTableSeeder');
     $this->call('TesterTableSeeder');
     $this->call('CategoryTableSeeder');
     $this->call('SubCategoryTableSeeder');
