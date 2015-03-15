@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 class Image extends Model {
 
@@ -11,11 +12,16 @@ class Image extends Model {
    */
   public function setPathAttribute($value)
   {
-    if($this->file_exists):
+    if($this->file_exists($value)):
       $this->attributes['path'] = $value;
     else:
       $this->attributes['path'] = null;
     endif;
+  }
+
+  public function setAltAttribute($value)
+  {
+    $this->attributes['alt'] = 'orbiagro.com.ve subastas compra y venta: '.str_slug($value);
   }
 
   /**

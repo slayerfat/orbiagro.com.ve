@@ -18,8 +18,6 @@ class ProductTableSeeder extends Seeder {
    */
   public function run()
   {
-    $image  = new Image;
-    $file   = new File;
     $faker  = Faker::create('es_ES');
     $subcat = SubCategory::all();
     $user   = User::where('name', 'tester')->first();
@@ -27,9 +25,9 @@ class ProductTableSeeder extends Seeder {
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
 
     foreach($subcat as $subcategory):
+      $this->command->info('en bucle de subcat: '.$subcategory->slug);
       if (rand(0,1)) :
         $maker = Maker::orderByRaw('rand()')->first();
-
         $product = Product::create([
           'user_id'     => $user->id,
           'maker_id'    => $maker->id,
@@ -41,18 +39,8 @@ class ProductTableSeeder extends Seeder {
           'created_by'  => $user->id,
           'updated_by'  => $user->id,
         ]);
-
-        foreach(range(1, 5) as $index) :
-          $feature              = new App\Feature;
-          $feature->title       = $faker->sentence(3);
-          $feature->description = $faker->text(100);
-          $feature->created_by  = $user->id;
-          $feature->updated_by  = $user->id;
-
-          $product->features()->save($feature);
-          $image->path = $product->id.'1500x1500.gif';
-        endforeach;
-
+        $this->command->info("Producto {$product->title} creado!");
+        $product->sub_categories()->attach($subcategory->id);
       endif;
     endforeach;
     $this->command->info('Creacion de productos completado.');

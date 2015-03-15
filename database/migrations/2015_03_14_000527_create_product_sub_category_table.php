@@ -12,7 +12,7 @@ class CreateProductSubCategoryTable extends Migration {
    */
   public function up()
   {
-    Schema::create('product_sub_category_table', function(Blueprint $table)
+    Schema::create('product_sub_category', function(Blueprint $table)
     {
       $table->integer('product_id')->unsigned();
       $table->foreign('product_id')->references('id')->on('products');
@@ -28,7 +28,7 @@ class CreateProductSubCategoryTable extends Migration {
    */
   public function down()
   {
-    Schema::drop('product_sub_category_table');
+    Schema::drop('product_sub_category');
   }
 
 }
