@@ -19,7 +19,7 @@ class ProductTest extends \Codeception\TestCase\Test
   }
 
   // tests
-  public function testCategoryInModelNotNull()
+  public function testModelNotNull()
   {
     $this->assertNotNull($this->tester);
   }
@@ -60,13 +60,11 @@ class ProductTest extends \Codeception\TestCase\Test
   public function testFilesCollection()
   {
     $this->assertNotEmpty($this->tester->files);
-    $this->assertEquals('tester', $this->tester->files->first()->path);
   }
 
   public function testImagesCollection()
   {
     $this->assertNotEmpty($this->tester->images);
-    $this->assertEquals('tester', $this->tester->images->first()->path);
   }
 
   public function testCharacteristicModel()
@@ -94,6 +92,73 @@ class ProductTest extends \Codeception\TestCase\Test
   public function testMechanicalInfoModel()
   {
     $this->assertNotEmpty($this->tester->mechanical_info);
+  }
+
+  public function testCorrectSlugFormat()
+  {
+    $this->tester->slug = '';
+    $this->assertNull($this->tester->slug);
+    $this->tester->slug = 'tetsuo kaneda tetsuo kaneda';
+    $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
+  }
+
+  public function testCorrectTitleFormat()
+  {
+    $this->tester->title = '';
+    $this->assertNull($this->tester->title);
+    $this->assertNull($this->tester->slug);
+    $this->tester->title = 'tetsuo kaneda tetsuo kaneda';
+    $this->assertEquals('tetsuo kaneda tetsuo kaneda', $this->tester->title);
+    $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
+  }
+
+  public function testCorrectDescriptionFormat()
+  {
+    $this->tester->description = '';
+    $this->assertNull($this->tester->description);
+  }
+
+  public function testValidDescriptionSanitation()
+  {
+    $data = [
+      '<script>DOOM</script>',
+      '<iframe>DOOM</iframe>'
+    ];
+    foreach($data as $desc):
+      $this->tester->description = $desc;
+      $this->assertEquals('DOOM', $this->tester->description);
+    endforeach;
+    // DESARROLLAR
+    $this->assertTrue(false);
+  }
+
+  public function testCheckDollarMethod()
+  {
+    $this->assertNotNull($this->tester->check_dolar());
+  }
+
+  public function testCorrectPriceFormats()
+  {
+    $this->tester->price = '';
+    $this->assertNull($this->tester->price);
+    $this->tester->price = 'a123';
+    $this->assertNull($this->tester->price);
+    $this->tester->price = '1000.00';
+    $this->assertEquals(1000, $this->tester->price);
+    $price = $this->tester->price / $this->tester->check_dollar();
+    $this->assertEquals('Bs. 1.000,00', $this->tester->price_bs());
+    $this->assertEquals('1.000,00', $this->tester->price_formatted());
+    $this->assertEquals("${$price}", $this->tester->price_dollars());
+  }
+
+  public function testQuantityAttribute()
+  {
+    $this->tester->quantity = 1;
+    $this->assertNotNull($this->tester->quantity);
+    $this->tester->quantity = '';
+    $this->assertNull($this->tester->quantity);
+    $this->tester->quantity = -1;
+    $this->assertNull($this->tester->quantity);
   }
 
 }

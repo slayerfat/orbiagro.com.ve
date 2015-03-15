@@ -7,7 +7,7 @@ class Promotion extends Model {
   /**
    * Relaciones
    */
-  public function productos()
+  public function products()
   {
     return $this->belongsToMany('App\Product');
   }
