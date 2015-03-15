@@ -91,19 +91,20 @@ class UserTest extends \Codeception\TestCase\Test
   public function testRelatedBillingModel()
   {
     $this->assertNotEmpty($this->tester->Billing);
-    $this->assertEquals('Sin Banco Asociado', $this->tester->billing->bank->description);
-    $this->assertEquals('Sin Tarjeta Asociada', $this->tester->billing->card->description);
+    $this->assertEquals('Sin Banco Asociado', $this->tester->billing()->first()->bank->description);
+    $this->assertEquals('Sin Tarjeta Asociada', $this->tester->billing()->first()->card->description);
   }
 
   public function testRelatedProductModel()
   {
     $this->assertNotEmpty($this->tester->Products);
+    $this->assertGreaterThan(0, $this->tester->Products->first()->id);
   }
 
-  public function testRelatedBuyModel()
+  public function testRelatedPurchaseModel()
   {
-    $this->assertNotEmpty($this->tester->buy);
-    $this->assertGreaterThan(0, $this->tester->buy->quantity);
+    $this->assertNotEmpty($this->tester->purchases);
+    $this->assertGreaterThan(0, $this->tester->purchases->first()->quantity);
   }
 
 }

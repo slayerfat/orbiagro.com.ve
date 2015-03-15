@@ -26,7 +26,7 @@ class TesterProductTableSeeder extends Seeder {
 
     foreach($subcat as $subcategory):
       $this->command->info('en bucle de subcat: '.$subcategory->slug);
-      if (rand(0,1)) :
+      if(rand(0,1)):
         $maker = Maker::orderByRaw('RANDOM()')->first();
         $product = Product::create([
           'user_id'     => $user->id,
