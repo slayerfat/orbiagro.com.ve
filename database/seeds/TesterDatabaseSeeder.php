@@ -26,6 +26,9 @@ class TesterDatabaseSeeder extends Seeder {
     $this->call('MakerTableSeeder');
     $this->call('TesterProductTableSeeder');
     $this->call('TesterFeatureTableSeeder');
+    $this->call('CharacteristicTableSeeder');
+    $this->call('NutritionalTableSeeder');
+    $this->call('MechanicalInfoTableSeeder');
   }
 
 }

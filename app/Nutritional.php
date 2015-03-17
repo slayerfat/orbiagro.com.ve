@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Nutritional extends Model {
 
+  protected $fillable = ['due'];
+
   /**
    * Relaciones
    */
