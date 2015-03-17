@@ -2,15 +2,13 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Sex extends Model {
-
-  //
+class Bank extends Model {
 
   /**
    * Relaciones
    */
-  public function personas()
+  public function billings()
   {
-    return $this->hasMany('App\User');
+    return $this->hasMany('App\Billing');
   }
 }

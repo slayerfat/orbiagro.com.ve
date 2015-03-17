@@ -34,10 +34,72 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
   /**
    * Relaciones
+   *
+   * Has One
    */
-  public function sex()
+  public function person()
   {
-    return $this->belongsTo('App\Sex');
+    return $this->hasOne('App\Person');
+  }
+
+  /**
+   * Has Many
+   */
+  public function billings()
+  {
+    return $this->hasMany('App\Billing');
+  }
+
+  public function products()
+  {
+    return $this->hasMany('App\Product');
+  }
+
+  public function purchases()
+  {
+    return $this->hasMany('App\Purchase');
+  }
+
+  /**
+   * Belongs To
+   */
+  public function profile()
+  {
+    return $this->belongsTo('App\Profile');
+  }
+
+  /**
+   * Relacion polimorfica
+   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+   *
+   * $a->product()->first()->direction()->save($b)
+   * en donde $a es una instancia de User y
+   * $b es una instancia de Direction
+   */
+  public function visits()
+  {
+    return $this->morphMany('App\Visit', 'visitable');
+  }
+
+  /**
+   * scopes y mutators
+   */
+  public function isAdmin()
+  {
+    if ($this->profile->description === 'Administrador') return true;
+    return false;
+  }
+
+  public function isUser()
+  {
+    if ($this->profile->description === 'Usuario') return true;
+    return false;
+  }
+
+  public function isDisabled()
+  {
+    if ($this->profile->description === 'Desactivado') return true;
+    return false;
   }
 
 }

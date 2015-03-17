@@ -4,7 +4,10 @@ var elixir      = require('laravel-elixir'),
     bump        = require('gulp-bump'),
     filter      = require('gulp-filter'),
     tag_version = require('gulp-tag-version'),
-    imagemin    = require('gulp-imagemin');
+    imagemin    = require('gulp-imagemin'),
+    codecept    = require('gulp-codeception'),
+    notify      = require('gulp-notify'),
+    _           = require('underscore');
 
 /**
  * Bumping version number and tagging the repository with it.
@@ -55,6 +58,41 @@ elixir.extend('imgOptimizer', function() {
 
 });
 
+
+/**
+ * codeception
+ * https://github.com/JeffreyWay/laravel-elixir-codeception
+ */
+elixir.extend('codeception', function(baseDir, options) {
+
+  baseDir = baseDir || 'tests';
+  options = _.extend({
+    clear: true, notify: true
+  }, options);
+
+  gulp.task('codeception', function() {
+    gulp.src('')
+        .pipe(codecept('', options))
+        .on('error', notify.onError({
+           title: 'Red!',
+           message: 'Your Codeception tests failed!',
+           icon: __dirname + '/node_modules/laravel-elixir/icons/fail.png'
+        }))
+        .pipe(notify({
+           title: 'Green!',
+           message: 'Your Codeception tests passed!',
+           icon: __dirname + '/node_modules/laravel-elixir/icons/pass.png'
+        }));
+  });
+
+  this.queueTask('codeception');
+
+  this.registerWatcher('codeception', [
+    baseDir + '/**/*+(Test|Cept|Cest).php',
+    'app/**/*.php'
+  ], 'tdd');
+
+});
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
@@ -68,7 +106,8 @@ elixir.extend('imgOptimizer', function() {
 
 elixir(function(mix) {
   mix.sass('app.scss')
-     .imgOptimizer();
+     .imgOptimizer()
+     .codeception();
   mix.copy('vendor/bower_components/jquery/dist/jquery.min.js',
       'public/js/vendor/jquery.min.js')
      .copy('vendor/bower_components/jquery/dist/jquery.min.map',
@@ -94,5 +133,9 @@ elixir(function(mix) {
      .copy('vendor/bower_components/numeraljs/languages.js',
         'public/js/vendor/languages.js')
      .copy('vendor/bower_components/numeraljs/numeral.js',
-        'public/js/vendor/numeral.js');
+        'public/js/vendor/numeral.js')
+     .copy('storage/1500x1500.gif', 'storage/app/1500x1500.gif')
+     .copy('storage/file.pdf', 'storage/app/file.pdf')
+     .copy('storage/1500x1500.gif', 'tests/_output/1500x1500.gif')
+     .copy('storage/file.pdf', 'tests/_output/file.pdf');
 });
