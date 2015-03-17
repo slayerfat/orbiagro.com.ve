@@ -54,4 +54,39 @@ class PromotionTest extends \Codeception\TestCase\Test
     endforeach;
   }
 
+  public function testPercentage()
+  {
+    foreach($this->data as $data):
+      $this->tester->percentage = $data;
+      $this->assertNull($this->tester->percentage);
+    endforeach;
+    $this->tester->percentage = 10;
+    $this->assertEquals('10%', $this->tester->percentage_pc());
+    $this->assertEquals(0.1, $this->tester->percentage_raw());
+    $this->assertEquals(10, $this->tester->percentage);
+    $this->tester->percentage = 0.1;
+    $this->assertEquals('10%', $this->tester->percentage_pc());
+    $this->assertEquals(0.1, $this->tester->percentage_raw());
+    $this->assertEquals(10, $this->tester->percentage);
+  }
+
+  public function testStatic()
+  {
+    foreach($this->data as $data):
+      $this->tester->static = $data;
+      $this->assertNull($this->tester->static);
+    endforeach;
+    $this->tester->static = 10;
+    $this->assertEquals('10 Bs.', $this->tester->static_bs());
+    $this->assertEquals(10, $this->tester->static);
+  }
+
+  public function testBegins()
+  {
+    foreach($this->data as $data):
+      $this->tester->begins = $data;
+      $this->assertNull($this->tester->begins);
+    endforeach;
+  }
+
 }
