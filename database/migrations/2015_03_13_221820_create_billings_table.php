@@ -22,8 +22,8 @@ class CreateBillingsTable extends Migration {
       $table->integer('card_type_id')->unsigned()->nullable();
       $table->foreign('card_type_id')->references('id')->on('card_types');
       $table->string('card_number')->nullable();
-      $table->string('bank_number')->nullable();
-      $table->date('expiration')->nullable();
+      $table->string('bank_account')->nullable();
+      $table->string('expiration', 5)->nullable();
       $table->string('comments')->nullable();
       $table->timestamps();
       $table->integer('created_by')->unsigned();

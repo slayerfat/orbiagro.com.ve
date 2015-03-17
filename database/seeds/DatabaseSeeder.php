@@ -29,6 +29,9 @@ class DatabaseSeeder extends Seeder {
     $this->call('CharacteristicTableSeeder');
     $this->call('NutritionalTableSeeder');
     $this->call('MechanicalInfoTableSeeder');
+    $this->call('BankTableSeeder');
+    $this->call('CardTypeTableSeeder');
+    $this->call('BillingTableSeeder');
   }
 
 }
