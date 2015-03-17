@@ -16,6 +16,7 @@ class CreatePromotionsTable extends Migration {
     {
       $table->increments('id');
       $table->string('title');
+      $table->string('slug');
       $table->integer('percentage')->unsigned()->nullable();
       $table->integer('static')->unsigned()->nullable();
       $table->date('begins');
