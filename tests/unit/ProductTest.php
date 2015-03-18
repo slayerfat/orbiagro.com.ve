@@ -59,12 +59,12 @@ class ProductTest extends \Codeception\TestCase\Test
 
   public function testFilesCollection()
   {
-    $this->assertNotEmpty($this->tester->files);
+    $this->assertNotEmpty($this->tester->files()->first());
   }
 
   public function testImagesCollection()
   {
-    $this->assertNotEmpty($this->tester->images);
+    $this->assertNotEmpty($this->tester->images()->first());
   }
 
   public function testCharacteristicModel()
@@ -86,12 +86,12 @@ class ProductTest extends \Codeception\TestCase\Test
   public function testNutritionalModel()
   {
     $this->assertNotEmpty($this->tester->nutritional);
-    $this->assertEquals('1999-09-09', $this->tester->nutritional->due_date);
+    $this->assertEquals('1999-09-09', $this->tester->nutritional->due);
   }
 
   public function testMechanicalInfoModel()
   {
-    $this->assertNotEmpty($this->tester->mechanical_info);
+    $this->assertNotEmpty($this->tester->mechanical);
   }
 
   public function testCorrectSlugFormat()
@@ -108,7 +108,7 @@ class ProductTest extends \Codeception\TestCase\Test
     $this->assertNull($this->tester->title);
     $this->assertNull($this->tester->slug);
     $this->tester->title = 'tetsuo kaneda tetsuo kaneda';
-    $this->assertEquals('tetsuo kaneda tetsuo kaneda', $this->tester->title);
+    $this->assertEquals('Tetsuo kaneda tetsuo kaneda', $this->tester->title);
     $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
   }
 

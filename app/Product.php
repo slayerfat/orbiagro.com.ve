@@ -19,35 +19,61 @@ class Product extends Model {
   /**
    * Mutators
    */
+
+  public function setTitleAttribute($value)
+  {
+    if(trim($value) == '') :
+      $this->attributes['title'] = null;
+      $this->attributes['slug']  = null;
+    else:
+      $this->attributes['title'] = $value;
+      $this->attributes['slug']  = str_slug($value);
+    endif;
+  }
+
+  public function setDescriptionAttribute($value)
+  {
+    if(trim($value) == '') :
+     $this->attributes['description'] = null;
+    else:
+     $this->attributes['description'] = $value;
+    endif;
+  }
   public function setSlugAttribute($value)
   {
-    $this->attributes['slug'] = str_slug($this->attributes['title']);
+    if(trim($value) == '') :
+      $this->attributes['slug'] = null;
+    else:
+      $this->attributes['slug'] = str_slug($value);
+    endif;
   }
 
   public function setQuantityAttribute($value)
   {
     if($value == '') :
-      $this->attributes['description'] = null;
+      $this->attributes['quantity'] = null;
+    elseif($value < 0):
+      $this->attributes['quantity'] = null;
     else:
-      $this->attributes['description'] = (integer)$value;
+      $this->attributes['quantity'] = (integer)$value;
     endif;
   }
 
   public function setPriceAttribute($value)
   {
     if($value == '') :
-      $this->attributes['description'] = null;
+      $this->attributes['price'] = null;
     elseif(!is_numeric($value)) :
-      $this->attributes['description'] = null;
+      $this->attributes['price'] = null;
     else:
-      $this->attributes['description'] = (integer)$value;
+      $this->attributes['price'] = $value;
     endif;
   }
 
   /**
    * Accessors
    */
-  public function getAAttribute($value)
+  public function getTitleAttribute($value)
   {
     if($value) return ucfirst($value);
     return null;

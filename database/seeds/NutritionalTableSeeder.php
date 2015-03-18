@@ -26,7 +26,7 @@ class NutritionalTableSeeder extends Seeder {
       $this->command->info("Producto {$product->slug}");
       Nutritional::create([
         'product_id' => $product->id,
-        'due'        => date('Y-m-d'),
+        'due'        => '1999-09-09',
         'created_by' => $user->id,
         'updated_by' => $user->id,
       ]);
