@@ -42,11 +42,6 @@ class Product extends Model {
   /**
    * Has Many
    */
-  public function purchases()
-  {
-    return $this->hasMany('App\Purchase');
-  }
-
   public function features()
   {
     return $this->hasMany('App\Feature');
@@ -81,6 +76,11 @@ class Product extends Model {
   public function sub_categories()
   {
     return $this->belongsToMany('App\SubCategory');
+  }
+
+  public function purchases()
+  {
+   return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
   }
 
   /**

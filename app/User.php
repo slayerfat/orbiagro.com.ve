@@ -55,17 +55,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return $this->hasMany('App\Product');
   }
 
-  public function purchases()
-  {
-    return $this->hasMany('App\Purchase');
-  }
-
   /**
    * Belongs To
    */
   public function profile()
   {
     return $this->belongsTo('App\Profile');
+  }
+
+  /**
+   * Belongs To Many
+   */
+  public function purchases()
+  {
+   return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
   }
 
   /**
