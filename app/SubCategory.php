@@ -11,11 +11,20 @@ class SubCategory extends Model {
    */
   public function setDescriptionAttribute($value)
   {
-    if(trim($value) == '') :
+    if($value == '') :
       $this->attributes['description'] = null;
     else:
       $this->attributes['description'] = $value;
     endif;
+  }
+
+  /**
+   * Accessors
+   */
+  public function getDescriptionAttribute($value)
+  {
+    if($value) return ucfirst($value);
+    return null;
   }
 
   /**

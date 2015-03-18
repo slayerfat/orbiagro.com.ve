@@ -24,6 +24,35 @@ class Product extends Model {
     $this->attributes['slug'] = str_slug($this->attributes['title']);
   }
 
+  public function setQuantityAttribute($value)
+  {
+    if($value == '') :
+      $this->attributes['description'] = null;
+    else:
+      $this->attributes['description'] = (integer)$value;
+    endif;
+  }
+
+  public function setPriceAttribute($value)
+  {
+    if($value == '') :
+      $this->attributes['description'] = null;
+    elseif(!is_numeric($value)) :
+      $this->attributes['description'] = null;
+    else:
+      $this->attributes['description'] = (integer)$value;
+    endif;
+  }
+
+  /**
+   * Accessors
+   */
+  public function getAAttribute($value)
+  {
+    if($value) return ucfirst($value);
+    return null;
+  }
+
   /**
    * Relaciones
    *
