@@ -15,7 +15,7 @@ class TesterBillingTableSeeder extends Seeder {
     $users = User::all();
 
     foreach($users as $user):
-      $bank = Bank::orderByRaw('RANDOM()')->first();
+      $bank = Bank::where('description', 'Sin Banco Asociado')->first();
       $card = CardType::orderByRaw('RANDOM()')->first();
       Billing::create([
         'user_id'      => $user->id,

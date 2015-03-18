@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder {
     $this->call('CardTypeTableSeeder');
     $this->call('BillingTableSeeder');
     $this->call('PurchaseTableSeeder');
+    $this->call('VisitTableSeeder');
   }
 
 }
