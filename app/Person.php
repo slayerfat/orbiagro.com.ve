@@ -18,22 +18,26 @@ class Person extends Model {
    */
   public function getFirstNameAttribute($value)
   {
-    return ucfirst($value);
+    if($value) return ucfirst($value);
+    return null;
   }
 
   public function getLastNameAttribute($value)
   {
-    return ucfirst($value);
+    if($value) return ucfirst($value);
+    return null;
   }
 
   public function getFirstSurNameAttribute($value)
   {
-    return ucfirst($value);
+    if($value) return ucfirst($value);
+    return null;
   }
 
   public function getLastSurNameAttribute($value)
   {
-    return ucfirst($value);
+    if($value) return ucfirst($value);
+    return null;
   }
 
   public function formatted_names()
@@ -45,15 +49,73 @@ class Person extends Model {
     return $names;
   }
 
+  public function getPhoneAttribute($value)
+  {
+    $regex = '/(?P<cero>[0]?)(?P<code>[0-9]{3})(?P<trio>[\d]{3})(?P<gangbang>[\d]{4})/';
+    $matches = [];
+    if (preg_match($regex, $vale, $matches)) :
+      return "({$matches['code']})-{$matches['trio']}-{$matches['gangbang']}";
+    endif;
+    return null;
+  }
+
   /**
    * Mutators
    */
   public function setIdentityCardAttribute($value)
   {
-    if (ctype_digit($value)) :
-      $this->attributes['identity_card'] = trim($value);
+    if (is_numeric($value)) :
+      $this->attributes['identity_card'] = $value;
     else:
       $this->attributes['identity_card'] = null;
+    endif;
+  }
+
+  public function setFirstNameAttribute($value)
+  {
+    if(trim($value) != '' && strlen($value) >= 5):
+      var_dump($value);
+      $this->attributes['first_name'] = $value;
+    else:
+      $this->attributes['first_name'] = null;
+    endif;
+  }
+
+  public function setLastNameAttribute($value)
+  {
+    if(trim($value) != '' && strlen($value) >= 5):
+      $this->attributes['last_name'] = $value;
+    else:
+      $this->attributes['last_name'] = null;
+    endif;
+  }
+
+  public function setFirstSurnameAttribute($value)
+  {
+    if(trim($value) != '' && strlen($value) >= 5):
+      $this->attributes['first_surname'] = $value;
+    else:
+      $this->attributes['first_surname'] = null;
+    endif;
+  }
+
+  public function setLastSurnameAttribute($value)
+  {
+    if(trim($value) != '' && strlen($value) >= 5):
+      $this->attributes['last_surname'] = $value;
+    else:
+      $this->attributes['last_surname'] = null;
+    endif;
+  }
+
+  public function setPhoneAttribute($value)
+  {
+    $regex = '/(?P<cero>0)?(?P<numbers>\d{10})/';
+    $matches = [];
+    if (preg_match($regex, $vale, $matches)) :
+      $this->attributes['phone'] = $matches['numbers'];
+    else:
+      $this->attributes['phone'] = null;
     endif;
   }
 

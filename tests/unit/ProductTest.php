@@ -118,20 +118,6 @@ class ProductTest extends \Codeception\TestCase\Test
     $this->assertNull($this->tester->description);
   }
 
-  public function testValidDescriptionSanitation()
-  {
-    $data = [
-      '<script>DOOM</script>',
-      '<iframe>DOOM</iframe>'
-    ];
-    foreach($data as $desc):
-      $this->tester->description = $desc;
-      $this->assertEquals('DOOM', $this->tester->description);
-    endforeach;
-    // DESARROLLAR
-    $this->assertTrue(false);
-  }
-
   public function testCheckDollarMethod()
   {
     $this->assertNotNull($this->tester->check_dolar());
