@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\ModelValidation;
 
 class Person extends Model {
 
@@ -51,12 +52,7 @@ class Person extends Model {
 
   public function getPhoneAttribute($value)
   {
-    $regex = '/(?P<cero>[0]?)(?P<code>[0-9]{3})(?P<trio>[\d]{3})(?P<gangbang>[\d]{4})/';
-    $matches = [];
-    if (preg_match($regex, $vale, $matches)) :
-      return "({$matches['code']})-{$matches['trio']}-{$matches['gangbang']}";
-    endif;
-    return null;
+    return ModelValidation::parsePhone($value);
   }
 
   /**
@@ -64,59 +60,32 @@ class Person extends Model {
    */
   public function setIdentityCardAttribute($value)
   {
-    if (is_numeric($value)) :
-      $this->attributes['identity_card'] = $value;
-    else:
-      $this->attributes['identity_card'] = null;
-    endif;
+    $this->attributes['identity_card'] = ModelValidation::validateByNumeric($value);
   }
 
   public function setFirstNameAttribute($value)
   {
-    if(trim($value) != '' && strlen($value) >= 5):
-      var_dump($value);
-      $this->attributes['first_name'] = $value;
-    else:
-      $this->attributes['first_name'] = null;
-    endif;
+    $this->attributes['first_name'] = ModelValidation::validateByLenght($value, 5);
   }
 
   public function setLastNameAttribute($value)
   {
-    if(trim($value) != '' && strlen($value) >= 5):
-      $this->attributes['last_name'] = $value;
-    else:
-      $this->attributes['last_name'] = null;
-    endif;
+    $this->attributes['last_name'] = ModelValidation::validateByLenght($value, 5);
   }
 
   public function setFirstSurnameAttribute($value)
   {
-    if(trim($value) != '' && strlen($value) >= 5):
-      $this->attributes['first_surname'] = $value;
-    else:
-      $this->attributes['first_surname'] = null;
-    endif;
+    $this->attributes['first_surname'] = ModelValidation::validateByLenght($value, 5);
   }
 
   public function setLastSurnameAttribute($value)
   {
-    if(trim($value) != '' && strlen($value) >= 5):
-      $this->attributes['last_surname'] = $value;
-    else:
-      $this->attributes['last_surname'] = null;
-    endif;
+    $this->attributes['last_surname'] = ModelValidation::validateByLenght($value, 5);
   }
 
   public function setPhoneAttribute($value)
   {
-    $regex = '/(?P<cero>0)?(?P<numbers>\d{10})/';
-    $matches = [];
-    if (preg_match($regex, $vale, $matches)) :
-      $this->attributes['phone'] = $matches['numbers'];
-    else:
-      $this->attributes['phone'] = null;
-    endif;
+    $this->attributes['phone'] = ModelValidation::parseRawPhone($value);
   }
 
   /**
