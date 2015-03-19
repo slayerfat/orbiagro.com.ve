@@ -54,7 +54,7 @@ class ProductTest extends \Codeception\TestCase\Test
   public function testPromotionsCollection()
   {
     $this->assertNotEmpty($this->tester->promotions);
-    $this->assertEquals('tester', $this->tester->promotions->first()->title);
+    $this->assertEquals('Lleva 2, paga 3!', $this->tester->promotions->first()->title);
   }
 
   public function testFilesCollection()
