@@ -48,7 +48,7 @@ class ProductTest extends \Codeception\TestCase\Test
   public function testPurchasesCollection()
   {
     $this->assertNotEmpty($this->tester->purchases);
-    $this->assertEquals('tester', $this->tester->purchases->first()->user->name);
+    $this->assertEquals('tester', $this->tester->purchases()->first()->name);
   }
 
   public function testPromotionsCollection()
@@ -80,7 +80,7 @@ class ProductTest extends \Codeception\TestCase\Test
   public function testfeaturesCollection()
   {
     $this->assertNotEmpty($this->tester->features);
-    $this->assertEquals('tester', $this->tester->features->first()->title);
+    $this->assertEquals('Tester', $this->tester->features->first()->title);
   }
 
   public function testNutritionalModel()

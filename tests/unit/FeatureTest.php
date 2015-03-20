@@ -12,6 +12,7 @@ class FeatureTest extends \Codeception\TestCase\Test
   protected function _before()
   {
     $this->tester = Feature::first();
+    $this->data = ['', 'a', -1];
   }
 
   protected function _after()
@@ -41,30 +42,22 @@ class FeatureTest extends \Codeception\TestCase\Test
 
   public function testCorrectTitleFormat()
   {
-    $this->assertEquals('tester', $this->tester->title);
-    $this->tester->title = '';
-    $this->assertNull($this->tester->title);
+    $this->assertEquals('Tester', $this->tester->title);
+    $obj = new Feature;
+    foreach($this->data as $value):
+      $obj->title = $value;
+      $this->assertNull($obj->title);
+    endforeach;
   }
 
   public function testCorrectDescriptionFormat()
   {
     $this->assertEquals('tester', $this->tester->description);
-    $this->tester->description = '';
-    $this->assertNull($this->tester->description);
-  }
-
-  public function testValidDescriptionSanitation()
-  {
-    $data = [
-      '<script>DOOM</script>',
-      '<iframe>DOOM</iframe>'
-    ];
-    foreach($data as $desc):
-      $this->tester->description = $desc;
-      $this->assertEquals('DOOM', $this->tester->description);
+    $obj = new Feature;
+    foreach($this->data as $value):
+      $obj->description = $value;
+      $this->assertNull($obj->description);
     endforeach;
-    // DESARROLLAR
-    $this->assertTrue(false);
   }
 
 }

@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\ModelValidation;
 
 class Category extends Model {
 
@@ -11,17 +12,22 @@ class Category extends Model {
    */
   public function setDescriptionAttribute($value)
   {
-    if(trim($value) == '') :
-      $this->attributes['description'] = null;
-    else:
-      $this->attributes['description'] = $value;
-    endif;
+    $this->attributes['description'] = ModelValidation::byLenght($value, 5);
+  }
+
+  /**
+   * Accessors
+   */
+  public function getDescriptionAttribute($value)
+  {
+    if($value) return ucfirst($value);
+    return null;
   }
 
   /**
    * Relaciones
    */
-  public function subcategories()
+  public function sub_categories()
   {
     return $this->hasMany('App\SubCategory');
   }

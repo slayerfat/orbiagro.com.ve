@@ -1,10 +1,28 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\ModelValidation;
 
 class Direction extends Model {
 
   protected $fillable = ['parish_id', 'details'];
+
+  /**
+   * Mutators
+   */
+  public function setDetailsAttribute($value)
+  {
+    $this->attributes['details'] = ModelValidation::byLenght($value, 5);
+  }
+
+  /**
+   * Accessors
+   */
+  public function getDetailsAttribute($value)
+  {
+    if($value) return ucfirst($value);
+    return null;
+  }
 
   /**
    * Relacion polimorfica

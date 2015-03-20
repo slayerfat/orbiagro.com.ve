@@ -135,7 +135,7 @@ class Product extends Model {
 
   public function purchases()
   {
-   return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
+   return $this->belongsToMany('App\User')->withPivot('quantity')->withTimestamps();
   }
 
   /**
