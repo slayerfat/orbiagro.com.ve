@@ -60,27 +60,27 @@ class Person extends Model {
    */
   public function setIdentityCardAttribute($value)
   {
-    $this->attributes['identity_card'] = ModelValidation::validateByNumeric($value);
+    $this->attributes['identity_card'] = ModelValidation::byNumeric($value);
   }
 
   public function setFirstNameAttribute($value)
   {
-    $this->attributes['first_name'] = ModelValidation::validateByLenght($value, 5);
+    $this->attributes['first_name'] = ModelValidation::byLenght($value, 5);
   }
 
   public function setLastNameAttribute($value)
   {
-    $this->attributes['last_name'] = ModelValidation::validateByLenght($value, 5);
+    $this->attributes['last_name'] = ModelValidation::byLenght($value, 5);
   }
 
   public function setFirstSurnameAttribute($value)
   {
-    $this->attributes['first_surname'] = ModelValidation::validateByLenght($value, 5);
+    $this->attributes['first_surname'] = ModelValidation::byLenght($value, 5);
   }
 
   public function setLastSurnameAttribute($value)
   {
-    $this->attributes['last_surname'] = ModelValidation::validateByLenght($value, 5);
+    $this->attributes['last_surname'] = ModelValidation::byLenght($value, 5);
   }
 
   public function setPhoneAttribute($value)

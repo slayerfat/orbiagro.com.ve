@@ -50,7 +50,7 @@ class ModelValidation {
    * @param string  $value  el valor a chequear.
    * @param integer $lenght el tamaño minimo.
    */
-  public static function validateByLenght($value, $lenght = 5)
+  public static function byLenght($value, $lenght = 5)
   {
     if(strlen(trim($value)) >= $lenght):
       return $value;
@@ -60,13 +60,26 @@ class ModelValidation {
 
   /**
    * Valida si es numero y regresa si es valido el valor.
-   * @param integer $value
+   * @param mixed $value
    */
-  public static function validateByNumeric($value)
+  public static function byNumeric($value)
   {
     if(is_numeric($value)):
       return $value;
     endif;
+    return null;
+  }
+
+  /**
+   * Valida si es numero y si es positivo, regresa si es valido el valor.
+   * @param mixed $value
+   */
+  public static function byNonNegative($value)
+  {
+    $number = self::byNumeric($value);
+    if ($number >= 0) {
+      return $number;
+    }
     return null;
   }
 }

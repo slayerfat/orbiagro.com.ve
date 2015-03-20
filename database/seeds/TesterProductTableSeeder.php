@@ -28,14 +28,15 @@ class TesterProductTableSeeder extends Seeder {
       $this->command->info('en bucle de subcat: '.$subcategory->slug);
       $maker   = Maker::orderByRaw('RANDOM()')->first();
       $parish  = Parish::orderByRaw('RANDOM()')->first();
+      $title   = $faker->sentence(5);
       $product = Product::create([
         'user_id'     => $user->id,
         'maker_id'    => $maker->id,
-        'title'       => $faker->sentence(5),
+        'title'       => $title,
         'description' => $faker->text(),
         'price'       => $faker->randomFloat(2, 100, 9999999999),
         'quantity'    => $faker->numberBetween(1, 20),
-        'slug'        => true,
+        'slug'        => str_slug($title),
         'created_by'  => $user->id,
         'updated_by'  => $user->id,
       ]);

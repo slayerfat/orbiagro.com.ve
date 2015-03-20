@@ -12,6 +12,7 @@ class MakerTest extends \Codeception\TestCase\Test
   protected function _before()
   {
     $this->tester = Maker::first();
+    $this->data = ['', 'a', -1];
   }
 
   protected function _after()
@@ -41,34 +42,30 @@ class MakerTest extends \Codeception\TestCase\Test
 
   public function testNameFormat()
   {
-    $this->tester->name = '';
-    $this->assertNull($this->tester->name);
+    foreach($this->data as $value):
+      $this->tester->name = $value;
+      $this->assertNull($this->tester->name);
+    endforeach;
     $this->tester->name = 'akira corp.';
     $this->assertEquals('Akira corp.', $this->tester->name);
   }
 
   public function testSlugFormat()
   {
-    $this->tester->slug = '';
-    $this->assertNull($this->tester->slug);
+    foreach($this->data as $value):
+      $this->tester->slug = $value;
+      $this->assertNull($this->tester->slug);
+    endforeach;
+    $this->tester->name = 'Tetsuo kaneda tetsuo';
+    $this->assertEquals('tetsuo-kaneda-tetsuo', $this->tester->slug);
     $this->tester->slug = 'a b c d';
     $this->assertEquals('a-b-c-d', $this->tester->slug);
-  }
-
-  public function testLogoPath()
-  {
-    $this->tester->logo_path = '';
-    $this->assertNull($this->tester->logo_path);
-    $this->tester->logo_path = 'abc';
-    $this->assertNull($this->tester->logo_path);
-    $this->tester->logo_path = storage_path().'/1500x1500.gif';
-    $this->assertEquals(storage_path().'/1500x1500.gif', $this->tester->logo_path);
   }
 
   public function testLogoAlt()
   {
     $this->assertEquals('orbiagro.com.ve subastas compra y venta: '.$this->tester->slug,
-      $this->tester->logo_path);
+      $this->tester->images()->first()->alt);
   }
 
 }

@@ -60,7 +60,7 @@ class MechanicalInfoTest extends \Codeception\TestCase\Test
 
   public function testCorrectMileageFormat()
   {
-    $this->assertEquals(0, $this->tester->mileage);
+    $this->assertEquals(1, $this->tester->mileage);
     $this->tester->mileage = '2';
     $this->assertEquals(2, $this->tester->mileage);
     foreach($this->data as $value):
