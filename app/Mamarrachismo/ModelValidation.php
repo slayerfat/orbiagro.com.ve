@@ -3,12 +3,6 @@
 class ModelValidation {
 
   /**
-   * Los valores a atrapar para devolver
-   * @var array
-   */
-  protected $matches = [];
-
-  /**
    * Regular Expresion para el numero de telefono con formato Venezolano.
    * @var string
    */
@@ -24,8 +18,9 @@ class ModelValidation {
    */
   public static function parsePhone($value)
   {
-    if (preg_match($completePhoneRegex, $value, $this->matches)) :
-      return "({$this->matches['code']})-{$this->matches['trio']}-{$this->matches['gangbang']}";
+    $matches = [];
+    if (preg_match(self::$completePhoneRegex, $value, $matches)) :
+      return "({$matches['code']})-{$matches['trio']}-{$matches['gangbang']}";
     endif;
     return null;
   }
@@ -39,7 +34,8 @@ class ModelValidation {
    */
   public static function parseRawPhone($value)
   {
-    if (preg_match($completeRegex, $value, $this->matches)) :
+    $matches = [];
+    if (preg_match(self::$rawPhoneRegex, $value, $matches)) :
       return $matches['numbers'];
     endif;
     return null;

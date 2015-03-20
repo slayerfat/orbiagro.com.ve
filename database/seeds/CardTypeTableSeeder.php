@@ -12,7 +12,8 @@ class CardTypeTableSeeder extends Seeder {
       'MasterCard',
       'American Express',
       'Discover Card',
-      'Debito'
+      'Debito',
+      'Sin Tarjeta Asociada'
     ];
 
     foreach($data as $value):
