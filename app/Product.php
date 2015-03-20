@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\CheckDollar as Dollar;
 
 class Product extends Model {
 
@@ -16,10 +17,9 @@ class Product extends Model {
     'updated_by',
   ];
 
-  /**
-   * Mutators
-   */
-
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setTitleAttribute($value)
   {
     if(trim($value) == '') :
@@ -70,20 +70,21 @@ class Product extends Model {
     endif;
   }
 
-  /**
-   * Accessors
-   */
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getTitleAttribute($value)
   {
     if($value) return ucfirst($value);
     return null;
   }
 
-  /**
-   * Relaciones
-   *
-   * Belongs To
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
+  // Belongs To
+  // --------------------------------------------------------------------------
   public function user()
   {
     return $this->belongsTo('App\User');
@@ -94,17 +95,17 @@ class Product extends Model {
     return $this->belongsTo('App\Maker');
   }
 
-  /**
-   * Has Many
-   */
+  // --------------------------------------------------------------------------
+  // Has Many
+  // --------------------------------------------------------------------------
   public function features()
   {
     return $this->hasMany('App\Feature');
   }
 
-  /**
-   * Has One
-   */
+  // --------------------------------------------------------------------------
+  // Has One
+  // --------------------------------------------------------------------------
   public function characteristics()
   {
     return $this->hasOne('App\Characteristic');
@@ -120,9 +121,9 @@ class Product extends Model {
     return $this->hasOne('App\Nutritional');
   }
 
-  /**
-   * Belongs to many
-   */
+  // --------------------------------------------------------------------------
+  // Belongs To Many
+  // --------------------------------------------------------------------------
   public function promotions()
   {
     return $this->belongsToMany('App\Promotion');
@@ -138,14 +139,17 @@ class Product extends Model {
    return $this->belongsToMany('App\User')->withPivot('quantity')->withTimestamps();
   }
 
-  /**
-   * Relacion polimorfica
-   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-   *
-   * $a->product()->first()->direction()->save($b)
-   * en donde $a es una instancia de User y
-   * $b es una instancia de Direction
-   */
+
+  // --------------------------------------------------------------------------
+  // Polymorphic
+  //
+  // Relacion polimorfica
+  // http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+  //
+  // $a->product()->first()->direction()->save($b)
+  // en donde $a es una instancia de User y
+  // $b es una instancia de Direction
+  // --------------------------------------------------------------------------
   public function direction()
   {
     return $this->morphMany('App\Direction', 'directionable');
@@ -164,6 +168,23 @@ class Product extends Model {
   public function visits()
   {
     return $this->morphMany('App\Visit', 'visitable');
+  }
+
+  // --------------------------------------------------------------------------
+  // Metodos Publicos
+  // --------------------------------------------------------------------------
+
+  public function check_dollar()
+  {
+    $obj = new Dollar;
+    if($obj->isValid()) return $obj->dollar->promedio;
+    return null;
+  }
+
+  public function price_bs()
+  {
+    if(isset($this->attributes['price'])) return "Bs. {$this->attributes['price']}";
+    return null;
   }
 
 }

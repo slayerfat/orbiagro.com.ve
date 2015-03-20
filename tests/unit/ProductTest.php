@@ -120,7 +120,12 @@ class ProductTest extends \Codeception\TestCase\Test
 
   public function testCheckDollarMethod()
   {
-    $this->assertNotNull($this->tester->check_dolar());
+    $this->assertNotNull($this->tester->check_dollar());
+  }
+
+  public function testCheckPriceBsMethod()
+  {
+    $this->assertNotNull($this->tester->price_bs());
   }
 
   public function testCorrectPriceFormats()
