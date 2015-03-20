@@ -13,9 +13,9 @@ class Promotion extends Model {
     'ends',
   ];
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setTitleAttribute($value)
   {
     if($value != '' && strlen($value) >= 5):
@@ -58,36 +58,85 @@ class Promotion extends Model {
   public function setStaticAttribute($value)
   {
     if($value > 0 && is_numeric($value)):
-      $this->attributes['ends'] = $value;
+      $this->attributes['static'] = $value;
     else:
-      $this->attributes['ends'] = null;
+      $this->attributes['static'] = null;
     endif;
   }
 
   public function setPercentageAttribute($value)
   {
     if($value > 0 && is_numeric($value)):
-      $this->attributes['ends'] = $value;
+      if ($this->isFloat($value)) :
+        $this->attributes['percentage'] = $value * 100;
+      else:
+      $this->attributes['percentage'] = $value;
+      endif;
     else:
-      $this->attributes['ends'] = null;
+      $this->attributes['percentage'] = null;
     endif;
   }
 
-  /**
-   * Accessors
-   */
+
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getTitleAttribute($value)
   {
     if($value) return ucfirst($value);
     return null;
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function products()
   {
     return $this->belongsToMany('App\Product');
   }
 
+  // --------------------------------------------------------------------------
+  // Funciones publicas
+  // --------------------------------------------------------------------------
+
+  /**
+   * Devuelve el descuento estatico concadenado con Bs.
+   */
+  public function static_bs()
+  {
+    if(isset($this->attributes['static'])) return "{$this->attributes['static']} Bs.";
+    return null;
+  }
+
+  /**
+   * Devuelve el descuento en porcentaje concadenado con %.
+   */
+  public function percentage_pc()
+  {
+    if(isset($this->attributes['percentage'])) return "{$this->attributes['percentage']}%";
+    return null;
+  }
+
+  /**
+   * Devuelve el descuento en numero ej: 100 => 10, 10 => 0.1.
+   */
+  public function percentage_raw()
+  {
+    if(isset($this->attributes['percentage'])) return $this->attributes['percentage'] / 100;
+    return null;
+  }
+
+  // --------------------------------------------------------------------------
+  // Funciones protegidas
+  // --------------------------------------------------------------------------
+
+  /**
+   * chequea si el valor es punto flotante o no.
+   * @param mixed $value
+   */
+  protected function isFloat($value)
+  {
+    if(is_float($value)) return $value;
+    return false;
+  }
 }
