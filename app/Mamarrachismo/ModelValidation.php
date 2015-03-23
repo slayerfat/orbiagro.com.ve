@@ -1,5 +1,7 @@
 <?php namespace App\Mamarrachismo;
 
+use Validator;
+
 class ModelValidation {
 
   /**
@@ -151,5 +153,14 @@ class ModelValidation {
       return $number;
     }
     return null;
+  }
+
+  public static function mime($value)
+  {
+    $validator = Validator::make(['mime' => $value], ['mime' => 'required|mimes:jpeg,gif,png']);
+    if ($validator->fails()):
+      return null;
+    endif;
+    return $value;
   }
 }

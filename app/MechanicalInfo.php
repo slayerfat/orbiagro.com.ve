@@ -16,9 +16,9 @@ class MechanicalInfo extends Model {
     'lift',
   ];
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setLiftAttribute($value)
   {
     $this->attributes['lift'] = ModelValidation::byNonNegative($value);
@@ -39,12 +39,33 @@ class MechanicalInfo extends Model {
     $this->attributes['cylinders'] = ModelValidation::byNonNegative($value);
   }
 
-  /**
-   * Relaciones
-   */
+  public function setHorsePowerAttribute($value)
+  {
+    $this->attributes['horsepower'] = ModelValidation::byNonNegative($value);
+  }
+
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function product()
   {
     return $this->belongsTo('App\Product');
   }
 
+  // --------------------------------------------------------------------------
+  // Metodos Publicos
+  // --------------------------------------------------------------------------
+  public function mileage_km()
+  {
+    $mileage = ModelValidation::parseNumberToReadable($this->attributes['mileage']);
+    if(isset($this->attributes['mileage'])) return "{$mileage} Km.";
+    return null;
+  }
+
+  public function horsepower_hp()
+  {
+    $horsepower = ModelValidation::parseNumberToReadable($this->attributes['horsepower']);
+    if(isset($this->attributes['horsepower'])) return "{$horsepower} HP.";
+    return null;
+  }
 }
