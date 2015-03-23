@@ -13,9 +13,7 @@ class Product extends Model {
     'description',
     'price',
     'quantity',
-    'slug',
-    'created_by',
-    'updated_by',
+    'slug'
   ];
 
   // --------------------------------------------------------------------------

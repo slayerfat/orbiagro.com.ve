@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\Transformer;
 
 class Characteristic extends Model {
 
@@ -9,17 +10,23 @@ class Characteristic extends Model {
     'width',
     'depth',
     'units',
-    'weight',
-    'created_by',
-    'updated_by'
+    'weight'
   ];
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function product()
   {
     return $this->belongsTo('App\Product');
+  }
+
+  // --------------------------------------------------------------------------
+  // Private Methods
+  // --------------------------------------------------------------------------
+  public function convert($int, $base)
+  {
+    return Transformer::transform($int, $base);
   }
 
 }

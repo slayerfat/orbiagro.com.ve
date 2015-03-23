@@ -40,15 +40,6 @@ class ImagesTest extends \Codeception\TestCase\Test
     endforeach;
   }
 
-  public function testMime()
-  {
-    $this->assertNotEmpty($this->tester->mime);
-    foreach($this->data as $mime):
-      $this->tester->mime = $mime;
-      $this->assertNull($this->tester->mime);
-    endforeach;
-  }
-
   public function testAlt()
   {
     $this->assertNotEmpty($this->tester->alt);

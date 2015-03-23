@@ -6,7 +6,7 @@ use App\Mamarrachismo\ModelValidation;
 
 class Image extends Model {
 
-  protected $fillable = ['path', 'mime', 'alt', 'created_by', 'updated_by'];
+  protected $fillable = ['path', 'mime', 'alt'];
 
   // --------------------------------------------------------------------------
   // Mutators
@@ -25,9 +25,13 @@ class Image extends Model {
     $this->attributes['alt'] = 'orbiagro.com.ve subastas compra y venta: '.str_slug($value);
   }
 
-  public function setMimeAttribute($value)
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
+  public function getPathAttribute($value)
   {
-    $this->attributes['mime'] = ModelValidation::mime($value);
+    if($value) return $value;
+    return null;
   }
 
   /**

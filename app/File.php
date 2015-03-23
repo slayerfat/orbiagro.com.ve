@@ -5,11 +5,11 @@ use Storage;
 
 class File extends Model {
 
-  protected $fillable = ['path', 'mime', 'created_by', 'updated_by'];
+  protected $fillable = ['path', 'mime'];
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setPathAttribute($value)
   {
     if($this->file_exists($value)):
@@ -17,6 +17,15 @@ class File extends Model {
     else:
       $this->attributes['path'] = null;
     endif;
+  }
+
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
+  public function getPathAttribute($value)
+  {
+    if($value) return $value;
+    return null;
   }
 
   /**
@@ -28,9 +37,9 @@ class File extends Model {
     return $this->morphTo();
   }
 
-  /**
-   * Private Methods
-   */
+  // --------------------------------------------------------------------------
+  // Private Methods
+  // --------------------------------------------------------------------------
   private function file_exists($path)
   {
     if(Storage::exists($path)):
