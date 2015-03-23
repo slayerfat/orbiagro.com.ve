@@ -172,6 +172,18 @@ class Product extends Model {
     return null;
   }
 
+  public function price_dollar()
+  {
+    $dollar = $this->check_dollar();
+
+    if($dollar):
+      $value = $this->attributes['price'] / $dollar;
+      return "\${$value}";
+    else:
+      return null;
+    endif;
+  }
+
   public function price_bs()
   {
     $price = ModelValidation::parseNumberToReadable($this->attributes['price']);

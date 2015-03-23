@@ -144,7 +144,7 @@ class ProductTest extends \Codeception\TestCase\Test
     $price = $this->tester->price / $this->tester->check_dollar();
     $this->assertEquals('Bs. 1.000,00', $this->tester->price_bs());
     $this->assertEquals('1.000,00', $this->tester->price_formatted());
-    $this->assertEquals("${$price}", $this->tester->price_dollars());
+    $this->assertEquals("\${$price}", $this->tester->price_dollar());
   }
 
   public function testQuantityAttribute()
