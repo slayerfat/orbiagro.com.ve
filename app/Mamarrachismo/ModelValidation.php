@@ -7,7 +7,10 @@ class ModelValidation {
    * @var string
    */
   private static $completePhoneRegex = '/(?P<cero>[0]?)(?P<code>[0-9]{3})(?P<trio>[\d]{3})(?P<gangbang>[\d]{4})/';
-  private static $rawPhoneRegex = '/(?P<cero>0)?(?P<numbers>\d{10})/';
+  private static $rawPhoneRegex      = '/(?P<cero>0)?(?P<numbers>\d{10})/';
+
+  private static $numberComaRegex = '/^-?(?P<numbers>\d+|\d{1,3}(?P<last>\.\d{3})+)(?P<decimal>\,(\s)?\d*)?$/';
+  private static $numberDotRegex  = '/^-?(?P<numbers>\d+|\d{1,3}(?P<last>\.\d{3})+)(?P<decimal>\.(\s)?\d*)?$/';
 
   /**
    * Chequea y devuelve el telefono acomodado.
@@ -22,6 +25,77 @@ class ModelValidation {
     if (preg_match(self::$completePhoneRegex, $value, $matches)) :
       return "({$matches['code']})-{$matches['trio']}-{$matches['gangbang']}";
     endif;
+    return null;
+  }
+
+  /**
+   * Chequea y devuelve el numero segun una cadena formateada.
+   * ej: 987.654,32 -> 987654.32
+   * @param mixed $value el numero a transformar.
+   *
+   * @return mixed.
+   */
+  public static function parseReadableToNumber($value)
+  {
+    $matches = [];
+    // se chequea el valor a comparar:
+    if(preg_match(self::$numberComaRegex, $value, $matches)) :
+      // se quitan los puntos del string.
+      $cleanNumbers = str_replace('.', '', $matches['numbers']);
+      // si hay decimales en el string:
+      if(isset($matches['decimal'])):
+        // se cambian por comas los puntos.
+        $decimal = str_replace(',', '.', $matches['decimal']);
+        $number = "{$cleanNumbers}{$decimal}";
+        // se castea a float.
+        return (float)$number;
+      endif;
+      // si no hay decimales se castea a int.
+      return (int)$cleanNumbers;
+    endif;
+    // si no es un numero propiamente formateado
+    return null;
+  }
+
+  /**
+   * Chequea y devuelve una cadena formateada segun el numero.
+   * ej: 987654.32 -> 987.654,32
+   * @param string $value el texto a transformar.
+   *
+   * @return mixed.
+   */
+  public static function parseNumberToReadable($value)
+  {
+    $matches = [];
+    // se chequea el valor a comparar:
+    if(preg_match(self::$numberDotRegex, $value, $matches)) :
+      // se invierte la cadena para poder poner los puntos.
+      $numbers = strrev($matches['numbers']);
+      // la variable que contendra la cadena.
+      $formatted = '';
+      // variable de control para poner el punto en el lugar correcto.
+      $j = 1;
+      // se itera a travez de los numeros:
+      for($i = 1; $i <= strlen($numbers); $i++) :
+        if($j % 4 == 0) :
+          $formatted .= '.'.$numbers[$i-1];
+          $j = 2;
+        else:
+          $formatted .= $numbers[$i-1];
+          $j++;
+        endif;
+      endfor;
+      // se revierte a la forma original.
+      $numbers = strrev($formatted);
+      // si hay decimal se quitan los puntos y se devuelve.
+      if(isset($matches['decimal'])):
+        $decimal = str_replace('.', ',', $matches['decimal']);
+        return "{$numbers}{$decimal}";
+      endif;
+      // si no hay decimales
+      return "{$numbers}";
+    endif;
+    // si no es numero
     return null;
   }
 

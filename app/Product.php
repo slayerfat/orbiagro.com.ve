@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\CheckDollar as Dollar;
+use App\Mamarrachismo\ModelValidation;
 
 class Product extends Model {
 
@@ -33,11 +34,7 @@ class Product extends Model {
 
   public function setDescriptionAttribute($value)
   {
-    if(trim($value) == '') :
-     $this->attributes['description'] = null;
-    else:
-     $this->attributes['description'] = $value;
-    endif;
+    $this->attributes['description'] = ModelValidation::byLenght($value, 5);
   }
   public function setSlugAttribute($value)
   {
@@ -61,13 +58,7 @@ class Product extends Model {
 
   public function setPriceAttribute($value)
   {
-    if($value == '') :
-      $this->attributes['price'] = null;
-    elseif(!is_numeric($value)) :
-      $this->attributes['price'] = null;
-    else:
-      $this->attributes['price'] = $value;
-    endif;
+    $this->attributes['price'] = ModelValidation::byNonNegative($value);
   }
 
   // --------------------------------------------------------------------------
@@ -183,7 +174,15 @@ class Product extends Model {
 
   public function price_bs()
   {
-    if(isset($this->attributes['price'])) return "Bs. {$this->attributes['price']}";
+    $price = ModelValidation::parseNumberToReadable($this->attributes['price']);
+    if(isset($this->attributes['price'])) return "Bs. {$price}";
+    return null;
+  }
+
+  public function price_formatted()
+  {
+    $price = ModelValidation::parseNumberToReadable($this->attributes['price']);
+    if(isset($this->attributes['price'])) return "{$price}";
     return null;
   }
 
