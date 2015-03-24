@@ -35,6 +35,7 @@ class Product extends Model {
   {
     $this->attributes['description'] = ModelValidation::byLenght($value, 5);
   }
+
   public function setSlugAttribute($value)
   {
     if(trim($value) == '') :
