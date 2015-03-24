@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\CheckDollar as Dollar;
 use App\Mamarrachismo\ModelValidation;
+use App\Mamarrachismo\Transformer;
 
 class Product extends Model {
 
@@ -184,14 +185,14 @@ class Product extends Model {
 
   public function price_bs()
   {
-    $price = ModelValidation::parseNumberToReadable($this->attributes['price']);
+    $price = Transformer::toReadable($this->attributes['price']);
     if(isset($this->attributes['price'])) return "Bs. {$price}";
     return null;
   }
 
   public function price_formatted()
   {
-    $price = ModelValidation::parseNumberToReadable($this->attributes['price']);
+    $price = Transformer::toReadable($this->attributes['price']);
     if(isset($this->attributes['price'])) return "{$price}";
     return null;
   }

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
+use App\Mamarrachismo\Transformer;
 
 class MechanicalInfo extends Model {
 
@@ -57,14 +58,14 @@ class MechanicalInfo extends Model {
   // --------------------------------------------------------------------------
   public function mileage_km()
   {
-    $mileage = ModelValidation::parseNumberToReadable($this->attributes['mileage']);
+    $mileage = Transformer::toReadable($this->attributes['mileage']);
     if(isset($this->attributes['mileage'])) return "{$mileage} Km.";
     return null;
   }
 
   public function horsepower_hp()
   {
-    $horsepower = ModelValidation::parseNumberToReadable($this->attributes['horsepower']);
+    $horsepower = Transformer::toReadable($this->attributes['horsepower']);
     if(isset($this->attributes['horsepower'])) return "{$horsepower} HP.";
     return null;
   }
