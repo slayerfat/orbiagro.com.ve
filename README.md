@@ -1,6 +1,8 @@
 #orbiagro.com.ve
 
-en construccion
+[![Build Status](https://travis-ci.org/slayerfat/orbiagro.com.ve.svg)](https://travis-ci.org/slayerfat/orbiagro.com.ve)
+
+en construcción.
 
 ##bd test
 
