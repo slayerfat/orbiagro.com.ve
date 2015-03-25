@@ -219,6 +219,10 @@ class Transformer {
         return $this->fromMillimeter();
         break;
 
+      case 'cm':
+        return true;
+        break;
+
       case 'm':
         return $this->fromMeter();
         break;
@@ -254,6 +258,10 @@ class Transformer {
   {
     $a = $this->fromSwitch($base);
     switch ($to) :
+      case 'mm':
+        return $this->toMillimeter();
+        break;
+      // unidad de peso
       case 'g':
         return $this->toGram();
         break;
