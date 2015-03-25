@@ -1,0 +1,17 @@
+language: php
+php:
+  - "5.6"
+  - "5.5"
+  - "5.4"
+
+before_script:
+  - composer install
+  - npm install
+  - gulp sass
+  - gulp copy
+  - "php artisan migrate --database codeception --no-interaction"
+  - "php artisan db:seed --class TesterDatabaseSeeder --database codeception --no-interaction"
+  - "sqlite3 tests/_data/db.sqlite .dump > tests/_data/dump.sql"
+  - "./vendor/bin/codecept build"
+
+script: "./vendor/bin/codecept run"

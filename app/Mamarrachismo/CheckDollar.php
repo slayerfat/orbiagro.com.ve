@@ -107,8 +107,15 @@ class CheckDollar {
    */
   private function checkFileExists()
   {
-    if(Storage::exists('dollar.json')) return true;
-    return false;
+    if(Storage::exists('dollar.json')) :
+      if (Storage::size('dollar.json') > 0) :
+        return true;
+      endif;
+      Storage::delete('dollar.json');
+      return false;
+    else:
+      return false;
+    endif;
   }
 
   /**
@@ -118,10 +125,10 @@ class CheckDollar {
   {
     $data = file_get_contents($this->dollarTodayUrl);
     if(!$data) return null;
-    $data = json_decode($data);
+    $data = json_decode(utf8_decode($data));
     $data->local_timestamps = Carbon::now();
     $this->data = $data;
-    $data = json_encode($data);
+    $data = json_encode((array)$data);
     Storage::put('dollar.json', $data);
     return true;
   }
