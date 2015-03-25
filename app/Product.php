@@ -1,6 +1,9 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\CheckDollar as Dollar;
+use App\Mamarrachismo\ModelValidation;
+use App\Mamarrachismo\Transformer;
 
 class Product extends Model {
 
@@ -11,24 +14,68 @@ class Product extends Model {
     'description',
     'price',
     'quantity',
-    'slug',
-    'created_by',
-    'updated_by',
+    'slug'
   ];
 
-  /**
-   * Mutators
-   */
-  public function setSlugAttribute($value)
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
+  public function setTitleAttribute($value)
   {
-    $this->attributes['slug'] = str_slug($this->attributes['title']);
+    if(trim($value) == '') :
+      $this->attributes['title'] = null;
+      $this->attributes['slug']  = null;
+    else:
+      $this->attributes['title'] = $value;
+      $this->attributes['slug']  = str_slug($value);
+    endif;
   }
 
-  /**
-   * Relaciones
-   *
-   * Belongs To
-   */
+  public function setDescriptionAttribute($value)
+  {
+    $this->attributes['description'] = ModelValidation::byLenght($value, 5);
+  }
+
+  public function setSlugAttribute($value)
+  {
+    if(trim($value) == '') :
+      $this->attributes['slug'] = null;
+    else:
+      $this->attributes['slug'] = str_slug($value);
+    endif;
+  }
+
+  public function setQuantityAttribute($value)
+  {
+    if($value == '') :
+      $this->attributes['quantity'] = null;
+    elseif($value < 0):
+      $this->attributes['quantity'] = null;
+    else:
+      $this->attributes['quantity'] = (integer)$value;
+    endif;
+  }
+
+  public function setPriceAttribute($value)
+  {
+    $this->attributes['price'] = ModelValidation::byNonNegative($value);
+  }
+
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
+  public function getTitleAttribute($value)
+  {
+    if($value) return ucfirst($value);
+    return null;
+  }
+
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
+  // Belongs To
+  // --------------------------------------------------------------------------
   public function user()
   {
     return $this->belongsTo('App\User');
@@ -39,22 +86,17 @@ class Product extends Model {
     return $this->belongsTo('App\Maker');
   }
 
-  /**
-   * Has Many
-   */
-  public function purchases()
-  {
-    return $this->hasMany('App\Purchase');
-  }
-
+  // --------------------------------------------------------------------------
+  // Has Many
+  // --------------------------------------------------------------------------
   public function features()
   {
     return $this->hasMany('App\Feature');
   }
 
-  /**
-   * Has One
-   */
+  // --------------------------------------------------------------------------
+  // Has One
+  // --------------------------------------------------------------------------
   public function characteristics()
   {
     return $this->hasOne('App\Characteristic');
@@ -70,9 +112,9 @@ class Product extends Model {
     return $this->hasOne('App\Nutritional');
   }
 
-  /**
-   * Belongs to many
-   */
+  // --------------------------------------------------------------------------
+  // Belongs To Many
+  // --------------------------------------------------------------------------
   public function promotions()
   {
     return $this->belongsToMany('App\Promotion');
@@ -83,14 +125,22 @@ class Product extends Model {
     return $this->belongsToMany('App\SubCategory');
   }
 
-  /**
-   * Relacion polimorfica
-   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-   *
-   * $a->product()->first()->direction()->save($b)
-   * en donde $a es una instancia de User y
-   * $b es una instancia de Direction
-   */
+  public function purchases()
+  {
+   return $this->belongsToMany('App\User')->withPivot('quantity')->withTimestamps();
+  }
+
+
+  // --------------------------------------------------------------------------
+  // Polymorphic
+  //
+  // Relacion polimorfica
+  // http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+  //
+  // $a->product()->first()->direction()->save($b)
+  // en donde $a es una instancia de User y
+  // $b es una instancia de Direction
+  // --------------------------------------------------------------------------
   public function direction()
   {
     return $this->morphMany('App\Direction', 'directionable');
@@ -109,6 +159,43 @@ class Product extends Model {
   public function visits()
   {
     return $this->morphMany('App\Visit', 'visitable');
+  }
+
+  // --------------------------------------------------------------------------
+  // Metodos Publicos
+  // --------------------------------------------------------------------------
+
+  public function check_dollar()
+  {
+    $obj = new Dollar;
+    if($obj->isValid()) return $obj->dollar->promedio;
+    return null;
+  }
+
+  public function price_dollar()
+  {
+    $dollar = $this->check_dollar();
+
+    if($dollar):
+      $value = $this->attributes['price'] / $dollar;
+      return "\${$value}";
+    else:
+      return null;
+    endif;
+  }
+
+  public function price_bs()
+  {
+    $price = Transformer::toReadable($this->attributes['price']);
+    if(isset($this->attributes['price'])) return "Bs. {$price}";
+    return null;
+  }
+
+  public function price_formatted()
+  {
+    $price = Transformer::toReadable($this->attributes['price']);
+    if(isset($this->attributes['price'])) return "{$price}";
+    return null;
   }
 
 }

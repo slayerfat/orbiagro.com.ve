@@ -23,9 +23,19 @@ class TesterDatabaseSeeder extends Seeder {
     $this->call('TesterTableSeeder');
     $this->call('CategoryTableSeeder');
     $this->call('SubCategoryTableSeeder');
-    $this->call('MakerTableSeeder');
+    $this->call('TesterMakerTableSeed');
     $this->call('TesterProductTableSeeder');
     $this->call('TesterFeatureTableSeeder');
+    $this->call('CharacteristicTableSeeder');
+    $this->call('NutritionalTableSeeder');
+    $this->call('MechanicalInfoTableSeeder');
+    $this->call('BankTableSeeder');
+    $this->call('CardTypeTableSeeder');
+    $this->call('TesterBillingTableSeeder');
+    $this->call('PurchaseTableSeeder');
+    $this->call('VisitTableSeeder');
+    $this->call('TesterImagesTableSeeder');
+    $this->call('PromotionTableSeeder');
   }
 
 }

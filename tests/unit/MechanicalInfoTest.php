@@ -51,7 +51,7 @@ class MechanicalInfoTest extends \Codeception\TestCase\Test
     $this->assertEquals(1, $this->tester->horsepower);
     $this->tester->horsepower = '2000';
     $this->assertEquals(2000, $this->tester->horsepower);
-    $this->assertEquals('2.000 HP', $this->tester->horsepower_hp());
+    $this->assertEquals('2.000 HP.', $this->tester->horsepower_hp());
     foreach($this->data as $value):
       $this->tester->horsepower = $value;
       $this->assertNull($this->tester->horsepower);
@@ -60,7 +60,7 @@ class MechanicalInfoTest extends \Codeception\TestCase\Test
 
   public function testCorrectMileageFormat()
   {
-    $this->assertEquals(0, $this->tester->mileage);
+    $this->assertEquals(1, $this->tester->mileage);
     $this->tester->mileage = '2';
     $this->assertEquals(2, $this->tester->mileage);
     foreach($this->data as $value):
@@ -69,7 +69,7 @@ class MechanicalInfoTest extends \Codeception\TestCase\Test
     endforeach;
     $this->tester->mileage = 1000;
     $this->assertEquals(1000, $this->tester->mileage);
-    $this->assertEquals('1.000 Km', $this->tester->mileage_km());
+    $this->assertEquals('1.000 Km.', $this->tester->mileage_km());
   }
 
   public function testCorrectTractionFormat()

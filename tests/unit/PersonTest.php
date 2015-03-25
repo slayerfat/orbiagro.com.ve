@@ -76,14 +76,15 @@ class PersonTest extends \Codeception\TestCase\Test
 
   public function testReturnNullWhenNamesAreEmpty()
   {
-    $this->tester->first_name    = '';
-    $this->tester->last_name     = '';
-    $this->tester->first_surname = '';
-    $this->tester->last_surname  = '';
-    $this->assertNull($this->tester->first_name);
-    $this->assertNull($this->tester->last_name);
-    $this->assertNull($this->tester->first_surname);
-    $this->assertNull($this->tester->last_surname);
+    $person = new Person;
+    $person->first_name    = '';
+    $person->last_name     = '';
+    $person->first_surname = '';
+    $person->last_surname  = '';
+    $this->assertNull($person->first_name);
+    $this->assertNull($person->last_name);
+    $this->assertNull($person->first_surname);
+    $this->assertNull($person->last_surname);
   }
 
   public function testCorrectFormattedPhones()

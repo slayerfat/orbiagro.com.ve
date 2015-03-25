@@ -12,6 +12,7 @@ class CategoryTest extends \Codeception\TestCase\Test
   protected function _before()
   {
     $this->tester = Category::first();
+    $this->data = ['', 'a', -1];
   }
 
   protected function _after()
@@ -41,8 +42,10 @@ class CategoryTest extends \Codeception\TestCase\Test
 
   public function testDescriptionFormat()
   {
-    $this->tester->description = '';
-    $this->assertNull($this->tester->description);
+    foreach($this->data as $value):
+      $this->tester->description = $value;
+      $this->assertNull($this->tester->description);
+    endforeach;
     $this->tester->description = 'tetsuo';
     $this->assertEquals('Tetsuo', $this->tester->description);
   }

@@ -48,23 +48,23 @@ class ProductTest extends \Codeception\TestCase\Test
   public function testPurchasesCollection()
   {
     $this->assertNotEmpty($this->tester->purchases);
-    $this->assertEquals('tester', $this->tester->purchases->first()->user->name);
+    $this->assertEquals('tester', $this->tester->purchases()->first()->name);
   }
 
   public function testPromotionsCollection()
   {
     $this->assertNotEmpty($this->tester->promotions);
-    $this->assertEquals('tester', $this->tester->promotions->first()->title);
+    $this->assertEquals('Lleva 2, paga 3!', $this->tester->promotions->first()->title);
   }
 
   public function testFilesCollection()
   {
-    $this->assertNotEmpty($this->tester->files);
+    $this->assertNotEmpty($this->tester->files()->first());
   }
 
   public function testImagesCollection()
   {
-    $this->assertNotEmpty($this->tester->images);
+    $this->assertNotEmpty($this->tester->images()->first());
   }
 
   public function testCharacteristicModel()
@@ -80,18 +80,18 @@ class ProductTest extends \Codeception\TestCase\Test
   public function testfeaturesCollection()
   {
     $this->assertNotEmpty($this->tester->features);
-    $this->assertEquals('tester', $this->tester->features->first()->title);
+    $this->assertEquals('Tester', $this->tester->features->first()->title);
   }
 
   public function testNutritionalModel()
   {
     $this->assertNotEmpty($this->tester->nutritional);
-    $this->assertEquals('1999-09-09', $this->tester->nutritional->due_date);
+    $this->assertEquals('1999-09-09', $this->tester->nutritional->due);
   }
 
   public function testMechanicalInfoModel()
   {
-    $this->assertNotEmpty($this->tester->mechanical_info);
+    $this->assertNotEmpty($this->tester->mechanical);
   }
 
   public function testCorrectSlugFormat()
@@ -108,7 +108,7 @@ class ProductTest extends \Codeception\TestCase\Test
     $this->assertNull($this->tester->title);
     $this->assertNull($this->tester->slug);
     $this->tester->title = 'tetsuo kaneda tetsuo kaneda';
-    $this->assertEquals('tetsuo kaneda tetsuo kaneda', $this->tester->title);
+    $this->assertEquals('Tetsuo kaneda tetsuo kaneda', $this->tester->title);
     $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
   }
 
@@ -118,23 +118,19 @@ class ProductTest extends \Codeception\TestCase\Test
     $this->assertNull($this->tester->description);
   }
 
-  public function testValidDescriptionSanitation()
-  {
-    $data = [
-      '<script>DOOM</script>',
-      '<iframe>DOOM</iframe>'
-    ];
-    foreach($data as $desc):
-      $this->tester->description = $desc;
-      $this->assertEquals('DOOM', $this->tester->description);
-    endforeach;
-    // DESARROLLAR
-    $this->assertTrue(false);
-  }
-
   public function testCheckDollarMethod()
   {
-    $this->assertNotNull($this->tester->check_dolar());
+    $this->assertNotNull($this->tester->check_dollar());
+  }
+
+  public function testCheckPriceBsMethod()
+  {
+    $this->assertNotNull($this->tester->price_bs());
+  }
+
+  public function testCheckDollar()
+  {
+    $this->assertNotNull($this->tester->check_dollar());
   }
 
   public function testCorrectPriceFormats()
@@ -148,7 +144,7 @@ class ProductTest extends \Codeception\TestCase\Test
     $price = $this->tester->price / $this->tester->check_dollar();
     $this->assertEquals('Bs. 1.000,00', $this->tester->price_bs());
     $this->assertEquals('1.000,00', $this->tester->price_formatted());
-    $this->assertEquals("${$price}", $this->tester->price_dollars());
+    $this->assertEquals("\${$price}", $this->tester->price_dollar());
   }
 
   public function testQuantityAttribute()

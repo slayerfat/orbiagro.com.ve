@@ -55,9 +55,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return $this->hasMany('App\Product');
   }
 
-  public function purchases()
+  public function visits()
   {
-    return $this->hasMany('App\Purchase');
+    return $this->hasMany('App\Visit');
   }
 
   /**
@@ -69,16 +69,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   }
 
   /**
-   * Relacion polimorfica
-   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-   *
-   * $a->product()->first()->direction()->save($b)
-   * en donde $a es una instancia de User y
-   * $b es una instancia de Direction
+   * Belongs To Many
    */
-  public function visits()
+  public function purchases()
   {
-    return $this->morphMany('App\Visit', 'visitable');
+   return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
   }
 
   /**

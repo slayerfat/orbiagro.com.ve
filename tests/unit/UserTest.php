@@ -76,23 +76,17 @@ class UserTest extends \Codeception\TestCase\Test
     $this->assertEquals('Venezolano', $this->tester->person->nationality->description);
   }
 
-  public function testRelatedProductVisitsModel()
+  public function testRelatedVisitsModel()
   {
-    $this->assertNotEmpty($this->tester->product_visits);
-    $this->assertGreaterThan(0, $this->tester->product_visits->total);
+    $this->assertNotEmpty($this->tester->visits);
+    $this->assertGreaterThan(0, $this->tester->visits->first()->total);
   }
 
-  public function testRelatedCategoryVisitsModel()
+  public function testRelatedBillingsModel()
   {
-    $this->assertNotEmpty($this->tester->category_visits);
-    $this->assertGreaterThan(0, $this->tester->category_visits->total);
-  }
-
-  public function testRelatedBillingModel()
-  {
-    $this->assertNotEmpty($this->tester->Billing);
-    $this->assertEquals('Sin Banco Asociado', $this->tester->billing()->first()->bank->description);
-    $this->assertEquals('Sin Tarjeta Asociada', $this->tester->billing()->first()->card->description);
+    $this->assertNotEmpty($this->tester->billings);
+    $this->assertEquals('Sin Banco Asociado', $this->tester->billings()->first()->bank->description);
+    $this->assertEquals('Sin Tarjeta Asociada', $this->tester->billings()->first()->card_type->description);
   }
 
   public function testRelatedProductModel()

@@ -5,7 +5,7 @@ use Faker\Factory as Faker;
 use App\User;
 use App\Image;
 
-class MakerTableSeeder extends Seeder {
+class TesterMakerTableSeed extends Seeder {
 
   /**
    * Run the database seeds.
@@ -33,13 +33,13 @@ class MakerTableSeeder extends Seeder {
 
         // se empieza creado el directorio relacionado con el producto
         // primero se elimina si existe
-        Storage::deleteDirectory("makers/{$maker->id}");
-        Storage::makeDirectory("makers/{$maker->id}");
+        Storage::disk('test')->deleteDirectory("makers/{$maker->id}");
+        Storage::disk('test')->makeDirectory("makers/{$maker->id}");
 
         // el nombre del archivo
         $name = date('Ymdhmmss-').str_random(20);
         // se copia el archivo
-        Storage::copy('1500x1500.gif', "makers/{$maker->id}/{$name}.gif");
+        Storage::disk('test')->copy('1500x1500.gif', "makers/{$maker->id}/{$name}.gif");
         $this->command->info("Creado makers/{$maker->id}/{$name}.gif");
 
         // el modelo

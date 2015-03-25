@@ -14,7 +14,7 @@ class Billing extends Model {
 
   public function card_type()
   {
-    return $this->belongsTo('App\Bank');
+    return $this->belongsTo('App\CardType');
   }
 
   public function user()

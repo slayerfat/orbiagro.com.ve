@@ -41,7 +41,7 @@ class SubCategoryTest extends \Codeception\TestCase\Test
 
   public function testDescriptionFormat()
   {
-    $this->tester->description = '';
+    $this->tester->description = null;
     $this->assertNull($this->tester->description);
     $this->tester->description = 'tetsuo';
     $this->assertEquals('Tetsuo', $this->tester->description);

@@ -48,8 +48,8 @@ class CharacteristicTest extends \Codeception\TestCase\Test
   {
     $this->tester->height = '2000';
     $this->assertEquals(2000, $this->tester->height);
-    $this->assertEquals('2.000,00 cm', $this->tester->height_cm());
-    $this->assertEquals('20.000,00 mm', $this->tester->height_mm());
+    $this->assertEquals('2.000 cm.', $this->tester->height_cm());
+    $this->assertEquals('20.000 mm.', $this->tester->height_mm());
     foreach($this->data as $value):
       $this->tester->height = $value;
       $this->assertNull($this->tester->height);
@@ -60,8 +60,8 @@ class CharacteristicTest extends \Codeception\TestCase\Test
   {
     $this->tester->width = '2000';
     $this->assertEquals(2000, $this->tester->width);
-    $this->assertEquals('2.000,00 cm', $this->tester->width_cm());
-    $this->assertEquals('20.000,00 mm', $this->tester->width_mm());
+    $this->assertEquals('2.000 cm.', $this->tester->width_cm());
+    $this->assertEquals('20.000 mm.', $this->tester->width_mm());
     foreach($this->data as $value):
       $this->tester->width = $value;
       $this->assertNull($this->tester->width);
@@ -72,8 +72,8 @@ class CharacteristicTest extends \Codeception\TestCase\Test
   {
     $this->tester->depth = '2000';
     $this->assertEquals(2000, $this->tester->depth);
-    $this->assertEquals('2.000,00 cm', $this->tester->depth_cm());
-    $this->assertEquals('20.000,00 mm', $this->tester->depth_mm());
+    $this->assertEquals('2.000 cm.', $this->tester->depth_cm());
+    $this->assertEquals('20.000 mm.', $this->tester->depth_mm());
     foreach($this->data as $value):
       $this->tester->depth = $value;
       $this->assertNull($this->tester->depth);
@@ -84,7 +84,7 @@ class CharacteristicTest extends \Codeception\TestCase\Test
   {
     $this->tester->units = '2000';
     $this->assertEquals(2000, $this->tester->units);
-    $this->assertEquals('2.000 Unidades.', $this->tester->units_units());
+    $this->assertEquals('2.000 Unidades.', $this->tester->formatted_units());
     foreach($this->data as $value):
       $this->tester->units = $value;
       $this->assertNull($this->tester->units);
@@ -95,9 +95,9 @@ class CharacteristicTest extends \Codeception\TestCase\Test
   {
     $this->tester->weight = '2000';
     $this->assertEquals(2000, $this->tester->weight);
-    $this->assertEquals('2.000,00 Kg.', $this->tester->weight_kg());
+    $this->assertEquals('2.000 Kg.', $this->tester->weight_kg());
     $this->assertEquals('2 T.', $this->tester->weight_tons());
-    $this->assertEquals('20.000,00 g.', $this->tester->weight_g());
+    $this->assertEquals('2.000.000 g.', $this->tester->weight_g());
     foreach($this->data as $value):
       $this->tester->weight = $value;
       $this->assertNull($this->tester->weight);

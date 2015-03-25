@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\ModelValidation;
 
 class Person extends Model {
 
@@ -18,22 +19,26 @@ class Person extends Model {
    */
   public function getFirstNameAttribute($value)
   {
-    return ucfirst($value);
+    if($value) return ucfirst($value);
+    return null;
   }
 
   public function getLastNameAttribute($value)
   {
-    return ucfirst($value);
+    if($value) return ucfirst($value);
+    return null;
   }
 
   public function getFirstSurNameAttribute($value)
   {
-    return ucfirst($value);
+    if($value) return ucfirst($value);
+    return null;
   }
 
   public function getLastSurNameAttribute($value)
   {
-    return ucfirst($value);
+    if($value) return ucfirst($value);
+    return null;
   }
 
   public function formatted_names()
@@ -45,16 +50,42 @@ class Person extends Model {
     return $names;
   }
 
+  public function getPhoneAttribute($value)
+  {
+    return ModelValidation::parsePhone($value);
+  }
+
   /**
    * Mutators
    */
   public function setIdentityCardAttribute($value)
   {
-    if (ctype_digit($value)) :
-      $this->attributes['identity_card'] = trim($value);
-    else:
-      $this->attributes['identity_card'] = null;
-    endif;
+    $this->attributes['identity_card'] = ModelValidation::byNumeric($value);
+  }
+
+  public function setFirstNameAttribute($value)
+  {
+    $this->attributes['first_name'] = ModelValidation::byLenght($value, 5);
+  }
+
+  public function setLastNameAttribute($value)
+  {
+    $this->attributes['last_name'] = ModelValidation::byLenght($value, 5);
+  }
+
+  public function setFirstSurnameAttribute($value)
+  {
+    $this->attributes['first_surname'] = ModelValidation::byLenght($value, 5);
+  }
+
+  public function setLastSurnameAttribute($value)
+  {
+    $this->attributes['last_surname'] = ModelValidation::byLenght($value, 5);
+  }
+
+  public function setPhoneAttribute($value)
+  {
+    $this->attributes['phone'] = ModelValidation::parseRawPhone($value);
   }
 
   /**

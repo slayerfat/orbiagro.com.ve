@@ -27,12 +27,12 @@ class PromotionTest extends \Codeception\TestCase\Test
 
   public function testProductModel()
   {
-    $this->assertNotEmpty($this->tester->product);
+    $this->assertNotEmpty($this->tester->products);
   }
 
   public function testTitle()
   {
-    $this->assertEquals('Tester', $this->tester->title);
+    $this->assertEquals('Lleva 2, paga 3!', $this->tester->title);
     $this->tester->title = 'akira';
     $this->assertEquals('Akira', $this->tester->title);
     foreach($this->data as $data):
@@ -43,7 +43,7 @@ class PromotionTest extends \Codeception\TestCase\Test
 
   public function testSlug()
   {
-    $this->assertEquals('tester', $this->tester->slug);
+    $this->assertEquals('lleva-2-paga-3', $this->tester->slug);
     $this->tester->title = 'tetsuo kaneda tetsuo kaneda';
     $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
     $this->tester->slug = 'kaneda tetsuo kaneda tetsuo';
@@ -56,29 +56,31 @@ class PromotionTest extends \Codeception\TestCase\Test
 
   public function testPercentage()
   {
+    $obj = new Promotion;
     foreach($this->data as $data):
-      $this->tester->percentage = $data;
-      $this->assertNull($this->tester->percentage);
+      $obj->percentage = $data;
+      $this->assertNull($obj->percentage);
     endforeach;
-    $this->tester->percentage = 10;
-    $this->assertEquals('10%', $this->tester->percentage_pc());
-    $this->assertEquals(0.1, $this->tester->percentage_raw());
-    $this->assertEquals(10, $this->tester->percentage);
-    $this->tester->percentage = 0.1;
-    $this->assertEquals('10%', $this->tester->percentage_pc());
-    $this->assertEquals(0.1, $this->tester->percentage_raw());
-    $this->assertEquals(10, $this->tester->percentage);
+    $obj->percentage = 10;
+    $this->assertEquals('10%', $obj->percentage_pc());
+    $this->assertEquals(0.1, $obj->percentage_raw());
+    $this->assertEquals(10, $obj->percentage);
+    $obj->percentage = 0.1;
+    $this->assertEquals('10%', $obj->percentage_pc());
+    $this->assertEquals(0.1, $obj->percentage_raw());
+    $this->assertEquals(10, $obj->percentage);
   }
 
   public function testStatic()
   {
+    $obj = new Promotion;
     foreach($this->data as $data):
-      $this->tester->static = $data;
-      $this->assertNull($this->tester->static);
+      $obj->static = $data;
+      $this->assertNull($obj->static);
     endforeach;
-    $this->tester->static = 10;
-    $this->assertEquals('10 Bs.', $this->tester->static_bs());
-    $this->assertEquals(10, $this->tester->static);
+    $obj->static = 10;
+    $this->assertEquals('10 Bs.', $obj->static_bs());
+    $this->assertEquals(10, $obj->static);
   }
 
   public function testBegins()

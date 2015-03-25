@@ -10,6 +10,7 @@ class DirectionTest extends \Codeception\TestCase\Test
   {
     $this->tester = Direction::first();
     $this->dirP   = Direction::find(2);
+    $this->data = ['', 'a', -1];
   }
 
   protected function _after()
@@ -24,18 +25,20 @@ class DirectionTest extends \Codeception\TestCase\Test
 
   public function testRelatedUserModel()
   {
-    $this->assertNotEmpty($this->tester->person);
+    $this->assertNotEmpty($this->tester->directionable);
   }
 
   public function testRelatedProductModel()
   {
-    $this->assertNotEmpty($this->dirP->product);
+    $this->assertNotEmpty($this->dirP->directionable);
   }
 
   public function testCorrectFormattedDetails()
   {
-    $this->tester->details = '';
-    $this->assertfalse($this->tester->details);
+    foreach($this->data as $value):
+      $this->tester->details = $value;
+      $this->assertNull($this->tester->details);
+    endforeach;
     $this->tester->details = 'tetsuo';
     $this->assertEquals('Tetsuo', $this->tester->details);
   }
