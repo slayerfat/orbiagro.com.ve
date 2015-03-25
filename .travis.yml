@@ -6,5 +6,12 @@ php:
 
 before_script:
   - composer install
+  - composer require codeception/codeception: 2.x@dev
+  - npm install
+  - gulp
+  - "php artisan migrate:refresh --database codeception"
+  - "php artisan db:seed --class TesterDatabaseSeeder --database codeception"
+  - "sqlite3 tests/_data/db.sqlite .dump > tests/_data/dump.sql"
+  - "./vendor/bin/codecept build"
 
 script: "./vendor/bin/codecept run"
