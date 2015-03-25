@@ -10,7 +10,7 @@ before_script:
   - gulp sass
   - gulp copy
   - "php artisan migrate --database codeception --no-interaction"
-  - "php artisan db:seed --class TesterDatabaseSeeder --database codeception"
+  - "php artisan db:seed --class TesterDatabaseSeeder --database codeception --no-interaction"
   - "sqlite3 tests/_data/db.sqlite .dump > tests/_data/dump.sql"
   - "./vendor/bin/codecept build"
 
