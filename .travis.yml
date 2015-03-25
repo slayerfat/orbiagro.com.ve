@@ -7,8 +7,9 @@ php:
 before_script:
   - composer install
   - npm install
-  - gulp
-  - "php artisan migrate:refresh --database codeception"
+  - gulp sass
+  - gulp copy
+  - "php artisan migrate --database codeception --no-interaction"
   - "php artisan db:seed --class TesterDatabaseSeeder --database codeception"
   - "sqlite3 tests/_data/db.sqlite .dump > tests/_data/dump.sql"
   - "./vendor/bin/codecept build"
