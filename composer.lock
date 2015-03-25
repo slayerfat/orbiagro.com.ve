@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "929f61aec13b7b377d59b9b72f8bd527",
+    "hash": "8f7dec80a7bdae3eb18d687d063eedee",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -68,16 +68,16 @@
         },
         {
             "name": "codeception/codeception",
-            "version": "2.0.11",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "9c7f23eff3e607225e9f43277c6d9cdb03d30b84"
+                "reference": "30082dfa4c1c782005705a6be138e8a3786900b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/9c7f23eff3e607225e9f43277c6d9cdb03d30b84",
-                "reference": "9c7f23eff3e607225e9f43277c6d9cdb03d30b84",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/30082dfa4c1c782005705a6be138e8a3786900b0",
+                "reference": "30082dfa4c1c782005705a6be138e8a3786900b0",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2015-02-23 23:10:03"
+            "time": "2015-03-25 02:44:59"
         },
         {
             "name": "codeception/phpbuiltinserver",
@@ -3546,7 +3546,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "codeception/codeception": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

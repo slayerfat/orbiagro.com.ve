@@ -6,7 +6,6 @@ php:
 
 before_script:
   - composer install
-  - composer require codeception/codeception: 2.x@dev
   - npm install
   - gulp
   - "php artisan migrate:refresh --database codeception"
