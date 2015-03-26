@@ -70,6 +70,15 @@ class Product extends Model {
     return null;
   }
 
+  /**
+   * regresa los eventos paginados
+   * @return object LengthAwarePaginator
+   */
+  public function getPaginateAttribute()
+  {
+    return $this->get()->paginate(5);
+  }
+
   // --------------------------------------------------------------------------
   // Relaciones
   // --------------------------------------------------------------------------
