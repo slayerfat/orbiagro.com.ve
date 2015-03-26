@@ -112,8 +112,14 @@ elixir(function(mix) {
       'public/js/vendor/jquery.min.js')
      .copy('vendor/bower_components/jquery/dist/jquery.min.map',
         'public/js/vendor/jquery.min.map')
-     .copy('vendor/bower_components/bootstrap-sass/assets/fonts/bootstrap',
-        'public/fonts/bootstrap')
+     .copy('vendor/bower_components/fontawesome/css/font-awesome.min.css',
+        'public/css/vendor/font-awesome.min.css')
+      .copy('vendor/bower_components/fontawesome/css/font-awesome.css.map',
+         'public/css/vendor/font-awesome.css.map')
+      .copy('vendor/bower_components/fontawesome/fonts',
+         'public/css/fonts')
+      .copy('vendor/bower_components/bootstrap-sass/assets/fonts/bootstrap',
+         'public/fonts/bootstrap')
      .copy('vendor/bower_components/bootstrap/dist/js/bootstrap.min.js',
         'public/js/vendor/bootstrap.min.js')
      .copy('vendor/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',

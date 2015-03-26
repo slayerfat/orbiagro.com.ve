@@ -4500,5 +4500,38 @@ div.404 {
   .status p {
     font-size: 18px; }
 
+.bloque-4-4-4-info {
+  background-color: #ececec;
+  margin: 20px 0;
+  min-height: 150px;
+  padding: 30px 0; }
+
+.feature-12 {
+  padding: 150px 0; }
+  .feature-12 h1 {
+    font-size: 4em;
+    padding: 0 40px; }
+  .feature-12 p {
+    font-size: 2em;
+    padding: 50px 70px; }
+
+.no-margin {
+  margin: 0; }
+
+.no-padding {
+  padding: 0; }
+
+.fa-128px {
+  font-size: 128px; }
+
+.fa-300px {
+  font-size: 300px; }
+
+.fa-500px {
+  font-size: 500px; }
+
+.fa-100 {
+  font-size: 100%; }
+
 
 /*# sourceMappingURL=app.css.map */

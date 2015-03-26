@@ -2,3 +2,23 @@
 @import 'variables';
 
 @import '404';
+@import 'home/main';
+@import 'feature/main';
+
+// fontawesome
+
+.fa-128px {
+  font-size: 128px;
+}
+
+.fa-300px {
+  font-size: 300px;
+}
+
+.fa-500px {
+  font-size: 500px;
+}
+
+.fa-100 {
+  font-size: 100%;
+}
