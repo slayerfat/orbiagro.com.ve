@@ -4522,6 +4522,13 @@ div.404 {
 .no-padding {
   padding: 0; }
 
+.slider-sync .slider-for img {
+  margin: 10px;
+  padding: 2%;
+  position: relative; }
+.slider-sync .slider-nav img {
+  padding: 2%; }
+
 /* Slider */
 .slick-slider {
   position: relative;

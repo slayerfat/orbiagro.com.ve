@@ -48,7 +48,13 @@ class ProductsController extends Controller {
    */
   public function show($id)
   {
-    //
+    if($product = Product::where('slug', $id)->first())
+
+    return view('product.show', compact('product'));
+
+    $product = Product::findOrFail($id);
+
+    return view('product.show', compact('product'));
   }
 
   /**
