@@ -53,6 +53,11 @@ return [
       'root'   => base_path().'/tests/_output',
     ],
 
+    'public' => [
+      'driver' => 'local',
+      'root'   => public_path(),
+    ],
+
     's3' => [
       'driver' => 's3',
       'key'    => 'your-key',

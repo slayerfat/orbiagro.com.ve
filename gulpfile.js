@@ -144,8 +144,8 @@ elixir(function(mix) {
         'public/js/vendor/numeral.js')
      .copy('vendor/bower_components/slick.js/slick/slick.min.js',
         'public/js/vendor/slick.min.js')
-     .copy('storage/1500x1500.gif', 'storage/app/1500x1500.gif')
-     .copy('storage/file.pdf', 'storage/app/file.pdf')
+     .copy('storage/1500x1500.gif', 'public/1500x1500.gif')
+     .copy('storage/file.pdf', 'public/file.pdf')
      .copy('storage/1500x1500.gif', 'tests/_output/1500x1500.gif')
      .copy('storage/file.pdf', 'tests/_output/file.pdf')
      .copy('vendor/bower_components/slick.js/slick/ajax-loader.gif', 'public/ajax-loader.gif');

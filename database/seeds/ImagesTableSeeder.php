@@ -28,7 +28,7 @@ class ImagesTableSeeder extends Seeder {
       // el nombre del archivo
       $name = date('Ymdhmmss-').str_random(20);
       // se copia el archivo
-      Storage::copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
+      Storage::disk('public')->copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
       $this->command->info("Creado products/{$product->id}/{$name}.gif");
 
       // el modelo
@@ -43,7 +43,7 @@ class ImagesTableSeeder extends Seeder {
 
       // el archivo asociado
       $name = date('Ymdhmmss-').str_random(20);
-      Storage::copy('file.pdf', "products/{$product->id}/{$name}.pdf");
+      Storage::disk('public')->copy('file.pdf', "products/{$product->id}/{$name}.pdf");
       $this->command->info("Creado products/{$product->id}/{$name}.pdf");
 
       // el modelo

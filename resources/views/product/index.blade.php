@@ -12,7 +12,7 @@
           <div class="media">
             <div class="media-left">
               <a href="#">
-                <img class="media-object" src="{!! $product->images()->first()->path !!}" alt="...">
+                <img class="media-object" src="{!! $product->images()->first()->path !!}" alt="..." width="128" height="128">
               </a>
             </div>
             <div class="media-body">
