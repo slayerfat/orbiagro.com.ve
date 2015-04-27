@@ -89,6 +89,8 @@
     </div>
   </div>
 
+  @include('product.addons.direction', $product)
+
   @include('partials.disclaimer')
 @stop
 

@@ -24,6 +24,10 @@ class Direction extends Model {
     return null;
   }
 
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
+
   /**
    * Relacion polimorfica
    * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
@@ -31,6 +35,14 @@ class Direction extends Model {
   public function directionable()
   {
     return $this->morphTo();
+  }
+
+  // --------------------------------------------------------------------------
+  // belongs to
+  // --------------------------------------------------------------------------
+  public function parish()
+  {
+    return $this->belongsTo('App\Parish');
   }
 
 }
