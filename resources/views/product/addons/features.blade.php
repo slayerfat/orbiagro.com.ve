@@ -22,7 +22,12 @@
           aria-labelledby="target_{{ $feature->id }}">
           <div class="panel-body">
             {{ $feature->description }}
-            <img src="{!! asset($feature->images()->first()->path) !!}}" alt="" />
+            <img
+              src="{!! asset($feature->images->first()->path) !!}"
+              alt="{{ $feature->images->first()->alt }}"
+              class="img-responsive" />
+
+            {!! link_to_asset($feature->files->first()->path, 'descargar archivo') !!}
           </div>
         </div>
       </div>

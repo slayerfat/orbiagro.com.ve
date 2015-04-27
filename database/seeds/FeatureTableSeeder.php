@@ -25,7 +25,15 @@ class FeatureTableSeeder extends Seeder {
 
     $products = Product::all();
 
+    // se empieza creado el directorio relacionado con el producto
+    // primero se elimina si existe
+    Storage::disk('public')->deleteDirectory("products");
+
     foreach($products as $product):
+
+      // primero se elimina si existe
+      Storage::disk('public')->makeDirectory("products/{$product->id}");
+
       $this->command->info("Producto {$product->slug}");
       foreach(range(1, 5) as $index) :
         $this->command->info("feature {$index}");
@@ -36,11 +44,6 @@ class FeatureTableSeeder extends Seeder {
         $feature->updated_by  = $user->id;
 
         $product->features()->save($feature);
-
-        // se empieza creado el directorio relacionado con el producto
-        // primero se elimina si existe
-        Storage::disk('public')->deleteDirectory("products/{$product->id}");
-        Storage::disk('public')->makeDirectory("products/{$product->id}");
 
         // el nombre del archivo
         $name = date('Ymdhmmss-').str_random(20);

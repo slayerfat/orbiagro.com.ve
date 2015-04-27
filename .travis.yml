@@ -6,6 +6,7 @@ php:
 before_script:
   - composer install
   - npm install -g npm@2
+  - npm install
   - gulp sass
   - gulp copy
   - "./vendor/bin/codecept build"
