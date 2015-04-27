@@ -13,38 +13,78 @@
         <p>
           {{ $product->description }}
         </p>
-
       </div>
-      <div class='container slider-sync col-md-5'>
-        <div class="slider slider-for">
-          @foreach ($product->images as $image)
-            <div>
-              <img
-                src="{!! asset($image->path) !!}"
-                alt="{{ $image->alt }}"
-                class="img-responsive"/>
-            </div>
-          @endforeach
+      <div class='slider-sync col-md-5'>
+        <div class="row">
+          <div class="col-xs-12">
+            <h2>
+              <strong>{{ $product->price_bs() }}</strong>
+            </h2>
+            <p>
+              {{ $product->quantity }} Unidades
+            </p>
+          </div>
         </div>
-        <div class="slider slider-nav">
-          @foreach ($product->images as $image)
-            <div>
-              <img
-                src="{!! asset($image->path) !!}"
-                alt="{{ $image->alt }}"
-                class="img-responsive"/>
+        <div class="row">
+          <div class="col-xm-12">
+            <div class="slider slider-for">
+              @foreach ($product->images as $image)
+                <div>
+                  <img
+                    src="{!! asset($image->path) !!}"
+                    alt="{{ $image->alt }}"
+                    class="img-responsive"/>
+                </div>
+              @endforeach
             </div>
-          @endforeach
+            <div class="slider slider-nav">
+              @foreach ($product->images as $image)
+                <div>
+                  <img
+                    src="{!! asset($image->path) !!}"
+                    alt="{{ $image->alt }}"
+                    class="img-responsive"/>
+                </div>
+              @endforeach
+            </div>
+
+          </div>
         </div>
       </div>
-
     </div>
   </div>
 
   <div class="container">
     <div class="row">
+      <div class="col-xs-12">
+        <p>
+          Creado el: {{ $product->created_at }}
+          Actualizado el: {{ $product->updated_at }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>Especificaciones</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6" id="features">
+        @include('product.addons.features', $product)
+      </div>
+      <div class="col-sm-6">
+        @include('product.addons.mechanical', $product)
+      </div>
+    </div>
+    <div class="row">
       <div class="col-sm-6">
         @include('product.addons.characteristics', $product)
+      </div>
+      <div class="col-sm-6">
+        @include('product.addons.nutritional', $product)
       </div>
     </div>
   </div>

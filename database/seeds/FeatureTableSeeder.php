@@ -71,7 +71,7 @@ class FeatureTableSeeder extends Seeder {
         $feature->files()->save($file);
       endforeach;
     endforeach;
-    $this->command->info('Creacion de productos completado.');
+    $this->command->info('Creacion de features completado.');
   }
 
 }
