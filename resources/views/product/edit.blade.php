@@ -25,3 +25,8 @@
     </div>
   </div>
 @stop
+
+@section('js')
+  <!-- ajax de edo/mun/par -->
+  <script src="{!! asset('js/ajax/setDirecciones.js') !!}"></script>
+@stop
