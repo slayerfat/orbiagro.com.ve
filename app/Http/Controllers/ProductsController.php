@@ -8,6 +8,17 @@ use App\Product;
 
 class ProductsController extends Controller {
 
+
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth', ['except' => ['index', 'show']]);
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -65,7 +76,13 @@ class ProductsController extends Controller {
    */
   public function edit($id)
   {
-    //
+    if($product = Product::where('slug', $id)->first())
+
+    return view('product.edit', compact('product'));
+
+    $product = Product::findOrFail($id);
+
+    return view('product.edit', compact('product'));
   }
 
   /**
