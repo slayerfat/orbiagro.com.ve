@@ -56,6 +56,17 @@
 </div>
 
 <div class="form-group">
+  <div id="map-canvas" class="col-xs-12 embed-responsive embed-responsive-16by9"></div>
+</div>
+
+<div class="form-group">
+  {!! Form::label('details', 'Direccion Exacta:', ['class' => 'col-md-2 control-label']) !!}
+  <div class="col-md-10">
+    {!! Form::text('details', $product->direction->first()->details, ['class' => 'form-control']) !!}
+  </div>
+</div>
+
+<div class="form-group">
   <div class="col-md-12">
     {!! Form::submit($textoBotonSubmit, ['class' => 'form-control btn btn-primary']) !!}
   </div>

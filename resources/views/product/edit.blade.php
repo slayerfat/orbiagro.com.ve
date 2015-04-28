@@ -29,4 +29,9 @@
 @section('js')
   <!-- ajax de edo/mun/par -->
   <script src="{!! asset('js/ajax/setDirecciones.js') !!}"></script>
+  <!-- google maps -->
+  <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API') }}">
+  </script>
+  <script src="{!! asset('js/maps/productMap.js') !!}"></script>
 @stop
