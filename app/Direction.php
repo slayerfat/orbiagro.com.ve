@@ -7,17 +7,17 @@ class Direction extends Model {
 
   protected $fillable = ['parish_id', 'details'];
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setDetailsAttribute($value)
   {
     $this->attributes['details'] = ModelValidation::byLenght($value, 5);
   }
 
-  /**
-   * Accessors
-   */
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getDetailsAttribute($value)
   {
     if($value) return ucfirst($value);
@@ -35,6 +35,14 @@ class Direction extends Model {
   public function directionable()
   {
     return $this->morphTo();
+  }
+
+  // --------------------------------------------------------------------------
+  // Has One
+  // --------------------------------------------------------------------------
+  public function map()
+  {
+    return $this->hasOne('App\MapDetail');
   }
 
   // --------------------------------------------------------------------------
