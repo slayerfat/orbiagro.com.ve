@@ -7,6 +7,7 @@ use App\SubCategory;
 use App\Maker;
 use App\Parish;
 use App\Direction;
+use App\MapDetail;
 use App\Product;
 
 class TesterProductTableSeeder extends Seeder {
@@ -54,7 +55,8 @@ class TesterProductTableSeeder extends Seeder {
     $subcategory = SubCategory::first();
     $maker   = Maker::first();
     $this->command->info('producto final: '.$subcategory->slug);
-    $parish  = Parish::orderByRaw('RANDOM()')->first();
+    // para asegurarse que un producto tenga un parish de id 1
+    $parish  = Parish::first();
     $title   = $faker->sentence(5);
     $product = Product::create([
       'user_id'     => $user->id,
@@ -75,6 +77,15 @@ class TesterProductTableSeeder extends Seeder {
     $direction->updated_by = $user->id;
     $product->direction()->save($direction);
     $this->command->info("direccion: {$direction->details}");
+
+    // detalles del mapa
+    $this->command->info("map details: 10.492315, -66.932899");
+    $map = new MapDetail;
+    $map->latitude = 10.492315;
+    $map->longitude = -66.932899;
+    $map->zoom = 12;
+    $direction->map()->save($map);
+
     $product->sub_categories()->attach($subcategory->id);
     $this->command->info('Creacion de productos completado.');
   }
