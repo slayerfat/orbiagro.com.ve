@@ -57,6 +57,19 @@
 
 <div class="form-group">
   <div id="map-canvas" class="col-xs-12 embed-responsive embed-responsive-16by9"></div>
+  @if($product->direction->first()->map)
+    <div class="hidden">
+      {!! Form::input('number', 'longitude', $product->direction->first()->map->longitude) !!}
+      {!! Form::input('number', 'latitude', $product->direction->first()->map->latitude) !!}
+      {!! Form::input('number', 'zoom', $product->direction->first()->map->zoom) !!}
+    </div>
+  @else
+    <div class="hidden">
+      {!! Form::text('longitude', 0) !!}
+      {!! Form::text('latitude', 0) !!}
+      {!! Form::text('zoom', 0) !!}
+    </div>
+  @endif
 </div>
 
 <div class="form-group">
