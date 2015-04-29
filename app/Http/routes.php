@@ -6,6 +6,8 @@ Route::get('/', 'HomeController@index');
 
 Route::resource('usuarios', 'UsersController');
 Route::resource('productos', 'ProductsController');
+Route::resource('categorias', 'CategoriesController');
+Route::resource('sub-categorias', 'SubCategoriesController');
 
 Route::get('home', function(){
   return redirect('/');

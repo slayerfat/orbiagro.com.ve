@@ -65,6 +65,9 @@
     </div>
   </div>
 
+  <?php $sub_category = $product->sub_category ?>
+  @include('sub-category.addons.relatedProducts', $sub_category)
+
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
@@ -90,6 +93,8 @@
   </div>
 
   @include('product.addons.direction', $product)
+
+  @include('visit.addons.gallerie-products')
 
   @include('partials.disclaimer')
 @stop

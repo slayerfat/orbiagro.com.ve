@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 well">
+    <div class="col-xs-12 well">
       <p class="text-justify">
 
         Orbiagro no asume ninguna responsabilidad por la información contenida

@@ -2,6 +2,19 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
+        <h1>Direccion</h1>
+        <h3>
+          Venezuela, Estado
+          {{ $product->direction()->first()->parish->town->state->description }}
+        </h3>
+        <h3>
+          Parroquia {{ $product->direction()->first()->parish->description }},
+          Municipio {{ $product->direction()->first()->parish->town->description }}
+        </h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
         <iframe
           width="100%"
           height="450"
