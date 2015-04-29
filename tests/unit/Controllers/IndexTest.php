@@ -23,7 +23,7 @@ class IndexTest extends \Codeception\TestCase\Test
     $this->tester->amLoggedAs(['email' => 'tester@tester.com', 'password' => 'tester']);
     $this->tester->amOnPage('/');
     $this->tester->seeInCurrentUrl('/');
-    $this->tester->dontSee('404');
+    $this->tester->dontSee('404', 'h1');
   }
 
 }

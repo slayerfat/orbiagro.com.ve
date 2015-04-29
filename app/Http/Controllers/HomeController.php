@@ -11,7 +11,7 @@ class HomeController extends Controller {
    */
   public function index()
   {
-    $sub_category = SubCategory::has('products')->orderByRaw('rand()')->first();
+    $sub_category = SubCategory::has('products')->random()->first();
 
     return view('home.index', compact('sub_category'));
   }
