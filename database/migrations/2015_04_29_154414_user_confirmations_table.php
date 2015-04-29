@@ -18,7 +18,6 @@ class UserConfirmationsTable extends Migration {
       $table->integer('user_id')->unsigned()->index();
       $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
       $table->string('data', 32)->nullable();
-      $table->timestamps();
     });
   }
 

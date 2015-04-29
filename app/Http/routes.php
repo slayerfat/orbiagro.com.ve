@@ -5,6 +5,7 @@ Route::get('/welcome', 'WelcomeController@index');
 Route::get('/', 'HomeController@index');
 
 Route::resource('usuarios', 'UsersController');
+Route::resource('usuarios', 'UsersController');
 Route::resource('productos', 'ProductsController');
 Route::resource('categorias', 'CategoriesController');
 Route::resource('sub-categorias', 'SubCategoriesController');
