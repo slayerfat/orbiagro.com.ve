@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  @include('sub-category.addons.relatedProducts', $sub_category)
+  @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => null])
 
 @stop
 

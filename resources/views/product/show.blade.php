@@ -66,7 +66,7 @@
   </div>
 
   <?php $sub_category = $product->sub_category ?>
-  @include('sub-category.addons.relatedProducts', $sub_category)
+  @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Productos Relacionados'])
 
   <div class="container">
     <div class="row">
