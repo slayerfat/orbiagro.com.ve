@@ -10,6 +10,7 @@ class Product extends Model {
   protected $fillable = [
     'user_id',
     'maker_id',
+    'sub_category_id',
     'title',
     'description',
     'price',
@@ -82,6 +83,7 @@ class Product extends Model {
   // --------------------------------------------------------------------------
   // Relaciones
   // --------------------------------------------------------------------------
+
   // --------------------------------------------------------------------------
   // Belongs To
   // --------------------------------------------------------------------------
@@ -93,6 +95,11 @@ class Product extends Model {
   public function maker()
   {
     return $this->belongsTo('App\Maker');
+  }
+
+  public function sub_category()
+  {
+    return $this->belongsTo('App\SubCategory');
   }
 
   // --------------------------------------------------------------------------
@@ -127,11 +134,6 @@ class Product extends Model {
   public function promotions()
   {
     return $this->belongsToMany('App\Promotion');
-  }
-
-  public function sub_categories()
-  {
-    return $this->belongsToMany('App\SubCategory');
   }
 
   public function purchases()

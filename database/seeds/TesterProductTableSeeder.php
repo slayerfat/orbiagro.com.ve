@@ -31,15 +31,16 @@ class TesterProductTableSeeder extends Seeder {
       $parish  = Parish::orderByRaw('RANDOM()')->first();
       $title   = $faker->sentence(5);
       $product = Product::create([
-        'user_id'     => $user->id,
-        'maker_id'    => $maker->id,
-        'title'       => $title,
-        'description' => $faker->text(),
-        'price'       => $faker->randomFloat(2, 100, 9999999999),
-        'quantity'    => $faker->numberBetween(1, 20),
-        'slug'        => str_slug($title),
-        'created_by'  => $user->id,
-        'updated_by'  => $user->id,
+        'user_id'         => $user->id,
+        'maker_id'        => $maker->id,
+        'sub_category_id' => $subcategory->id,
+        'title'           => $title,
+        'description'     => $faker->text(),
+        'price'           => $faker->randomFloat(2, 100, 9999999999),
+        'quantity'        => $faker->numberBetween(1, 20),
+        'slug'            => str_slug($title),
+        'created_by'      => $user->id,
+        'updated_by'      => $user->id,
       ]);
       $this->command->info("Producto {$product->title} creado!");
       $direction = new Direction;
@@ -49,7 +50,6 @@ class TesterProductTableSeeder extends Seeder {
       $direction->updated_by = $user->id;
       $product->direction()->save($direction);
       $this->command->info("direccion: {$direction->details}");
-      $product->sub_categories()->attach($subcategory->id);
     endforeach;
     // para asegurarse que un producto tenga un maker de id 1
     $subcategory = SubCategory::first();
@@ -59,15 +59,16 @@ class TesterProductTableSeeder extends Seeder {
     $parish  = Parish::first();
     $title   = $faker->sentence(5);
     $product = Product::create([
-      'user_id'     => $user->id,
-      'maker_id'    => $maker->id,
-      'title'       => $title,
-      'description' => $faker->text(),
-      'price'       => $faker->randomFloat(2, 100, 9999999999),
-      'quantity'    => $faker->numberBetween(1, 20),
-      'slug'        => str_slug($title),
-      'created_by'  => $user->id,
-      'updated_by'  => $user->id,
+      'user_id'         => $user->id,
+      'maker_id'        => $maker->id,
+      'sub_category_id' => $subcategory->id,
+      'title'           => $title,
+      'description'     => $faker->text(),
+      'price'           => $faker->randomFloat(2, 100, 9999999999),
+      'quantity'        => $faker->numberBetween(1, 20),
+      'slug'            => str_slug($title),
+      'created_by'      => $user->id,
+      'updated_by'      => $user->id,
     ]);
     $this->command->info("Producto {$product->title} creado!");
     $direction = new Direction;
@@ -86,7 +87,6 @@ class TesterProductTableSeeder extends Seeder {
     $map->zoom = 12;
     $direction->map()->save($map);
 
-    $product->sub_categories()->attach($subcategory->id);
     $this->command->info('Creacion de productos completado.');
   }
 

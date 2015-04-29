@@ -6,9 +6,9 @@ class SubCategory extends Model {
 
   protected $fillable = ['category_id', 'description', 'slug'];
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setDescriptionAttribute($value)
   {
     if($value == '') :
@@ -18,39 +18,41 @@ class SubCategory extends Model {
     endif;
   }
 
-  /**
-   * Accessors
-   */
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getDescriptionAttribute($value)
   {
     if($value) return ucfirst($value);
     return null;
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------
+  // Belongs To
+  // --------------------------------------------------------------------------
   public function category()
   {
     return $this->belongsTo('App\Category');
   }
 
-  /**
-   * Has Many
-   */
+  // --------------------------------------------------------------------------
+  // Has Many
+  // --------------------------------------------------------------------------
+  public function products()
+  {
+   return $this->hasMany('App\Product');
+  }
 
-
-  /**
-   * Belongs To Many
-   */
+  // --------------------------------------------------------------------------
+  // Belongs To Many
+  // --------------------------------------------------------------------------
   public function makers()
   {
     return $this->belongsToMany('App\Maker');
-  }
-
-  public function products()
-  {
-   return $this->belongsToMany('App\Product');
   }
 
 }
