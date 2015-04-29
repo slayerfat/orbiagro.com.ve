@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Http\Requests\ProductRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -91,9 +92,9 @@ class ProductsController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, ProductRequest $request)
   {
-    //
+    return $request->all();
   }
 
   /**
