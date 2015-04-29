@@ -2,7 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Otros\EnviarEmail as Email;
+use App\Mamarrachismo\EnviarEmail as Email;
 use Auth;
 use App\User;
 use App\Profile;
@@ -16,7 +16,7 @@ class ConfirmationsController extends Controller {
     if ( !$confirmation ) :
       return redirect('/');
     endif;
-    $confirmModel = UserConfirmation::where('confirmation', $confirmation)->get();
+    $confirmModel = UserConfirmation::where('data', $confirmation)->get();
     if ( !$confirmModel ) :
       return redirect('/');
     endif;
@@ -28,15 +28,15 @@ class ConfirmationsController extends Controller {
     else:
       $confirmModel = $confirmModel->first();
     endif;
-    $usuario = User::findOrFail($confirmModel->user_id);
-    if (!$usuario->confirmacion) :
+    $user = User::findOrFail($confirmModel->user_id);
+    if (!$user->confirmation) :
       $confirmModel->delete();
       return redirect('/');
     endif;
-    $perfil = Profile::where('description', 'Sin Edificio')->first();
-    $usuario->profile_id = $perfil->id;
-    $usuario->save();
-    $usuario->confirmacion()->delete();
+    $profile = Profile::where('description', 'Usuario')->first();
+    $user->profile_id = $profile->id;
+    $user->save();
+    $user->confirmation()->delete();
     Auth::logout();
     flash()->success('Ud. ha sido correctamente verificado, por favor ingrese en el sistema.');
     return redirect('auth/login');
@@ -44,23 +44,23 @@ class ConfirmationsController extends Controller {
 
   public function generateConfirm()
   {
-    $usuario = Auth::user();
-    if (!$usuario->confirmacion):
+    $user = Auth::user();
+    if (!$user->confirmacion):
       return redirect('/');
     endif;
-    $confirmacion = new UserConfirmation(['confirmation' => true]);
-    $usuario->confirmacion()->update(['confirmation' => $confirmacion->confirmation]);
+    $confirmation = new UserConfirmation(['data' => true]);
+    $user->confirmation()->update(['data' => $confirmation->data]);
     // por alguna razon la confirmacion no se actualiza en el modelo
     // asi que tengo que traermelo otra vez
-    $usuario = User::find(Auth::user()->id);
+    $user = User::find(Auth::user()->id);
     // datos usados para enviar el email
     $data = [
       'vista'   => ['emails.confirmation', 'emails.confirmationPlain'],
-      'subject' => 'Confirmacion de cuenta en sistemaCONDOR',
-      'usuario' => $usuario,
+      'subject' => 'Confirmacion de cuenta en Orbiagro',
+      'user' => $user,
     ];
     // array de destinatarios
-    $emails = (array)$usuario->email;
+    $emails = (array)$user->email;
     Email::enviarEmail($data, $emails);
     flash('Nueva confirmacion generada, por favor revise su correo electronico.');
     return redirect('/por-verificar');

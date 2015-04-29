@@ -16,4 +16,11 @@ class HomeController extends Controller {
     return view('home.index', compact('sub_category'));
   }
 
+  public function unverified()
+  {
+    $user  = Auth::user();
+
+    return view('auth.verification', compact('user'));
+  }
+
 }

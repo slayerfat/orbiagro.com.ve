@@ -12,7 +12,7 @@ class UserConfirmation extends Model {
   public $timestamps = false;
 
   protected $fillable = [
-    'confirmation'
+    'data'
   ];
 
   // --------------------------------------------------------------------------

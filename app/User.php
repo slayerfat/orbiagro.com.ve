@@ -117,4 +117,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return false;
   }
 
+  public function isVerified()
+  {
+   if ($this->profile->description !== 'Desactivado') return true;
+    return false;
+  }
+
 }

@@ -5,7 +5,7 @@
 @section('content')
   <div class="container">
     <h1>
-      Hola! {{ $usuario->username }}!
+      Hola! {{ $user->name }}!
     </h1>
     <h3 class="text-justify">
       Para poder entrar en el sistema, es necesario que Usted.

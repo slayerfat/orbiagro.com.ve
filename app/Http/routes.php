@@ -10,6 +10,14 @@ Route::resource('productos', 'ProductsController');
 Route::resource('categorias', 'CategoriesController');
 Route::resource('sub-categorias', 'SubCategoriesController');
 
+Route::group(['middleware' => 'user.verified'], function(){
+  // usuario por verificar
+  Route::get('/por-verificar', 'HomeController@unverified');
+  // para generar confirmaciones de usuario
+  Route::get('/generar-confirmacion', 'ConfirmationsController@generateConfirm');
+  Route::get('/confirmar/{string}', 'ConfirmationsController@confirm');
+});
+
 Route::get('home', function(){
   return redirect('/');
 });
