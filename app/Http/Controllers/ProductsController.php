@@ -69,8 +69,6 @@ class ProductsController extends Controller {
     $this->setNewProductVisit($product->id);
     $visitedProducts = $this->getVisitedProducts();
 
-    // var_dump($request->cookie());
-
     return view('product.show', compact('product'));
   }
 
@@ -117,6 +115,14 @@ class ProductsController extends Controller {
     //
   }
 
+  /**
+   * Para saber si el usuario es o no el dueño
+   * de un producto para editar.
+   *
+   * @param int $id user's id.
+   *
+   * @return boolean
+   */
   private function notOwner($id)
   {
     if(Auth::user()->id === $id) return false;
@@ -125,6 +131,11 @@ class ProductsController extends Controller {
     return true;
   }
 
+  /**
+   * busca los productos dentro de los cookies y devuelve la coleccion.
+   *
+   * @return Illuminate\Database\Eloquent\Collection
+   */
   private function getVisitedProducts()
   {
     $bag = [];
@@ -142,6 +153,13 @@ class ProductsController extends Controller {
     return Product::find($bag);
   }
 
+  /**
+   * guarda las visitas a productos del usuario en la base de datos.
+   *
+   * @param array $array el array a iterar (id => visitas).
+   *
+   * @return void
+   */
   private function storeVisits($array)
   {
     if(!Auth::user()) return null;
@@ -152,8 +170,9 @@ class ProductsController extends Controller {
 
     if(!$date) return null;
 
-    // if($date->diffInMinutes() < 5) return null;
+    if($date->diffInMinutes() < 5) return null;
 
+    // si la visita no existe en la base de datos se crea, sino se actualiza
     foreach($array as $id => $total) :
       if($product = Product::find($id)) :
         if(Auth::user()->visits()->where('visitable_id', $product->id)->get()->isEmpty()) :
@@ -167,27 +186,44 @@ class ProductsController extends Controller {
           $visit->save();
         endif;
       endif;
-      // Cookie::queue("products.{$id}", null);
+      // se resetea el contador.
+      Cookie::queue("products.{$id}", 1);
     endforeach;
-    // $this->setUpdatedCookieDate();
+    // se actualiza la fecha de edicion del cookie
+    $this->setUpdatedCookieDate();
   }
 
   /**
    * http://php.net/manual/en/function.preg-grep.php#111673
+   *
+   * @param $pattern string la expresion regular.
+   * @param $input array el array a iterar.
+   *
+   * @return array
    */
   private function preg_grep_keys($pattern, $input, $flags = 0)
   {
     return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
   }
 
+  /**
+   * @param int $id id del producto visitado.
+   *
+   * @return void
+   */
   private function setNewProductVisit($id)
   {
     $total = Cookie::get("products_{$id}");
     $total = ($total) ? ($total + 1) : 1;
     Cookie::queue("products.{$id}", $total);
-    $this->setUpdatedCookieDate();
+    if(!Cookie::get('visitedAt')) $this->setUpdatedCookieDate();
   }
 
+  /**
+   * para darle una fecha al cookie
+   *
+   * @return void
+   */
   private function setUpdatedCookieDate()
   {
     $carbon = Carbon::now();
@@ -195,6 +231,15 @@ class ProductsController extends Controller {
     Cookie::queue("visitedAt", $date);
   }
 
+  /**
+   * itera el array de los productos visitados y lo
+   * cambia para que sea mas facil de manipular
+   * ['product_x' => y] ---> [x => y]
+   *
+   * @param array $array el array a iterar.
+   *
+   * @return array
+   */
   private function parseProductIdInArrayKeys($array)
   {
     $parsed = [];
