@@ -1,12 +1,14 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
+use Cookie;
+use Carbon\Carbon;
 use App\Http\Requests;
 use App\Http\Requests\ProductRequest;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use App\Product;
+use App\Visit;
 
 class ProductsController extends Controller {
 
@@ -59,13 +61,15 @@ class ProductsController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id)
+  public function show($id, Request $request)
   {
-    if($product = Product::where('slug', $id)->first())
-
-    return view('product.show', compact('product'));
-
+    if(!$product = Product::where('slug', $id)->first())
     $product = Product::findOrFail($id);
+
+    $this->setNewProductVisit($product->id);
+    $visitedProducts = $this->getVisitedProducts();
+
+    // var_dump($request->cookie());
 
     return view('product.show', compact('product'));
   }
@@ -119,6 +123,75 @@ class ProductsController extends Controller {
     if(Auth::user()->isAdmin()) return false;
 
     return true;
+  }
+
+  private function getVisitedProducts()
+  {
+    $bag = [];
+    $array = $this->preg_grep_keys("/(products\_)+/", Cookie::get());
+
+    if(!empty($array))
+    {
+      foreach ($array as $productID) :
+        $bag[] = $productID;
+      endforeach;
+      $this->storeVisits($bag);
+    }
+
+    return Product::find($bag);
+  }
+
+  private function storeVisits($array)
+  {
+    if(!Auth::user()) return null;
+
+    if(!isset($array)) return null;
+
+    $date = Cookie::get("visitedAt");
+
+    if(!$date) return null;
+
+    // if($date->diffInMinutes() < 5) return null;
+
+    foreach($array as $id => $total) :
+      if($product = Product::find($id)) :
+        if(Auth::user()->visits()->where('visitable_id', $product->id)->get()->isEmpty()) :
+          $visit = new Visit;
+          $visit->total = $total;
+          $visit->user_id = Auth::user()->id;
+          $product->visits()->save($visit);
+        else:
+          $visit = Auth::user()->visits()->where('visitable_id', $product->id)->first();
+          $visit->total += $total;
+          $visit->save();
+        endif;
+      endif;
+      // Cookie::queue("products.{$id}", null);
+    endforeach;
+    // $this->setUpdatedCookieDate();
+  }
+
+  /**
+   * http://php.net/manual/en/function.preg-grep.php#111673
+   */
+  private function preg_grep_keys($pattern, $input, $flags = 0)
+  {
+    return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
+  }
+
+  private function setNewProductVisit($id)
+  {
+    $total = Cookie::get("products_{$id}");
+    $total = ($total) ? ($total + 1) : 1;
+    Cookie::queue("products.{$id}", $total);
+    $this->setUpdatedCookieDate();
+  }
+
+  private function setUpdatedCookieDate()
+  {
+    $carbon = Carbon::now();
+    $date = $carbon;
+    Cookie::queue("visitedAt", $date);
   }
 
 }
