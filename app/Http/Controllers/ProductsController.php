@@ -129,13 +129,14 @@ class ProductsController extends Controller {
   {
     $bag = [];
     $array = $this->preg_grep_keys("/(products\_)+/", Cookie::get());
+    $parsed = $this->parseProductIdInArrayKeys($array);
 
-    if(!empty($array))
+    if(!empty($parsed))
     {
-      foreach ($array as $productID) :
+      foreach ($parsed as $productID => $total) :
         $bag[] = $productID;
       endforeach;
-      $this->storeVisits($bag);
+      $this->storeVisits($parsed);
     }
 
     return Product::find($bag);
@@ -192,6 +193,17 @@ class ProductsController extends Controller {
     $carbon = Carbon::now();
     $date = $carbon;
     Cookie::queue("visitedAt", $date);
+  }
+
+  private function parseProductIdInArrayKeys($array)
+  {
+    $parsed = [];
+    foreach ($array as $key => $value)
+    {
+      $exploted = explode('_', $key);
+      $parsed[$exploted[1]] = $value;
+    }
+    return $parsed;
   }
 
 }
