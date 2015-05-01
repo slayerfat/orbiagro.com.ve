@@ -1,10 +1,15 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <h1>Ultimos Productos que visito</h1>
+@foreach($visitedProducts->take(3)->all() as $product)
+  <div class="col-sm-4">
+    <div class="thumbnail">
+      <img
+        src="{!! asset($product->images->first()->path) !!}"
+        alt="{{ $product->images->first()->alt }}"
+        class="img-responsive"/>
+      <div class="caption">
+        <h3>
+          {!! link_to_action('ProductsController@show', $product->title, $product->id) !!}
+        </h3>
+      </div>
     </div>
   </div>
-  <div class="row">
-    {{-- TODO: AJUSTAR A LA REALIDAD --}}
-  </div>
-</div>
+@endforeach

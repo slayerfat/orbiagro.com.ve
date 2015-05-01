@@ -94,7 +94,7 @@
 
   @include('product.addons.direction', $product)
 
-  @include('visit.addons.gallerie-products')
+  @include('visit.addons.relatedProducts')
 
   @include('partials.disclaimer')
 @stop

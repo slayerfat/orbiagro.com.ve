@@ -69,7 +69,7 @@ class ProductsController extends Controller {
     $this->setNewProductVisit($product->id);
     $visitedProducts = $this->getVisitedProducts();
 
-    return view('product.show', compact('product'));
+    return view('product.show', compact('product', 'visitedProducts'));
   }
 
   /**
@@ -139,6 +139,18 @@ class ProductsController extends Controller {
   private function getVisitedProducts()
   {
     $bag = [];
+
+    if(Auth::user()) :
+      if($visits = Auth::user()->visits()->with('visitable')->get()) :
+        foreach ($visits as $visit) {
+          $bag[] = $visit->visitable->id;
+        }
+        $products = Product::find($bag);
+        $products->load('user', 'sub_category');
+        return $products;
+      endif;
+    endif;
+
     $array = $this->preg_grep_keys("/(products\_)+/", Cookie::get());
     $parsed = $this->parseProductIdInArrayKeys($array);
 
