@@ -118,4 +118,6 @@
       focusOnSelect: true
     });
   </script>
+  {{-- galeria de productos visitados relacionados. --}}
+  <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
 @stop
