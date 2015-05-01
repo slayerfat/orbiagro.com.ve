@@ -11,22 +11,24 @@
         <div class="row">
           <div class="media">
             <div class="media-left">
-              <a href="#">
+              <a href="{!! action('ProductsController@show', $product->id) !!}">
                 <img
                   class="media-object"
-                  src="{{ $product->images()->first()->path }}"
+                  src="{!! asset($product->images()->first()->path) !!}"
                   alt="{{ $product->images()->first()->alt }}"
                   width="128" height="128">
               </a>
             </div>
             <div class="media-body">
-              <h4 class="media-heading">{{ $product->title }}</h4>
+              <a href="{!! action('ProductsController@show', $product->id) !!}">
+                <h4 class="media-heading">{{ $product->title }}</h4>
+              </a>
               {{ $product->description }}
             </div>
           </div>
         </div>
       @endforeach
-      {{ $products->render() }}
+      {!! $products->render() !!}
     @endunless
   </div>
 @stop

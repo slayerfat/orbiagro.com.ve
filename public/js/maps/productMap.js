@@ -23,6 +23,7 @@ function initialize(latitude, longitude, zoom) {
 }
 
 function getAdress(address){
+  console.log(address);
   // https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingStatusCodes
   var geocoder = new google.maps.Geocoder();
   // el "query"
@@ -48,11 +49,10 @@ function changeInputs(){
 }
 
 // para cambiar o hacer una nueva vista del mapa segun la direccion a buscar
-function make(){
+function make(address){
   // se cambia el zoom
   map.setZoom(10);
-  // el "query string"
-  var address = 'estado'+$('#state_id :selected').html()+', venezuela';
+
   getAdress(address);
   changeInputs();
 }
@@ -63,6 +63,7 @@ $(document).ajaxStop(function () {
   var lng = $('input[name="longitude"]').val();
   var lat = $('input[name="latitude"').val();
   var zoom;
+  var address;
 
   // si por alguna razon la latitud o longitud no son numeros
   if (!$.isNumeric(lng) || !$.isNumeric(lat))
@@ -82,8 +83,9 @@ $(document).ajaxStop(function () {
   // si eso falla entonces se busca por el estado
   else if ( $.isNumeric( $('#state_id').val() ) )
   {
+    address = 'estado '+$('#state_id :selected').html()+', venezuela';
     initialize();
-    make();
+    make(address);
   }
   // si todo falla se inicia con valores por defecto.
   else
@@ -93,13 +95,15 @@ $(document).ajaxStop(function () {
 
   // si el estado seleccionado cambia se hace el query nuevo
   $('#state_id').change(function(){
-    make();
+    // el "query string"
+    address = 'estado '+$('#state_id :selected').html()+', venezuela';
+    make(address);
   });
 
   // cambia segun la posicion del mapa en la vista
   google.maps.event.addListener(map, 'dragend', function() {
-    $('input[name="longitude"]').val(map.center.D);
-    $('input[name="latitude"').val(map.center.k);
+    $('input[name="longitude"]').val(map.center.lng());
+    $('input[name="latitude"').val(map.center.lat());
   });
   google.maps.event.addListener(map, 'zoom_changed', function() {
     $('input[name="zoom"').val(map.zoom);

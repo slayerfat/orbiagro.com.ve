@@ -1,5 +1,5 @@
 <div class="container">
-  @if($visitedProducts)
+  @unless($visitedProducts->isEmpty())
     <div class="row">
       <div class="col-xs-12">
         <h1>Ultimos Productos que ha visitado</h1>
@@ -31,5 +31,5 @@
         @endforeach
       </div>
     @endforeach
-  @endif
+  @endunless
 </div>
