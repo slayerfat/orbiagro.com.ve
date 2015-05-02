@@ -50,18 +50,18 @@
   {!! Form::label('parish_id', 'Parroquia:', ['class' => 'col-md-2 control-label']) !!}
   <div class="col-md-10">
     <select name="parish_id" id="parish_id" class="form-control">
-      <option value="{!! $product->direction->first()->parish_id !!}"></option>
+      <option value="{!! $product->direction->parish_id !!}"></option>
     </select>
   </div>
 </div>
 
 <div class="form-group">
   <div id="map-canvas" class="col-xs-12 embed-responsive embed-responsive-16by9"></div>
-  @if($product->direction->first()->map)
+  @if($product->direction->map)
     <div class="hidden">
-      {!! Form::input('number', 'longitude', $product->direction->first()->map->longitude) !!}
-      {!! Form::input('number', 'latitude', $product->direction->first()->map->latitude) !!}
-      {!! Form::input('number', 'zoom', $product->direction->first()->map->zoom) !!}
+      {!! Form::text('longitude', $product->direction->map->longitude) !!}
+      {!! Form::text('latitude', $product->direction->map->latitude) !!}
+      {!! Form::text('zoom', $product->direction->map->zoom) !!}
     </div>
   @else
     <div class="hidden">
@@ -75,7 +75,14 @@
 <div class="form-group">
   {!! Form::label('details', 'Direccion Exacta:', ['class' => 'col-md-2 control-label']) !!}
   <div class="col-md-10">
-    {!! Form::text('details', $product->direction->first()->details, ['class' => 'form-control']) !!}
+    {!! Form::text('details', $product->direction->details, ['class' => 'form-control']) !!}
+  </div>
+</div>
+
+<div class="form-group">
+  {!! Form::label('maker_id', 'Fabricante:', ['class' => 'col-md-2 control-label']) !!}
+  <div class="col-md-10">
+    {!! Form::select('maker_id', $makers, $product->maker->id, ['class' => 'form-control']) !!}
   </div>
 </div>
 

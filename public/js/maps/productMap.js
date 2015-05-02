@@ -43,8 +43,8 @@ function getAdress(address){
 
 // para cambiar todos a la vez segun los datos del mapa
 function changeInputs(){
-  $('input[name="longitude"]').val(map.center.D);
-  $('input[name="latitude"').val(map.center.k);
+  $('input[name="longitude"]').val(map.center.lng());
+  $('input[name="latitude"').val(map.center.lat());
   $('input[name="zoom"').val(map.zoom);
 }
 
@@ -60,8 +60,8 @@ function make(address){
 // ajaxStop espera que todas las transacciones ajax culminen antes de ejecutar
 $(document).ajaxStop(function () {
 
-  var lng = $('input[name="longitude"]').val();
-  var lat = $('input[name="latitude"').val();
+  var lng = parseFloat($('input[name="longitude"]').val());
+  var lat = parseFloat($('input[name="latitude"').val());
   var zoom;
   var address;
 
@@ -71,14 +71,14 @@ $(document).ajaxStop(function () {
     initialize();
   }
   // se chequea que no sean exactamente 0 (por defecto los campos son 0 en la vista)
-  else if (parseFloat(lng) !== 0 && parseFloat(lat) !== 0)
+  else if (lng !== 0 && lat)
   {
     // se chequea adicionalmente el zoom
     if ($.isNumeric($('input[name="zoom"').val())) {
-      zoom = $('input[name="zoom"').val();
+      zoom = parseInt($('input[name="zoom"').val());
     }else{zoom = null;}
 
-    initialize(lng, lat, zoom);
+    initialize(lat, lng, zoom);
   }
   // si eso falla entonces se busca por el estado
   else if ( $.isNumeric( $('#state_id').val() ) )

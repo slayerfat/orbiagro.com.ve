@@ -20,7 +20,7 @@
           height="450"
           frameborder="0" style="border:0"
           src="https://www.google.com/maps/embed/v1/place?key={!! env('GOOGLE_MAPS_API') !!}
-            &q=municipio+{{ $product->direction->first()->parish->town->description }}+edo+{{ $product->direction->first()->parish->town->state->description }}+Venezuela
+            &q=municipio+{{ $product->direction->parish->town->description }}+edo+{{ $product->direction->parish->town->state->description }}+Venezuela
             &zoom=10&region=ve">
         </iframe>
       </div>

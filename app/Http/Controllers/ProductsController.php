@@ -9,6 +9,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
 use App\Visit;
+use App\MapDetail;
+use App\Direction;
+use App\Maker;
 
 class ProductsController extends Controller {
 
@@ -90,7 +93,9 @@ class ProductsController extends Controller {
 
     $product = Product::findOrFail($id);
 
-    return view('product.edit', compact('product'));
+    $makers = Maker::lists('name', 'id');
+
+    return view('product.edit', compact('product', 'makers'));
   }
 
   /**
@@ -101,7 +106,24 @@ class ProductsController extends Controller {
    */
   public function update($id, ProductRequest $request)
   {
-    return $request->all();
+    if($this->notOwner($id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@show', $id);
+    endif;
+
+    $product = Product::findOrFail($id);
+    $product->update($request->all());
+
+    $map = new MapDetail($request->all());
+
+    $direction = new Direction($request->all());
+
+    $product->direction->save([$direction]);
+
+    $product->direction->map()->save($map);
+
+    flash('El Producto ha sido actualizado con exito.');
+    return redirect()->action('ProductsController@show', $id);
   }
 
   /**

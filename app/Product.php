@@ -154,7 +154,7 @@ class Product extends Model {
   // --------------------------------------------------------------------------
   public function direction()
   {
-    return $this->morphMany('App\Direction', 'directionable');
+    return $this->morphOne('App\Direction', 'directionable');
   }
 
   public function files()
