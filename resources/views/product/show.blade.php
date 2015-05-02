@@ -10,8 +10,8 @@
     <div class="row">
       <div class="col-md-7">
         <h1>{{ $product->title }}</h1>
-        <p>
-          {{ $product->description }}
+        <p id="product-description">
+          {!! $product->description !!}
         </p>
       </div>
       <div class='slider-sync col-md-5'>
@@ -120,4 +120,7 @@
   </script>
   {{-- galeria de productos visitados relacionados. --}}
   <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
+  {{-- CKEDITOR --}}
+  <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
+  <script src="{!! asset('js/editor/products.js') !!}"></script>
 @stop

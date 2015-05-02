@@ -34,4 +34,7 @@
     src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API') }}">
   </script>
   <script src="{!! asset('js/maps/productMap.js') !!}"></script>
+  {{-- CKEDITOR --}}
+  <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
+  <script src="{!! asset('js/editor/products.js') !!}"></script>
 @stop
