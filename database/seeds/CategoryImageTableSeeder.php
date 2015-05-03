@@ -18,7 +18,7 @@ class CategoryImageTableSeeder extends Seeder {
 
     foreach($cats as $cat) :
 
-      // primero se elimina si existe
+      // primero se crea el directorio
       Storage::disk('public')->makeDirectory("category/{$cat->id}");
 
       // el nombre del archivo

@@ -4529,6 +4529,12 @@ div.404 {
 .slider-sync .slider-nav img {
   padding: 2%; }
 
+.product-media {
+  margin-bottom: 10px; }
+
+.carrusel-cats img {
+  margin-right: 10px; }
+
 /* Slider */
 .slick-slider {
   position: relative;

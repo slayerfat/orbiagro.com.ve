@@ -8,6 +8,8 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
+use App\Category;
+use App\SubCategory;
 use App\Visit;
 use App\MapDetail;
 use App\Direction;
@@ -34,8 +36,10 @@ class ProductsController extends Controller {
   public function index()
   {
     $products = Product::paginate(20);
+    $cats     = Category::all();
+    $subCats  = SubCategory::all();
 
-    return view('product.index', compact('products'));
+    return view('product.index', compact('products', 'cats', 'subCats'));
   }
 
   /**
