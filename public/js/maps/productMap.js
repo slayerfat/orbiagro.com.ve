@@ -71,7 +71,7 @@ $(document).ajaxStop(function () {
     initialize();
   }
   // se chequea que no sean exactamente 0 (por defecto los campos son 0 en la vista)
-  else if (lng !== 0 && lat)
+  else if (lng !== 0 && lat !== 0)
   {
     // se chequea adicionalmente el zoom
     if ($.isNumeric($('input[name="zoom"').val())) {

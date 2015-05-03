@@ -1,15 +1,31 @@
 @extends('master')
 
 @section('title')
-  - Index - Productos
+  - Productos - {{ $product->price_bs() }} - {{ $product->title }}
 @stop
 
 @section('content')
+
+  @if(Auth::user())
+    @if(Auth::user()->isOwnerOrAdmin($product->id))
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-2">
+            {!! link_to_action('ProductsController@edit', 'Editar', $product->id, ['class' => 'btn btn-default btn-block']) !!}
+          </div>
+        </div>
+      </div>
+    @endif
+  @endif
+
   @include('product.breadcrumbs', $product)
   <div class="container">
     <div class="row">
       <div class="col-md-7">
         <h1>{{ $product->title }}</h1>
+        <p>
+          Por: {!! link_to_action('MakersController@show', $product->maker->name.'.', $product->maker->id) !!}
+        </p>
         <p id="product-description">
           {!! $product->description !!}
         </p>

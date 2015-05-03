@@ -8,6 +8,7 @@ Route::resource('usuarios', 'UsersController');
 Route::resource('productos', 'ProductsController');
 Route::resource('categorias', 'CategoriesController');
 Route::resource('sub-categorias', 'SubCategoriesController');
+Route::resource('fabricantes', 'MakersController');
 
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar

@@ -123,4 +123,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return false;
   }
 
+  /**
+   * chequea si el id del foreign key del producto es igual al id del usuario
+   *
+   * @param int $id el foreign key del producto.
+   */
+  public function isOwner($id)
+  {
+    if ($this->attributes['id'] === $id) return true;
+    return false;
+  }
+
+  /**
+   * chequea si el id del foreign key del producto es igual al id del usuario
+   *
+   * @param int $id el foreign key del producto.
+   */
+  public function isOwnerOrAdmin($id)
+  {
+    if ($this->profile->description === 'Administrador') return true;
+    return $this->isOwner($id);
+  }
+
 }
