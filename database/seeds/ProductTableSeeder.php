@@ -27,7 +27,7 @@ class ProductTableSeeder extends Seeder {
 
     foreach($subcat as $subcategory):
       $this->command->info('en bucle de subcat: '.$subcategory->slug);
-      foreach(range(1,10) as $index) :
+      foreach(range(1, 10) as $index) :
         $maker   = Maker::orderByRaw('rand()')->first();
         $parish  = Parish::orderByRaw('rand()')->first();
         $title   = $faker->sentence(5);

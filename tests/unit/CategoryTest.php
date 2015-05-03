@@ -40,6 +40,11 @@ class CategoryTest extends \Codeception\TestCase\Test
     $this->assertNotEmpty($this->tester->sub_categories()->first()->products);
   }
 
+  public function testRelatedImageModel()
+  {
+    $this->assertNotEmpty($this->tester->image);
+  }
+
   public function testDescriptionFormat()
   {
     foreach($this->data as $value):

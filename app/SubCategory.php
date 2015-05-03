@@ -67,4 +67,12 @@ class SubCategory extends Model {
     return $this->belongsToMany('App\Maker');
   }
 
+  // --------------------------------------------------------------------------
+  // Polymorphic
+  // --------------------------------------------------------------------------
+  public function image()
+  {
+    return $this->morphOne('App\Image', 'imageable');
+  }
+
 }

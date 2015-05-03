@@ -18,8 +18,8 @@ class FeatureTableSeeder extends Seeder {
    */
   public function run()
   {
-    $faker  = Faker::create('es_ES');
-    $user   = User::where('name', 'tester')->first();
+    $faker = Faker::create('es_ES');
+    $user  = User::where('name', 'tester')->first();
 
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
 
@@ -31,7 +31,7 @@ class FeatureTableSeeder extends Seeder {
 
     foreach($products as $product):
 
-      // primero se elimina si existe
+      // primero se crea el directorio
       Storage::disk('public')->makeDirectory("products/{$product->id}");
 
       $this->command->info("Producto {$product->slug}");
