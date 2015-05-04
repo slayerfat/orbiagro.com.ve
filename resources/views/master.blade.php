@@ -9,6 +9,7 @@
     @yield('title')
   </title>
 
+  <link href="{!! asset('css/vendor/font-awesome.min.css') !!}" rel="stylesheet">
   <link href="/css/app.css" rel="stylesheet">
   {{-- css de una libreria en alguna vista --}}
   @yield('css')

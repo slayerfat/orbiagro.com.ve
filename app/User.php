@@ -32,19 +32,39 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
    */
   protected $hidden = ['password', 'remember_token'];
 
-  /**
-   * Relaciones
-   *
-   * Has One
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------
+  // Scopes
+  // --------------------------------------------------------------------------
+  public function scopeAdmins($query)
+  {
+    $perfil = Profile::where('description', 'Administrador')->first();
+    return $query->where('profile_id', $perfil->id);
+  }
+
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------
+  // Has one
+  // --------------------------------------------------------------------------
   public function person()
   {
     return $this->hasOne('App\Person');
   }
 
-  /**
-   * Has Many
-   */
+  public function confirmation()
+  {
+    return $this->hasOne('App\UserConfirmation');
+  }
+
+  // --------------------------------------------------------------------------
+  // Has Many
+  // --------------------------------------------------------------------------
   public function billings()
   {
     return $this->hasMany('App\Billing');
@@ -60,25 +80,25 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return $this->hasMany('App\Visit');
   }
 
-  /**
-   * Belongs To
-   */
+  // --------------------------------------------------------------------------
+  // Belongs To
+  // --------------------------------------------------------------------------
   public function profile()
   {
     return $this->belongsTo('App\Profile');
   }
 
-  /**
-   * Belongs To Many
-   */
+  // --------------------------------------------------------------------------
+  // Belongs To Many
+  // --------------------------------------------------------------------------
   public function purchases()
   {
    return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
   }
 
-  /**
-   * scopes y mutators
-   */
+  // --------------------------------------------------------------------------
+  // Funciones Publicas
+  // --------------------------------------------------------------------------
   public function isAdmin()
   {
     if ($this->profile->description === 'Administrador') return true;
@@ -95,6 +115,34 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   {
     if ($this->profile->description === 'Desactivado') return true;
     return false;
+  }
+
+  public function isVerified()
+  {
+   if ($this->profile->description !== 'Desactivado') return true;
+    return false;
+  }
+
+  /**
+   * chequea si el id del foreign key del producto es igual al id del usuario
+   *
+   * @param int $id el foreign key del producto.
+   */
+  public function isOwner($id)
+  {
+    if ($this->attributes['id'] === $id) return true;
+    return false;
+  }
+
+  /**
+   * chequea si el id del foreign key del producto es igual al id del usuario
+   *
+   * @param int $id el foreign key del producto.
+   */
+  public function isOwnerOrAdmin($id)
+  {
+    if ($this->profile->description === 'Administrador') return true;
+    return $this->isOwner($id);
   }
 
 }

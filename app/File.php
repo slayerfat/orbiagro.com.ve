@@ -42,7 +42,7 @@ class File extends Model {
   // --------------------------------------------------------------------------
   private function file_exists($path)
   {
-    if(Storage::exists($path)):
+    if(Storage::disk('public')->exists($path)):
       return true;
     elseif(Storage::disk('test')->exists($path)):
       return true;

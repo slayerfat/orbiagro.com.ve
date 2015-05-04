@@ -33,13 +33,13 @@ class MakerTableSeeder extends Seeder {
 
         // se empieza creado el directorio relacionado con el producto
         // primero se elimina si existe
-        Storage::deleteDirectory("makers/{$maker->id}");
-        Storage::makeDirectory("makers/{$maker->id}");
+        Storage::disk('public')->deleteDirectory("makers/{$maker->id}");
+        Storage::disk('public')->makeDirectory("makers/{$maker->id}");
 
         // el nombre del archivo
         $name = date('Ymdhmmss-').str_random(20);
         // se copia el archivo
-        Storage::copy('1500x1500.gif', "makers/{$maker->id}/{$name}.gif");
+        Storage::disk('public')->copy('1500x1500.gif', "makers/{$maker->id}/{$name}.gif");
         $this->command->info("Creado makers/{$maker->id}/{$name}.gif");
 
         // el modelo

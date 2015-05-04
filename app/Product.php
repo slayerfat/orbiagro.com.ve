@@ -10,6 +10,7 @@ class Product extends Model {
   protected $fillable = [
     'user_id',
     'maker_id',
+    'sub_category_id',
     'title',
     'description',
     'price',
@@ -70,9 +71,31 @@ class Product extends Model {
     return null;
   }
 
+  /**
+   * regresa los eventos paginados
+   * @return object LengthAwarePaginator
+   */
+  public function getPaginateAttribute()
+  {
+    return $this->get()->paginate(5);
+  }
+
+  // --------------------------------------------------------------------------
+  // Scopes
+  // --------------------------------------------------------------------------
+  public function scopeRandom($query)
+  {
+    if (env('APP_ENV') == 'testing') {
+      $query->orderByRaw('RANDOM()');
+    }else{
+      $query->orderByRaw('RAND()');
+    }
+  }
+
   // --------------------------------------------------------------------------
   // Relaciones
   // --------------------------------------------------------------------------
+
   // --------------------------------------------------------------------------
   // Belongs To
   // --------------------------------------------------------------------------
@@ -84,6 +107,11 @@ class Product extends Model {
   public function maker()
   {
     return $this->belongsTo('App\Maker');
+  }
+
+  public function sub_category()
+  {
+    return $this->belongsTo('App\SubCategory');
   }
 
   // --------------------------------------------------------------------------
@@ -120,11 +148,6 @@ class Product extends Model {
     return $this->belongsToMany('App\Promotion');
   }
 
-  public function sub_categories()
-  {
-    return $this->belongsToMany('App\SubCategory');
-  }
-
   public function purchases()
   {
    return $this->belongsToMany('App\User')->withPivot('quantity')->withTimestamps();
@@ -143,7 +166,7 @@ class Product extends Model {
   // --------------------------------------------------------------------------
   public function direction()
   {
-    return $this->morphMany('App\Direction', 'directionable');
+    return $this->morphOne('App\Direction', 'directionable');
   }
 
   public function files()

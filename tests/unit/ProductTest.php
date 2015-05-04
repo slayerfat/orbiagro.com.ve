@@ -36,13 +36,13 @@ class ProductTest extends \Codeception\TestCase\Test
 
   public function testSubCategoriesCollection()
   {
-    $this->assertNotEmpty($this->tester->sub_categories);
-    $this->assertNotEmpty($this->tester->sub_categories->first());
+    $this->assertNotEmpty($this->tester->sub_category);
+    $this->assertNotEmpty($this->tester->sub_category);
   }
 
   public function testCategoryModel()
   {
-    $this->assertNotEmpty($this->tester->sub_categories->first()->category);
+    $this->assertNotEmpty($this->tester->sub_category);
   }
 
   public function testPurchasesCollection()

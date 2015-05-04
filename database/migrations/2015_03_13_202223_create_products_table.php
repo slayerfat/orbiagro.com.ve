@@ -19,6 +19,8 @@ class CreateProductsTable extends Migration {
       $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
       $table->integer('maker_id')->unsigned();
       $table->foreign('maker_id')->references('id')->on('makers');
+      $table->integer('sub_category_id')->unsigned();
+      $table->foreign('sub_category_id')->references('id')->on('sub_categories');
       $table->string('title');
       $table->text('description');
       $table->double('price', 12, 2)->unsigned();

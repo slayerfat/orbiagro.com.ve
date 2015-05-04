@@ -39,6 +39,11 @@ class SubCategoryTest extends \Codeception\TestCase\Test
     $this->assertNotEmpty($this->tester->category);
   }
 
+  public function testRelatedImageModel()
+  {
+    $this->assertNotEmpty($this->tester->image);
+  }
+
   public function testDescriptionFormat()
   {
     $this->tester->description = null;

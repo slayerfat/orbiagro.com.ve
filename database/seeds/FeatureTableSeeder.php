@@ -18,14 +18,22 @@ class FeatureTableSeeder extends Seeder {
    */
   public function run()
   {
-    $faker  = Faker::create('es_ES');
-    $user   = User::where('name', 'tester')->first();
+    $faker = Faker::create('es_ES');
+    $user  = User::where('name', 'tester')->first();
 
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
 
     $products = Product::all();
 
+    // se empieza creado el directorio relacionado con el producto
+    // primero se elimina si existe
+    Storage::disk('public')->deleteDirectory("products");
+
     foreach($products as $product):
+
+      // primero se crea el directorio
+      Storage::disk('public')->makeDirectory("products/{$product->id}");
+
       $this->command->info("Producto {$product->slug}");
       foreach(range(1, 5) as $index) :
         $this->command->info("feature {$index}");
@@ -37,15 +45,10 @@ class FeatureTableSeeder extends Seeder {
 
         $product->features()->save($feature);
 
-        // se empieza creado el directorio relacionado con el producto
-        // primero se elimina si existe
-        Storage::deleteDirectory("products/{$product->id}");
-        Storage::makeDirectory("products/{$product->id}");
-
         // el nombre del archivo
         $name = date('Ymdhmmss-').str_random(20);
         // se copia el archivo
-        Storage::copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
+        Storage::disk('public')->copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
         $this->command->info("Creado products/{$product->id}/{$name}.gif");
 
         // el modelo
@@ -59,7 +62,7 @@ class FeatureTableSeeder extends Seeder {
 
         // el archivo asociado
         $name = date('Ymdhmmss-').str_random(20);
-        Storage::copy('file.pdf', "products/{$product->id}/{$name}.pdf");
+        Storage::disk('public')->copy('file.pdf', "products/{$product->id}/{$name}.pdf");
         $this->command->info("Creado products/{$product->id}/{$name}.pdf");
 
         // el modelo
@@ -71,7 +74,7 @@ class FeatureTableSeeder extends Seeder {
         $feature->files()->save($file);
       endforeach;
     endforeach;
-    $this->command->info('Creacion de productos completado.');
+    $this->command->info('Creacion de features completado.');
   }
 
 }
