@@ -1,3 +1,4 @@
+@if($product->characteristics)
 <table class="table table-striped">
   <tbody>
     <tr>
@@ -42,3 +43,4 @@
     </tr>
   </tbody>
 </table>
+@endif

@@ -49,11 +49,13 @@ class ProductsController extends Controller {
    */
   public function create()
   {
-    $product = new Product;
+    $product   = new Product;
+    $makers    = Maker::lists('name', 'id');
+    $catModels = Category::with('sub_categories')->get();
 
-    $makers  = Maker::lists('name', 'id');
+    $cats = $this->toAsocArray($catModels);
 
-    return view('product.create', compact('product', 'makers'));
+    return view('product.create', compact('product', 'makers', 'cats'));
   }
 
   /**
@@ -63,7 +65,23 @@ class ProductsController extends Controller {
    */
   public function store(ProductRequest $request)
   {
-    return $request->all();
+    $id      = Auth::id();
+    $data    = $request->all();
+    $product = new Product($data);
+    $dir     = new Direction($data);
+    $map     = new MapDetail($data);
+
+    $product->created_by = $id;
+    $product->updated_by = $id;
+    $dir->updated_by = $id;
+    $dir->created_by = $id;
+
+    Auth::user()->products()->save($product);
+    $product->direction()->save($dir);
+    $product->direction->map()->save($map);
+
+    flash('El Producto ha sido creado con exito.');
+    return redirect()->action('ProductsController@show', $product->id);
   }
 
   /**
@@ -291,6 +309,29 @@ class ProductsController extends Controller {
       $parsed[$exploted[1]] = $value;
     }
     return $parsed;
+  }
+
+  /**
+   * devuelve un array asociativo con los elementos
+   * y sus subelementos.
+   *
+   * @todo abstraer a un metodo generico.
+   *
+   * @param IlluminateDatabaseEloquentCollection $models
+   */
+  private function toAsocArray(\Illuminate\Database\Eloquent\Collection $models)
+  {
+    $cats = [];
+
+    if(!$models) return null;
+
+    foreach($models as $cat) :
+      foreach($cat->sub_categories as $subCat) :
+        $cats[$cat->description][$subCat->id] = $subCat->description;
+      endforeach;
+    endforeach;
+
+    return $cats;
   }
 
 }

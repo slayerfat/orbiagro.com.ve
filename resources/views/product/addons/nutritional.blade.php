@@ -1,3 +1,4 @@
+@if($product->nutritional)
 <table class="table table-striped">
   <tbody>
     <tr>
@@ -10,3 +11,4 @@
     </tr>
   </tbody>
 </table>
+@endif

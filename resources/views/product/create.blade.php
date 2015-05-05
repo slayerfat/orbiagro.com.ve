@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($product, ['action' => 'ProductsController@store', 'class' => 'form-horizontal']) !!}
-              @include('product.forms.create', ['textoBotonSubmit' => 'Añadir nuevo Evento'])
+              @include('product.forms.create', ['textoBotonSubmit' => 'Añadir nuevo Producto'])
             {!! Form::close() !!}
           </div>
         </div>
