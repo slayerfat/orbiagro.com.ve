@@ -49,7 +49,11 @@ class ProductsController extends Controller {
    */
   public function create()
   {
-    //
+    $product = new Product;
+
+    $makers  = Maker::lists('name', 'id');
+
+    return view('product.create', compact('product', 'makers'));
   }
 
   /**
@@ -57,9 +61,9 @@ class ProductsController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(ProductRequest $request)
   {
-    //
+    return $request->all();
   }
 
   /**

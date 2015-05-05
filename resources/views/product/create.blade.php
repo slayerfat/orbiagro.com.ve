@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title')
-  - Actualizar - Productos - {{ $product->title }}
+  - Crear - Productos
 @stop
 
 @section('content')
@@ -9,15 +9,11 @@
     <div class="row">
       <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default">
-          <div class="panel-heading">Editar {{ $product->title }}</div>
+          <div class="panel-heading">Crear nuevo Producto</div>
           <div class="panel-body">
             @include('errors.bag')
-            {!! Form::model($product, [
-                  'method' => 'PATCH',
-                  'action' => ['ProductsController@update', $product->id],
-                  'class'  => 'form-horizontal'
-                ]) !!}
-              @include('product.forms.edit', ['textoBotonSubmit' => 'Editar Producto'])
+            {!! Form::model($product, ['action' => 'ProductsController@store', 'class' => 'form-horizontal']) !!}
+              @include('product.forms.create', ['textoBotonSubmit' => 'Añadir nuevo Evento'])
             {!! Form::close() !!}
           </div>
         </div>
@@ -28,7 +24,7 @@
 
 @section('js')
   <!-- ajax de edo/mun/par -->
-  <script src="{!! asset('js/ajax/setDirecciones.js') !!}"></script>
+  <script src="{!! asset('js/ajax/getDirecciones.js') !!}"></script>
   <!-- google maps -->
   <script type="text/javascript"
     src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API') }}">

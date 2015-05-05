@@ -23,6 +23,11 @@ class ProductRequest extends Request {
   {
     return [
       'title' => 'required|string',
+      'description' => 'required|string',
+      'price' => 'required|numeric',
+      'quantity' => 'required|numeric',
+      'parish_id' => 'required|numeric',
+      'maker_id' => 'required|numeric',
       'latitude' => 'numeric',
       'longitude' => 'numeric',
     ];
