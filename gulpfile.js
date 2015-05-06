@@ -166,8 +166,15 @@ elixir(function(mix) {
         'public/js/vendor/ckeditor/plugins')
       .copy('vendor/bower_components/ckeditor/lang/es.js',
         'public/js/vendor/ckeditor/lang/es.js')
+      .copy('vendor/bower_components/ckeditor/lang/en.js',
+        'public/js/vendor/ckeditor/lang/en.js')
       .copy('vendor/bower_components/ckeditor/contents.css',
         'public/js/vendor/ckeditor/contents.css')
+      // image upload/crop
+      .copy('vendor/bower_components/picEdit/dist/css/picedit.min.css',
+        'public/css/vendor/picEdit/picedit.min.css')
+      .copy('vendor/bower_components/picEdit/dist/js/picedit.min.js',
+        'public/js/vendor/picEdit/picedit.min.js')
       // migration/tests files
       .copy('storage/1500x1500.gif', 'public/1500x1500.gif')
       .copy('storage/file.pdf', 'public/file.pdf')

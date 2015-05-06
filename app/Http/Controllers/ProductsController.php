@@ -65,6 +65,7 @@ class ProductsController extends Controller {
    */
   public function store(ProductRequest $request)
   {
+    dd($request->all());
     $id      = Auth::id();
     $data    = $request->all();
     $product = new Product($data);

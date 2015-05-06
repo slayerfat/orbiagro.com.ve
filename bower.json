@@ -23,6 +23,7 @@
     "formatter": "~0.1.5",
     "numeraljs": "~1.5.3",
     "ckeditor": "~4.4.7",
-    "slick.js": "~1.4.1"
+    "slick.js": "~1.4.1",
+    "picEdit": "https://github.com/andyvr/picEdit.git"
   }
 }
