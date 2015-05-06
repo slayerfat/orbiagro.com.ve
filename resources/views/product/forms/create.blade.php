@@ -12,6 +12,8 @@
 
 @yield('product-price-quantity')
 
+@yield('product-images')
+
 @yield('product-direction')
 
 @yield('product-map')
