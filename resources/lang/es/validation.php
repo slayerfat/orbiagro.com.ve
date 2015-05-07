@@ -135,6 +135,8 @@ return [
     'last_surname'     => 'Segundo Apellido',
     'price'            => 'Precio',
     'quantity'         => 'Cantidad',
+    'images'           => 'Imagenes',
+    'image'            => 'Imagen',
   ],
 
 ];

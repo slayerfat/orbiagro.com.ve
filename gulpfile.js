@@ -171,10 +171,10 @@ elixir(function(mix) {
       .copy('vendor/bower_components/ckeditor/contents.css',
         'public/js/vendor/ckeditor/contents.css')
       // image upload/crop
-      .copy('vendor/bower_components/picEdit/dist/css/picedit.min.css',
-        'public/css/vendor/picEdit/picedit.min.css')
-      .copy('vendor/bower_components/picEdit/dist/js/picedit.min.js',
-        'public/js/vendor/picEdit/picedit.min.js')
+      .copy('vendor/bower_components/cropper/dist/cropper.min.js',
+        'public/js/vendor/cropper.min.js')
+      .copy('vendor/bower_components/cropper/dist/cropper.min.css',
+        'public/css/vendor/cropper.min.css')
       // migration/tests files
       .copy('storage/1500x1500.gif', 'public/1500x1500.gif')
       .copy('storage/file.pdf', 'public/file.pdf')

@@ -5,7 +5,7 @@
 @stop
 
 @section('css')
-  <link rel="stylesheet" href="{!! asset('css/vendor/picEdit/picedit.min.css') !!}" charset="utf-8">
+  <link rel="stylesheet" href="{!! asset('css/vendor/cropper.min.css') !!}" charset="utf-8">
 @stop
 @section('content')
   <div class="container">
@@ -41,10 +41,5 @@
   <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
   <script src="{!! asset('js/editor/products.js') !!}"></script>
   {{-- image upload / crop --}}
-  <script src="{!! asset('js/vendor/picEdit/picedit.min.js') !!}"></script>
-  <script type="text/javascript">
-    $(function() {
-      $('#images').picEdit();
-    });
-  </script>
+  <script src="{!! asset('js/vendor/cropper.min.js') !!}"></script>
 @stop
