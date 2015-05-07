@@ -132,7 +132,12 @@ class ProductsController extends Controller {
 
     $makers = Maker::lists('name', 'id');
 
-    return view('product.edit', compact('product', 'makers'));
+    $catModels = Category::with('sub_categories')->get();
+
+    $cats = $this->toAsocArray($catModels);
+
+
+    return view('product.edit', compact('product', 'makers', 'cats'));
   }
 
   /**
@@ -148,16 +153,22 @@ class ProductsController extends Controller {
       return redirect()->action('ProductsController@show', $id);
     endif;
 
-    $product = Product::findOrFail($id);
+    $product = Product::with('direction')->findOrFail($id);
     $product->update($request->all());
 
-    $map = new MapDetail($request->all());
+    // modificado porque el modelo no queria
+    // quedarse guardado correctamente en BD.
+    $direction = $product->direction;
+    $direction->parish_id = $request->input('parish_id');
+    $direction->details = $request->input('details');
+    $direction->updated_by = Auth::id();
+    $direction->save();
 
-    $direction = new Direction($request->all());
-
-    $product->direction->save([$direction]);
-
-    $product->direction->map()->save($map);
+    $map = $direction->map;
+    $map->latitude = $request->input('latitude');
+    $map->longitude = $request->input('longitude');
+    $map->zoom = $request->input('zoom');
+    $map->save();
 
     flash('El Producto ha sido actualizado con exito.');
     return redirect()->action('ProductsController@show', $id);
@@ -389,6 +400,7 @@ class ProductsController extends Controller {
     $image = new Image($array);
     $image->created_by = Auth::id();
     $image->updated_by = Auth::id();
+    $image->alt = $product->title;
     return $product->images()->save($image);
   }
 

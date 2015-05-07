@@ -31,7 +31,8 @@ class ProductRequest extends Request {
       'sub_category_id' => 'required|numeric',
       'latitude'        => 'numeric',
       'longitude'       => 'numeric',
-      'images'          => 'required|array|between:1,5',
+      'images'          => 'array|between:1,5',
+      'details'         => 'min:5',
     ];
   }
 
