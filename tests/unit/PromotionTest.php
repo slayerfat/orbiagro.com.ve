@@ -30,6 +30,11 @@ class PromotionTest extends \Codeception\TestCase\Test
     $this->assertNotEmpty($this->tester->products);
   }
 
+  public function testPromoTypeModel()
+  {
+    $this->assertNotEmpty($this->tester->type);
+  }
+
   public function testImageModel()
   {
     $this->assertNotEmpty($this->tester->images);

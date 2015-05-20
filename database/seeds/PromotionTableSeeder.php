@@ -5,6 +5,7 @@ use App\User;
 use App\Product;
 use App\Image;
 use App\Promotion;
+use App\PromoType;
 use Carbon\Carbon;
 
 class PromotionTableSeeder extends Seeder {
@@ -16,13 +17,15 @@ class PromotionTableSeeder extends Seeder {
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
 
     $product   = Product::first();
+    $promoType = PromoType::where('description', 'primavera')->first();
     $promotion = Promotion::create([
-      'title'      => 'Lleva 2, paga 3!',
-      'slug'       => str_slug('Lleva 2, paga 3!'),
-      'percentage' => 10,
-      'static'     => 100,
-      'begins'     => Carbon::now()->subYears(4)->toDateString(),
-      'ends'       => Carbon::now()->addYears(1)->toDateString(),
+      'title'         => 'Lleva 2, paga 3!',
+      'slug'          => str_slug('Lleva 2, paga 3!'),
+      'promo_type_id' => $promoType->id,
+      'percentage'    => 10,
+      'static'        => 100,
+      'begins'        => Carbon::now()->subYears(4)->toDateString(),
+      'ends'          => Carbon::now()->addYears(1)->toDateString(),
     ]);
 
     // se empieza creado el directorio relacionado con la promo

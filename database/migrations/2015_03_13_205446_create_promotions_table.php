@@ -15,6 +15,8 @@ class CreatePromotionsTable extends Migration {
     Schema::create('promotions', function(Blueprint $table)
     {
       $table->increments('id');
+      $table->integer('promo_type_id')->unsigned();
+      $table->foreign('promo_type_id')->references('id')->on('promo_types');
       $table->string('title');
       $table->string('slug');
       $table->integer('percentage')->unsigned()->nullable();

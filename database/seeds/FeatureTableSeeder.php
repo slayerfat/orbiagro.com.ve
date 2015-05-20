@@ -35,7 +35,7 @@ class FeatureTableSeeder extends Seeder {
       Storage::disk('public')->makeDirectory("products/{$product->id}");
 
       $this->command->info("Producto {$product->slug}");
-      foreach(range(1, 5) as $index) :
+      foreach(range(1, 2) as $index) :
         $this->command->info("feature {$index}");
         $feature              = new App\Feature;
         $feature->title       = $faker->sentence(3);
