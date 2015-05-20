@@ -96,6 +96,14 @@ class Promotion extends Model {
   }
 
   // --------------------------------------------------------------------------
+  // Polimorfica
+  // --------------------------------------------------------------------------
+  public function images()
+  {
+    return $this->morphMany('App\Image', 'imageable');
+  }
+
+  // --------------------------------------------------------------------------
   // Funciones publicas
   // --------------------------------------------------------------------------
 
@@ -118,7 +126,7 @@ class Promotion extends Model {
   }
 
   /**
-   * Devuelve el descuento en numero ej: 100 => 10, 10 => 0.1.
+   * Devuelve el descuento en numero ej: 100 => 1, 10 => 0.1.
    */
   public function percentage_raw()
   {
