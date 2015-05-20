@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\User;
 use App\Product;
+use App\Image;
 use App\Promotion;
 use Carbon\Carbon;
 
@@ -9,6 +11,10 @@ class PromotionTableSeeder extends Seeder {
 
   public function run()
   {
+    $user  = User::where('name', 'tester')->first();
+
+    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+
     $product   = Product::first();
     $promotion = Promotion::create([
       'title'      => 'Lleva 2, paga 3!',
@@ -31,6 +37,15 @@ class PromotionTableSeeder extends Seeder {
     // se copia el archivo
     Storage::disk('public')->copy('1500x1500.gif', "promos/{$promotion->id}/{$name}.gif");
     $this->command->info("Creado promos/{$promotion->id}/{$name}.gif");
+
+    // el modelo
+    $image             = new Image;
+    $image->path       = "promos/{$promotion->id}/{$name}.gif";
+    $image->mime       = 'image/gif';
+    $image->alt        = $promotion->title;
+    $image->created_by = $user->id;
+    $image->updated_by = $user->id;
+    $promotion->images()->save($image);
 
     $product->promotions()->attach($promotion);
   }
