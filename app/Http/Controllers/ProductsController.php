@@ -9,6 +9,7 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mamarrachismo\VisitedProductsFinder;
+use App\Mamarrachismo\Upload;
 use App\Product;
 use App\Image;
 use App\File;
@@ -67,14 +68,15 @@ class ProductsController extends Controller {
    *
    * @return Response
    */
-  public function store(ProductRequest $request)
+  public function store(ProductRequest $request, Upload $upload)
   {
     // se crean los modelos
-    $id      = Auth::id();
-    $data    = $request->all();
-    $product = new Product($data);
-    $dir     = new Direction($data);
-    $map     = new MapDetail($data);
+    $id         = Auth::id();
+    $upload->userId = $id;
+    $data       = $request->all();
+    $product    = new Product($data);
+    $dir        = new Direction($data);
+    $map        = new MapDetail($data);
 
     // info adicional
     $product->created_by = $id;
@@ -89,7 +91,9 @@ class ProductsController extends Controller {
 
     // se iteran las imagenes y se guardan los modelos
     if ($request->hasFile('images')) :
-      $this->createImages($request->file('images'), $product);
+      $upload->createProductImages($request->file('images'), $product);
+    else:
+      $upload->createDefaultProductImage($product);
     endif;
 
     flash('El Producto ha sido creado con exito.');
@@ -223,87 +227,6 @@ class ProductsController extends Controller {
     endforeach;
 
     return $cats;
-  }
-
-  /**
-   * crea la(s) imagen(es) relacionadas con algun producto.
-   *
-   * @param array   $array   El array con los objetos UploadedFiles.
-   * @param Product $product El modelo de producto.
-   *
-   * @return boolean
-   */
-  private function createImages(array $array, Product $product)
-  {
-    foreach($array as $file) :
-      // reglas para el validador.
-      $rules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
-
-      // el validador
-      $validator = \Validator::make(['image' => $file], $rules);
-      if ($validator->fails()) {
-        // regresa el validador para redirect.
-        return redirect()->back()->withInput()->withErrors($validator);
-      }
-
-      // se crea la imagen en el HD.
-      if (!$result = $this->createFile($file, $product)) return false;
-
-      // se crea el modelo.
-      $this->createImageModel($result, $product);
-    endforeach;
-
-    return true;
-  }
-
-  /**
-   * crea el modelo nuevo de alguna imagen relacionada con algun producto.
-   *
-   * @param array   $array   el array que contiene los datos para la imagen.
-   * @param Product $product el modelo de producto.
-   *
-   * @return boolean
-   */
-  private function createImageModel(array $array, Product $product)
-  {
-    $image = new Image($array);
-    $image->created_by = Auth::id();
-    $image->updated_by = Auth::id();
-    $image->alt = $product->title;
-    return $product->images()->save($image);
-  }
-
-  /**
-   * usado para crear en el disco duro el archivo relacionado a un producto.
-   *
-   * @param  SymfonyComponentHttpFoundationFileUploadedFile $model
-   * @param  Product $product el modelo de producto.
-   * @return array   $data    la carpeta, nombre y extension del archivo guardado.
-   */
-  private function createFile(\Symfony\Component\HttpFoundation\File\UploadedFile $model, Product $product)
-  {
-    // el nombre del archivo
-    $name = date('Ymdhmmss-').str_random(20);
-
-    $ext = $model->getClientOriginalExtension();
-
-    // i have no idea what im doing.
-    try
-    {
-      $model->move("products/{$product->id}", "{$name}.{$ext}");
-    }
-    catch(\FileException $e)
-    {
-      return false;
-    }
-
-    // la data necesaria para crear el modelo de imagen.
-    $data = [
-      'path' => "products/{$product->id}/{$name}.{$ext}",
-      'mime' => $model->getClientMimeType()
-    ];
-
-    return $data;
   }
 
 }
