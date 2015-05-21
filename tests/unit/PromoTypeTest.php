@@ -10,7 +10,7 @@ class PromoTypeTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-      $this->tester = PromoType::first();
+      $this->tester = PromoType::where('description', 'primavera')->first();
     }
 
     protected function _after()

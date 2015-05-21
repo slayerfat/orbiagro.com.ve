@@ -13,7 +13,7 @@ class PromoType extends Model {
   // --------------------------------------------------------------------------
   public function promotions()
   {
-    return $this->HasMany('App\Promotion');
+    return $this->hasMany('App\Promotion');
   }
 
 }

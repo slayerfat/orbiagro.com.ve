@@ -104,7 +104,7 @@ class Promotion extends Model {
   // --------------------------------------------------------------------------
   public function type()
   {
-    return $this->belongsTo('App\PromoType');
+    return $this->belongsTo('App\PromoType', 'promo_type_id', 'id');
   }
 
   // --------------------------------------------------------------------------
