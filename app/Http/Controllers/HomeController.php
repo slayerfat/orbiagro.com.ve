@@ -1,6 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 use App\SubCategory;
+use App\Promotion;
+use App\PromoType;
+use App\Mamarrachismo\VisitedProductsFinder;
 
 class HomeController extends Controller {
 
@@ -9,11 +12,20 @@ class HomeController extends Controller {
    *
    * @return Response
    */
-  public function index()
+  public function index(VisitedProductsFinder $visitedFinder)
   {
     $sub_category = SubCategory::has('products')->random()->first();
 
-    return view('home.index', compact('sub_category'));
+    // TODO: mejorar logica de seleccion de tipos de promociones
+    // TODO: abstraer a una clase o incluirlo dentro de la clase Promotion
+    // selecciona los tipos especificos
+    $typesId = PromoType::whereIn('description', ['primavera', 'verano', 'otoño', 'invierno'])->lists('id');
+    // selecciona las promociones existentes segun el tipo ya seleccionado
+    $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
+
+    $visitedProducts = $visitedFinder->getVisitedProducts();
+
+    return view('home.index', compact('sub_category', 'promotions', 'visitedProducts'));
   }
 
   public function unverified()

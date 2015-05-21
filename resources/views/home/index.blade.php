@@ -64,6 +64,8 @@
 
   @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Productos en '.$sub_category->description])
 
+  @include('visit.addons.relatedProducts')
+
 @stop
 
 @section('js')
@@ -82,4 +84,7 @@
       });
     });
   </script>
+
+  {{-- galeria de productos visitados relacionados. --}}
+  <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
 @stop
