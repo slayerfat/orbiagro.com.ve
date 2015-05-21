@@ -6,6 +6,14 @@ Route::get('/', 'HomeController@index');
 
 Route::resource('usuarios', 'UsersController');
 Route::resource('productos', 'ProductsController');
+// features de producto
+Route::group(['prefix' => 'producto/feature'], function(){
+  Route::get('/create', 'FeaturesController@create');
+  Route::post('/', 'FeaturesController@store');
+  Route::get('/{productos}/edit', 'FeaturesController@edit');
+  Route::put('/{productos}', 'FeaturesController@update');
+  Route::delete('/{productos}', 'FeaturesController@destroy');
+});
 Route::resource('categorias', 'CategoriesController');
 Route::resource('sub-categorias', 'SubCategoriesController');
 Route::resource('fabricantes', 'MakersController');
