@@ -1,4 +1,4 @@
-@if ($product->features)
+@unless ($product->features->isEmpty())
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     @foreach ($product->features as $feature)
       <div class="panel panel-default">
@@ -33,4 +33,12 @@
       </div>
     @endforeach
   </div>
+@else
+  @if(Auth::user())
+    @if(Auth::user()->isOwnerOrAdmin($product->id))
+      {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
+    @endif
+  @else
+    Sin información detallada
+  @endif
 @endif
