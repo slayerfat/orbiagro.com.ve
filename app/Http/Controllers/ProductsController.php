@@ -22,6 +22,7 @@ use App\Maker;
 
 class ProductsController extends Controller {
 
+  public $user, $userId;
 
   /**
    * Create a new controller instance.
@@ -31,6 +32,8 @@ class ProductsController extends Controller {
   public function __construct()
   {
     $this->middleware('auth', ['except' => ['index', 'show']]);
+    $this->user   = Auth::user();
+    $this->userId = Auth::id();
   }
 
   /**
@@ -52,9 +55,8 @@ class ProductsController extends Controller {
    *
    * @return Response
    */
-  public function create()
+  public function create(Product $product)
   {
-    $product   = new Product;
     $makers    = Maker::lists('name', 'id');
     $catModels = Category::with('sub_categories')->get();
 
@@ -71,21 +73,20 @@ class ProductsController extends Controller {
   public function store(ProductRequest $request, Upload $upload)
   {
     // se crean los modelos
-    $id         = Auth::id();
-    $upload->userId = $id;
+    $upload->userId = $this->userId;
     $data       = $request->all();
     $product    = new Product($data);
     $dir        = new Direction($data);
     $map        = new MapDetail($data);
 
     // info adicional
-    $product->created_by = $id;
-    $product->updated_by = $id;
-    $dir->updated_by = $id;
-    $dir->created_by = $id;
+    $product->created_by = $this->userId;
+    $product->updated_by = $this->userId;
+    $dir->updated_by = $this->userId;
+    $dir->created_by = $this->userId;
 
     // se guardan los modelos
-    Auth::user()->products()->save($product);
+    $this->user->products()->save($product);
     $product->direction()->save($dir);
     $product->direction->map()->save($map);
 
@@ -166,10 +167,14 @@ class ProductsController extends Controller {
     $direction = $product->direction;
     $direction->parish_id = $request->input('parish_id');
     $direction->details = $request->input('details');
-    $direction->updated_by = Auth::id();
+    $direction->updated_by = $this->userId;
     $direction->save();
 
-    $map = $direction->map;
+    if(!$map = $direction->map)
+    {
+      $map = new MapDetail;
+      $map->direction_id = $direction->id;
+    }
     $map->latitude = $request->input('latitude');
     $map->longitude = $request->input('longitude');
     $map->zoom = $request->input('zoom');
@@ -200,8 +205,8 @@ class ProductsController extends Controller {
    */
   private function notOwner($id)
   {
-    if(Auth::user()->id === $id) return false;
-    if(Auth::user()->isAdmin()) return false;
+    if($this->userId === $id) return false;
+    if($this->user->isAdmin()) return false;
 
     return true;
   }
