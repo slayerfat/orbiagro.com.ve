@@ -2,6 +2,7 @@
 
 use Auth;
 use App\Http\Requests;
+use App\Http\Requests\MechanicalInfoRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -62,7 +63,7 @@ class MechanicalInfoController extends Controller {
    *
    * @return Response
    */
-  public function store($id, Request $request)
+  public function store($id, MechanicalInfoRequest $request)
   {
     $product = Product::findOrFail($id)->load('mechanical');
 
@@ -71,10 +72,19 @@ class MechanicalInfoController extends Controller {
       return redirect()->action('ProductsController@show', $id);
     endif;
 
-    if ($product->mechanical) {
+    if ($product->mechanical) :
       flash()->error('Este Producto ya posee informacion mecanica, por favor actualice el existente.');
       return redirect()->action('ProductsController@show', $id);
-    }
+    endif;
+
+    $this->mech = new MechanicalInfo($request->all());
+    $this->mech->created_by = $this->userId;
+    $this->mech->updated_by = $this->userId;
+
+    $product->mechanical()->save($this->mech);
+
+    flash('Información Mecanica creada exitosamente.');
+    return redirect()->action('ProductsController@show', $id);
   }
 
   /**
@@ -83,14 +93,16 @@ class MechanicalInfoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function edit($id)
+  public function edit($id, MechanicalInfoRequest $request)
   {
-    $mech = MechanicalInfo::findOrFail($id)->load('product');
+    $this->mech = MechanicalInfo::findOrFail($id)->load('product');
 
-    if($this->modelValidator->notOwner($mech->product->user->id)) :
+    if($this->modelValidator->notOwner($this->mech->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $this->mech->product->id);
     endif;
+
+    return view('mechanicalInfo.edit')->with(['mech' => $this->mech]);
   }
 
   /**
@@ -99,14 +111,20 @@ class MechanicalInfoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, MechanicalInfoRequest $request)
   {
-    $mech = MechanicalInfo::findOrFail($id)->load('product');
+    $this->mech = MechanicalInfo::findOrFail($id)->load('product');
 
-    if($this->modelValidator->notOwner($mech->product->user->id)) :
+    if($this->modelValidator->notOwner($this->mech->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $this->mech->product->id);
     endif;
+
+    $this->mech->updated_by = $this->userId;
+    $this->mech->update($request->all());
+
+    flash('Información Mecanica Actualizada exitosamente.');
+    return redirect()->action('ProductsController@show', $this->mech->product->id);
   }
 
   /**

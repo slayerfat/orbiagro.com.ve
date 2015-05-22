@@ -170,6 +170,7 @@ class ProductsController extends Controller {
     endif;
 
     $product = Product::with('direction')->findOrFail($id);
+    $product->updated_by = $this->userId;
     $product->update($request->all());
 
     // modificado porque el modelo no queria

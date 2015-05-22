@@ -137,6 +137,7 @@ class FeaturesController extends Controller {
       return redirect()->action('ProductsController@show', $id);
     endif;
 
+    $this->feature->updated_by = $this->userId;
     $this->feature->update($request->all());
     flash('El feature ha sido actualizado correctamente.');
     // para guardar la imagen y modelo
