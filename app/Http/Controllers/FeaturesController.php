@@ -1,9 +1,14 @@
 <?php namespace App\Http\Controllers;
 
+use Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+
+use App\Product;
+
+use App\Mamarrachismo\ModelValidation;
 
 class FeaturesController extends Controller {
 
@@ -15,6 +20,8 @@ class FeaturesController extends Controller {
   public function __construct()
   {
     $this->middleware('auth');
+    $this->user   = Auth::user();
+    $this->userId = Auth::id();
   }
 
   /**
@@ -24,7 +31,16 @@ class FeaturesController extends Controller {
    */
   public function create($id)
   {
-    //
+    $product = Product::findOrFail($id)->load('features');
+
+    $modelValidator = new ModelValidation($this->userId, $this->user);
+
+    if (!$product->features->count() < 5) :
+      if($modelValidator->notOwner($id)) :
+        flash()->error('Ud. no tiene permisos para esta accion.');
+        return redirect()->action('ProductsController@show', $id);
+      endif;
+    endif;
   }
 
   /**

@@ -8,11 +8,11 @@ Route::resource('usuarios', 'UsersController');
 Route::resource('productos', 'ProductsController');
 // features de producto
 Route::group(['prefix' => 'producto/feature'], function(){
-  Route::get('/create', 'FeaturesController@create');
+  Route::get('/create/{productos}', 'FeaturesController@create');
   Route::post('/', 'FeaturesController@store');
-  Route::get('/{productos}/edit', 'FeaturesController@edit');
-  Route::put('/{productos}', 'FeaturesController@update');
-  Route::delete('/{productos}', 'FeaturesController@destroy');
+  Route::get('/{features}/edit', 'FeaturesController@edit');
+  Route::put('/{features}', 'FeaturesController@update');
+  Route::delete('/{features}', 'FeaturesController@destroy');
 });
 Route::resource('categorias', 'CategoriesController');
 Route::resource('sub-categorias', 'SubCategoriesController');
