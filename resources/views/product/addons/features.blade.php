@@ -32,6 +32,9 @@
         </div>
       </div>
     @endforeach
+    @if(Auth::user()->isOwnerOrAdmin($product->id) && $product->features->count() < 5)
+      {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
+    @endif
   </div>
 @else
   @if(Auth::user())

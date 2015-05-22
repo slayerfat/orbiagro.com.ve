@@ -7,10 +7,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Product;
+use App\Feature;
 
 use App\Mamarrachismo\ModelValidation;
+use App\Mamarrachismo\Upload;
 
 class FeaturesController extends Controller {
+
+  private $user, $userId;
 
   /**
    * Create a new controller instance.
@@ -22,6 +26,7 @@ class FeaturesController extends Controller {
     $this->middleware('auth');
     $this->user   = Auth::user();
     $this->userId = Auth::id();
+    $this->modelValidator = new ModelValidation($this->userId, $this->user);
   }
 
   /**
@@ -33,14 +38,17 @@ class FeaturesController extends Controller {
   {
     $product = Product::findOrFail($id)->load('features');
 
-    $modelValidator = new ModelValidation($this->userId, $this->user);
-
-    if (!$product->features->count() < 5) :
-      if($modelValidator->notOwner($id)) :
+    if ($product->features->count() < 5) :
+      if($this->modelValidator->notOwner($id)) :
         flash()->error('Ud. no tiene permisos para esta accion.');
         return redirect()->action('ProductsController@show', $id);
       endif;
+
+      return view('feature.create', compact('product'));
     endif;
+
+    flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
+    return redirect()->action('ProductsController@show', $id);
   }
 
   /**
@@ -48,9 +56,36 @@ class FeaturesController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store($id, Request $request, Upload $upload)
   {
-    //
+    $product = Product::findOrFail($id);
+    // para los archivos del feature
+    $upload->userId = $this->userId;
+
+    if ($product->features->count() < 5) :
+      if($this->modelValidator->notOwner($id)) :
+        flash()->error('Ud. no tiene permisos para esta accion.');
+        return redirect()->action('ProductsController@show', $id);
+      endif;
+
+      $feature = new Feature($request->all());
+      $feature->created_by = $this->userId;
+      $feature->updated_by = $this->userId;
+      $product->features()->save($feature);
+
+      // para guardar la imagen y modelo
+      if ($request->hasFile('image')) :
+        $upload->createFeatureImage($request->file('image'), $product, $feature);
+      else:
+        $upload->createDefaultFeatureImage($product, $feature);
+      endif;
+
+      flash('Producto actualizado correctamente.');
+      return redirect()->action('ProductsController@show', $product->id);
+    endif;
+
+    flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
+    return redirect()->action('ProductsController@show', $id);
   }
 
   /**
@@ -61,7 +96,7 @@ class FeaturesController extends Controller {
    */
   public function edit($id)
   {
-    //
+
   }
 
   /**

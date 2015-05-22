@@ -2,6 +2,7 @@
 
 use Auth;
 use App\Product;
+use App\Feature;
 use App\Image;
 
 /**
@@ -9,7 +10,16 @@ use App\Image;
  */
 class Upload {
 
+  /**
+   * @var int
+   */
   public $userId;
+
+  /**
+   * reglas para el validador.
+   * @var array
+   */
+  private $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
 
   public function __construct($id = null)
   {
@@ -27,11 +37,9 @@ class Upload {
   public function createProductImages(array $array, Product $product)
   {
     foreach($array as $file) :
-      // reglas para el validador.
-      $rules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
 
       // el validador
-      $validator = \Validator::make(['image' => $file], $rules);
+      $validator = \Validator::make(['image' => $file], $this->imageRules);
       if ($validator->fails())
       {
         // si existe entre 0 y 1 en el array y la imagen es invalida
@@ -47,7 +55,7 @@ class Upload {
       if (!$result = $this->createFile($file, $product)) return false;
 
       // se crea el modelo.
-      $this->createImageModel($result, $product);
+      $this->createProductImageModel($result, $product);
     endforeach;
 
     return true;
@@ -62,17 +70,79 @@ class Upload {
    */
   public function createDefaultProductImage(Product $product)
   {
+    // el nombre del archivo
+    $name = date('Ymdhmmss-').str_random(20);
+    $path = "products/{$product->id}/{$name}.gif";
     // se copia el archivo
-    if (\Storage::disk('public')->copy('sin_imagen.gif', "products/{$product->id}/sin_imagen.gif")) :
+    if (\Storage::disk('public')->copy('sin_imagen.gif', $path)) :
 
       $image = new Image;
-      $image->path       = "products/{$product->id}/sin_imagen.gif";
+      $image->path       = $path;
       $image->mime       = 'image/gif';
       $image->alt        = $product->title;
       $image->created_by = $this->userId;
       $image->updated_by = $this->userId;
 
       return $product->images()->save($image);
+
+    endif;
+
+    return false;
+
+  }
+
+  /**
+   * crea la imagen relacionada con algun feature.
+   *
+   * @param array   $array   El array con los objetos UploadedFiles.
+   * @param Product $product El modelo de producto.
+   * @param Feature $feature El modelo de feature relacionado con producto.
+   *
+   * @return boolean
+   */
+  public function createFeatureImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file, Product $product, Feature $feature)
+  {
+    // el validador
+    $validator = \Validator::make(['image' => $file], $this->imageRules);
+    if ($validator->fails())
+    {
+      // si las imagen no es valida crea una imagen por defecto
+      return $this->createDefaultFeatureImage($product, $feature);
+    }
+
+    // se crea la imagen en el HD.
+    if (!$result = $this->createFile($file, $product)) return false;
+
+    // se crea el modelo.
+    $this->createFeatureImageModel($result, $feature);
+
+    return true;
+  }
+
+  /**
+   * crea la imagen por defecto relacionada con algun producto.
+   *
+   * @param Product $product El modelo de producto.
+   * @param Feature $feature El modelo de feature relacionado con producto.
+   *
+   * @return boolean
+   */
+  public function createDefaultFeatureImage(Product $product, Feature $feature)
+  {
+    // el nombre del archivo
+    $name = date('Ymdhmmss-').str_random(20);
+    $path = "products/{$product->id}/{$name}.gif";
+    // se copia el archivo
+    if (\Storage::disk('public')->copy('sin_imagen.gif', $path)) :
+
+      $image = new Image;
+      $image->path       = $path;
+      $image->mime       = 'image/gif';
+      $image->alt        = $feature->title;
+      $image->created_by = $this->userId;
+      $image->updated_by = $this->userId;
+
+      return $feature->image()->save($image);
 
     endif;
 
@@ -88,13 +158,30 @@ class Upload {
    *
    * @return boolean
    */
-  private function createImageModel(array $array, Product $product)
+  private function createProductImageModel(array $array, Product $product)
   {
     $image = new Image($array);
     $image->created_by = $this->userId;
     $image->updated_by = $this->userId;
     $image->alt = $product->title;
     return $product->images()->save($image);
+  }
+
+  /**
+   * crea el modelo nuevo de alguna imagen relacionada con algun feature.
+   *
+   * @param array   $array   el array que contiene los datos para la imagen.
+   * @param Feature $feature el modelo de feature.
+   *
+   * @return boolean
+   */
+  private function createFeatureImageModel(array $array, Feature $feature)
+  {
+    $image = new Image($array);
+    $image->created_by = $this->userId;
+    $image->updated_by = $this->userId;
+    $image->alt = $feature->title;
+    return $feature->image()->save($image);
   }
 
   /**
