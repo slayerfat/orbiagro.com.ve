@@ -12,7 +12,7 @@
           <div class="panel-heading">Crear nuevo Producto</div>
           <div class="panel-body">
             @include('errors.bag')
-            {!! Form::model($product, [
+            {!! Form::model($feature, [
               'action' => ['FeaturesController@store', $product->id],
               'class' => 'form-horizontal',
               'files' => true,

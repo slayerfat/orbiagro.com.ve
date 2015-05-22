@@ -23,17 +23,21 @@
           <div class="panel-body">
             {{ $feature->description }}
             <img
-              src="{!! asset($feature->images->first()->path) !!}"
-              alt="{{ $feature->images->first()->alt }}"
+              src="{!! asset($feature->image->path) !!}"
+              alt="{{ $feature->image->alt }}"
               class="img-responsive" />
 
-            {!! link_to_asset($feature->files->first()->path, 'descargar archivo') !!}
+            @if($feature->file)
+              {!! link_to_asset($feature->file->path, 'descargar archivo') !!}
+            @endif
           </div>
         </div>
       </div>
     @endforeach
-    @if(Auth::user()->isOwnerOrAdmin($product->id) && $product->features->count() < 5)
-      {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
+    @if(Auth::user())
+      @if(Auth::user()->isOwnerOrAdmin($product->id) && $product->features->count() < 5)
+        {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
+      @endif
     @endif
   </div>
 @else

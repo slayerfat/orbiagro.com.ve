@@ -2,6 +2,7 @@
 
 use Auth;
 use App\Http\Requests;
+use App\Http\Requests\FeatureRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -14,19 +15,23 @@ use App\Mamarrachismo\Upload;
 
 class FeaturesController extends Controller {
 
-  private $user, $userId;
+  private $user, $userId, $feature;
 
   /**
    * Create a new controller instance.
    *
+   * @method __construct
+   * @param  Feature     $feature
+   *
    * @return void
    */
-  public function __construct()
+  public function __construct(Feature $feature)
   {
     $this->middleware('auth');
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->modelValidator = new ModelValidation($this->userId, $this->user);
+    $this->feature = $feature;
   }
 
   /**
@@ -43,8 +48,10 @@ class FeaturesController extends Controller {
         flash()->error('Ud. no tiene permisos para esta accion.');
         return redirect()->action('ProductsController@show', $id);
       endif;
-
-      return view('feature.create', compact('product'));
+      return view('feature.create')->with([
+        'product' => $product,
+        'feature' => $this->feature
+      ]);
     endif;
 
     flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
@@ -54,9 +61,14 @@ class FeaturesController extends Controller {
   /**
    * Store a newly created resource in storage.
    *
+   * @method store
+   * @param  int            $id
+   * @param  FeatureRequest $request
+   * @param  Upload         $upload  clase para subir archivos.
+   *
    * @return Response
    */
-  public function store($id, Request $request, Upload $upload)
+  public function store($id, FeatureRequest $request, Upload $upload)
   {
     $product = Product::findOrFail($id);
     // para los archivos del feature
@@ -68,16 +80,18 @@ class FeaturesController extends Controller {
         return redirect()->action('ProductsController@show', $id);
       endif;
 
-      $feature = new Feature($request->all());
-      $feature->created_by = $this->userId;
-      $feature->updated_by = $this->userId;
-      $product->features()->save($feature);
+
+      $this->feature->title       = $request->input('title');
+      $this->feature->description = $request->input('description');
+      $this->feature->created_by  = $this->userId;
+      $this->feature->updated_by  = $this->userId;
+      $product->features()->save($this->feature);
 
       // para guardar la imagen y modelo
       if ($request->hasFile('image')) :
-        $upload->createFeatureImage($request->file('image'), $product, $feature);
+        $upload->createFeatureImage($request->file('image'), $product, $this->feature);
       else:
-        $upload->createDefaultFeatureImage($product, $feature);
+        $upload->createDefaultFeatureImage($product, $this->feature);
       endif;
 
       flash('Producto actualizado correctamente.');
@@ -96,7 +110,9 @@ class FeaturesController extends Controller {
    */
   public function edit($id)
   {
+    $this->feature = Feature::findOrFail($id);
 
+    return view('feature.edit')->with(['feature' => $this->feature]);
   }
 
   /**

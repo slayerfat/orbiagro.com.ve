@@ -32,12 +32,12 @@ class FeatureTest extends \Codeception\TestCase\Test
 
   public function testImageModel()
   {
-    $this->assertNotEmpty($this->tester->images);
+    $this->assertNotEmpty($this->tester->image);
   }
 
   public function testFileModel()
   {
-    $this->assertNotEmpty($this->tester->files);
+    $this->assertNotEmpty($this->tester->file);
   }
 
   public function testCorrectTitleFormat()
