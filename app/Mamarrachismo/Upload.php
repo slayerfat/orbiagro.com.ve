@@ -172,7 +172,9 @@ class Upload {
         \Storage::disk('public')->delete($feature->image->path);
 
       // se crea la imagen en el HD y se actualiza el modelo.
-      if (!$result = $this->createFile($file, $product)) return false;
+      if (!$result = $this->createFile($file, $product))
+        return $this->createDefaultFeatureImage($product, $feature);
+
       return $feature->image->update($result);
     endif;
 
