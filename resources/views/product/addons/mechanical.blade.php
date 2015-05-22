@@ -1,6 +1,13 @@
 @if($product->mechanical)
 <table class="table table-striped">
   <tbody>
+    @if($isUserValid)
+      <tr>
+        <td colspan="2">
+          {!! link_to_action('MechanicalInfoController@edit', 'Actualizar Informacion Mecanica', $product->mechanical->id) !!}
+        </td>
+      </tr>
+    @endif
     <tr>
       <td>
         Motor
@@ -67,4 +74,8 @@
     </tr>
   </tbody>
 </table>
+@else
+  @if($isUserValid)
+    {!! link_to_action('MechanicalInfoController@create', 'Crear Informacion Mecanica', $product->id) !!}
+  @endif
 @endif

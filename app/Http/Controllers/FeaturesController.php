@@ -15,7 +15,7 @@ use App\Mamarrachismo\Upload;
 
 class FeaturesController extends Controller {
 
-  private $user, $userId, $feature;
+  private $user, $userId, $feature, $modelValidator;
 
   /**
    * Create a new controller instance.
@@ -41,10 +41,10 @@ class FeaturesController extends Controller {
    */
   public function create($id)
   {
-    $product = Product::findOrFail($id)->load('features');
+    $product = Product::findOrFail($id)->load('features', 'user');
 
     if ($product->features->count() < 5) :
-      if($this->modelValidator->notOwner($id)) :
+      if($this->modelValidator->notOwner($product->user->id)) :
         flash()->error('Ud. no tiene permisos para esta accion.');
         return redirect()->action('ProductsController@show', $id);
       endif;
@@ -75,7 +75,7 @@ class FeaturesController extends Controller {
     $upload->userId = $this->userId;
 
     if ($product->features->count() < 5) :
-      if($this->modelValidator->notOwner($id)) :
+      if($this->modelValidator->notOwner($product->user->id)) :
         flash()->error('Ud. no tiene permisos para esta accion.');
         return redirect()->action('ProductsController@show', $id);
       endif;
@@ -110,7 +110,12 @@ class FeaturesController extends Controller {
    */
   public function edit($id)
   {
-    $this->feature = Feature::findOrFail($id);
+    $this->feature = Feature::findOrFail($id)->load('product');
+
+    if($this->modelValidator->notOwner($this->feature->product->user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@show', $id);
+    endif;
 
     return view('feature.edit')->with(['feature' => $this->feature]);
   }
@@ -126,6 +131,11 @@ class FeaturesController extends Controller {
   public function update($id, FeatureRequest $request, Upload $upload)
   {
     $this->feature = Feature::findOrFail($id)->load('product');
+
+    if($this->modelValidator->notOwner($this->feature->product->user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@show', $id);
+    endif;
 
     $this->feature->update($request->all());
     flash('El feature ha sido actualizado correctamente.');

@@ -1,10 +1,3 @@
-@if(Auth::user())
-  @if(Auth::user()->isOwnerOrAdmin($product->id))
-  <?php $isValid = true; ?>
-  @endif
-@else
-  <?php $isValid = false; ?>
-@endif
 @unless ($product->features->isEmpty())
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     @foreach ($product->features as $feature)
@@ -20,7 +13,7 @@
               aria-controls="collapsed_{{$feature->id}}">
               {{ $feature->title }}
             </a>
-            @if($isValid)
+            @if($isUserValid)
               {!! link_to_action('FeaturesController@edit', '| Actualizar', $feature->id) !!}
             @endif
           </h4>
@@ -44,7 +37,7 @@
         </div>
       </div>
     @endforeach
-    @if($isValid && $product->features->count() < 5)
+    @if($isUserValid && $product->features->count() < 5)
       {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
     @endif
   </div>

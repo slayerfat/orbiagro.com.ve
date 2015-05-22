@@ -6,14 +6,23 @@ Route::get('/', 'HomeController@index');
 
 Route::resource('usuarios', 'UsersController');
 Route::resource('productos', 'ProductsController');
-// features de producto
+// modelos asociados a producto
 Route::group(['prefix' => 'productos'], function(){
+  // features
   Route::get('/{productos}/feature/create', 'FeaturesController@create');
   Route::post('/{productos}/feature', 'FeaturesController@store');
   Route::get('/feature/{features}/edit', 'FeaturesController@edit');
   Route::put('/feature/{features}', 'FeaturesController@update');
   Route::patch('/feature/{features}', 'FeaturesController@update');
   Route::delete('/feature/{features}', 'FeaturesController@destroy');
+
+  // mechanical info
+  Route::get('/{productos}/info-mecanica/create', 'MechanicalInfoController@create');
+  Route::post('/{productos}/info-mecanica', 'MechanicalInfoController@store');
+  Route::get('/info-mecanica/{mechanicals}/edit', 'MechanicalInfoController@edit');
+  Route::put('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
+  Route::patch('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
+  Route::delete('/info-mecanica/{mechanicals}', 'MechanicalInfoController@destroy');
 });
 Route::resource('categorias', 'CategoriesController');
 Route::resource('sub-categorias', 'SubCategoriesController');

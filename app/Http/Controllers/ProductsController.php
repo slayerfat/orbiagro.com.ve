@@ -115,7 +115,17 @@ class ProductsController extends Controller {
     $visitedFinder->setNewProductVisit($product->id);
     $visitedProducts = $visitedFinder->getVisitedProducts();
 
-    return view('product.show', compact('product', 'visitedProducts'));
+    if($this->user) :
+      if($this->user->isOwnerOrAdmin($product->id)) :
+        $isUserValid = true;
+      else :
+        $isUserValid = false;
+      endif;
+    else :
+      $isUserValid = false;
+    endif;
+
+    return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
   }
 
   /**
