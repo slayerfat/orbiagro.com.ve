@@ -118,12 +118,24 @@ class FeaturesController extends Controller {
   /**
    * Update the specified resource in storage.
    *
-   * @param  int  $id
+   * @param  int            $id
+   * @param  FeatureRequest $request
+   * @param  Upload         $upload  clase para subir archivos.
    * @return Response
    */
-  public function update($id)
+  public function update($id, FeatureRequest $request, Upload $upload)
   {
-    //
+    $this->feature = Feature::findOrFail($id)->load('product');
+
+    $this->feature->update($request->all());
+    flash('El feature ha sido actualizado correctamente.');
+    // para guardar la imagen y modelo
+    if ($request->hasFile('image')) :
+      if (!$upload->updateFeatureImage($request->file('image'), $this->feature->product, $this->feature))
+        flash()->error('La imagen no pudo ser actualizada correctamente');
+    endif;
+
+    return redirect()->action('ProductsController@show', $this->feature->product->id);
   }
 
   /**

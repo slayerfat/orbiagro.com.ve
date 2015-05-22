@@ -13,6 +13,7 @@
               aria-controls="collapsed_{{$feature->id}}">
               {{ $feature->title }}
             </a>
+            {!! link_to_action('FeaturesController@edit', '| Actualizar', $feature->id) !!}
           </h4>
         </div>
         <div

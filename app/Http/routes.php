@@ -12,6 +12,7 @@ Route::group(['prefix' => 'productos'], function(){
   Route::post('/{productos}/feature', 'FeaturesController@store');
   Route::get('/feature/{features}/edit', 'FeaturesController@edit');
   Route::put('/feature/{features}', 'FeaturesController@update');
+  Route::patch('/feature/{features}', 'FeaturesController@update');
   Route::delete('/feature/{features}', 'FeaturesController@destroy');
 });
 Route::resource('categorias', 'CategoriesController');
