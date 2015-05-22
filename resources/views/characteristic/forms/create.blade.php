@@ -1,8 +1,10 @@
-@include('feature.forms.common')
+@include('characteristic.forms.common')
 
-@yield('feature-title')
-@yield('feature-description')
-@yield('feature-image')
+@yield('char-height')
+@yield('char-width')
+@yield('char-depth')
+@yield('char-weight')
+@yield('char-units')
 
 <div class="form-group">
   <div class="col-md-12">

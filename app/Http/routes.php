@@ -23,6 +23,14 @@ Route::group(['prefix' => 'productos'], function(){
   Route::put('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
   Route::patch('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
   Route::delete('/info-mecanica/{mechanicals}', 'MechanicalInfoController@destroy');
+
+  // characteristics
+  Route::get('/{productos}/caracteristicas/create', 'CharacteristicsController@create');
+  Route::post('/{productos}/caracteristicas', 'CharacteristicsController@store');
+  Route::get('/caracteristicas/{mechanicals}/edit', 'CharacteristicsController@edit');
+  Route::put('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
+  Route::patch('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
+  Route::delete('/caracteristicas/{mechanicals}', 'CharacteristicsController@destroy');
 });
 Route::resource('categorias', 'CategoriesController');
 Route::resource('sub-categorias', 'SubCategoriesController');

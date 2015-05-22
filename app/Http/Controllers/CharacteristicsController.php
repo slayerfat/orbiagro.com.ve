@@ -2,19 +2,19 @@
 
 use Auth;
 use App\Http\Requests;
-use App\Http\Requests\MechanicalInfoRequest;
+use App\Http\Requests\CharacteristicRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
 use App\Product;
-use App\MechanicalInfo;
+use App\Characteristic;
 
 use App\Mamarrachismo\ModelValidation;
 
-class MechanicalInfoController extends Controller {
+class CharacteristicsController extends Controller {
 
-  private $user, $userId, $mech;
+  private $user, $userId, $characteristic;
 
   /**
    * Create a new controller instance.
@@ -24,13 +24,13 @@ class MechanicalInfoController extends Controller {
    *
    * @return void
    */
-  public function __construct(MechanicalInfo $mech)
+  public function __construct(Characteristic $characteristic)
   {
     $this->middleware('auth');
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->modelValidator = new ModelValidation($this->userId, $this->user);
-    $this->mech = $mech;
+    $this->characteristic = $characteristic;
   }
 
   /**
@@ -47,14 +47,14 @@ class MechanicalInfoController extends Controller {
       return redirect()->action('ProductsController@show', $id);
     endif;
 
-    if ($product->mechanical) {
-      flash()->error('Este Producto ya posee informacion mecanica, por favor actualice el existente.');
+    if ($product->characteristics) {
+      flash()->error('Este Producto ya posee caracteristicas, por favor actualice las existentes.');
       return redirect()->action('ProductsController@show', $id);
     }
 
-    return view('mechanicalInfo.create')->with([
+    return view('characteristic.create')->with([
       'product' => $product,
-      'mech'    => $this->mech
+      'characteristic'    => $this->characteristic
     ]);
   }
 
@@ -63,7 +63,7 @@ class MechanicalInfoController extends Controller {
    *
    * @return Response
    */
-  public function store($id, MechanicalInfoRequest $request)
+  public function store($id, CharacteristicRequest $request)
   {
     $product = Product::findOrFail($id)->load('mechanical');
 
@@ -72,18 +72,18 @@ class MechanicalInfoController extends Controller {
       return redirect()->action('ProductsController@show', $id);
     endif;
 
-    if ($product->mechanical) :
-      flash()->error('Este Producto ya posee informacion mecanica, por favor actualice el existente.');
+    if ($product->characteristic) :
+      flash()->error('Este Producto ya posee caracteristicas, por favor actualice las existentes.');
       return redirect()->action('ProductsController@show', $id);
     endif;
 
-    $this->mech = new MechanicalInfo($request->all());
-    $this->mech->created_by = $this->userId;
-    $this->mech->updated_by = $this->userId;
+    $this->characteristic = new Characteristic($request->all());
+    $this->characteristic->created_by = $this->userId;
+    $this->characteristic->updated_by = $this->userId;
 
-    $product->mechanical()->save($this->mech);
+    $product->characteristics()->save($this->characteristic);
 
-    flash('Información Mecanica creada exitosamente.');
+    flash('Caracteristicas del producto creadas exitosamente.');
     return redirect()->action('ProductsController@show', $id);
   }
 
@@ -95,14 +95,14 @@ class MechanicalInfoController extends Controller {
    */
   public function edit($id)
   {
-    $this->mech = MechanicalInfo::findOrFail($id)->load('product');
+    $this->characteristic = Characteristic::findOrFail($id)->load('product');
 
-    if($this->modelValidator->notOwner($this->mech->product->user->id)) :
+    if($this->modelValidator->notOwner($this->characteristic->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->mech->product->id);
+      return redirect()->action('ProductsController@show', $this->characteristic->product->id);
     endif;
 
-    return view('mechanicalInfo.edit')->with(['mech' => $this->mech]);
+    return view('characteristic.edit')->with(['characteristic' => $this->characteristic]);
   }
 
   /**
@@ -111,20 +111,20 @@ class MechanicalInfoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id, MechanicalInfoRequest $request)
+  public function update($id, CharacteristicRequest $request)
   {
-    $this->mech = MechanicalInfo::findOrFail($id)->load('product');
+    $this->characteristic = Characteristic::findOrFail($id)->load('product');
 
-    if($this->modelValidator->notOwner($this->mech->product->user->id)) :
+    if($this->modelValidator->notOwner($this->characteristic->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->mech->product->id);
+      return redirect()->action('ProductsController@show', $this->characteristic->product->id);
     endif;
 
-    $this->mech->updated_by = $this->userId;
-    $this->mech->update($request->all());
+    $this->characteristic->updated_by = $this->userId;
+    $this->characteristic->update($request->all());
 
-    flash('Información Mecanica Actualizada exitosamente.');
-    return redirect()->action('ProductsController@show', $this->mech->product->id);
+    flash('Caracteristicas del Producto Actualizadas exitosamente.');
+    return redirect()->action('ProductsController@show', $this->characteristic->product->id);
   }
 
   /**
