@@ -31,6 +31,14 @@ Route::group(['prefix' => 'productos'], function(){
   Route::put('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
   Route::patch('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
   Route::delete('/caracteristicas/{mechanicals}', 'CharacteristicsController@destroy');
+
+  // nutritional
+  Route::get('/{productos}/valores-nutricionales/create', 'NutritionalsController@create');
+  Route::post('/{productos}/valores-nutricionales', 'NutritionalsController@store');
+  Route::get('/valores-nutricionales/{mechanicals}/edit', 'NutritionalsController@edit');
+  Route::put('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
+  Route::patch('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
+  Route::delete('/valores-nutricionales/{mechanicals}', 'NutritionalsController@destroy');
 });
 Route::resource('categorias', 'CategoriesController');
 Route::resource('sub-categorias', 'SubCategoriesController');
