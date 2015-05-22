@@ -3,7 +3,6 @@ var map;
 // opciones para la iniciacion del mapa
 var mapOptions;
 
-
 // crea el canvas inicial segun los valores otorgados
 function initialize(latitude, longitude, zoom) {
   if (latitude === undefined || longitude === undefined)
@@ -23,7 +22,6 @@ function initialize(latitude, longitude, zoom) {
 }
 
 function getAdress(address){
-  console.log(address);
   // https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingStatusCodes
   var geocoder = new google.maps.Geocoder();
   // el "query"
@@ -49,16 +47,54 @@ function changeInputs(){
 }
 
 // para cambiar o hacer una nueva vista del mapa segun la direccion a buscar
-function make(address){
+function make(address, zoom){
+  var zoomLvl;
+
+  if (zoom === undefined) {
+    zoomLvl = 10;
+  }else {zoomLvl = zoom;}
   // se cambia el zoom
-  map.setZoom(10);
+  map.setZoom(zoomLvl);
 
   getAdress(address);
   changeInputs();
 }
 
-// ajaxStop espera que todas las transacciones ajax culminen antes de ejecutar
-$(document).ajaxStop(function () {
+function determineZoomLvl(address) {
+  console.log('add: '+address);
+  switch (parseInt(address)) {
+    case 2:
+      return 7;
+    case 3:
+      return 7;
+    case 4:
+      return 8;
+    case 6:
+      return 9;
+    case 7:
+      return 8;
+    case 9:
+      return 9;
+    case 10:
+      return 8;
+    case 11:
+      return 9;
+    case 12:
+      return 8;
+    case 13:
+      return 8;
+    case 16:
+      return 8;
+    case 18:
+      return 8;
+    case 19:
+      return 9;
+    default:
+      return 10;
+  }
+}
+
+$(document).ready(function () {
 
   var lng = parseFloat($('input[name="longitude"]').val());
   var lat = parseFloat($('input[name="latitude"').val());
@@ -97,7 +133,9 @@ $(document).ajaxStop(function () {
   $('#state_id').change(function(){
     // el "query string"
     address = 'estado '+$('#state_id :selected').html()+', venezuela';
-    make(address);
+
+    zoom = determineZoomLvl($('#state_id :selected').val());
+    make(address, zoom);
   });
 
   // cambia segun la posicion del mapa en la vista
@@ -106,6 +144,7 @@ $(document).ajaxStop(function () {
     $('input[name="latitude"').val(map.center.lat());
   });
   google.maps.event.addListener(map, 'zoom_changed', function() {
+    console.log('zoom changed: '+map.zoom);
     $('input[name="zoom"').val(map.zoom);
   });
 });
