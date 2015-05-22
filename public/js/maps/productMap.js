@@ -89,6 +89,10 @@ function determineZoomLvl(address) {
       return 8;
     case 19:
       return 9;
+    case 22:
+      return 9;
+    case 24:
+      return 8;
     default:
       return 10;
   }
