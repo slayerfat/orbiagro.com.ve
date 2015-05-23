@@ -105,7 +105,6 @@ class ProductsController extends Controller {
    */
   public function show($id, Request $request, VisitedProductsFinder $visitedFinder)
   {
-    // dd(\Cookie::get());
     if(!$product = Product::where('slug', $id)->first())
     $product = Product::findOrFail($id);
 
@@ -133,10 +132,11 @@ class ProductsController extends Controller {
    */
   public function edit($id)
   {
-    if($this->notOwner($id)) :
+    if(!$this->user->isOwnerOrAdmin($id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
       return redirect()->action('ProductsController@show', $id);
     endif;
+
     if($product = Product::where('slug', $id)->first())
 
     return view('product.edit', compact('product'));
@@ -161,7 +161,7 @@ class ProductsController extends Controller {
    */
   public function update($id, ProductRequest $request)
   {
-    if($this->notOwner($id)) :
+    if(!$this->user->isOwnerOrAdmin($id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
       return redirect()->action('ProductsController@show', $id);
     endif;
@@ -201,22 +201,6 @@ class ProductsController extends Controller {
   public function destroy($id)
   {
     //
-  }
-
-  /**
-   * Para saber si el usuario es o no el dueño
-   * de un producto para editar.
-   *
-   * @param int $id user's id.
-   *
-   * @return boolean
-   */
-  private function notOwner($id)
-  {
-    if($this->userId === $id) return false;
-    if($this->user->isAdmin()) return false;
-
-    return true;
   }
 
   /**
