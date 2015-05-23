@@ -32,9 +32,25 @@ class SubCategoriesController extends Controller {
    *
    * @return Response
    */
-  public function index()
+  public function index(VisitedProductsFinder $visitedFinder)
   {
-    //
+    $visitedProducts = $visitedFinder->getVisitedProducts();
+
+    // TODO: closure? : subcat ... function($query) ...
+    // $todo = SubCategory::with(['products' => function($query){
+    // 	// $query(get 9 random products...);
+    // }]);
+    // $todo = SubCategory::with(['products' => function($query){
+    //   $query->random()->take(1);
+    // }])->get();
+    $subCats  = SubCategory::all();
+    $productsCollection = collect();
+    foreach ($subCats as $cat) {
+      $productsCollection->push($cat->products()->random()->take(9)->get());
+    }
+    return $todo;
+
+
   }
 
   /**
