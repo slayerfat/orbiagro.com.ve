@@ -41,7 +41,7 @@ Route::group(['prefix' => 'productos'], function(){
   Route::delete('/valores-nutricionales/{mechanicals}', 'NutritionalsController@destroy');
 });
 Route::resource('categorias', 'CategoriesController');
-Route::resource('sub-categorias', 'SubCategoriesController');
+Route::resource('rubros', 'SubCategoriesController');
 Route::resource('fabricantes', 'MakersController');
 
 Route::group(['middleware' => 'user.verified'], function(){

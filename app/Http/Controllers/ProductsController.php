@@ -37,13 +37,17 @@ class ProductsController extends Controller {
    *
    * @return Response
    */
-  public function index()
+  public function index(VisitedProductsFinder $visitedFinder)
   {
     $products = Product::paginate(20);
     $cats     = Category::all();
     $subCats  = SubCategory::all();
 
-    return view('product.index', compact('products', 'cats', 'subCats'));
+    $visitedProducts = $visitedFinder->getVisitedProducts();
+
+    return view('product.index', compact(
+      'products', 'cats', 'subCats', 'visitedProducts'
+    ));
   }
 
   /**

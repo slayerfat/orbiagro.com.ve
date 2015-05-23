@@ -1,7 +1,7 @@
 <div class="container">
   @unless($visitedProducts->isEmpty())
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-xs-12" id="products-visits">
         <h1>Ultimos Productos que ha visitado</h1>
       </div>
     </div>

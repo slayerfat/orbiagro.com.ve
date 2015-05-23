@@ -2,7 +2,13 @@
 <div class="carrusel-cats">
   @foreach($cats as $cat)
     <div>
-      <img src="{!! asset($cat->image->path) !!}" alt="{{ $cat->name }}" width="150px" height="150px"/>
+      <a href="{!! action($title == ('Rubros') ? 'SubCategoriesController@show' : 'CategoriesController@show', $cat->id) !!}">
+        <img
+        src="{!! asset($cat->image->path) !!}"
+        alt="{{ $cat->image->alt }}"
+        width="150px"
+        height="150px"/>
+      </a>
     </div>
   @endforeach
 </div>

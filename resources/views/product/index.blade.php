@@ -12,12 +12,12 @@
         @include('category.addons.gallery-slick', ['title' => 'Categorias', 'cats' => $cats])
       </div>
       <div class="row">
-        @include('category.addons.gallery-slick', ['title' => 'Sub-Categorias', 'cats' => $subCats])
+        @include('category.addons.gallery-slick', ['title' => 'Rubros', 'cats' => $subCats])
       </div>
     </div>
 
     {{-- TODO --}}
-    {{-- categorias, sub-categorias, populares. --}}
+    {{-- categorias, sub-categorias (rubros), populares. --}}
   @endif
 
   <div class="container">
@@ -36,7 +36,7 @@
             </div>
             <div class="media-body product-details-container">
               <a href="{!! action('ProductsController@show', $product->id) !!}">
-                <h4 class="media-heading">{{ $product->title }}</h4>
+                <h4 class="media-heading product-title">{{ $product->title }}</h4>
               </a>
               <div class="col-md-3 product-price">
                 {{ $product->price_bs() }}
@@ -55,9 +55,12 @@
       {!! $products->render() !!}
     @endunless
   </div>
+
+  @include('visit.addons.relatedProducts')
 @stop
 
 @section('js')
+  <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
   <script type="text/javascript" src="{!! asset('js/vendor/slick.min.js') !!}"></script>
   <script charset="utf-8">
     $(document).ready(function(){
