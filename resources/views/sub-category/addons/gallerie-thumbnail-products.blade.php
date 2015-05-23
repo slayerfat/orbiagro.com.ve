@@ -6,9 +6,9 @@
         alt="{{ $product->images->first()->alt }}"
         class="img-responsive"/>
       <div class="caption">
-        <h3>
+        <h4>
           {!! link_to_action('ProductsController@show', $product->title, $product->id) !!}
-        </h3>
+        </h4>
       </div>
     </div>
   </div>
