@@ -61,7 +61,6 @@ function make(address, zoom){
 }
 
 function determineZoomLvl(address) {
-  console.log('add: '+address);
   switch (parseInt(address)) {
     case 2:
       return 7;
@@ -148,7 +147,6 @@ $(document).ready(function () {
     $('input[name="latitude"').val(map.center.lat());
   });
   google.maps.event.addListener(map, 'zoom_changed', function() {
-    console.log('zoom changed: '+map.zoom);
     $('input[name="zoom"').val(map.zoom);
   });
 });

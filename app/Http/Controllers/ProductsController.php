@@ -1,21 +1,17 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
-use Validator;
-use Cookie;
-use Carbon\Carbon;
 use App\Http\Requests;
 use App\Http\Requests\ProductRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Mamarrachismo\VisitedProductsFinder;
 use App\Mamarrachismo\Upload;
+
 use App\Product;
-use App\Image;
-use App\File;
 use App\Category;
 use App\SubCategory;
-use App\Visit;
 use App\MapDetail;
 use App\Direction;
 use App\Maker;
@@ -109,6 +105,7 @@ class ProductsController extends Controller {
    */
   public function show($id, Request $request, VisitedProductsFinder $visitedFinder)
   {
+    // dd(\Cookie::get());
     if(!$product = Product::where('slug', $id)->first())
     $product = Product::findOrFail($id);
 

@@ -3,8 +3,11 @@
 Use Auth;
 Use Cookie;
 Use Carbon\Carbon;
-Use App\Product;
+
 Use App\Mamarrachismo\Transformer;
+
+Use App\Product;
+Use App\Visit;
 
 /**
  * clase utilizada para buscar y crear nuevas
@@ -25,17 +28,6 @@ class VisitedProductsFinder {
   {
     $bag = [];
 
-    if(Auth::user()) :
-      if($visits = Auth::user()->visits()->with('visitable')->get()) :
-        foreach ($visits as $visit) {
-          $bag[] = $visit->visitable->id;
-        }
-        $products = Product::find($bag);
-        $products->load('user', 'sub_category');
-        return $products;
-      endif;
-    endif;
-
     $array = Transformer::getArrayByKeyValue("/(products\_)+/", Cookie::get());
     $parsed = $this->parseProductIdInArrayKeys($array);
 
@@ -46,6 +38,17 @@ class VisitedProductsFinder {
       endforeach;
       $this->storeVisits($parsed);
     }
+
+    if(Auth::user()) :
+      if($visits = Auth::user()->visits()->with('visitable')->get()) :
+        foreach ($visits as $visit) {
+          $bag[] = $visit->visitable->id;
+        }
+        $products = Product::find($bag);
+        $products->load('user', 'sub_category');
+        return $products;
+      endif;
+    endif;
 
     return Product::find($bag);
   }
@@ -60,6 +63,7 @@ class VisitedProductsFinder {
     $total = Cookie::get("products_{$id}");
     $total = ($total) ? ($total + 1) : 1;
     Cookie::queue("products.{$id}", $total);
+    Cookie::queue("lastVisitedProduct", $id);
     if(!Cookie::get('visitedAt')) $this->setUpdatedCookieDate();
   }
 
@@ -121,8 +125,14 @@ class VisitedProductsFinder {
           $visit->save();
         endif;
       endif;
-      // se resetea el contador.
-      Cookie::queue("products.{$id}", 1);
+
+      // se resetea el contador a 1 o 0 dependiendo de la ultima visita.
+      if(intval(Cookie::get('lastVisitedProduct')) == $id) :
+        Cookie::queue("products.{$id}", 1);
+      else:
+        // se elimina el contador.
+        Cookie::queue("products.{$id}", 0);
+      endif;
     endforeach;
     // se actualiza la fecha de edicion del cookie
     $this->setUpdatedCookieDate();
