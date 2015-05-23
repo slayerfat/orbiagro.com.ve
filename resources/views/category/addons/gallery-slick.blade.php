@@ -1,4 +1,8 @@
-<h1>{{ $title }}</h1>
+<h1>
+  <a href="{!! action($title == ('Rubros') ? 'SubCategoriesController@index' : 'CategoriesController@index') !!}">
+    {{ $title }}
+  </a>
+</h1>
 <div class="carrusel-cats">
   @foreach($cats as $cat)
     <div>

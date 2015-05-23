@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Product;
+use App\Category;
 use App\SubCategory;
 
 use App\Mamarrachismo\VisitedProductsFinder;
@@ -59,9 +60,11 @@ class SubCategoriesController extends Controller {
    *
    * @return Response
    */
-  public function create()
+  public function create(SubCategory $subCat)
   {
-    //
+    $cats = Category::lists('description', 'id');
+
+    return view('sub-category.create', compact('cats', 'subCat'));
   }
 
   /**
