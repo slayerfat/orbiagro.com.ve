@@ -29,6 +29,18 @@
             </li>
           @endif
         @endunless
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Productos
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            @unless(Auth::guest())
+              <li>{!! link_to_action('ProductsController@create', 'Crear') !!}</li>
+            @endunless
+            <li>{!! link_to_action('ProductsController@index', 'Consultar') !!}</li>
+          </ul>
+        </li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right" id="main-navbar-user">

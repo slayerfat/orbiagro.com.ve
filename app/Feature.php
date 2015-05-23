@@ -7,9 +7,9 @@ class Feature extends Model {
 
   protected $fillable = ['title', 'description'];
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setTitleAttribute($value)
   {
     $this->attributes['title'] = ModelValidation::byLenght($value, 5);
@@ -20,39 +20,34 @@ class Feature extends Model {
     $this->attributes['description'] = ModelValidation::byLenght($value, 5);
   }
 
-  /**
-   * Accessors
-   */
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getTitleAttribute($value)
   {
     if($value) return ucfirst($value);
     return null;
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function product()
   {
     return $this->belongsTo('App\Product');
   }
 
-  /**
-   * Relacion polimorfica
-   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-   *
-   * $a->person()->first()->direction()->save($b)
-   * en donde $a es una instancia de User y
-   * $b es una instancia de Direction
-   */
-  public function files()
+  // --------------------------------------------------------------------------
+  // Polimorfica
+  // --------------------------------------------------------------------------
+  public function file()
   {
-    return $this->morphMany('App\File', 'fileable');
+    return $this->morphOne('App\File', 'fileable');
   }
 
-  public function images()
+  public function image()
   {
-    return $this->morphMany('App\Image', 'imageable');
+    return $this->morphOne('App\Image', 'imageable');
   }
 
 }

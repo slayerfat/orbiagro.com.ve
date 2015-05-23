@@ -133,6 +133,10 @@ return [
     'middle_name'      => 'Segundo Nombre',
     'first_surname'    => 'Primer Apellido',
     'last_surname'     => 'Segundo Apellido',
+    'price'            => 'Precio',
+    'quantity'         => 'Cantidad',
+    'images'           => 'Imagenes',
+    'image'            => 'Imagen',
   ],
 
 ];

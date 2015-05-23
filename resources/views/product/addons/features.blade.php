@@ -1,4 +1,4 @@
-@if ($product->features)
+@unless ($product->features->isEmpty())
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     @foreach ($product->features as $feature)
       <div class="panel panel-default">
@@ -13,6 +13,9 @@
               aria-controls="collapsed_{{$feature->id}}">
               {{ $feature->title }}
             </a>
+            @if($isUserValid)
+              {!! link_to_action('FeaturesController@edit', '| Actualizar', $feature->id) !!}
+            @endif
           </h4>
         </div>
         <div
@@ -23,14 +26,27 @@
           <div class="panel-body">
             {{ $feature->description }}
             <img
-              src="{!! asset($feature->images->first()->path) !!}"
-              alt="{{ $feature->images->first()->alt }}"
+              src="{!! asset($feature->image->path) !!}"
+              alt="{{ $feature->image->alt }}"
               class="img-responsive" />
 
-            {!! link_to_asset($feature->files->first()->path, 'descargar archivo') !!}
+            @if($feature->file)
+              {!! link_to_asset($feature->file->path, 'descargar archivo') !!}
+            @endif
           </div>
         </div>
       </div>
     @endforeach
+    @if($isUserValid && $product->features->count() < 5)
+      {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
+    @endif
   </div>
+@else
+  @if(Auth::user())
+    @if(Auth::user()->isOwnerOrAdmin($product->id))
+      {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
+    @endif
+  @else
+    Sin información detallada
+  @endif
 @endif

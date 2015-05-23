@@ -1,8 +1,37 @@
 <?php namespace App\Mamarrachismo;
 
 use Validator;
+use App\User;
 
+
+/**
+ * @todo mejorar los metodos estaticos de esta clase
+ */
 class ModelValidation {
+
+  public $userId, $user;
+
+  public function __construct($id = null, User $user = null)
+  {
+    $this->userId = $id;
+    $this->user   = $user;
+  }
+
+  /**
+   * Para saber si el usuario es o no el dueño
+   * de un producto para editar.
+   *
+   * @param int $id user's id.
+   *
+   * @return boolean
+   */
+  public function notOwner($id)
+  {
+    if($this->userId === $id) return false;
+    if($this->user->isAdmin()) return false;
+
+    return true;
+  }
 
   /**
    * Regular Expresion para el numero de telefono con formato Venezolano.

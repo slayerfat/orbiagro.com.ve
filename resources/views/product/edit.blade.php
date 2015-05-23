@@ -17,7 +17,7 @@
                   'action' => ['ProductsController@update', $product->id],
                   'class'  => 'form-horizontal'
                 ]) !!}
-              @include('product.addons.form', ['textoBotonSubmit' => 'Editar Producto'])
+              @include('product.forms.edit', ['textoBotonSubmit' => 'Editar Producto'])
             {!! Form::close() !!}
           </div>
         </div>

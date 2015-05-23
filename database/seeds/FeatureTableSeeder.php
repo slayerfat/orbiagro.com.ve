@@ -35,7 +35,7 @@ class FeatureTableSeeder extends Seeder {
       Storage::disk('public')->makeDirectory("products/{$product->id}");
 
       $this->command->info("Producto {$product->slug}");
-      foreach(range(1, 5) as $index) :
+      foreach(range(1, 2) as $index) :
         $this->command->info("feature {$index}");
         $feature              = new App\Feature;
         $feature->title       = $faker->sentence(3);
@@ -58,7 +58,7 @@ class FeatureTableSeeder extends Seeder {
         $image->alt        = $feature->title;
         $image->created_by = $user->id;
         $image->updated_by = $user->id;
-        $feature->images()->save($image);
+        $feature->image()->save($image);
 
         // el archivo asociado
         $name = date('Ymdhmmss-').str_random(20);
@@ -71,7 +71,7 @@ class FeatureTableSeeder extends Seeder {
         $file->mime       = "application/pdf";
         $file->created_by = $user->id;
         $file->updated_by = $user->id;
-        $feature->files()->save($file);
+        $feature->file()->save($file);
       endforeach;
     endforeach;
     $this->command->info('Creacion de features completado.');

@@ -20,8 +20,8 @@ class CreateMapDetailsTable extends Migration {
             ->references('id')
             ->on('directions')
             ->onDelete('cascade');
-      $table->double('latitude', 10, 8);
-      $table->double('longitude', 11, 8);
+      $table->double('latitude', 17, 15);
+      $table->double('longitude', 18, 15);
       $table->tinyInteger('zoom')->unisgned();
       $table->timestamps();
     });

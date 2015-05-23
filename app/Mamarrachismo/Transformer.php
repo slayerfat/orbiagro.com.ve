@@ -173,6 +173,28 @@ class Transformer {
 
 
   // --------------------------------------------------------------------------
+  // Manipulacion de arrays
+  // --------------------------------------------------------------------------
+  /**
+   * http://php.net/manual/en/function.preg-grep.php#111673
+   *
+   * regresa un array con los elementos que sean encontrados segun el patron
+   * nota: la busqueda se hace por el key del array
+   * ej: array['pito'] -> guacharaca
+   * ej: array['foo'] -> bar
+   *
+   * @param $pattern string la expresion regular.
+   * @param $input array el array a iterar.
+   *
+   * @return array
+   */
+  public function preg_grep_keys($pattern, $input, $flags = 0)
+  {
+    return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
+  }
+
+
+  // --------------------------------------------------------------------------
   // Metodos Estaticos
   // --------------------------------------------------------------------------
 
@@ -189,6 +211,27 @@ class Transformer {
     if($to) return $transformer->transformTo($base, $to);
 
     return $transformer->fromSwitch($base);
+  }
+
+  /**
+   * http://php.net/manual/en/function.preg-grep.php#111673
+   *
+   * invoca preg_grep_keys
+   *
+   * regresa un array con los elementos que sean encontrados segun el patron
+   * nota: la busqueda se hace por el key del array
+   * ej: array['pito'] -> guacharaca
+   * ej: array['foo'] -> bar
+   *
+   * @param $pattern string la expresion regular.
+   * @param $input array el array a iterar.
+   *
+   * @return array
+   */
+  public static function getArrayByKeyValue($pattern, $input, $flags = 0)
+  {
+    $transformer = new Transformer();
+    return $transformer->preg_grep_keys($pattern, $input, $flags);
   }
 
   /**

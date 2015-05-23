@@ -1,5 +1,13 @@
+@if($product->characteristics)
 <table class="table table-striped">
   <tbody>
+    @if($isUserValid)
+      <tr>
+        <td colspan="2">
+          {!! link_to_action('CharacteristicsController@edit', 'Actualizar Caracteristicas', $product->characteristics->id) !!}
+        </td>
+      </tr>
+    @endif
     <tr>
       <td>
         Alto
@@ -42,3 +50,8 @@
     </tr>
   </tbody>
 </table>
+@else
+  @if($isUserValid)
+    {!! link_to_action('CharacteristicsController@create', 'Crear Caracteristicas del Producto', $product->id) !!}
+  @endif
+@endif

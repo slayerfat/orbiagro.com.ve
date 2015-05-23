@@ -22,9 +22,17 @@ class ProductRequest extends Request {
   public function rules()
   {
     return [
-      'title' => 'required|string',
-      'latitude' => 'numeric',
-      'longitude' => 'numeric',
+      'title'           => 'required|string|min:5',
+      'description'     => 'required|string|min:20',
+      'price'           => 'required|numeric',
+      'quantity'        => 'required|numeric',
+      'parish_id'       => 'required|numeric',
+      'maker_id'        => 'required|numeric',
+      'sub_category_id' => 'required|numeric',
+      'latitude'        => 'numeric',
+      'longitude'       => 'numeric',
+      'images'          => 'array|between:1,5',
+      'details'         => 'min:5',
     ];
   }
 

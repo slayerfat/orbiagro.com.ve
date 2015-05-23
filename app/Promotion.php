@@ -88,11 +88,43 @@ class Promotion extends Model {
   }
 
   // --------------------------------------------------------------------------
+  // Scopes
+  // --------------------------------------------------------------------------
+  public function scopeRandom($query)
+  {
+    if (env('APP_ENV') == 'testing') {
+      $query->orderByRaw('RANDOM()');
+    }else{
+      $query->orderByRaw('RAND()');
+    }
+  }
+
+  // --------------------------------------------------------------------------
   // Relaciones
+  // --------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------
+  // Belongs to Many
   // --------------------------------------------------------------------------
   public function products()
   {
     return $this->belongsToMany('App\Product');
+  }
+
+  // --------------------------------------------------------------------------
+  // Belongs To
+  // --------------------------------------------------------------------------
+  public function type()
+  {
+    return $this->belongsTo('App\PromoType', 'promo_type_id', 'id');
+  }
+
+  // --------------------------------------------------------------------------
+  // Polimorfica
+  // --------------------------------------------------------------------------
+  public function images()
+  {
+    return $this->morphMany('App\Image', 'imageable');
   }
 
   // --------------------------------------------------------------------------
@@ -118,7 +150,7 @@ class Promotion extends Model {
   }
 
   /**
-   * Devuelve el descuento en numero ej: 100 => 10, 10 => 0.1.
+   * Devuelve el descuento en numero ej: 100 => 1, 10 => 0.1.
    */
   public function percentage_raw()
   {
