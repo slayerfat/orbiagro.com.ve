@@ -45,10 +45,11 @@ class SubCategoriesController extends Controller {
     // }])->get();
     $subCats  = SubCategory::all();
     $productsCollection = collect();
+
     foreach ($subCats as $cat) {
-      $productsCollection->push($cat->products()->random()->take(9)->get());
+      $productsCollection->push($cat->products()->random()->take(1)->get());
     }
-    return $todo;
+    return view('sub-category.index', compact('subCats', 'productsCollection'));
 
 
   }

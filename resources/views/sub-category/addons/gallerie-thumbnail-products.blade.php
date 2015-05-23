@@ -1,5 +1,5 @@
-@foreach($sub_category->products->take(3) as $product)
-  <div class="col-sm-4">
+@foreach($products as $product)
+  <div class="{{$size}}">
     <div class="thumbnail">
       <img
         src="{!! asset($product->images->first()->path) !!}"
