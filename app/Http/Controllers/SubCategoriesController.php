@@ -47,7 +47,7 @@ class SubCategoriesController extends Controller {
     $productsCollection = collect();
 
     foreach ($subCats as $cat) {
-      $productsCollection->push($cat->products()->random()->take(1)->get());
+      $productsCollection->push($cat->products()->random()->take(12)->get());
     }
     return view('sub-category.index', compact('subCats', 'productsCollection'));
 
