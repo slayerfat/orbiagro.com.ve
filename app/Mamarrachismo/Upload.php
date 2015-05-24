@@ -134,46 +134,34 @@ class Upload {
     endif;
 
     return false;
-
   }
 
   /**
    * actualiza la imagen relacionada con algun feature.
    *
-   * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
-   * @param Product       $product El modelo de producto.
-   * @param Feature       $feature El modelo de feature relacionado con producto.
+   * @param UploadedFile  $file         Objeto UploadedFiles con la imagen.
+   * @param object        $parentModel  El modelo a actualizar.
+   * @param App\Image     $imageModel   El modelo de la imagen.
    *
    * @return boolean
    */
-  public function updateFeatureImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file, Product $product, Feature $feature)
+  public function updateImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel, Image $imageModel)
   {
-    $this->path = $this->generatePathFromModel($model);
+    $this->path = $this->generatePathFromModel($parentModel);
 
     // el validador
     $validator = \Validator::make(['image' => $file], $this->imageRules);
     if ($validator->fails()) return false;
 
-    // si no existe modelo se crea uno y se ignora el bloque condicional
-    if($feature->image):
-      // se chequea si existe el archivo y se elimina
-      if (\Storage::disk('public')->exists($feature->image->path))
-        \Storage::disk('public')->delete($feature->image->path);
+    // se chequea si existe el archivo y se elimina
+    if (\Storage::disk('public')->exists($imageModel->path))
+      \Storage::disk('public')->delete($imageModel->path);
 
-      // se crea la imagen en el HD y se actualiza el modelo.
-      if (!$result = $this->createFile($file, $this->path))
-        return $this->createDefaultImage($this->path, $feature);
+    // se crea la imagen en el HD y se actualiza el modelo.
+    if (!$result = $this->createFile($file, $this->path))
+      return $this->createDefaultImage($this->path, $parentModel);
 
-      return $feature->image->update($result);
-    endif;
-
-    // se crea la imagen en el HD.
-    if (!$result = $this->createFile($file, $this->path)) return false;
-
-    // se crea el modelo.
-    $this->createImageModel($result, $feature);
-
-    return true;
+    return $imageModel->update($result);
   }
 
   /**

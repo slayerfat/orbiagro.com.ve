@@ -152,9 +152,26 @@ class SubCategoriesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, SubCategoryRequest $request, Upload $upload)
   {
-    //
+    if(!$this->user->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
+
+    $this->subCat = SubCategory::findOrFail($id)->load('image');
+
+    $this->subCat->update($request->all());
+    flash()->success('El Rubro ha sido actualizado correctamente.');
+
+    if ($request->hasFile('image')) :
+      if (!$upload->updateImage($request->file('image'), $this->subCat, $this->subCat->image)) :
+        flash()->warning('El Rubro ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
+      endif;
+    endif;
+
+    return redirect()->action('SubCategoriesController@show', $this->subCat->id);
   }
 
   /**

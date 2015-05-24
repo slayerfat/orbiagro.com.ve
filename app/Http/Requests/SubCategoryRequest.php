@@ -25,7 +25,7 @@ class SubCategoryRequest extends Request {
       'description' => 'required|min:5',
       'info'        => 'required|min:5',
       'category_id' => 'required|numeric',
-      'image'       => 'required|image',
+      'image'       => 'image',
     ];
   }
 
