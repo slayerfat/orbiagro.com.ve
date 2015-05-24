@@ -1,20 +1,33 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\ModelValidation;
 
 class SubCategory extends Model {
 
-  protected $fillable = ['category_id', 'description', 'slug'];
+  protected $fillable = ['category_id', 'description', 'info'];
 
   // --------------------------------------------------------------------------
   // Mutators
   // --------------------------------------------------------------------------
   public function setDescriptionAttribute($value)
   {
-    if($value == '') :
-      $this->attributes['description'] = null;
+    $this->attributes['description'] = ModelValidation::byLenght($value);
+    if($this->attributes['description'])
+      $this->attributes['slug'] = str_slug($this->attributes['description']);
+  }
+
+  public function setInfoAttribute($value)
+  {
+    $this->attributes['info'] = ModelValidation::byLenght($value);
+  }
+
+  public function setSlugAttribute($value)
+  {
+    if (ModelValidation::byLenght($value)) :
+      $this->attributes['slug'] = str_slug($value);
     else:
-      $this->attributes['description'] = $value;
+      $this->attributes['slug'] = null;
     endif;
   }
 
@@ -24,6 +37,19 @@ class SubCategory extends Model {
   public function getDescriptionAttribute($value)
   {
     if($value) return ucfirst($value);
+    return null;
+  }
+
+  public function getInfoAttribute($value)
+  {
+    if($value) :
+      if (substr($value, -1) !== '.')
+      {
+        $value .= '.';
+      }
+      return ucfirst($value);
+    endif;
+
     return null;
   }
 

@@ -2,6 +2,7 @@
 
 use Auth;
 use App\Http\Requests;
+use App\Http\Requests\SubCategoryRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -50,9 +51,8 @@ class SubCategoriesController extends Controller {
     foreach ($subCats as $cat) {
       $productsCollection->push($cat->products()->random()->take(12)->get());
     }
+
     return view('sub-category.index', compact('subCats', 'productsCollection'));
-
-
   }
 
   /**
@@ -72,9 +72,12 @@ class SubCategoriesController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(SubCategoryRequest $request)
   {
-    //
+    $cat = Category::findOrFail($request->input('category_id'));
+
+    $subCat = new SubCategory($request->except('category_id', 'image'));
+    return $subCat;
   }
 
   /**

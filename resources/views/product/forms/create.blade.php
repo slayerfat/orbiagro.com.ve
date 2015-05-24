@@ -7,21 +7,13 @@
 ])
 
 @yield('product-title')
-
 @yield('product-description')
-
 @yield('product-price-quantity')
-
 @yield('product-images')
-
 @yield('product-direction')
-
 @yield('product-map')
-
 @yield('product-details')
-
 @yield('product-makers')
-
 @yield('product-categories')
 
 <div class="form-group">

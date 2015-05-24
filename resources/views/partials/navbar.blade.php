@@ -21,12 +21,12 @@
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li>{!! link_to_action('SubCategoriesController@create', 'Crear') !!}</li>
             @unless (Auth::guest())
               @if (Auth::user()->isAdmin())
-                <li>{!! link_to_action('SubCategoriesController@index', 'Consultar') !!}</li>
+                <li>{!! link_to_action('SubCategoriesController@create', 'Crear') !!}</li>
               @endif
             @endunless
+            <li>{!! link_to_action('SubCategoriesController@index', 'Consultar') !!}</li>
           </ul>
         </li>
         <li class="dropdown">
