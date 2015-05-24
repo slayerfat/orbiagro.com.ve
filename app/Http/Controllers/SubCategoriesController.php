@@ -71,7 +71,7 @@ class SubCategoriesController extends Controller {
     }
     $cats = Category::lists('description', 'id');
 
-    return view('sub-category.create')-with([
+    return view('sub-category.create')->with([
       'cats' => $cats,
       'subCat' => $this->subCat
     ]);
@@ -99,15 +99,10 @@ class SubCategoriesController extends Controller {
 
     $cat->sub_categories()->save($this->subCat);
 
-    dd($cat);
+    $upload->createImage($request->file('image'), $this->subCat);
 
-    // para guardar la imagen y modelo
-    if ($request->hasFile('image')) :
-      $upload->createSubCategoryImage($request->file('image'), $product, $this->feature);
-    endif;
-
-    $subCat = new SubCategory($request->except('category_id', 'image'));
-    return $subCat;
+    flash()->success('Rubro creado exitosamente.');
+    return redirect()->action('SubCategoriesController@index');
   }
 
   /**
@@ -116,9 +111,15 @@ class SubCategoriesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id)
+  public function show($id, VisitedProductsFinder $visitedFinder)
   {
-    //
+    $subCat = SubCategory::findOrFail($id);
+
+    $products = Product::where('sub_category_id', $id)->paginate(20);
+
+    $visitedProducts = $visitedFinder->getVisitedProducts();
+
+    return view('sub-category.show', compact('products', 'visitedProducts', 'subCat'));
   }
 
   /**
