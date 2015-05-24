@@ -7,15 +7,20 @@ use App\SubCategory;
 use App\Category;
 use App\Image;
 
-/**
- *
- */
 class Upload {
 
   /**
    * @var int
    */
   public $userId;
+
+  /**
+   * el modelo a ser manipulado
+   *
+   * @todo implementar.
+   * @var object
+   */
+  public $model;
 
   /**
    * la direccion para guardar el archivo relacionado al modelo.
@@ -35,16 +40,18 @@ class Upload {
   }
 
   /**
-   * crea la(s) imagen(es) relacionadas con algun producto.
+   * crea la(s) imagen(es) relacionadas con algun modelo.
    *
-   * @param array   $array   El array con los objetos UploadedFiles.
-   * @param Product $product El modelo de producto.
+   * @param array  $array   El array con los objetos UploadedFiles.
+   * @param object $product El modelo a relacionar con la imagen.
    *
    * @return boolean
    */
-  public function createProductImages(array $array, Product $product)
+  public function createImages(array $array = null, $model)
   {
-    $this->path = $this->generatePathFromModel($product);
+    $this->path = $this->generatePathFromModel($model);
+
+    if(!$array) return $this->createDefaultImage($this->path, $model);
 
     foreach($array as $file) :
 
@@ -57,73 +64,45 @@ class Upload {
         if (sizeOf($array) <= 1)
         {
           // si las imagenes no son validas crea una imagen por defecto
-          return $this->createDefaultImage("products/{$product->id}", $product);
+          return $this->createDefaultImage($this->path, $model);
         }
       }
 
       // se crea la imagen en el HD.
-      if (!$result = $this->createFile($file, "products/{$product->id}")) return false;
+      if (!$result = $this->createFile($file, $this->path)) return false;
 
       // se crea el modelo.
-      $this->createImageModel($result, $product);
+      $this->createImageModel($result, $model);
     endforeach;
 
     return true;
   }
 
   /**
-   * crea la imagen relacionada con algun feature.
+   * crea la imagen relacionada con algun modelo.
    *
-   * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
-   * @param Product       $product El modelo de producto.
-   * @param Feature       $feature El modelo de feature relacionado con producto.
+   * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
+   * @param object        $model El modelo relacionado para ser asociado.
    *
    * @return boolean
    */
-  public function createFeatureImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file, Product $product, Feature $feature)
+  public function createImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $model)
   {
+    $this->path = $this->generatePathFromModel($model);
+
     // el validador
     $validator = \Validator::make(['image' => $file], $this->imageRules);
     if ($validator->fails())
     {
       // si las imagen no es valida crea una imagen por defecto
-      return $this->createDefaultImage("products/{$product->id}", $feature);
+      return $this->createDefaultImage($this->path, $model);
     }
 
     // se crea la imagen en el HD.
-    if (!$result = $this->createFile($file, "products/{$product->id}")) return false;
+    if (!$result = $this->createFile($file, $this->path)) return false;
 
     // se crea el modelo.
-    $this->createImageModel($result, $feature);
-
-    return true;
-  }
-
-  /**
-   * crea la imagen relacionada con algun rubro.
-   *
-   * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
-   * @param SubCategory   $subCat  El modelo del rubro.
-   * @param Feature       $feature El modelo de feature relacionado con producto.
-   *
-   * @return boolean
-   */
-  public function createSubCategoryImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file, SubCategory $subCat)
-  {
-    // el validador
-    $validator = \Validator::make(['image' => $file], $this->imageRules);
-    if ($validator->fails())
-    {
-      // si las imagen no es valida
-      // TODO: mejorar
-      return false;
-    }
-
-    // se crea la imagen en el HD.
-    if (!$result = $this->createFile($file, "sub-category/{$subCat->id}")) return false;
-
-    // se crea el modelo.
-    $this->createImageModel($result, $subCat);
+    $this->createImageModel($result, $model);
 
     return true;
   }
@@ -169,6 +148,8 @@ class Upload {
    */
   public function updateFeatureImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file, Product $product, Feature $feature)
   {
+    $this->path = $this->generatePathFromModel($model);
+
     // el validador
     $validator = \Validator::make(['image' => $file], $this->imageRules);
     if ($validator->fails()) return false;
@@ -180,14 +161,14 @@ class Upload {
         \Storage::disk('public')->delete($feature->image->path);
 
       // se crea la imagen en el HD y se actualiza el modelo.
-      if (!$result = $this->createFile($file, "products/{$product->id}"))
-        return $this->createDefaultImage("products/{$product->id}", $feature);
+      if (!$result = $this->createFile($file, $this->path))
+        return $this->createDefaultImage($this->path, $feature);
 
       return $feature->image->update($result);
     endif;
 
     // se crea la imagen en el HD.
-    if (!$result = $this->createFile($file, "products/{$product->id}")) return false;
+    if (!$result = $this->createFile($file, $this->path)) return false;
 
     // se crea el modelo.
     $this->createImageModel($result, $feature);
@@ -227,6 +208,14 @@ class Upload {
         $image->alt = $model->description;
         return $model->image()->save($image);
 
+      case 'App\Maker':
+        $image->alt = $model->name;
+        return $model->images()->save($image);
+
+      case 'App\Promotion':
+        $image->alt = $model->title;
+        return $model->images()->save($image);
+
       default:
         throw new \Exception("Error: modelo desconocido, no se puede guardar imagen", 1);
         break;
@@ -253,7 +242,7 @@ class Upload {
     {
       $file->move($path, "{$name}.{$ext}");
     }
-    catch(\FileException $e)
+    catch(FileException $e)
     {
       return false;
     }
@@ -282,6 +271,12 @@ class Upload {
 
       case 'App\SubCategory':
         return "sub-category/{$model->id}";
+
+      case 'App\Maker':
+        return "makers/{$model->id}";
+
+      case 'App\Promotion':
+        return "promos/{$model->id}";
 
       default:
         throw new \Exception("Error: modelo desconocido, no se puede crear ruta", 2);

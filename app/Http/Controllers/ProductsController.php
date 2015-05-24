@@ -91,11 +91,7 @@ class ProductsController extends Controller {
     $product->direction->map()->save($map);
 
     // se iteran las imagenes y se guardan los modelos
-    if ($request->hasFile('images')) :
-      $upload->createProductImages($request->file('images'), $product);
-    else:
-      $upload->createDefaultProductImage($product);
-    endif;
+    $upload->createImages($request->file('images'), $product);
 
     flash('El Producto ha sido creado con exito.');
     return redirect()->action('ProductsController@show', $product->id);

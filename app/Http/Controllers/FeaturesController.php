@@ -92,11 +92,8 @@ class FeaturesController extends Controller {
     $product->features()->save($this->feature);
 
     // para guardar la imagen y modelo
-    if ($request->hasFile('image')) :
-      $upload->createFeatureImage($request->file('image'), $product, $this->feature);
-    else:
-      $upload->createDefaultFeatureImage($product, $this->feature);
-    endif;
+
+    $upload->createImage($request->file('image'), $this->feature);
 
     flash('Producto actualizado correctamente.');
     return redirect()->action('ProductsController@show', $product->id);
