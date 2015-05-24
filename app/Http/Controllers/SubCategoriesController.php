@@ -12,21 +12,23 @@ use App\Category;
 use App\SubCategory;
 
 use App\Mamarrachismo\VisitedProductsFinder;
+use App\Mamarrachismo\Upload;
 
 class SubCategoriesController extends Controller {
 
-  public $user, $userId;
+  public $user, $userId, $subCat;
 
   /**
    * Create a new controller instance.
    *
    * @return void
    */
-  public function __construct()
+  public function __construct(SubCategory $subCat)
   {
     $this->middleware('auth', ['except' => ['index', 'show']]);
     $this->user   = Auth::user();
     $this->userId = Auth::id();
+    $this->subCat = $subCat;
   }
 
   /**
@@ -60,11 +62,19 @@ class SubCategoriesController extends Controller {
    *
    * @return Response
    */
-  public function create(SubCategory $subCat)
+  public function create()
   {
+    if(!$this->user->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
     $cats = Category::lists('description', 'id');
 
-    return view('sub-category.create', compact('cats', 'subCat'));
+    return view('sub-category.create')-with([
+      'cats' => $cats,
+      'subCat' => $this->subCat
+    ]);
   }
 
   /**
@@ -72,9 +82,29 @@ class SubCategoriesController extends Controller {
    *
    * @return Response
    */
-  public function store(SubCategoryRequest $request)
+  public function store(SubCategoryRequest $request, Upload $upload)
   {
+    if(!$this->user->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
+
     $cat = Category::findOrFail($request->input('category_id'));
+
+    // para los archivos del rubro
+    $upload->userId = $this->userId;
+
+    $this->subCat->fill($request->all());
+
+    $cat->sub_categories()->save($this->subCat);
+
+    dd($cat);
+
+    // para guardar la imagen y modelo
+    if ($request->hasFile('image')) :
+      $upload->createSubCategoryImage($request->file('image'), $product, $this->feature);
+    endif;
 
     $subCat = new SubCategory($request->except('category_id', 'image'));
     return $subCat;

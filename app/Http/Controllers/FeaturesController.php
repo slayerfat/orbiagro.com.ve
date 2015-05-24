@@ -74,32 +74,32 @@ class FeaturesController extends Controller {
     // para los archivos del feature
     $upload->userId = $this->userId;
 
-    if ($product->features->count() < 5) :
-      if($this->modelValidator->notOwner($product->user->id)) :
-        flash()->error('Ud. no tiene permisos para esta accion.');
-        return redirect()->action('ProductsController@show', $id);
-      endif;
-
-
-      $this->feature->title       = $request->input('title');
-      $this->feature->description = $request->input('description');
-      $this->feature->created_by  = $this->userId;
-      $this->feature->updated_by  = $this->userId;
-      $product->features()->save($this->feature);
-
-      // para guardar la imagen y modelo
-      if ($request->hasFile('image')) :
-        $upload->createFeatureImage($request->file('image'), $product, $this->feature);
-      else:
-        $upload->createDefaultFeatureImage($product, $this->feature);
-      endif;
-
-      flash('Producto actualizado correctamente.');
-      return redirect()->action('ProductsController@show', $product->id);
+    // el producto puede tener como maximo 5 features
+    if ($product->features->count() >= 5) :
+      flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
+      return redirect()->action('ProductsController@show', $id);
     endif;
 
-    flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
-    return redirect()->action('ProductsController@show', $id);
+    if($this->modelValidator->notOwner($product->user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@show', $id);
+    endif;
+
+    $this->feature->title       = $request->input('title');
+    $this->feature->description = $request->input('description');
+    $this->feature->created_by  = $this->userId;
+    $this->feature->updated_by  = $this->userId;
+    $product->features()->save($this->feature);
+
+    // para guardar la imagen y modelo
+    if ($request->hasFile('image')) :
+      $upload->createFeatureImage($request->file('image'), $product, $this->feature);
+    else:
+      $upload->createDefaultFeatureImage($product, $this->feature);
+    endif;
+
+    flash('Producto actualizado correctamente.');
+    return redirect()->action('ProductsController@show', $product->id);
   }
 
   /**
