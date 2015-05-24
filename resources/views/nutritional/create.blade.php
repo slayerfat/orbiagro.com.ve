@@ -16,7 +16,7 @@
               'action' => ['NutritionalsController@store', $product->id],
               'class' => 'form-horizontal',
               ]) !!}
-              @include('nutritional.forms.create', ['textoBotonSubmit' => 'Añadir Valores Nutricionales'])
+              @include('nutritional.forms.body', ['textoBotonSubmit' => 'Añadir Valores Nutricionales'])
             {!! Form::close() !!}
           </div>
         </div>

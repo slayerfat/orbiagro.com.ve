@@ -9,7 +9,7 @@
 
 @section('product-description')
   <div class="form-group">
-    {!! Form::label('description', 'Descripcion:', ['class' => 'col-md-2 control-label']) !!}
+    {!! Form::label('description', 'Descripción:', ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-10">
       {!! Form::textarea('description', null, ['class' => 'form-control', 'id' => 'product-description']) !!}
     </div>

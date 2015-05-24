@@ -4,7 +4,7 @@
     <div class="caption">
       <h3><a href="#">titulo del producto</a></h3>
       <p>
-        Descripcion corta del producto
+        Descripción corta del producto
       </p>
       <p>
         <a href="#" class="btn btn-default">Mas informaci&oacute;n</a>

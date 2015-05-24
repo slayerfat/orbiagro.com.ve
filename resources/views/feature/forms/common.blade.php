@@ -1,6 +1,6 @@
 @section('feature-title')
   <div class="form-group">
-    {!! Form::label('title', 'Titulo del Feature:', ['class' => 'col-md-2 control-label']) !!}
+    {!! Form::label('title', 'Titulo del Distintivo:', ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-10">
       {!! Form::text('title', null, ['class' => 'form-control', 'id' => 'title']) !!}
     </div>
@@ -9,7 +9,7 @@
 
 @section('feature-description')
   <div class="form-group">
-    {!! Form::label('description', 'Descripcion del Feature:', ['class' => 'col-md-2 control-label']) !!}
+    {!! Form::label('description', 'Descripción del Distintivo:', ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-10">
       {!! Form::textarea('description', null, ['class' => 'form-control', 'id' => 'description']) !!}
     </div>

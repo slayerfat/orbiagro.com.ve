@@ -16,7 +16,7 @@
               'action' => ['MechanicalInfoController@store', $product->id],
               'class' => 'form-horizontal',
               ]) !!}
-              @include('mechanicalInfo.forms.create', ['textoBotonSubmit' => 'Añadir Información Mecanica'])
+              @include('mechanicalInfo.forms.body', ['textoBotonSubmit' => 'Añadir Información Mecanica'])
             {!! Form::close() !!}
           </div>
         </div>

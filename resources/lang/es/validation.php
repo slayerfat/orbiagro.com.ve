@@ -104,8 +104,8 @@ return [
 
   'attributes' => [
     'title'            => 'Titulo',
-    'body'             => 'Cuerpo o Descripcion',
-    'description'      => 'Descripcion',
+    'body'             => 'Cuerpo o Descripción',
+    'description'      => 'Descripción',
     'event_type_id'    => 'Tipo de Evento',
     'message_type_id'  => 'Tipo de Mensaje',
     'building_id'      => 'Edificio',

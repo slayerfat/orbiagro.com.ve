@@ -17,7 +17,7 @@
               'action' => ['NutritionalsController@update', $nutritional->id],
               'class' => 'form-horizontal',
               ]) !!}
-              @include('nutritional.forms.create', ['textoBotonSubmit' => 'Actualizar Valores Nutricionales'])
+              @include('nutritional.forms.body', ['textoBotonSubmit' => 'Actualizar Valores Nutricionales'])
             {!! Form::close() !!}
           </div>
         </div>

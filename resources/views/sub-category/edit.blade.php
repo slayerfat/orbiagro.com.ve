@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title')
-  - Actualizar - Caracteristicas - {{ $characteristic->product->title }}
+  - Actualizar - Rubro - {{ $subCat->description }}
 @stop
 
 @section('content')
@@ -9,15 +9,16 @@
     <div class="row">
       <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default">
-          <div class="panel-heading">Actualizar Características</div>
+          <div class="panel-heading">Actualizar {{$subCat->description}}</div>
           <div class="panel-body">
             @include('errors.bag')
-            {!! Form::model($characteristic, [
+            {!! Form::model($subCat, [
               'method' => 'PATCH',
-              'action' => ['CharacteristicsController@update', $characteristic->id],
-              'class' => 'form-horizontal',
+              'action' => 'SubCategoriesController@store',
+              'class'  => 'form-horizontal',
+              'files'  => true
               ]) !!}
-              @include('characteristic.forms.body', ['textoBotonSubmit' => 'Actualizar Características'])
+              @include('sub-category.forms.body', ['textoBotonSubmit' => 'Actualizar Rubro'])
             {!! Form::close() !!}
           </div>
         </div>

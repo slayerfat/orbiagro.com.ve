@@ -130,7 +130,20 @@ class SubCategoriesController extends Controller {
    */
   public function edit($id)
   {
-    //
+    if(!$this->user->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
+
+    $this->subCat = SubCategory::findOrFail($id);
+
+    $cats = Category::lists('description', 'id');
+
+    return view('sub-category.edit')->with([
+      'cats' => $cats,
+      'subCat' => $this->subCat
+    ]);
   }
 
   /**

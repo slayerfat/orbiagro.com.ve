@@ -14,10 +14,10 @@
             @include('errors.bag')
             {!! Form::model($subCat, [
               'action' => 'SubCategoriesController@store',
-              'class' => 'form-horizontal',
-              'files' => true
+              'class'  => 'form-horizontal',
+              'files'  => true
               ]) !!}
-              @include('sub-category.forms.create', ['textoBotonSubmit' => 'Añadir nuevo Rubro'])
+              @include('sub-category.forms.body', ['textoBotonSubmit' => 'Añadir nuevo Rubro'])
             {!! Form::close() !!}
           </div>
         </div>
