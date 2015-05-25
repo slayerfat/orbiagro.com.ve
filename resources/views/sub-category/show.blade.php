@@ -18,11 +18,10 @@
     @endif
   @endif
 
-  @include('sub-category.breadcrumbs')
-
+  @include('sub-category.addons.breadcrumbs-show')
   @include('partials.products.paginated')
-
   @include('visit.addons.relatedProducts')
+  @include('sub-category.addons.sub-cat-paginated', ['title' => 'Rubros Relacionados'])
 
 @stop
 

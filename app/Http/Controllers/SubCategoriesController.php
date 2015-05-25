@@ -115,11 +115,13 @@ class SubCategoriesController extends Controller {
   {
     $subCat = SubCategory::findOrFail($id);
 
+    $subCats = $subCat->category->sub_categories()->get();
+
     $products = Product::where('sub_category_id', $id)->paginate(20);
 
     $visitedProducts = $visitedFinder->getVisitedProducts();
 
-    return view('sub-category.show', compact('products', 'visitedProducts', 'subCat'));
+    return view('sub-category.show', compact('products', 'visitedProducts', 'subCat', 'subCats'));
   }
 
   /**
