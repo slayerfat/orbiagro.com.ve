@@ -36,27 +36,24 @@ class Transformer {
   {
     if (is_numeric($this->number)) :
       return $this->number /= 10;
-    else:
-      return null;
     endif;
+    return null;
   }
 
   public function toMillimeter()
   {
     if (is_numeric($this->number)) :
       return $this->number *= 10;
-    else:
-      return null;
     endif;
+    return null;
   }
 
   public function fromMeter()
   {
     if (is_numeric($this->number)) :
       return $this->number *= 100;
-    else:
-      return null;
     endif;
+    return null;
   }
 
   // --------------------------------------------------------------------------
@@ -66,36 +63,32 @@ class Transformer {
   {
     if (is_numeric($this->number)) :
       return $this->number /= 1000;
-    else:
-      return null;
     endif;
+    return null;
   }
 
   public function toGram()
   {
     if (is_numeric($this->number)) :
       return $this->number *= 1000;
-    else:
-      return null;
     endif;
+    return null;
   }
 
   public function fromTon()
   {
     if (is_numeric($this->number)) :
       return $this->number *= 1000;
-    else:
-      return null;
     endif;
+    return null;
   }
 
   public function toTon()
   {
     if (is_numeric($this->number)) :
       return $this->number /= 1000;
-    else:
-      return null;
     endif;
+    return null;
   }
 
   // --------------------------------------------------------------------------
@@ -146,15 +139,15 @@ class Transformer {
       // la variable que contendra la cadena.
       $formatted = '';
       // variable de control para poner el punto en el lugar correcto.
-      $j = 1;
+      $control = 1;
       // se itera a travez de los numeros:
       for($i = 1; $i <= strlen($numbers); $i++) :
-        if($j % 4 == 0) :
+        if($control % 4 == 0) :
           $formatted .= '.'.$numbers[$i-1];
-          $j = 2;
-        else:
+          $control = 2;
+        elseif($control % 4 != 0) :
           $formatted .= $numbers[$i-1];
-          $j++;
+          $control++;
         endif;
       endfor;
       // se revierte a la forma original.
@@ -171,90 +164,41 @@ class Transformer {
     return null;
   }
 
-
-  // --------------------------------------------------------------------------
-  // Manipulacion de arrays
-  // --------------------------------------------------------------------------
   /**
-   * http://php.net/manual/en/function.preg-grep.php#111673
+   * Metodo de apoyo para convertir numeros con unidades no base.
+   * ej: toneladas a gramos.
    *
-   * regresa un array con los elementos que sean encontrados segun el patron
-   * nota: la busqueda se hace por el key del array
-   * ej: array['pito'] -> guacharaca
-   * ej: array['foo'] -> bar
-   *
-   * @param $pattern string la expresion regular.
-   * @param $input array el array a iterar.
-   *
-   * @return array
-   */
-  public function preg_grep_keys($pattern, $input, $flags = 0)
-  {
-    return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
-  }
-
-
-  // --------------------------------------------------------------------------
-  // Metodos Estaticos
-  // --------------------------------------------------------------------------
-
-  /**
-   * @param  mixed  $value el numero a transformar/convertir.
    * @param  string $base  la unidad base de medida.
    * @param  string $to    la unidad final de medida.
    * @return mixed
    */
-  public static function transform($value, $base, $to = null)
+  public function transformTo($transformTo)
   {
-    $transformer = new Transformer($value);
+    switch ($transformTo) :
+      case 'mm':
+        return $this->toMillimeter();
+        break;
+      // unidad de peso
+      case 'g':
+        return $this->toGram();
+        break;
 
-    if($to) return $transformer->transformTo($base, $to);
+      case 't':
+        return $this->toTon();
+        break;
 
-    return $transformer->fromSwitch($base);
+      default:
+        throw new \Exception("Error, transformacion necesita unidad de destino", 1);
+        break;
+    endswitch;
   }
-
-  /**
-   * http://php.net/manual/en/function.preg-grep.php#111673
-   *
-   * invoca preg_grep_keys
-   *
-   * regresa un array con los elementos que sean encontrados segun el patron
-   * nota: la busqueda se hace por el key del array
-   * ej: array['pito'] -> guacharaca
-   * ej: array['foo'] -> bar
-   *
-   * @param $pattern string la expresion regular.
-   * @param $input array el array a iterar.
-   *
-   * @return array
-   */
-  public static function getArrayByKeyValue($pattern, $input, $flags = 0)
-  {
-    $transformer = new Transformer();
-    return $transformer->preg_grep_keys($pattern, $input, $flags);
-  }
-
-  /**
-   * invoca parseNumberToReadable;
-   *
-   * @param mixed $value el numero a cambiar.
-   */
-  public static function toReadable($value)
-  {
-    $transformer = new Transformer($value);
-    return $transformer->parseNumberToReadable();
-  }
-
-  // --------------------------------------------------------------------------
-  // Metodos privados
-  // --------------------------------------------------------------------------
 
   /**
    * refactored de self::transform.
    *
    * @param string $value la unidad de medida.
    */
-  private function fromSwitch($value)
+  public function make($value)
   {
     switch ($value) :
       // medidas de logitud
@@ -289,33 +233,83 @@ class Transformer {
     endswitch;
   }
 
+
+  // --------------------------------------------------------------------------
+  // Manipulacion de arrays
+  // --------------------------------------------------------------------------
   /**
-   * Metodo de apoyo para convertir numeros con unidades no base.
-   * ej: toneladas a gramos.
+   * http://php.net/manual/en/function.preg-grep.php#111673
    *
+   * regresa un array con los elementos que sean encontrados segun el patron
+   * nota: la busqueda se hace por el key del array
+   * ej: array['pito'] -> guacharaca
+   * ej: array['foo'] -> bar
+   *
+   * @param $pattern string la expresion regular.
+   * @param $input array el array a iterar.
+   *
+   * @return array
+   */
+  public function getArrayByPattern($pattern, $input, $flags = 0)
+  {
+    return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
+  }
+
+
+  // --------------------------------------------------------------------------
+  // Metodos Estaticos
+  // --------------------------------------------------------------------------
+
+  /**
+   * @param  mixed  $value el numero a transformar/convertir.
    * @param  string $base  la unidad base de medida.
    * @param  string $to    la unidad final de medida.
    * @return mixed
    */
-  private function transformTo($base, $to)
+  public static function transform($value, $base, $traformTo = null)
   {
-    $a = $this->fromSwitch($base);
-    switch ($to) :
-      case 'mm':
-        return $this->toMillimeter();
-        break;
-      // unidad de peso
-      case 'g':
-        return $this->toGram();
-        break;
+    $transformer = new Transformer($value);
 
-      case 't':
-        return $this->toTon();
-        break;
+    if($traformTo) return $transformer->transformTo($traformTo);
 
-      default:
-        throw new \Exception("Error, transformacion necesita unidad de destino", 1);
-        break;
-    endswitch;
+    return $transformer->make($base);
   }
+
+  /**
+   * http://php.net/manual/en/function.preg-grep.php#111673
+   *
+   * invoca getArrayByPattern
+   *
+   * regresa un array con los elementos que sean encontrados segun el patron
+   * nota: la busqueda se hace por el key del array
+   * ej: array['pito'] -> guacharaca
+   * ej: array['foo'] -> bar
+   *
+   * @param $pattern string la expresion regular.
+   * @param $input array el array a iterar.
+   *
+   * @return array
+   */
+  public static function getArrayByKeyValue($pattern, $input, $flags = 0)
+  {
+    $transformer = new Transformer();
+    return $transformer->getArrayByPattern($pattern, $input, $flags);
+  }
+
+  /**
+   * invoca parseNumberToReadable;
+   *
+   * @param mixed $value el numero a cambiar.
+   */
+  public static function toReadable($value)
+  {
+    $transformer = new Transformer($value);
+    return $transformer->parseNumberToReadable();
+  }
+
+  // --------------------------------------------------------------------------
+  // Metodos privados
+  // --------------------------------------------------------------------------
+
+
 }

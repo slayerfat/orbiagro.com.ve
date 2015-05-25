@@ -34,9 +34,9 @@ class Upload {
    */
   private $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
 
-  public function __construct($id = null)
+  public function __construct($userID = null)
   {
-    $this->userId = $id;
+    $this->userId = $userID;
   }
 
   /**

@@ -17,18 +17,29 @@ class CheckDollar {
    */
   public $euro;
 
-  public $promedio;
-
   /**
-   * @var array
+   * El promedio del dolar
+   * @var stdClass object
    */
-  public $errors = [];
+  public $promedio;
 
   /**
    * los datos de los APIs
    * @var stdClass object
    */
   private $data;
+
+  /**
+   * El objeto storage para manipular algun archivo
+   * @var stdClass object
+   */
+  private $storage;
+
+  /**
+   * El objeto Carbon con el timestamp
+   * @var stdClass object
+   */
+  private $time;
 
   /**
    * la direccion del 'API' de dollarToday
@@ -38,13 +49,14 @@ class CheckDollar {
 
   public function __construct()
   {
-    if($this->checkFileExists()):
-      $this->parseDollarTodayJson();
+    $this->storage = new Storage;
+    $this->time    = new Carbon;
+    if($this->fileExists()):
+      return $this->parseDollarTodayJson();;
     elseif($this->makeFile()):
-      self::__construct();
-    else:
-      $this->errors[] = ['Error, no se puede chequear dolar.'];
+      return self::__construct();
     endif;
+    return false;
   }
 
   // --------------------------------------------------------------------------
@@ -79,14 +91,16 @@ class CheckDollar {
    */
   private function parseDollarTodayJson()
   {
-    if($this->checkfileExists()):
-      $this->data = json_decode(Storage::get('dollar.json'));
-      $this->dollar = $this->data->USD;
-      $this->euro = $this->data->EUR;
-      return true;
-    else:
+    $storage = $this->storage;
+
+    if(!$this->fileExists()):
       return $this->makeFile();
     endif;
+
+    $this->data = json_decode($storage::get('dollar.json'));
+    $this->dollar = $this->data->USD;
+    $this->euro = $this->data->EUR;
+    return true;
   }
 
   /**
@@ -97,25 +111,26 @@ class CheckDollar {
     if($this->data):
       $this->dollar = $this->data->USD;
       return true;
-    else:
-      return $this->parseDollarTodayJson();
     endif;
+    return $this->parseDollarTodayJson();
   }
 
   /**
    * chequea que el archivo como tal exista.
    */
-  private function checkFileExists()
+  private function fileExists()
   {
-    if(Storage::exists('dollar.json')) :
-      if (Storage::size('dollar.json') > 0) :
+    $storage = $this->storage;
+
+    if($storage::exists('dollar.json')) :
+      if ($storage::size('dollar.json') > 0) :
         return true;
       endif;
-      Storage::delete('dollar.json');
-      return false;
-    else:
+      $storage::delete('dollar.json');
       return false;
     endif;
+
+    return false;
   }
 
   /**
@@ -123,13 +138,16 @@ class CheckDollar {
    */
   private function makeFile()
   {
+    $storage = $this->storage;
     $data = file_get_contents($this->dollarTodayUrl);
+
     if(!$data) return null;
+
     $data = json_decode(utf8_decode($data));
-    $data->local_timestamps = Carbon::now();
+    $data->local_timestamps = $this->time;
     $this->data = $data;
     $data = json_encode((array)$data);
-    Storage::put('dollar.json', $data);
-    return true;
+
+    return $storage::put('dollar.json', $data);;
   }
 }
