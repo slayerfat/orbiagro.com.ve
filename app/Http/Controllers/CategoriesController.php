@@ -45,7 +45,7 @@ class CategoriesController extends Controller {
 
     foreach ($cats as $cat) :
       foreach ($cat->sub_categories as $subCat) :
-        $productsCollection->push($subCat->products()->random()->take(12)->get());
+        $productsCollection->push($subCat->products()->random()->take(6)->get());
       endforeach;
     endforeach;
 
@@ -101,9 +101,15 @@ class CategoriesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id)
+  public function show($id, VisitedProductsFinder $visitedFinder)
   {
-    //
+    $cat = Category::findOrFail($id);
+
+    $subCats = $cat->sub_categories;
+
+    $visitedProducts = $visitedFinder->getVisitedProducts();
+
+    return view('category.show', compact('visitedProducts', 'cat', 'subCats'));
   }
 
   /**

@@ -1,27 +1,26 @@
 @extends('master')
 
 @section('title')
-  - Rubro - {{ $subCat->description }}
+  - Categoria - {{ $cat->description }}
 @stop
 
 @section('content')
 
   @if(Auth::user())
-    @if(Auth::user()->isOwnerOrAdmin($subCat->id))
+    @if(Auth::user()->isOwnerOrAdmin($cat->id))
       <div class="container">
         <div class="row">
           <div class="col-xs-2">
-            {!! link_to_action('SubCategoriesController@edit', 'Editar', $subCat->id, ['class' => 'btn btn-default btn-block']) !!}
+            {!! link_to_action('CategoriesController@edit', 'Editar', $cat->id, ['class' => 'btn btn-default btn-block']) !!}
           </div>
         </div>
       </div>
     @endif
   @endif
 
-  @include('sub-category.addons.breadcrumbs-show')
-  @include('partials.products.paginated')
+  @include('category.addons.breadcrumbs-show')
+  @include('sub-category.addons.sub-cat-paginated')
   @include('visit.addons.relatedProducts')
-  @include('sub-category.addons.sub-cat-paginated', ['title' => 'Rubros Relacionados'])
 
 @stop
 
