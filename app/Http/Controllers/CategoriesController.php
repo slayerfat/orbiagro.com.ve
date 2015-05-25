@@ -2,6 +2,7 @@
 
 use Auth;
 use App\Http\Requests;
+use App\Http\Requests\CategoryRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -58,7 +59,15 @@ class CategoriesController extends Controller {
    */
   public function create()
   {
-    //
+    if(!$this->user->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
+
+    return view('category.create')->with([
+      'cat' => $this->cat
+    ]);
   }
 
   /**
@@ -66,9 +75,24 @@ class CategoriesController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(CategoryRequest $request, Upload $upload)
   {
-    //
+    if(!$this->user->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
+
+    // para los archivos del rubro
+    $upload->userId = $this->userId;
+
+    $this->cat->fill($request->all());
+    $this->cat->save();
+
+    $upload->createImage($request->file('image'), $this->cat);
+
+    flash()->success('Rubro creado exitosamente.');
+    return redirect()->action('CategoriesController@index');
   }
 
   /**
