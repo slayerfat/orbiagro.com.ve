@@ -22,7 +22,7 @@ class SubCategoryRequest extends Request {
   public function rules()
   {
     return [
-      'description' => 'required|min:5',
+      'description' => 'required|min:3',
       'info'        => 'required|min:5',
       'category_id' => 'required|numeric',
       'image'       => 'image',

@@ -54,7 +54,7 @@ class SubCategoriesController extends Controller {
       $productsCollection->push($cat->products()->random()->take(12)->get());
     }
 
-    return view('sub-category.index', compact('subCats', 'productsCollection'));
+    return view('sub-category.index', compact('subCats', 'productsCollection', 'visitedProducts'));
   }
 
   /**

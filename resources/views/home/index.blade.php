@@ -1,23 +1,18 @@
 @extends('master')
 
 @section('content')
-
-<div class="container">
-  <div class="carrusel-main">
-    <div><img src="http://placehold.it/500/50" alt="" /></div>
-    <div><img src="http://placehold.it/500/500" alt="" /></div>
-    <div><img src="http://placehold.it/500/200" alt="" /></div>
+  <div class="container">
+    <div class="carrusel-main">
+      <div><img src="http://placehold.it/500/50" alt="" /></div>
+      <div><img src="http://placehold.it/500/500" alt="" /></div>
+      <div><img src="http://placehold.it/500/200" alt="" /></div>
+    </div>
   </div>
-</div>
 
   @include('partials.orbiagro-info')
-
   @include('promotion.addons.4-4-4-gallerie')
-
   @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Productos en '.$sub_category->description])
-
   @include('visit.addons.relatedProducts')
-
 @stop
 
 @section('js')

@@ -5,22 +5,51 @@ use App\Mamarrachismo\ModelValidation;
 
 class Category extends Model {
 
-  protected $fillable = ['description', 'slug'];
+  protected $fillable = ['description', 'slug', 'info'];
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setDescriptionAttribute($value)
   {
-    $this->attributes['description'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['description'] = ModelValidation::byLenght($value);
+    if($this->attributes['description'])
+      $this->attributes['slug'] = str_slug($this->attributes['description']);
   }
 
-  /**
-   * Accessors
-   */
+  public function setSlugAttribute($value)
+  {
+    if (ModelValidation::byLenght($value)) :
+      $this->attributes['slug'] = str_slug($value);
+    else:
+      $this->attributes['slug'] = null;
+    endif;
+  }
+
+  public function setInfoAttribute($value)
+  {
+    $this->attributes['info'] = ModelValidation::byLenght($value);
+  }
+
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getDescriptionAttribute($value)
   {
     if($value) return ucfirst($value);
+    return null;
+  }
+
+  public function getInfoAttribute($value)
+  {
+    if($value) :
+      if (substr($value, -1) !== '.')
+      {
+        $value .= '.';
+      }
+      return ucfirst($value);
+    endif;
+
     return null;
   }
 
