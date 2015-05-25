@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title')
-  - Crear - Distintivo - {{$product->title}}
+  - Crear - Rubro
 @stop
 
 @section('content')
@@ -9,15 +9,15 @@
     <div class="row">
       <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default">
-          <div class="panel-heading">Crear nuevo Distintivo</div>
+          <div class="panel-heading">Crear nuevo Rubro</div>
           <div class="panel-body">
             @include('errors.bag')
-            {!! Form::model($feature, [
-              'action' => ['FeaturesController@store', $product->id],
-              'class' => 'form-horizontal',
-              'files' => true,
+            {!! Form::model($subCat, [
+              'action' => 'SubCategoriesController@store',
+              'class'  => 'form-horizontal',
+              'files'  => true
               ]) !!}
-              @include('feature.forms.body', ['textoBotonSubmit' => 'Añadir nuevo Distintivo'])
+              @include('sub-category.forms.body', ['textoBotonSubmit' => 'Añadir nuevo Rubro'])
             {!! Form::close() !!}
           </div>
         </div>

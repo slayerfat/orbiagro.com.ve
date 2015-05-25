@@ -74,32 +74,29 @@ class FeaturesController extends Controller {
     // para los archivos del feature
     $upload->userId = $this->userId;
 
-    if ($product->features->count() < 5) :
-      if($this->modelValidator->notOwner($product->user->id)) :
-        flash()->error('Ud. no tiene permisos para esta accion.');
-        return redirect()->action('ProductsController@show', $id);
-      endif;
-
-
-      $this->feature->title       = $request->input('title');
-      $this->feature->description = $request->input('description');
-      $this->feature->created_by  = $this->userId;
-      $this->feature->updated_by  = $this->userId;
-      $product->features()->save($this->feature);
-
-      // para guardar la imagen y modelo
-      if ($request->hasFile('image')) :
-        $upload->createFeatureImage($request->file('image'), $product, $this->feature);
-      else:
-        $upload->createDefaultFeatureImage($product, $this->feature);
-      endif;
-
-      flash('Producto actualizado correctamente.');
-      return redirect()->action('ProductsController@show', $product->id);
+    // el producto puede tener como maximo 5 features
+    if ($product->features->count() >= 5) :
+      flash()->error('Este Producto ya posee 5 distintivos, por favor actualice los existentes.');
+      return redirect()->action('ProductsController@show', $id);
     endif;
 
-    flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
-    return redirect()->action('ProductsController@show', $id);
+    if($this->modelValidator->notOwner($product->user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@show', $id);
+    endif;
+
+    $this->feature->title       = $request->input('title');
+    $this->feature->description = $request->input('description');
+    $this->feature->created_by  = $this->userId;
+    $this->feature->updated_by  = $this->userId;
+    $product->features()->save($this->feature);
+
+    // para guardar la imagen y modelo
+
+    $upload->createImage($request->file('image'), $this->feature);
+
+    flash('Distintivos actualizado correctamente.');
+    return redirect()->action('ProductsController@show', $product->id);
   }
 
   /**
@@ -139,11 +136,11 @@ class FeaturesController extends Controller {
 
     $this->feature->updated_by = $this->userId;
     $this->feature->update($request->all());
-    flash('El feature ha sido actualizado correctamente.');
+    flash('El Distintivo ha sido actualizado correctamente.');
     // para guardar la imagen y modelo
     if ($request->hasFile('image')) :
-      if (!$upload->updateFeatureImage($request->file('image'), $this->feature->product, $this->feature))
-        flash()->error('La imagen no pudo ser actualizada correctamente');
+      if (!$upload->updateImage($request->file('image'), $this->feature, $this->feature->image))
+        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
     endif;
 
     return redirect()->action('ProductsController@show', $this->feature->product->id);

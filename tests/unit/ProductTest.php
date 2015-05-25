@@ -12,6 +12,7 @@ class ProductTest extends \Codeception\TestCase\Test
   protected function _before()
   {
     $this->tester = Product::first();
+    $this->data = ['', 'a', -1];
   }
 
   protected function _after()
@@ -104,9 +105,12 @@ class ProductTest extends \Codeception\TestCase\Test
 
   public function testCorrectTitleFormat()
   {
-    $this->tester->title = '';
-    $this->assertNull($this->tester->title);
-    $this->assertNull($this->tester->slug);
+    $obj = new Product;
+    foreach($this->data as $value):
+      $obj->title = $value;
+      $this->assertNull($obj->title);
+      $this->assertNull($obj->slug);
+    endforeach;
     $this->tester->title = 'tetsuo kaneda tetsuo kaneda';
     $this->assertEquals('Tetsuo kaneda tetsuo kaneda', $this->tester->title);
     $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
@@ -149,12 +153,11 @@ class ProductTest extends \Codeception\TestCase\Test
 
   public function testQuantityAttribute()
   {
-    $this->tester->quantity = 1;
-    $this->assertNotNull($this->tester->quantity);
-    $this->tester->quantity = '';
-    $this->assertNull($this->tester->quantity);
-    $this->tester->quantity = -1;
-    $this->assertNull($this->tester->quantity);
+    $obj = new Product;
+    foreach($this->data as $value):
+      $obj->quantity = $value;
+      $this->assertNull($obj->quantity);
+    endforeach;
   }
 
 }

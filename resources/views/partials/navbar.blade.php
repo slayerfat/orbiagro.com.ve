@@ -15,20 +15,20 @@
     <div class="collapse navbar-collapse" id="main-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="/">Inicio</a></li>
-        @unless (Auth::guest())
-          @if (Auth::user()->profile->description === 'Administrador')
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                Usuarios
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu" role="menu">
-                <li>{!! link_to_action('UsersController@create', 'Crear') !!}</li>
-                <li>{!! link_to_action('UsersController@index', 'Consulta General') !!}</li>
-              </ul>
-            </li>
-          @endif
-        @endunless
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Rubros
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            @unless (Auth::guest())
+              @if (Auth::user()->isAdmin())
+                <li>{!! link_to_action('SubCategoriesController@create', 'Crear') !!}</li>
+              @endif
+            @endunless
+            <li>{!! link_to_action('SubCategoriesController@index', 'Consultar') !!}</li>
+          </ul>
+        </li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
             Productos
@@ -41,6 +41,20 @@
             <li>{!! link_to_action('ProductsController@index', 'Consultar') !!}</li>
           </ul>
         </li>
+        @unless (Auth::guest())
+          @if (Auth::user()->isAdmin())
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Usuarios
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li>{!! link_to_action('UsersController@create', 'Crear') !!}</li>
+                <li>{!! link_to_action('UsersController@index', 'Consultar') !!}</li>
+              </ul>
+            </li>
+          @endif
+        @endunless
       </ul>
 
       <ul class="nav navbar-nav navbar-right" id="main-navbar-user">

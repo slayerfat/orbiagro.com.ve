@@ -11,9 +11,9 @@ class ModelValidation {
 
   public $userId, $user;
 
-  public function __construct($id = null, User $user = null)
+  public function __construct($userId = null, User $user = null)
   {
-    $this->userId = $id;
+    $this->userId = $userId;
     $this->user   = $user;
   }
 
@@ -25,9 +25,9 @@ class ModelValidation {
    *
    * @return boolean
    */
-  public function notOwner($id)
+  public function notOwner($candidateId)
   {
-    if($this->userId === $id) return false;
+    if($this->userId === $candidateId) return false;
     if($this->user->isAdmin()) return false;
 
     return true;

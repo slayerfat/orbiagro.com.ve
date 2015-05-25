@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use Faker\Factory as Faker;
+
 class SubCategoryTableSeeder extends Seeder {
 
   /**
@@ -25,6 +27,8 @@ class SubCategoryTableSeeder extends Seeder {
       ]
     ];
 
+    $faker  = Faker::create('es_ES');
+
     foreach($types as $category => $values):
       $this->command->info("$category");
       $cat = App\Category::where('description', $category)->first();
@@ -33,6 +37,7 @@ class SubCategoryTableSeeder extends Seeder {
           App\SubCategory::create([
             'category_id' => $cat->id,
             'description' => $value,
+            'info'        => $faker->text(),
             'slug'        => str_slug($value, '-')
           ]);
         endforeach;

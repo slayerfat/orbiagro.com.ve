@@ -17,7 +17,7 @@
               'action' => ['MechanicalInfoController@update', $mech->id],
               'class' => 'form-horizontal',
               ]) !!}
-              @include('mechanicalInfo.forms.create', ['textoBotonSubmit' => 'Actualizar Informacion Mecanica'])
+              @include('mechanicalInfo.forms.body', ['textoBotonSubmit' => 'Actualizar Informacion Mecanica'])
             {!! Form::close() !!}
           </div>
         </div>

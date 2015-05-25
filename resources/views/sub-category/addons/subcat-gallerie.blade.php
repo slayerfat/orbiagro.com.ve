@@ -6,8 +6,8 @@
   </div>
   <div class="row">
     @include('sub-category.addons.gallerie-thumbnail-products', [
-      'products' => $sub_category->products->take(3),
-      'size' => 'col-sm-4'
+      'products' => $productsCollection->random(),
+      'size' => 'col-sm-2'
     ])
   </div>
 </div>

@@ -9,14 +9,11 @@
           {!! link_to_action('ProductsController@index', 'Productos') !!}
         </li>
         <li>
-          {!! link_to_action('CategoriesController@show', $product->sub_category->category->description, $product->sub_category->category->id) !!}
-        </li>
-        <li>
-          {!! link_to_action('SubCategoriesController@show', $product->sub_category->description, $product->sub_category->id) !!}
+          {!! link_to_action('CategoriesController@index', 'Categorias') !!}
         </li>
         <li class="active">
           <em>
-            {!! $product->title !!}
+            Rubros
           </em>
         </li>
       </ol>

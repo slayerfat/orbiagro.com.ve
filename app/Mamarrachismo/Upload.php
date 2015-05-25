@@ -3,11 +3,10 @@
 use Auth;
 use App\Product;
 use App\Feature;
+use App\SubCategory;
+use App\Category;
 use App\Image;
 
-/**
- *
- */
 class Upload {
 
   /**
@@ -16,26 +15,44 @@ class Upload {
   public $userId;
 
   /**
+   * el modelo a ser manipulado
+   *
+   * @todo implementar.
+   * @var object
+   */
+  public $model;
+
+  /**
+   * la direccion para guardar el archivo relacionado al modelo.
+   * @var string
+   */
+  private $path;
+
+  /**
    * reglas para el validador.
    * @var array
    */
   private $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
 
-  public function __construct($id = null)
+  public function __construct($userID = null)
   {
-    $this->userId = $id;
+    $this->userId = $userID;
   }
 
   /**
-   * crea la(s) imagen(es) relacionadas con algun producto.
+   * crea la(s) imagen(es) relacionadas con algun modelo.
    *
-   * @param array   $array   El array con los objetos UploadedFiles.
-   * @param Product $product El modelo de producto.
+   * @param array  $array   El array con los objetos UploadedFiles.
+   * @param object $product El modelo a relacionar con la imagen.
    *
    * @return boolean
    */
-  public function createProductImages(array $array, Product $product)
+  public function createImages(array $array = null, $model)
   {
+    $this->path = $this->generatePathFromModel($model);
+
+    if(!$array) return $this->createDefaultImage($this->path, $model);
+
     foreach($array as $file) :
 
       // el validador
@@ -47,74 +64,45 @@ class Upload {
         if (sizeOf($array) <= 1)
         {
           // si las imagenes no son validas crea una imagen por defecto
-          return $this->createDefaultProductImage($product);
+          return $this->createDefaultImage($this->path, $model);
         }
       }
 
       // se crea la imagen en el HD.
-      if (!$result = $this->createFile($file, $product)) return false;
+      if (!$result = $this->createFile($file, $this->path)) return false;
 
       // se crea el modelo.
-      $this->createProductImageModel($result, $product);
+      $this->createImageModel($result, $model);
     endforeach;
 
     return true;
   }
 
   /**
-   * crea la imagen por defecto relacionada con algun producto.
+   * crea la imagen relacionada con algun modelo.
    *
-   * @param Product $product El modelo de producto.
-   *
-   * @return boolean
-   */
-  public function createDefaultProductImage(Product $product)
-  {
-    // el nombre del archivo
-    $name = date('Ymdhmmss-').str_random(20);
-    $path = "products/{$product->id}/{$name}.gif";
-    // se copia el archivo
-    if (\Storage::disk('public')->copy('sin_imagen.gif', $path)) :
-
-      $image = new Image;
-      $image->path       = $path;
-      $image->mime       = 'image/gif';
-      $image->alt        = $product->title;
-      $image->created_by = $this->userId;
-      $image->updated_by = $this->userId;
-
-      return $product->images()->save($image);
-
-    endif;
-
-    return false;
-
-  }
-
-  /**
-   * crea la imagen relacionada con algun feature.
-   *
-   * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
-   * @param Product       $product El modelo de producto.
-   * @param Feature       $feature El modelo de feature relacionado con producto.
+   * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
+   * @param object        $model El modelo relacionado para ser asociado.
    *
    * @return boolean
    */
-  public function createFeatureImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file, Product $product, Feature $feature)
+  public function createImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $model)
   {
+    $this->path = $this->generatePathFromModel($model);
+
     // el validador
     $validator = \Validator::make(['image' => $file], $this->imageRules);
     if ($validator->fails())
     {
       // si las imagen no es valida crea una imagen por defecto
-      return $this->createDefaultFeatureImage($product, $feature);
+      return $this->createDefaultImage($this->path, $model);
     }
 
     // se crea la imagen en el HD.
-    if (!$result = $this->createFile($file, $product)) return false;
+    if (!$result = $this->createFile($file, $this->path)) return false;
 
     // se crea el modelo.
-    $this->createFeatureImageModel($result, $feature);
+    $this->createImageModel($result, $model);
 
     return true;
   }
@@ -122,69 +110,58 @@ class Upload {
   /**
    * crea la imagen por defecto relacionada con algun producto.
    *
-   * @param Product $product El modelo de producto.
-   * @param Feature $feature El modelo de feature relacionado con producto.
+   * @param string $path  La direccion a donde se guardara
+   * @param object $model El modelo relacionado para ser asociado.
    *
    * @return boolean
    */
-  public function createDefaultFeatureImage(Product $product, Feature $feature)
+  public function createDefaultImage($path, $model)
   {
     // el nombre del archivo
     $name = date('Ymdhmmss-').str_random(20);
-    $path = "products/{$product->id}/{$name}.gif";
+    $path = "{$path}/{$name}.gif";
     // se copia el archivo
     if (\Storage::disk('public')->copy('sin_imagen.gif', $path)) :
 
-      $image = new Image;
-      $image->path       = $path;
-      $image->mime       = 'image/gif';
-      $image->alt        = $feature->title;
-      $image->created_by = $this->userId;
-      $image->updated_by = $this->userId;
+      // la data necesaria para crear el modelo de imagen.
+      $data = [
+        'path' => $path,
+        'mime' => 'image/gif'
+      ];
 
-      return $feature->image()->save($image);
+      return $this->createImageModel($data, $model);
 
     endif;
 
     return false;
-
   }
 
   /**
    * actualiza la imagen relacionada con algun feature.
    *
-   * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
-   * @param Product       $product El modelo de producto.
-   * @param Feature       $feature El modelo de feature relacionado con producto.
+   * @param UploadedFile  $file         Objeto UploadedFiles con la imagen.
+   * @param object        $parentModel  El modelo a actualizar.
+   * @param App\Image     $imageModel   El modelo de la imagen.
    *
    * @return boolean
    */
-  public function updateFeatureImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file, Product $product, Feature $feature)
+  public function updateImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel, Image $imageModel)
   {
+    $this->path = $this->generatePathFromModel($parentModel);
+
     // el validador
     $validator = \Validator::make(['image' => $file], $this->imageRules);
     if ($validator->fails()) return false;
 
-    // si no existe modelo se crea uno y se ignora el bloque condicional
-    if($feature->image):
-      // se chequea si existe el archivo y se elimina
-      if (\Storage::disk('public')->exists($feature->image->path))
-        \Storage::disk('public')->delete($feature->image->path);
+    // se chequea si existe el archivo y se elimina
+    if (\Storage::disk('public')->exists($imageModel->path))
+      \Storage::disk('public')->delete($imageModel->path);
 
-      // se crea la imagen en el HD y se actualiza el modelo.
-      if (!$result = $this->createFile($file, $product))
-        return $this->createDefaultFeatureImage($product, $feature);
+    // se crea la imagen en el HD y se actualiza el modelo.
+    if (!$result = $this->createFile($file, $this->path))
+      return $this->createDefaultImage($this->path, $parentModel);
 
-      return $feature->image->update($result);
-    endif;
-
-    // se crea la imagen en el HD.
-    if (!$result = $this->createFile($file, $product)) return false;
-
-    // se crea el modelo.
-    $this->createFeatureImageModel($result, $feature);
-
-    return true;
+    return $imageModel->update($result);
   }
 
   /**
@@ -195,40 +172,53 @@ class Upload {
    *
    * @return boolean
    */
-  private function createProductImageModel(array $array, Product $product)
+  private function createImageModel(array $array, $model)
   {
     $image = new Image($array);
     $image->created_by = $this->userId;
     $image->updated_by = $this->userId;
-    $image->alt = $product->title;
-    return $product->images()->save($image);
-  }
 
-  /**
-   * crea el modelo nuevo de alguna imagen relacionada con algun feature.
-   *
-   * @param array   $array   el array que contiene los datos para la imagen.
-   * @param Feature $feature el modelo de feature.
-   *
-   * @return boolean
-   */
-  private function createFeatureImageModel(array $array, Feature $feature)
-  {
-    $image = new Image($array);
-    $image->created_by = $this->userId;
-    $image->updated_by = $this->userId;
-    $image->alt = $feature->title;
-    return $feature->image()->save($image);
+    switch (get_class($model)) :
+
+      case 'App\Product':
+        $image->alt = $model->title;
+        return $model->images()->save($image);
+
+      case 'App\Feature':
+        $image->alt = $model->title;
+        return $model->image()->save($image);
+
+      case 'App\Category':
+        $image->alt = $model->description;
+        return $model->image()->save($image);
+
+      case 'App\SubCategory':
+        $image->alt = $model->description;
+        return $model->image()->save($image);
+
+      case 'App\Maker':
+        $image->alt = $model->name;
+        return $model->images()->save($image);
+
+      case 'App\Promotion':
+        $image->alt = $model->title;
+        return $model->images()->save($image);
+
+      default:
+        throw new \Exception("Error: modelo desconocido, no se puede guardar imagen", 1);
+        break;
+
+    endswitch;
   }
 
   /**
    * usado para crear en el disco duro el archivo relacionado a un producto.
    *
    * @param  SymfonyComponentHttpFoundationFileUploadedFile $model
-   * @param  Product $product el modelo de producto.
-   * @return array   $data    la carpeta, nombre y extension del archivo guardado.
+   * @param  string $path la direccion a donde se guardara el archivo.
+   * @return array  $data la carpeta, nombre y extension del archivo guardado.
    */
-  private function createFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file, Product $product)
+  private function createFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file, $path = null)
   {
     // el nombre del archivo
     $name = date('Ymdhmmss-').str_random(20);
@@ -238,19 +228,48 @@ class Upload {
     // i have no idea what im doing.
     try
     {
-      $file->move("products/{$product->id}", "{$name}.{$ext}");
+      $file->move($path, "{$name}.{$ext}");
     }
-    catch(\FileException $e)
+    catch(FileException $e)
     {
       return false;
     }
 
     // la data necesaria para crear el modelo de imagen.
     $data = [
-      'path' => "products/{$product->id}/{$name}.{$ext}",
+      'path' => "$path/{$name}.{$ext}",
       'mime' => $file->getClientMimeType()
     ];
 
     return $data;
+  }
+
+  private function generatePathFromModel($model)
+  {
+    switch (get_class($model)) :
+
+      case 'App\Product':
+        return "products/{$model->id}";
+
+      case 'App\Feature':
+        return "products/{$model->product->id}";
+
+      case 'App\Category':
+        return "category/{$model->id}";
+
+      case 'App\SubCategory':
+        return "sub-category/{$model->id}";
+
+      case 'App\Maker':
+        return "makers/{$model->id}";
+
+      case 'App\Promotion':
+        return "promos/{$model->id}";
+
+      default:
+        throw new \Exception("Error: modelo desconocido, no se puede crear ruta", 2);
+        break;
+
+    endswitch;
   }
 }

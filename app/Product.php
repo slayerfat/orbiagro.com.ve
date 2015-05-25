@@ -23,38 +23,28 @@ class Product extends Model {
   // --------------------------------------------------------------------------
   public function setTitleAttribute($value)
   {
-    if(trim($value) == '') :
-      $this->attributes['title'] = null;
-      $this->attributes['slug']  = null;
-    else:
-      $this->attributes['title'] = $value;
-      $this->attributes['slug']  = str_slug($value);
-    endif;
+    $this->attributes['title'] = ModelValidation::byLenght($value);
+    if($this->attributes['title'])
+      $this->attributes['slug'] = str_slug($this->attributes['title']);
   }
 
   public function setDescriptionAttribute($value)
   {
-    $this->attributes['description'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['description'] = ModelValidation::byLenght($value);
   }
 
   public function setSlugAttribute($value)
   {
-    if(trim($value) == '') :
-      $this->attributes['slug'] = null;
-    else:
+    if (ModelValidation::byLenght($value)) :
       $this->attributes['slug'] = str_slug($value);
+    else:
+      $this->attributes['slug'] = null;
     endif;
   }
 
   public function setQuantityAttribute($value)
   {
-    if($value == '') :
-      $this->attributes['quantity'] = null;
-    elseif($value < 0):
-      $this->attributes['quantity'] = null;
-    else:
-      $this->attributes['quantity'] = (integer)$value;
-    endif;
+    $this->attributes['price'] = (integer)ModelValidation::byNonNegative($value);
   }
 
   public function setPriceAttribute($value)

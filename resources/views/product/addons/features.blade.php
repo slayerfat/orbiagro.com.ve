@@ -38,13 +38,13 @@
       </div>
     @endforeach
     @if($isUserValid && $product->features->count() < 5)
-      {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
+      {!! link_to_action('FeaturesController@create', 'Crear nuevo Distintivo', $product->id) !!}
     @endif
   </div>
 @else
   @if(Auth::user())
     @if(Auth::user()->isOwnerOrAdmin($product->id))
-      {!! link_to_action('FeaturesController@create', 'Crear nuevos Features', $product->id) !!}
+      {!! link_to_action('FeaturesController@create', 'Crear nuevo Distintivo', $product->id) !!}
     @endif
   @else
     Sin información detallada
