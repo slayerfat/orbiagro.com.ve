@@ -29,7 +29,7 @@ class NeoTableSeeder extends Seeder {
       'first_name'     => 'Keanu',
       'first_surname'  => 'Reaves',
       'identity_card'  => '10000000',
-      'phone'          => '+58-(212)-333-2211',
+      'phone'          => '2123332211',
       'birth_date'     => '1968-09-06',
       'created_at'     => 'current_timestampt',
       'updated_at'     => 'current_timestampt'

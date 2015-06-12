@@ -21,7 +21,7 @@ class UsersController extends Controller {
    */
   public function __construct(User $user)
   {
-    $this->middleware('auth', ['except' => ['index', 'show']]);
+    $this->middleware('auth');
     $this->user = $user;
   }
 
@@ -87,7 +87,15 @@ class UsersController extends Controller {
    */
   public function show($id)
   {
-    //
+    if(!Auth::user()->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
+
+    $user = User::findOrFail($id);
+
+    return view('user.show', compact('user'));
   }
 
   /**
