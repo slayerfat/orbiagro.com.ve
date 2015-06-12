@@ -18,16 +18,18 @@
         <h2>
           <small>{{$user->profile->description}}</small>
         </h2>
-        <h2>
-          {{$user->person->formatted_names()}}
-        </h2>
-        <h3>
-          Cedula: {{$user->person->identity_card}}
-        </h3>
-        <h3>
-          {{$user->person->nationality->description}}, {{$user->person->gender->description}}
-        </h3>
-        <h3>{{$user->person->phone}}</h3>
+        @if($user->person)
+          <h2>
+            {{$user->person->formatted_names()}}
+          </h2>
+          <h3>
+            Cedula: {{$user->person->identity_card}}
+          </h3>
+          <h3>
+            {{$user->person->nationality->description}}, {{$user->person->gender->description}}
+          </h3>
+          <h3>{{$user->person->phone}}</h3>
+        @endif
       </div>
 
       <div class="col-sm-8">
