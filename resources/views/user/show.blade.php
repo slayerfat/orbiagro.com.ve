@@ -30,6 +30,11 @@
         <h3>{{$user->person->phone}}</h3>
       </div>
 
+      <div class="col-sm-8">
+        <h1>Productos</h1>
+        @include('partials.products.simple-media', ['products' => $user->products])
+      </div>
+
     </div>
   </div>
 @stop

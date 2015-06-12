@@ -112,7 +112,9 @@ elixir(function(mix) {
   mix.copy('vendor/bower_components/jquery/dist/jquery.min.js',
       'public/js/vendor/jquery.min.js')
       .copy('vendor/bower_components/jquery/dist/jquery.min.map',
-         'public/js/vendor/jquery.min.map')
+        'public/js/vendor/jquery.min.map')
+      .copy('vendor/bower_components/slick.js/slick/ajax-loader.gif',
+        'public/css/ajax-loader.gif')
       //  fontawesome
       .copy('vendor/bower_components/fontawesome/css/font-awesome.min.css',
         'public/css/vendor/font-awesome.min.css')
@@ -152,8 +154,8 @@ elixir(function(mix) {
         'public/css/fonts')
       .copy('vendor/bower_components/slick.js/slick/slick.min.js',
         'public/js/vendor/slick.min.js')
-        .copy('vendor/bower_components/slick.js/slick/ajax-loader.gif',
-        'public/ajax-loader.gif')
+      .copy('vendor/bower_components/slick.js/slick/ajax-loader.gif',
+      'public/ajax-loader.gif')
       // ckeditor
       .copy('vendor/bower_components/ckeditor/ckeditor.js',
         'public/js/vendor/ckeditor/ckeditor.js')

@@ -28,5 +28,7 @@
   },
   "author": "slayerfat@gmail.com",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "country-data": "0.0.19"
+  }
 }
