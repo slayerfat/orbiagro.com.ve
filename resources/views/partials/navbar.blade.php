@@ -17,6 +17,20 @@
         <li><a href="/">Inicio</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Categorias
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            @unless (Auth::guest())
+              @if (Auth::user()->isAdmin())
+                <li>{!! link_to_action('CategoriesController@create', 'Crear') !!}</li>
+              @endif
+            @endunless
+            <li>{!! link_to_action('CategoriesController@index', 'Consultar') !!}</li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
             Rubros
             <span class="caret"></span>
           </a>

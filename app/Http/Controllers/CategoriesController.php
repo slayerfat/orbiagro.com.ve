@@ -120,7 +120,17 @@ class CategoriesController extends Controller {
    */
   public function edit($id)
   {
-    //
+    if(!$this->user->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
+
+    $this->cat = Category::findOrFail($id);
+
+    return view('category.edit')->with([
+      'cat' => $this->cat,
+    ]);
   }
 
   /**
@@ -129,9 +139,26 @@ class CategoriesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, CategoryRequest $request, Upload $upload)
   {
-    //
+    if(!$this->user->isAdmin())
+    {
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('HomeController@index');
+    }
+
+    $this->cat = category::findOrFail($id)->load('image');
+
+    $this->cat->update($request->all());
+    flash()->success('La Categoria ha sido actualizada correctamente.');
+
+    if ($request->hasFile('image')) :
+      if (!$upload->updateImage($request->file('image'), $this->cat, $this->cat->image)) :
+        flash()->warning('La Categoria ha sido actualizada, pero la imagen asociada no pudo ser actualizada.');
+      endif;
+    endif;
+
+    return redirect()->action('CategoriesController@show', $id);
   }
 
   /**
