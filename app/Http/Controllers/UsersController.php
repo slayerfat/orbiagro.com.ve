@@ -93,7 +93,7 @@ class UsersController extends Controller {
       return redirect()->action('HomeController@index');
     }
 
-    $user = User::with('person', 'products')->findOrFail($id);
+    $user = User::with('person', 'products', 'profile')->findOrFail($id);
 
     return view('user.show', compact('user'));
   }
