@@ -43,6 +43,7 @@ Route::group(['prefix' => 'productos'], function(){
 Route::resource('categorias', 'CategoriesController');
 Route::resource('rubros', 'SubCategoriesController');
 Route::resource('fabricantes', 'MakersController');
+Route::resource('perfiles', 'ProfilesController');
 
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar
