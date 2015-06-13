@@ -67,6 +67,18 @@ class VisitsService {
     if(!Cookie::get('visitedAt')) $this->setUpdatedCookieDate();
   }
 
+  /**
+   * @param int $quantity la cantidad a tomar.
+   *
+   * @return Illuminate\Database\Eloquent\Collection
+   */
+  public function getPopularSubCats($quantity = 3)
+  {
+    return Visit::where('visitable_type', 'App\SubCategory')
+      ->orderBy('total', 'desc')
+      ->take($quantity)
+      ->get();
+  }
   // --------------------------------------------------------------------------
   // Funciones privadas
   // --------------------------------------------------------------------------

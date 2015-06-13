@@ -26,7 +26,12 @@ class HomeController extends Controller {
     $visitedProducts = $visits->getVisitedProducts();
     $popularSubCats  = $visits->getPopularSubCats();
 
-    return view('home.index', compact('sub_category', 'promotions', 'visitedProducts'));
+    return view('home.index', compact(
+      'sub_category',
+      'promotions',
+      'visitedProducts',
+      'popularSubCats'
+    ));
   }
 
   public function unverified()

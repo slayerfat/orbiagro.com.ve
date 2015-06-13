@@ -101,4 +101,9 @@ class SubCategory extends Model {
     return $this->morphOne('App\Image', 'imageable');
   }
 
+  public function visits()
+  {
+    return $this->morphMany('App\Visit', 'visitable');
+  }
+
 }
