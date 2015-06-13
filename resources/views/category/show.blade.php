@@ -19,10 +19,12 @@
   @include('category.addons.breadcrumbs-show')
   @include('sub-category.addons.sub-cat-paginated')
   @include('visit.addons.relatedProducts')
+  @include('sub-category.addons.popular', [$popularSubCats, 'title' => 'Rubros Populares'])
 
 @stop
 
 @section('js')
-  {{-- galeria de productos visitados relacionados. --}}
-  <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
+  {{-- javascript para productos, rubros y otros. --}}
+  @yield('relatedProducts-js')
+  @yield('popular-subCats-js')
 @stop

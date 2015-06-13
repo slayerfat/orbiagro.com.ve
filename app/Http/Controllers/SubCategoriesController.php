@@ -40,6 +40,8 @@ class SubCategoriesController extends Controller {
   public function index(VisitsService $visits)
   {
     $visitedProducts = $visits->getVisitedProducts();
+    $popularSubCats  = $visits->getPopular('subCategory');
+    $visitedSubCats  = $visits->getVisitedSubCats();
 
     // TODO: closure? : subcat ... function($query) ...
     // $todo = SubCategory::with(['products' => function($query){
@@ -55,7 +57,13 @@ class SubCategoriesController extends Controller {
       $productsCollection->push($cat->products()->random()->take(12)->get());
     }
 
-    return view('sub-category.index', compact('subCats', 'productsCollection', 'visitedProducts'));
+    return view('sub-category.index', compact(
+      'subCats',
+      'productsCollection',
+      'visitedProducts',
+      'popularSubCats',
+      'visitedSubCats'
+    ));
   }
 
   /**
@@ -114,7 +122,14 @@ class SubCategoriesController extends Controller {
     $popularSubCats  = $visits->getPopular('subCategory');
     $visitedSubCats  = $visits->getVisitedSubCats();
 
-    return view('sub-category.show', compact('products', 'visitedProducts', 'subCat', 'subCats'));
+    return view('sub-category.show', compact(
+      'products',
+      'visitedProducts',
+      'popularSubCats',
+      'visitedSubCats',
+      'subCat',
+      'subCats'
+    ));
   }
 
   /**

@@ -31,6 +31,7 @@ class HomeController extends Controller {
       'sub_category',
       'promotions',
       'visitedProducts',
+      'visitedSubCats',
       'popularSubCats'
     ));
   }

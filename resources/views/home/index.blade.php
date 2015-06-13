@@ -33,7 +33,7 @@
     });
   </script>
 
-  {{-- galeria de productos visitados relacionados. --}}
+  {{-- javascript para productos, rubros y otros. --}}
   @yield('relatedProducts-js')
   @yield('popular-subCats-js')
 @stop

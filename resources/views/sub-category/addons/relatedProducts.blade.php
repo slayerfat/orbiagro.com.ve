@@ -11,7 +11,3 @@
     ])
   </div>
 </div>
-
-@section('relatedProducts-js')
-  <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
-@stop

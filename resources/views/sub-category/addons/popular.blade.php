@@ -14,7 +14,7 @@
     @foreach($popularSubCats as $subcat)
       <div class="row related-subcategory" id="subCat{{ $subcat->id }}">
         <div class="col-xs-12">
-          <h3>Algunos Productos en Rubro {{ $subcat->description }}</h3>
+          <h3>Algunos Productos en {{ $subcat->description }}</h3>
         </div>
         @foreach($subcat->products()->random()->take(6)->get() as $product)
           <div class="col-sm-2">
