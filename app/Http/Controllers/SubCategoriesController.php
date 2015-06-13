@@ -109,9 +109,9 @@ class SubCategoriesController extends Controller {
 
     $products = Product::where('sub_category_id', $id)->paginate(20);
 
-    $visits->setNewSubCatVisit($id);
+    $visits->setNewVisit('subCat', $id);
     $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopularSubCats();
+    $popularSubCats  = $visits->getPopular('subCategory');
     $visitedSubCats  = $visits->getVisitedSubCats();
 
     return view('sub-category.show', compact('products', 'visitedProducts', 'subCat', 'subCats'));

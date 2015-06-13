@@ -108,9 +108,9 @@ class ProductsController extends Controller {
     if(!$product = Product::where('slug', $id)->first())
     $product = Product::findOrFail($id);
 
-    $visits->setNewProductVisit($product->id);
+    $visits->setNewVisit('product', $product->id);
     $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopularSubCats();
+    $popularSubCats  = $visits->getPopular('subCategory');
     $visitedSubCats  = $visits->getVisitedSubCats();
 
     if($this->user) :

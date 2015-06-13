@@ -24,7 +24,7 @@ class HomeController extends Controller {
     $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
 
     $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopularSubCats();
+    $popularSubCats  = $visits->getPopular('subCategory');
     $visitedSubCats  = $visits->getVisitedSubCats();
 
     return view('home.index', compact(

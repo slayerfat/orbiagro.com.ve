@@ -26,6 +26,74 @@ class VisitsService {
   // Funciones Publicas
   // --------------------------------------------------------------------------
 
+  /**
+   * @param int $id id del producto visitado.
+   *
+   * @return void
+   */
+  public function setNewVisit($model = null, $id)
+  {
+    switch (ucfirst($model))
+    {
+      case 'SubCategory':
+      case 'SubCategories':
+      case 'SubCat':
+      case 'SubCats':
+        $model = 'subCat';
+        break;
+      case 'Product':
+      case 'Products':
+        $model = 'product';
+        break;
+
+      default:
+        throw new \Exception("Error, es necesario especificar modelo valido.", 3);
+        break;
+    }
+
+    $total = Cookie::get("{$model}s_{$id}");
+    $total = ($total) ? ($total + 1) : 1;
+    Cookie::queue("{$model}s.{$id}", $total);
+    Cookie::queue("{$model}LastVisited", $id);
+    if(!Cookie::get("{$model}VisitedAt")) $this->setUpdatedCookieDate($model);
+  }
+
+  /**
+   * @param string  $className  el nombre de la clase.
+   * @param int     $quantity   la cantidad a tomar.
+   *
+   * @return Illuminate\Database\Eloquent\Collection
+   */
+  public function getPopular($className = null, $quantity = 3)
+  {
+    switch (ucfirst($className))
+    {
+      case 'SubCategory':
+      case 'SubCat':
+        $class = new SubCategory;
+        break;
+      case 'Product':
+        $class = new Product;
+        break;
+
+      default:
+        throw new \Exception("Error, es necesario especificar modelo valido.", 2);
+        break;
+    }
+
+    $results = Visit::selectRaw('visitable_id, sum(total)')
+      ->where('visitable_type', get_class($class))
+      ->groupBy('visitable_id')
+      ->orderBy('total', 'desc')
+      ->take($quantity)
+      ->get();
+    $results->each(function($result){
+      $this->bag[] = $result->visitable_id;
+    });
+
+    return $class->with('products')->find($this->bag);
+  }
+
   // --------------------------------------------------------------------------
   // Productos
   // --------------------------------------------------------------------------
@@ -62,36 +130,9 @@ class VisitsService {
     return Product::find($this->bag);
   }
 
-  /**
-   * @param int $id id del producto visitado.
-   *
-   * @return void
-   */
-  public function setNewProductVisit($id)
-  {
-    $total = Cookie::get("products_{$id}");
-    $total = ($total) ? ($total + 1) : 1;
-    Cookie::queue("products.{$id}", $total);
-    Cookie::queue("lastVisitedProduct", $id);
-    if(!Cookie::get('ProductvisitedAt')) $this->setUpdatedCookieDate('product');
-  }
-
   // --------------------------------------------------------------------------
   // Rubros
   // --------------------------------------------------------------------------
-
-  /**
-   * @param int $quantity la cantidad a tomar.
-   *
-   * @return Illuminate\Database\Eloquent\Collection
-   */
-  public function getPopularSubCats($quantity = 3)
-  {
-    return Visit::where('visitable_type', 'App\SubCategory')
-      ->orderBy('total', 'desc')
-      ->take($quantity)
-      ->get();
-  }
 
   /**
    * busca los rubros dentro de los cookies y devuelve la coleccion.
@@ -116,26 +157,11 @@ class VisitsService {
         foreach ($visits as $visit) {
           $this->bag[] = $visit->visitable->id;
         }
-        $subCats = SubCategory::find($this->bag);
-        return $subCats;
+        return SubCategory::find($this->bag);
       endif;
     endif;
 
     return SubCategory::find($this->bag);
-  }
-
-  /**
-   * @param int $id id del producto visitado.
-   *
-   * @return void
-   */
-  public function setNewSubCatVisit($id)
-  {
-    $total = Cookie::get("subCat_{$id}");
-    $total = ($total) ? ($total + 1) : 1;
-    Cookie::queue("subCats.{$id}", $total);
-    Cookie::queue("lastVisitedSubCat", $id);
-    if(!Cookie::get('subCatvisitedAt')) $this->setUpdatedCookieDate('subCat');
   }
 
   // --------------------------------------------------------------------------
@@ -176,7 +202,7 @@ class VisitsService {
 
     if(!isset($array)) return null;
 
-    $date = Cookie::get("ProductvisitedAt");
+    $date = Cookie::get("productVisitedAt");
 
     if(!$date) return null;
 
@@ -198,7 +224,7 @@ class VisitsService {
       endif;
 
       // se resetea el contador a 1 o 0 dependiendo de la ultima visita.
-      if(intval(Cookie::get('lastVisitedProduct')) == $id) :
+      if(intval(Cookie::get('productLastVisited')) == $id) :
         Cookie::queue("products.{$id}", 1);
       else:
         // se elimina el contador.
@@ -222,7 +248,7 @@ class VisitsService {
 
     if(!isset($array)) return null;
 
-    $date = Cookie::get("SubCatvisitedAt");
+    $date = Cookie::get("subCatVisitedAt");
 
     if(!$date) return null;
 
@@ -244,7 +270,7 @@ class VisitsService {
       endif;
 
       // se resetea el contador a 1 o 0 dependiendo de la ultima visita.
-      if(intval(Cookie::get('lastVisitedSubCat')) == $id) :
+      if(intval(Cookie::get('subCatLastVisited')) == $id) :
         Cookie::queue("subCats.{$id}", 1);
       else:
         // se elimina el contador.
@@ -266,10 +292,10 @@ class VisitsService {
     $date = $carbon;
     switch ($model) {
       case 'product':
-        Cookie::queue("ProductvisitedAt", $date);
+        Cookie::queue("productVisitedAt", $date);
         break;
       case 'subCat':
-        Cookie::queue("SubCatvisitedAt", $date);
+        Cookie::queue("subCatVisitedAt", $date);
         break;
 
       default:
