@@ -10,7 +10,7 @@ use App\Profile;
 
 class ProfilesController extends Controller {
 
-  public $user, $userId, $profile;
+  public $profile;
 
   /**
    * Create a new controller instance.
@@ -21,8 +21,6 @@ class ProfilesController extends Controller {
   {
     $this->middleware('auth');
     $this->middleware('user.admin');
-    $this->user    = Auth::user();
-    $this->userId  = Auth::id();
     $this->profile = $profile;
   }
 
@@ -33,7 +31,7 @@ class ProfilesController extends Controller {
    */
   public function index()
   {
-    $profiles = Profile::with('users', 'users.products')->get();
+    $profiles = Profile::with('users')->paginate(5);
 
     return view('profile.index', compact('profiles'));
   }
@@ -74,7 +72,7 @@ class ProfilesController extends Controller {
    */
   public function show($id)
   {
-    $this->profile = Profile::with('users', 'users.products')->findOrFail($id);
+    $this->profile = Profile::with('users')->findOrFail($id);
 
     return view('profile.show')->with(['profile' => $this->profile]);
   }
