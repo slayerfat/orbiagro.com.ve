@@ -17,7 +17,9 @@
   @endif
 
   @include('sub-category.addons.breadcrumbs-show')
-  @include('partials.products.paginated')
+  <div class="container" style="margin-top:15px;">
+    @include('partials.products.paginated')
+  </div>
   @include('visit.addons.relatedProducts')
   @include('sub-category.addons.sub-cat-paginated', ['title' => 'Rubros Relacionados'])
 
