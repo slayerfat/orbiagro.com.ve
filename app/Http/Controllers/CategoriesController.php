@@ -11,7 +11,7 @@ use App\Product;
 use App\Category;
 use App\SubCategory;
 
-use App\Mamarrachismo\VisitedProductsFinder;
+use App\Mamarrachismo\VisitsService;
 use App\Mamarrachismo\Upload;
 
 class CategoriesController extends Controller {
@@ -37,9 +37,9 @@ class CategoriesController extends Controller {
    *
    * @return Response
    */
-  public function index(VisitedProductsFinder $visitedFinder)
+  public function index(VisitsService $visits)
   {
-    $visitedProducts = $visitedFinder->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedProducts();
 
     $cats  = $this->cat->all()->load('sub_categories');
     $productsCollection = collect();
@@ -90,13 +90,13 @@ class CategoriesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id, VisitedProductsFinder $visitedFinder)
+  public function show($id, VisitsService $visits)
   {
     $cat = Category::findOrFail($id);
 
     $subCats = $cat->sub_categories;
 
-    $visitedProducts = $visitedFinder->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedProducts();
 
     return view('category.show', compact('visitedProducts', 'cat', 'subCats'));
   }

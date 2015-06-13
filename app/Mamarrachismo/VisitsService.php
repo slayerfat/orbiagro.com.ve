@@ -13,7 +13,7 @@ Use App\Visit;
  * clase utilizada para buscar y crear nuevas
  * visitas de un usuario a un producto
  */
-class VisitedProductsFinder {
+class VisitsService {
 
   // --------------------------------------------------------------------------
   // Funciones Publicas

@@ -6,7 +6,7 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Mamarrachismo\VisitedProductsFinder;
+use App\Mamarrachismo\VisitsService;
 use App\Mamarrachismo\Upload;
 
 use App\Product;
@@ -37,13 +37,13 @@ class ProductsController extends Controller {
    *
    * @return Response
    */
-  public function index(VisitedProductsFinder $visitedFinder)
+  public function index(VisitsService $visits)
   {
     $products = Product::paginate(20);
     $cats     = Category::all();
     $subCats  = SubCategory::all();
 
-    $visitedProducts = $visitedFinder->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedProducts();
 
     return view('product.index', compact(
       'products', 'cats', 'subCats', 'visitedProducts'
@@ -103,13 +103,13 @@ class ProductsController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id, Request $request, VisitedProductsFinder $visitedFinder)
+  public function show($id, Request $request, VisitsService $visits)
   {
     if(!$product = Product::where('slug', $id)->first())
     $product = Product::findOrFail($id);
 
-    $visitedFinder->setNewProductVisit($product->id);
-    $visitedProducts = $visitedFinder->getVisitedProducts();
+    $visits->setNewProductVisit($product->id);
+    $visitedProducts = $visits->getVisitedProducts();
 
     if($this->user) :
       if($this->user->isOwnerOrAdmin($product->id)) :

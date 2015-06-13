@@ -11,7 +11,7 @@ use App\Product;
 use App\Category;
 use App\SubCategory;
 
-use App\Mamarrachismo\VisitedProductsFinder;
+use App\Mamarrachismo\VisitsService;
 use App\Mamarrachismo\Upload;
 
 class SubCategoriesController extends Controller {
@@ -37,9 +37,9 @@ class SubCategoriesController extends Controller {
    *
    * @return Response
    */
-  public function index(VisitedProductsFinder $visitedFinder)
+  public function index(VisitsService $visits)
   {
-    $visitedProducts = $visitedFinder->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedProducts();
 
     // TODO: closure? : subcat ... function($query) ...
     // $todo = SubCategory::with(['products' => function($query){
@@ -101,7 +101,7 @@ class SubCategoriesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id, VisitedProductsFinder $visitedFinder)
+  public function show($id, VisitsService $visits)
   {
     $subCat = SubCategory::findOrFail($id);
 
@@ -109,7 +109,7 @@ class SubCategoriesController extends Controller {
 
     $products = Product::where('sub_category_id', $id)->paginate(20);
 
-    $visitedProducts = $visitedFinder->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedProducts();
 
     return view('sub-category.show', compact('products', 'visitedProducts', 'subCat', 'subCats'));
   }
