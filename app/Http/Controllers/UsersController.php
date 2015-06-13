@@ -33,7 +33,9 @@ class UsersController extends Controller {
    */
   public function index()
   {
-    //
+    $users = User::with('person')->get();
+
+    return view('user.index', compact('users'));
   }
 
   /**
@@ -110,9 +112,10 @@ class UsersController extends Controller {
   {
     $user = User::findOrFail($id);
 
-    $user->name = $request->input('name');
-    $user->email = $request->input('email');
+    $user->name       = $request->input('name');
+    $user->email      = $request->input('email');
     $user->profile_id = $request->input('profile_id');
+
     if (trim($request->input('password')) != '')
     {
       $user->password = $request->input('password');
