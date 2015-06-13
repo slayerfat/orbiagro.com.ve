@@ -40,7 +40,7 @@ class Registrar implements RegistrarContract {
     $user->name       = $data['name'];
     $user->profile_id = $profile->id;
     $user->email      = $data['email'];
-    $user->password   = bcrypt($data['password']);
+    $user->password   = $data['password'];
     $user->save();
     $user->confirmation()->save($confirmation);
     // datos usados para enviar el email
