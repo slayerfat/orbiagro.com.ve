@@ -1,11 +1,30 @@
 <?php namespace App\Http\Controllers;
 
+use Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
+use App\Profile;
+
 class ProfilesController extends Controller {
+
+  public $user, $userId, $profile;
+
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct(Profile $profile)
+  {
+    $this->middleware('auth');
+    $this->middleware('user.admin');
+    $this->user    = Auth::user();
+    $this->userId  = Auth::id();
+    $this->profile = $profile;
+  }
 
   /**
    * Display a listing of the resource.
@@ -14,7 +33,9 @@ class ProfilesController extends Controller {
    */
   public function index()
   {
-    //
+    $profiles = Profile::with('users', 'users.products')->get();
+
+    return view('profile.index', compact('profiles'));
   }
 
   /**
@@ -24,7 +45,7 @@ class ProfilesController extends Controller {
    */
   public function create()
   {
-    //
+    return view('profile.create')->with(['profile' => $this->profile]);
   }
 
   /**
@@ -32,9 +53,17 @@ class ProfilesController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(Request $request)
   {
-    //
+    $this->validate($request, [
+      'description' => 'required|unique:profiles|max:40|min:5'
+    ]);
+
+    $this->profile->description = $request->input('description');
+    $this->profile->save();
+
+    flash()->success('El Perfil ha sido creado con exito.');
+    return redirect()->action('ProfilesController@show', $this->profile->id);
   }
 
   /**
@@ -45,7 +74,9 @@ class ProfilesController extends Controller {
    */
   public function show($id)
   {
-    //
+    $this->profile = Profile::with('users', 'users.products')->findOrFail($id);
+
+    return view('profile.show')->with(['profile' => $this->profile]);
   }
 
   /**
@@ -56,7 +87,9 @@ class ProfilesController extends Controller {
    */
   public function edit($id)
   {
-    //
+    $this->profile = Profile::findOrFail($id);
+
+    return view('profile.edit')->with(['profile' => $this->profile]);
   }
 
   /**
@@ -65,9 +98,18 @@ class ProfilesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, Request $request)
   {
-    //
+    $this->validate($request, [
+      'description' => 'required|max:40|min:5|unique:profiles,description,'.$id
+    ]);
+    $this->profile = Profile::findOrFail($id);
+
+    $this->profile->description = $request->input('description');
+    $this->profile->save();
+
+    flash()->success('El Perfil ha sido actualizado con exito.');
+    return redirect()->action('ProfilesController@show', $this->profile->id);
   }
 
   /**
