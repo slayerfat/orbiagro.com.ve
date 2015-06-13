@@ -60,7 +60,9 @@ class UsersController extends Controller {
   {
     $profile = Profile::findOrFail($request->input('profile_id'));
 
-    $this->user->fill($request->all());
+    $this->user->name     = $request->input('name');
+    $this->user->email    = $request->input('email');
+    $this->user->password = bcrypt($request->input('password'));
 
     $profile->users()->save($this->user);
 
@@ -91,7 +93,11 @@ class UsersController extends Controller {
    */
   public function edit($id)
   {
-    //
+    $user = User::with('profile')->findOrFail($id);
+
+    $profiles = Profile::lists('description', 'id');
+
+    return view('user.edit', compact('user', 'profiles'));
   }
 
   /**
@@ -100,9 +106,22 @@ class UsersController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, UserRequest $request)
   {
-    //
+    $user = User::findOrFail($id);
+
+    $user->name = $request->input('name');
+    $user->email = $request->input('email');
+    $user->profile_id = $request->input('profile_id');
+    if (trim($request->input('password')) != '')
+    {
+      $user->password = bcrypt($request->input('password'));
+    }
+
+    $user->save();
+
+    flash()->success('El Usuario ha sido actualizado correctamente.');
+    return redirect()->action('UsersController@show', $id);
   }
 
   /**

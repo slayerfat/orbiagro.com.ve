@@ -21,12 +21,27 @@ class UserRequest extends Request {
    */
   public function rules()
   {
-    return [
-      'name'       => 'required|max:255|unique:users',
-      'email'      => 'required|email|max:255|unique:users',
-      'password'   => 'required|confirmed|min:6',
-      'profile_id' => 'required|numeric',
-    ];
+    // si es para crear (post) es standard.
+    // si es para actualizar (patch, put) el unique pasa ignorando el id
+    switch($this->method())
+    {
+      case 'POST':
+        return [
+          'name'       => 'required|max:255|unique:users',
+          'email'      => 'required|email|max:255|unique:users',
+          'password'   => 'required|confirmed|min:6',
+          'profile_id' => 'required|numeric',
+        ];
+      case 'PUT':
+      case 'PATCH':
+        return [
+          'name'       => 'required|max:255|unique:users,name,'.(int)$this->route('usuarios'),
+          'email'      => 'required|email|max:255|unique:users,email,'.(int)$this->route('usuarios'),
+          'password'   => 'confirmed|min:6',
+          'profile_id' => 'required|numeric',
+        ];
+      default:break;
+    }
   }
 
 }
