@@ -1,18 +1,19 @@
 $(function(){
 
   $('.related-subcategory-product').hide();
-  $('.related-subcategory-product').first().show().addClass('showing-related');
+  $('.related-subcategory-product').first().show().addClass('showing-related-product');
 
-  $('img[data-related], div[data-related]').mouseover(function(){
+  $('img[data-related-product], div[data-related-product]').mouseover(function(){
 
-    var id = $(this).data();
+    var id = $(this).data(),
+        element = $('#relatedProduct'+id.relatedProduct);
 
-    var element = $('#'+id.related);
-
-    if (!element.hasClass('showing-related')) {
-      $('.showing-related').fadeOut(300);
-      element.addClass('showing-related');
-      $('.related-subcategory-product').not(element).removeClass('showing-related');
+    if (!element.hasClass('showing-related-product')) {
+      $('.showing-related-product').fadeOut(300);
+      element.addClass('showing-related-product');
+      $('.related-subcategory-product')
+        .not(element)
+        .removeClass('showing-related-product');
       element.delay(300).fadeIn(300);
     }
   });

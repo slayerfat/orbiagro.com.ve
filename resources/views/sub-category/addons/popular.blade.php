@@ -1,20 +1,22 @@
-@unless($visitedProducts->isEmpty())
+@unless($popularSubCats->isEmpty())
   <div class="container">
     <div class="row">
-      <div class="col-xs-12" id="products-visits">
-        <h1>Ultimos Productos que ha visitado</h1>
+      <div class="col-xs-12" id="subCat-visits">
+        <h1>Rubros Populares</h1>
       </div>
     </div>
     <div class="row">
-      @include('visit.addons.gallerie-products')
+      @include('partials.sub-category.gallerie-thumbnail', [
+        'subCats' => $popularSubCats,
+        'size' => 'col-sm-4',
+      ])
     </div>
-    @foreach($visitedProducts as $visited)
-      <div class="row related-subcategory-product" id="relatedProduct{{ $visited->sub_category->id }}">
-        <?php $products = App\SubCategory::find($visited->sub_category->id)->products->take(6); ?>
+    @foreach($popularSubCats as $subcat)
+      <div class="row related-subcategory" id="subCat{{ $subcat->id }}">
         <div class="col-xs-12">
-          <h3>Recomendaciones por visitar la Categoria {{ $visited->sub_category->description }}</h3>
+          <h3>Algunos Productos en Rubro {{ $subcat->description }}</h3>
         </div>
-        @foreach($products as $product)
+        @foreach($subcat->products()->random()->take(6)->get() as $product)
           <div class="col-sm-2">
             <div class="thumbnail">
               <img
@@ -33,3 +35,7 @@
     @endforeach
   </div>
 @endunless
+
+@section('popular-subCats-js')
+  <script type="text/javascript" src="{!! asset('js/galleries/popularSubCats-gallerie.js') !!}"></script>
+@stop

@@ -11,8 +11,9 @@
 
   @include('partials.orbiagro-info')
   @include('promotion.addons.4-4-4-gallerie')
-  @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Productos en '.$sub_category->description])
+  @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Rubro Destacado, '.$sub_category->description])
   @include('visit.addons.relatedProducts')
+  @include('sub-category.addons.popular', [$popularSubCats, 'title' => 'Rubros Populares'])
 @stop
 
 @section('js')
@@ -33,5 +34,6 @@
   </script>
 
   {{-- galeria de productos visitados relacionados. --}}
-  <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
+  @yield('relatedProducts-js')
+  @yield('popular-subCats-js')
 @stop
