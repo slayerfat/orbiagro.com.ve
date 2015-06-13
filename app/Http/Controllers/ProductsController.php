@@ -110,6 +110,8 @@ class ProductsController extends Controller {
 
     $visits->setNewProductVisit($product->id);
     $visitedProducts = $visits->getVisitedProducts();
+    $popularSubCats  = $visits->getPopularSubCats();
+    $visitedSubCats  = $visits->getVisitedSubCats();
 
     if($this->user) :
       if($this->user->isOwnerOrAdmin($product->id)) :
