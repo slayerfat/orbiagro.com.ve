@@ -6,16 +6,14 @@
 
 @section('content')
 
-  @if(Auth::user())
-    @if(Auth::user()->isOwnerOrAdmin($cat->id))
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-2">
-            {!! link_to_action('CategoriesController@edit', 'Editar', $cat->id, ['class' => 'btn btn-default btn-block']) !!}
-          </div>
+  @if(Auth::user() and Auth::user()->isOwnerOrAdmin($cat->id))
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-2">
+          {!! link_to_action('CategoriesController@edit', 'Editar', $cat->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
       </div>
-    @endif
+    </div>
   @endif
 
   @include('category.addons.breadcrumbs-show')

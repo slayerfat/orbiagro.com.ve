@@ -5,6 +5,15 @@
 @stop
 
 @section('content')
+  @if(Auth::user() and Auth::user()->isAdmin())
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-2">
+          {!! link_to_action('UsersController@edit', 'Editar', $user->id, ['class' => 'btn btn-default btn-block']) !!}
+        </div>
+      </div>
+    </div>
+  @endif
   <div class="container">
     <div class="row">
       {{-- user info --}}
@@ -31,12 +40,15 @@
           <h3>{{$user->person->phone}}</h3>
         @endif
       </div>
-
-      <div class="col-sm-8">
-        <h1>Productos</h1>
-        @include('partials.products.paginated', ['products' => $products])
-      </div>
-
+      {{-- productos --}}
+      @unless($products->isEmpty())
+        <div class="col-sm-8">
+          <h1>Productos</h1>
+          @include('partials.products.paginated', ['products' => $products])
+        </div>
+      @else
+        <h1>TODO: CREAR PRODUCTO?</h1>
+      @endunless
     </div>
   </div>
 @stop
