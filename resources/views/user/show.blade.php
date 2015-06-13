@@ -34,7 +34,7 @@
 
       <div class="col-sm-8">
         <h1>Productos</h1>
-        @include('partials.products.simple-media', ['products' => $user->products])
+        @include('partials.products.paginated', ['products' => $products])
       </div>
 
     </div>

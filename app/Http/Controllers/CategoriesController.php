@@ -26,6 +26,7 @@ class CategoriesController extends Controller {
   public function __construct(Category $cat)
   {
     $this->middleware('auth', ['except' => ['index', 'show']]);
+    $this->middleware('user.admin', ['except' => ['index', 'show']]);
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->cat = $cat;
@@ -59,12 +60,6 @@ class CategoriesController extends Controller {
    */
   public function create()
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     return view('category.create')->with([
       'cat' => $this->cat
     ]);
@@ -77,12 +72,6 @@ class CategoriesController extends Controller {
    */
   public function store(CategoryRequest $request, Upload $upload)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     // para los archivos del rubro
     $upload->userId = $this->userId;
 
@@ -120,12 +109,6 @@ class CategoriesController extends Controller {
    */
   public function edit($id)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $this->cat = Category::findOrFail($id);
 
     return view('category.edit')->with([
@@ -141,12 +124,6 @@ class CategoriesController extends Controller {
    */
   public function update($id, CategoryRequest $request, Upload $upload)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $this->cat = category::findOrFail($id)->load('image');
 
     $this->cat->update($request->all());

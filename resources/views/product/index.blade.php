@@ -9,18 +9,27 @@
   @unless(Request::input('page'))
     <div class="container">
       <div class="row">
-        @include('category.addons.gallery-slick', ['title' => 'Categorias', 'cats' => $cats])
+        <div class="col-xs-12">
+          @include('category.addons.gallery-slick', ['title' => 'Categorias', 'cats' => $cats])
+        </div>
       </div>
       <div class="row">
-        @include('category.addons.gallery-slick', ['title' => 'Rubros', 'cats' => $subCats])
+        <div class="col-xs-12">
+          @include('category.addons.gallery-slick', ['title' => 'Rubros', 'cats' => $subCats])
+        </div>
       </div>
     </div>
 
     {{-- TODO --}}
     {{-- categorias, sub-categorias (rubros), populares. --}}
   @endif
-
-  @include('partials.products.paginated')
+  <div class="container" style="margin-top: 15px;">
+    <div class="row">
+      <div class="col-xs-12">
+        @include('partials.products.paginated')
+      </div>
+    </div>
+  </div>
 
   @include('visit.addons.relatedProducts')
 @stop

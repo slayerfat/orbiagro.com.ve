@@ -22,6 +22,7 @@ class UsersController extends Controller {
   public function __construct(User $user)
   {
     $this->middleware('auth');
+    $this->middleware('user.admin');
     $this->user = $user;
   }
 
@@ -42,12 +43,6 @@ class UsersController extends Controller {
    */
   public function create()
   {
-    if(!Auth::user()->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $profiles = Profile::lists('description', 'id');
 
     return view('user.create')->with([
@@ -63,12 +58,6 @@ class UsersController extends Controller {
    */
   public function store(UserRequest $request)
   {
-    if(!Auth::user()->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $profile = Profile::findOrFail($request->input('profile_id'));
 
     $this->user->fill($request->all());
@@ -87,15 +76,11 @@ class UsersController extends Controller {
    */
   public function show($id)
   {
-    if(!Auth::user()->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $user = User::with('person', 'products', 'profile')->findOrFail($id);
 
-    return view('user.show', compact('user'));
+    $products = \App\Product::where('user_id', $user->id)->paginate(4);
+
+    return view('user.show', compact('user', 'products'));
   }
 
   /**

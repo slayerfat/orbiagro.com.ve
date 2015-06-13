@@ -26,6 +26,7 @@ class SubCategoriesController extends Controller {
   public function __construct(SubCategory $subCat)
   {
     $this->middleware('auth', ['except' => ['index', 'show']]);
+    $this->middleware('user.admin', ['except' => ['index', 'show']]);
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->subCat = $subCat;
@@ -64,11 +65,6 @@ class SubCategoriesController extends Controller {
    */
   public function create()
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
     $cats = Category::lists('description', 'id');
 
     return view('sub-category.create')->with([
@@ -84,12 +80,6 @@ class SubCategoriesController extends Controller {
    */
   public function store(SubCategoryRequest $request, Upload $upload)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $cat = Category::findOrFail($request->input('category_id'));
 
     // para los archivos del rubro
@@ -132,12 +122,6 @@ class SubCategoriesController extends Controller {
    */
   public function edit($id)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $this->subCat = SubCategory::findOrFail($id);
 
     $cats = Category::lists('description', 'id');
@@ -156,12 +140,6 @@ class SubCategoriesController extends Controller {
    */
   public function update($id, SubCategoryRequest $request, Upload $upload)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $this->subCat = SubCategory::findOrFail($id)->load('image');
 
     $this->subCat->update($request->all());
