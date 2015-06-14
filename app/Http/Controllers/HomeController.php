@@ -23,17 +23,7 @@ class HomeController extends Controller {
     // selecciona las promociones existentes segun el tipo ya seleccionado
     $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
 
-    $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopular('subCategory');
-    $visitedSubCats  = $visits->getVisitedSubCats();
-
-    return view('home.index', compact(
-      'sub_category',
-      'promotions',
-      'visitedProducts',
-      'visitedSubCats',
-      'popularSubCats'
-    ));
+    return view('home.index', compact('sub_category', 'promotions'));
   }
 
   public function unverified()

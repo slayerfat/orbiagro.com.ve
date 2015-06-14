@@ -13,7 +13,7 @@
   @include('promotion.addons.4-4-4-gallerie')
   @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Rubro Destacado, '.$sub_category->description])
   @include('visit.addons.relatedProducts')
-  @include('sub-category.addons.popular', [$popularSubCats, 'title' => 'Rubros Populares'])
+  @include('sub-category.addons.popular', ['title' => 'Rubros Populares'])
 @stop
 
 @section('js')

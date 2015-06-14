@@ -9,7 +9,7 @@
   @include('sub-category.addons.subcat-gallerie', ['title' => "Rubro Destacado"])
   @include('category.addons.cat-paginated')
   @include('visit.addons.relatedProducts')
-  @include('sub-category.addons.popular', [$popularSubCats, 'title' => 'Rubros Populares'])
+  @include('sub-category.addons.popular', ['title' => 'Rubros Populares'])
 @stop
 
 @section('js')
