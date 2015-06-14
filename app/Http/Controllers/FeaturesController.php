@@ -93,6 +93,7 @@ class FeaturesController extends Controller {
 
     // para guardar la imagen y modelo
 
+    $upload->createFile($request->file('file'), $this->feature);
     $upload->createImage($request->file('image'), $this->feature);
 
     flash('Distintivos actualizado correctamente.');

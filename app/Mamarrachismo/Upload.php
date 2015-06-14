@@ -34,10 +34,20 @@ class Upload {
    */
   private $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
 
+  /**
+   * reglas para el validador.
+   * @var array
+   */
+  private $fileRules = ['file' => 'required|mimes:pdf|max:10000'];
+
   public function __construct($userID = null)
   {
     $this->userId = $userID;
   }
+
+  // --------------------------------------------------------------------------
+  // Funciones Publicas
+  // --------------------------------------------------------------------------
 
   /**
    * crea la(s) imagen(es) relacionadas con algun modelo.
@@ -164,6 +174,10 @@ class Upload {
     return $imageModel->update($result);
   }
 
+  // --------------------------------------------------------------------------
+  // Funciones Privadas
+  // --------------------------------------------------------------------------
+
   /**
    * crea el modelo nuevo de alguna imagen relacionada con algun producto.
    *
@@ -181,6 +195,7 @@ class Upload {
     switch (get_class($model)) :
 
       case 'App\Product':
+      case 'App\Promotion':
         $image->alt = $model->title;
         return $model->images()->save($image);
 
@@ -189,19 +204,12 @@ class Upload {
         return $model->image()->save($image);
 
       case 'App\Category':
-        $image->alt = $model->description;
-        return $model->image()->save($image);
-
       case 'App\SubCategory':
         $image->alt = $model->description;
         return $model->image()->save($image);
 
       case 'App\Maker':
         $image->alt = $model->name;
-        return $model->images()->save($image);
-
-      case 'App\Promotion':
-        $image->alt = $model->title;
         return $model->images()->save($image);
 
       default:

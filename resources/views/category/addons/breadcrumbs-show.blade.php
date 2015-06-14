@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <ol class="breadcrumb no-margin">
+    <ol class="breadcrumb">
       <li>
         {!! link_to_action('HomeController@index', 'Inicio') !!}
       </li>
