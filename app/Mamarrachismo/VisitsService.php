@@ -141,7 +141,7 @@ class VisitsService {
    */
   public function getVisitedSubCats()
   {
-    $array = Transformer::getArrayByKeyValue("/(subcats\_)+/", Cookie::get());
+    $array = Transformer::getArrayByKeyValue("/(subCats\_)+/", Cookie::get());
     $parsed = $this->parseIdsInArrayKeys($array);
 
     if(!empty($parsed))
