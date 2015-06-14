@@ -49,6 +49,10 @@ class Upload {
   // Funciones Publicas
   // --------------------------------------------------------------------------
 
+  // --------------------------------------------------------------------------
+  // Imagenes
+  // --------------------------------------------------------------------------
+
   /**
    * crea la(s) imagen(es) relacionadas con algun modelo.
    *
@@ -79,7 +83,7 @@ class Upload {
       }
 
       // se crea la imagen en el HD.
-      if (!$result = $this->createFile($file, $this->path)) return false;
+      if (!$result = $this->makeFile($file, $this->path)) return false;
 
       // se crea el modelo.
       $this->createImageModel($result, $model);
@@ -109,7 +113,7 @@ class Upload {
     }
 
     // se crea la imagen en el HD.
-    if (!$result = $this->createFile($file, $this->path)) return false;
+    if (!$result = $this->makeFile($file, $this->path)) return false;
 
     // se crea el modelo.
     $this->createImageModel($result, $model);
@@ -168,10 +172,42 @@ class Upload {
       \Storage::disk('public')->delete($imageModel->path);
 
     // se crea la imagen en el HD y se actualiza el modelo.
-    if (!$result = $this->createFile($file, $this->path))
+    if (!$result = $this->makeFile($file, $this->path))
       return $this->createDefaultImage($this->path, $parentModel);
 
     return $imageModel->update($result);
+  }
+
+  // --------------------------------------------------------------------------
+  // Archivos
+  // --------------------------------------------------------------------------
+
+  /**
+   * crea la imagen relacionada con algun modelo.
+   *
+   * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
+   * @param object        $model El modelo relacionado para ser asociado.
+   *
+   * @return boolean
+   */
+  public function createFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $model)
+  {
+    $this->path = $this->generatePathFromModel($model);
+
+    // el validador
+    $validator = \Validator::make(['file' => $file], $this->fileRules);
+    if ($validator->fails())
+    {
+      return false;
+    }
+
+    // se crea el archivo en el HD.
+    if (!$result = $this->makeFile($file, $this->path)) return false;
+
+    // se crea el modelo.
+    $this->createFileModel($result, $model);
+
+    return true;
   }
 
   // --------------------------------------------------------------------------
@@ -226,7 +262,7 @@ class Upload {
    * @param  string $path la direccion a donde se guardara el archivo.
    * @return array  $data la carpeta, nombre y extension del archivo guardado.
    */
-  private function createFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file, $path = null)
+  private function makeFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file, $path = null)
   {
     // el nombre del archivo
     $name = date('Ymdhmmss-').str_random(20);
