@@ -16,7 +16,12 @@ class ViewServiceProvider extends ServiceProvider {
       'App\Http\Composers\Visits@composePopularSubCats'
     );
 
-		view()->composer(
+    view()->composer(
+      'sub-category.addons.visited',
+      'App\Http\Composers\Visits@composePopularSubCats'
+    );
+
+    view()->composer(
       'visit.addons.relatedProducts',
       'App\Http\Composers\Visits@composeRelatedProducts'
     );

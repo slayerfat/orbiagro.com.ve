@@ -37,12 +37,8 @@ class SubCategoriesController extends Controller {
    *
    * @return Response
    */
-  public function index(VisitsService $visits)
+  public function index()
   {
-    $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopular('subCategory');
-    $visitedSubCats  = $visits->getVisitedSubCats();
-
     // TODO: closure? : subcat ... function($query) ...
     // $todo = SubCategory::with(['products' => function($query){
     // 	// $query(get 9 random products...);
@@ -57,13 +53,7 @@ class SubCategoriesController extends Controller {
       $productsCollection->push($cat->products()->random()->take(12)->get());
     }
 
-    return view('sub-category.index', compact(
-      'subCats',
-      'productsCollection',
-      'visitedProducts',
-      'popularSubCats',
-      'visitedSubCats'
-    ));
+    return view('sub-category.index', compact('subCats', 'productsCollection'));
   }
 
   /**
@@ -118,18 +108,8 @@ class SubCategoriesController extends Controller {
     $products = Product::where('sub_category_id', $id)->paginate(20);
 
     $visits->setNewVisit('subCat', $id);
-    $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopular('subCategory');
-    $visitedSubCats  = $visits->getVisitedSubCats();
 
-    return view('sub-category.show', compact(
-      'products',
-      'visitedProducts',
-      'popularSubCats',
-      'visitedSubCats',
-      'subCat',
-      'subCats'
-    ));
+    return view('sub-category.show', compact('products', 'subCat', 'subCats'));
   }
 
   /**

@@ -19,4 +19,9 @@ class Visits {
   {
     $view->with('visitedProducts', $this->visits->getVisitedProducts());
   }
+
+  public function composeVisitedSubCats(View $view)
+  {
+    $view->with('visitedSubCats', $this->visits->getVisitedSubCats());
+  }
 }

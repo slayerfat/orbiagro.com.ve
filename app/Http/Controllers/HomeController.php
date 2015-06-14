@@ -12,7 +12,7 @@ class HomeController extends Controller {
    *
    * @return Response
    */
-  public function index(VisitsService $visits)
+  public function index()
   {
     $sub_category = SubCategory::has('products')->random()->first();
 

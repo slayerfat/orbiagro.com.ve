@@ -37,12 +37,8 @@ class CategoriesController extends Controller {
    *
    * @return Response
    */
-  public function index(VisitsService $visits)
+  public function index()
   {
-    $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopular('subCategory');
-    $visitedSubCats  = $visits->getVisitedSubCats();
-
     $cats  = $this->cat->all()->load('sub_categories');
     $productsCollection = collect();
 
@@ -52,13 +48,7 @@ class CategoriesController extends Controller {
       endforeach;
     endforeach;
 
-    return view('category.index', compact(
-      'cats',
-      'productsCollection',
-      'visitedProducts',
-      'visitedSubCats',
-      'popularSubCats'
-    ));
+    return view('category.index', compact('cats', 'productsCollection'));
   }
 
   /**
@@ -98,23 +88,13 @@ class CategoriesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id, VisitsService $visits)
+  public function show($id)
   {
     $cat = Category::findOrFail($id);
 
     $subCats = $cat->sub_categories;
 
-    $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopular('subCategory');
-    $visitedSubCats  = $visits->getVisitedSubCats();
-
-    return view('category.show', compact(
-      'visitedProducts',
-      'visitedSubCats',
-      'cat',
-      'subCats',
-      'popularSubCats'
-    ));
+    return view('category.show', compact('cat', 'subCats'));
   }
 
   /**
