@@ -6,7 +6,7 @@ $(function(){
   $('img[data-related-product], div[data-related-product]').mouseover(function(){
 
     var id = $(this).data(),
-        element = $('#relatedProduct'+id.relatedProduct);
+        element = $('#products-visits-'+id.relatedProduct);
 
     if (!element.hasClass('showing-related-product')) {
       $('.showing-related-product').fadeOut(300);

@@ -13,6 +13,7 @@
   @include('promotion.addons.4-4-4-gallerie')
   @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Rubro Destacado, '.$sub_category->description])
   @include('visit.addons.relatedProducts')
+  @include('sub-category.addons.visited')
   @include('sub-category.addons.popular', ['title' => 'Rubros Populares'])
 @stop
 
@@ -36,4 +37,5 @@
   {{-- javascript para productos, rubros y otros. --}}
   @yield('relatedProducts-js')
   @yield('popular-subCats-js')
+  @yield('visited-subCats-js')
 @stop

@@ -1,18 +1,18 @@
-@unless($popularSubCats->isEmpty())
+@unless($visitedSubCats->isEmpty())
   <div class="container">
     <div class="row">
-      <div class="col-xs-12" id="subCat-popular">
-        <h1>Rubros Populares</h1>
+      <div class="col-xs-12" id="subCats-visits">
+        <h1>Ultimos Rubros que ha visitado</h1>
       </div>
     </div>
     <div class="row">
-      @include('partials.sub-category.gallerie-thumbnail', [
-        'subCats' => $popularSubCats,
+      @include('partials.sub-category.visits-gallerie-thumbnail', [
+        'subCats' => $visitedSubCats,
         'size' => 'col-sm-4',
       ])
     </div>
-    @foreach($popularSubCats as $subcat)
-      <div class="row related-subcategory" id="subCat-popular-{{ $subcat->id }}">
+    @foreach($visitedSubCats as $subcat)
+      <div class="row visited-subcategory" id="subCat-visits-{{ $subcat->id }}">
         <div class="col-xs-12">
           <h3>Algunos Productos en {{ $subcat->description }}</h3>
         </div>
@@ -36,6 +36,6 @@
   </div>
 @endunless
 
-@section('popular-subCats-js')
-  <script type="text/javascript" src="{!! asset('js/galleries/popularSubCats-gallerie.js') !!}"></script>
+@section('visited-subCats-js')
+  <script type="text/javascript" src="{!! asset('js/galleries/visitedSubCats-gallerie.js') !!}"></script>
 @stop

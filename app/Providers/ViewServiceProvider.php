@@ -18,7 +18,7 @@ class ViewServiceProvider extends ServiceProvider {
 
     view()->composer(
       'sub-category.addons.visited',
-      'App\Http\Composers\Visits@composePopularSubCats'
+      'App\Http\Composers\Visits@composeVisitedSubCats'
     );
 
     view()->composer(

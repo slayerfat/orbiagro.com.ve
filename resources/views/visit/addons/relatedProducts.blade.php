@@ -9,7 +9,7 @@
       @include('visit.addons.gallerie-products')
     </div>
     @foreach($visitedProducts as $visited)
-      <div class="row related-subcategory-product" id="relatedProduct{{ $visited->sub_category->id }}">
+      <div class="row related-subcategory-product" id="products-visits-{{ $visited->sub_category->id }}">
         <?php $products = App\SubCategory::find($visited->sub_category->id)->products->take(6); ?>
         <div class="col-xs-12">
           <h3>Recomendaciones por visitar la Categoria {{ $visited->sub_category->description }}</h3>
