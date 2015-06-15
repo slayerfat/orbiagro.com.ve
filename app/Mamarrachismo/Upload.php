@@ -89,6 +89,8 @@ class Upload {
           // si las imagenes no son validas crea una imagen por defecto
           return $this->createDefaultImage($this->path, $model);
         }
+        $this->errors = $validator->errors()->all();
+        throw new Exception("Error, Imagenes no validas.", 5);
       }
 
       // se crea la imagen en el HD.
@@ -156,7 +158,7 @@ class Upload {
 
     endif;
 
-    return false;
+    throw new \Exception("Error, Imagen por defecto no puede ser creada", 4);
   }
 
   /**
@@ -174,8 +176,11 @@ class Upload {
 
     // el validador
     $validator = Validator::make(['image' => $file], $this->imageRules);
-    if ($validator->fails()) return false;
-
+    if ($validator->fails())
+    {
+      $this->errors = $validator->errors()->all();
+      throw new Exception("Error, archivo no valido", 3);
+    }
     // se chequea si existe el archivo y se elimina
     if (Storage::disk('public')->exists($imageModel->path))
       Storage::disk('public')->delete($imageModel->path);
@@ -238,7 +243,7 @@ class Upload {
     if ($validator->fails())
     {
       $this->errors = $validator;
-      throw new Exception("Error, archivo no valido", 4);
+      throw new Exception("Error, archivo no valido", 3);
     }
 
     // se chequea si existe el archivo y se elimina

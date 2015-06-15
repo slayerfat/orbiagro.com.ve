@@ -82,27 +82,31 @@ class FeaturesController extends Controller {
 
     if($this->modelValidator->notOwner($product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
     endif;
 
     $this->feature->title       = $request->input('title');
     $this->feature->description = $request->input('description');
     $this->feature->created_by  = $this->userId;
     $this->feature->updated_by  = $this->userId;
+
     $product->features()->save($this->feature);
 
     flash('Distintivo creado correctamente.');
 
     // para guardar la imagen y modelo
 
-    try
-    {
-      $upload->createFile($request->file('file'), $this->feature);
-    }
-    catch (\Exception $e)
-    {
-      flash()->warning('Distintivo creado, pero su archivo no pudo ser procesado');
-    }
+    if ($request->hasFile('file'))
+      try
+      {
+        $upload->createFile($request->file('file'), $this->feature);
+      }
+      catch (\Exception $e)
+      {
+        flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado');
+        return redirect()
+          ->action('ProductsController@show', $product->id)
+          ->withErrors($upload->errors);
+      }
 
     $upload->createImage($request->file('image'), $this->feature);
 
@@ -148,13 +152,20 @@ class FeaturesController extends Controller {
     $this->feature->update($request->all());
     flash('El Distintivo ha sido actualizado correctamente.');
 
-    // para guardar la imagen y modelo
-    if ($request->hasFile('image')) :
-      if (!$upload->updateImage($request->file('image'), $this->feature, $this->feature->image))
-        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-    endif;
-
     // TODO: mejorar?
+    // para guardar la imagen y modelo
+    if ($request->hasFile('image'))
+      try
+      {
+        $upload->updateImage($request->file('image'), $this->feature, $this->feature->image);
+      }
+      catch (\Exception $e)
+      {
+        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
+        return redirect()
+          ->action('ProductsController@show', $this->feature->product->id)
+          ->withErrors($upload->errors);
+      }
 
     if ($request->hasFile('file'))
       try
