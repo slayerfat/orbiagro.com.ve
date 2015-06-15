@@ -65,6 +65,9 @@
                 <li class="divider"></li>
                 <li>{!! link_to_action('SubCategoriesController@create', 'Crear Rubro') !!}</li>
                 <li>{!! link_to_action('CategoriesController@create', 'Crear Categoria') !!}</li>
+                <li class="divider"></li>
+                <li>{!! link_to_action('MakersController@create', 'Crear Fabricante') !!}</li>
+                <li>{!! link_to_action('MakersController@index', 'Consultar Fabricante') !!}</li>
               </ul>
             </li>
           @endif
