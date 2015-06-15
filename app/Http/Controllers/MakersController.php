@@ -31,7 +31,9 @@ class MakersController extends Controller {
    */
   public function index()
   {
-    //
+    $makers = Maker::with('products')->get();
+
+    return view('maker.index', compact('makers'));
   }
 
   /**
@@ -72,7 +74,8 @@ class MakersController extends Controller {
    */
   public function show($id)
   {
-    return 'show';
+    $this->maker = Maker::with('products')->findOrFail($id);
+    return view('maker.show')->with(['maker' => $this->maker]);
   }
 
   /**
