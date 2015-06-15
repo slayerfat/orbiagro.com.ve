@@ -19,8 +19,6 @@ class CreateMakersTable extends Migration {
       $table->string('slug');
       $table->string('domain')->nullable();
       $table->string('url')->nullable();
-      $table->string('logo_path')->nullable();
-      $table->string('logo_alt')->nullable();
       $table->timestamps();
     });
   }

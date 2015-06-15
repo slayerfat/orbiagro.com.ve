@@ -291,7 +291,7 @@ class Upload {
 
       case 'App\Maker':
         $image->alt = $model->name;
-        return $model->images()->save($image);
+        return $model->image()->save($image);
 
       default:
         throw new Exception("Error: modelo desconocido, no se puede guardar imagen", 1);

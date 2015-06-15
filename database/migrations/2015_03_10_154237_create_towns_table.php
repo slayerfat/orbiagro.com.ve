@@ -17,7 +17,7 @@ class CreateTownsTable extends Migration {
       $table->increments('id');
       $table->integer('state_id')->unsigned();
       $table->foreign('state_id')->references('id')->on('states');
-      $table->string('description')->unique();
+      $table->string('description');
       $table->timestamps();
     });
   }

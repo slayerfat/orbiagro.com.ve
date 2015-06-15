@@ -1,12 +1,12 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
-use App\Http\Requests;
+use App\Http\Requests\MakerRequest;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
-
 use App\Maker;
+
+use App\Mamarrachismo\Upload;
 
 class MakersController extends Controller {
 
@@ -49,9 +49,19 @@ class MakersController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(MakerRequest $request, Upload $upload)
   {
-    //
+    $this->maker->fill($request->all());
+
+    $this->maker->save();
+
+    // para los archivos
+    $upload->userId = $this->userId;
+
+    $upload->createImage($request->file('image'), $this->maker);
+
+    flash()->success('Fabricante creado exitosamente.');
+    return redirect()->action('MakersController@index');
   }
 
   /**

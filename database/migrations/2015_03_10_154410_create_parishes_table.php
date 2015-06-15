@@ -17,7 +17,7 @@ class CreateParishesTable extends Migration {
       $table->increments('id');
       $table->integer('town_id')->unsigned();
       $table->foreign('town_id')->references('id')->on('towns');
-      $table->string('description')->unique();
+      $table->string('description');
       $table->timestamps();
     });
   }

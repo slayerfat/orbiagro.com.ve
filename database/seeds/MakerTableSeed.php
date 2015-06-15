@@ -49,7 +49,7 @@ class MakerTableSeeder extends Seeder {
         $image->alt        = $maker->slug;
         $image->created_by = $user->id;
         $image->updated_by = $user->id;
-        $maker->images()->save($image);
+        $maker->image()->save($image);
       endfor;
     endforeach;
     $this->command->info('Creacion de compañias completa.');
