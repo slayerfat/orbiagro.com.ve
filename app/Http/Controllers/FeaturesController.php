@@ -91,12 +91,21 @@ class FeaturesController extends Controller {
     $this->feature->updated_by  = $this->userId;
     $product->features()->save($this->feature);
 
+    flash('Distintivo creado correctamente.');
+
     // para guardar la imagen y modelo
 
-    $upload->createFile($request->file('file'), $this->feature);
+    try
+    {
+      $upload->createFile($request->file('file'), $this->feature);
+    }
+    catch (\Exception $e)
+    {
+      flash()->warning('Distintivo creado, pero su archivo no pudo ser procesado');
+    }
+
     $upload->createImage($request->file('image'), $this->feature);
 
-    flash('Distintivos actualizado correctamente.');
     return redirect()->action('ProductsController@show', $product->id);
   }
 
@@ -138,11 +147,27 @@ class FeaturesController extends Controller {
     $this->feature->updated_by = $this->userId;
     $this->feature->update($request->all());
     flash('El Distintivo ha sido actualizado correctamente.');
+
     // para guardar la imagen y modelo
     if ($request->hasFile('image')) :
       if (!$upload->updateImage($request->file('image'), $this->feature, $this->feature->image))
         flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
     endif;
+
+    // TODO: mejorar?
+
+    if ($request->hasFile('file'))
+      try
+      {
+        $upload->updateFile($request->file('file'), $this->feature->product, $this->feature->file);
+      }
+      catch (\Exception $e)
+      {
+        flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado');
+        return redirect()
+          ->action('ProductsController@show', $this->feature->product->id)
+          ->withErrors($upload->errors);
+      }
 
     return redirect()->action('ProductsController@show', $this->feature->product->id);
   }
