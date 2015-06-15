@@ -16,7 +16,7 @@
               'action' => 'MakersController@store',
               'class'  => 'form-horizontal',
               ]) !!}
-              @include('profile.forms.body', ['textoBotonSubmit' => 'Añadir nuevo Fabricante'])
+              @include('maker.forms.body', ['textoBotonSubmit' => 'Añadir nuevo Fabricante'])
             {!! Form::close() !!}
           </div>
         </div>

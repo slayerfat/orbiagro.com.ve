@@ -10,13 +10,13 @@ Route::get('/welcome', 'WelcomeController@index');
 
 Route::get('/', 'HomeController@index');
 
-Route::resource('usuarios', 'UsersController', $español);
 Route::get('usuarios/crear', ['uses' => 'UsersController@create', 'as' => 'usuarios.create']);
 Route::get('usuarios/{usuarios}/editar', ['uses' => 'UsersController@edit', 'as' => 'usuarios.edit']);
+Route::resource('usuarios', 'UsersController', $español);
 
-Route::resource('productos', 'ProductsController', $español);
 Route::get('productos/crear', ['uses' => 'ProductsController@create', 'as' => 'productos.create']);
 Route::get('productos/{productos}/editar', ['uses' => 'ProductsController@edit', 'as' => 'productos.edit']);
+Route::resource('productos', 'ProductsController', $español);
 
 // modelos asociados a producto
 Route::group(['prefix' => 'productos'], function(){
@@ -52,21 +52,21 @@ Route::group(['prefix' => 'productos'], function(){
   Route::patch('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
   Route::delete('/valores-nutricionales/{mechanicals}', 'NutritionalsController@destroy');
 });
-Route::resource('categorias', 'CategoriesController', $español);
 Route::get('categorias/crear', ['uses' => 'CategoriesController@create', 'as' => 'categorias.create']);
 Route::get('categorias/{categorias}/editar', ['uses' => 'CategoriesController@edit', 'as' => 'categorias.edit']);
+Route::resource('categorias', 'CategoriesController', $español);
 
-Route::resource('rubros', 'SubCategoriesController', $español);
 Route::get('rubros/crear', ['uses' => 'SubCategoriesController@create', 'as' => 'rubros.create']);
 Route::get('rubros/{rubros}/editar', ['uses' => 'SubCategoriesController@edit', 'as' => 'rubros.edit']);
+Route::resource('rubros', 'SubCategoriesController', $español);
 
-Route::resource('fabricantes', 'MakersController', $español);
 Route::get('fabricantes/crear', ['uses' => 'MakersController@create', 'as' => 'fabricantes.create']);
 Route::get('fabricantes/{fabricantes}/editar', ['uses' => 'MakersController@edit', 'as' => 'fabricantes.edit']);
+Route::resource('fabricantes', 'MakersController', $español);
 
-Route::resource('perfiles', 'ProfilesController', $español);
 Route::get('perfiles/crear', ['uses' => 'ProfilesController@create', 'as' => 'perfiles.create']);
 Route::get('perfiles/{perfiles}/editar', ['uses' => 'ProfilesController@edit', 'as' => 'perfiles.edit']);
+Route::resource('perfiles', 'ProfilesController', $español);
 
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar
