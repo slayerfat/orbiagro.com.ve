@@ -1,4 +1,6 @@
 css/vendor
+css/app.css
+css/app.css.map
 js/vendor
 products
 promos
