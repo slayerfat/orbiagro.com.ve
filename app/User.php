@@ -40,7 +40,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   public function setPasswordAttribute($value)
   {
     if($pw = ModelValidation::byLenght($value, 6)) :
-      $this->attributes['password'] = bcrypt($pw);
+      $this->attributes['password'] = $pw;
     else:
       $this->attributes['password'] = null;
     endif;

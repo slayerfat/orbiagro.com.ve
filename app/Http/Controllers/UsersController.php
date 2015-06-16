@@ -64,7 +64,7 @@ class UsersController extends Controller {
 
     $this->user->name     = $request->input('name');
     $this->user->email    = $request->input('email');
-    $this->user->password = $request->input('password');
+    $this->user->password = bcrypt($request->input('password'));
 
     $profile->users()->save($this->user);
 
@@ -119,7 +119,7 @@ class UsersController extends Controller {
 
     if (trim($request->input('password')) != '')
     {
-      $user->password = $request->input('password');
+      $user->password = bcrypt($request->input('password'));
     }
 
     $user->save();
