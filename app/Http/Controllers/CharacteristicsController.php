@@ -44,12 +44,12 @@ class CharacteristicsController extends Controller {
 
     if($this->modelValidator->notOwner($product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if ($product->characteristics) {
       flash()->error('Este Producto ya posee caracteristicas, por favor actualice las existentes.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     }
 
     return view('characteristic.create')->with([
@@ -69,12 +69,12 @@ class CharacteristicsController extends Controller {
 
     if($this->modelValidator->notOwner($product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if ($product->characteristic) :
       flash()->error('Este Producto ya posee caracteristicas, por favor actualice las existentes.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     $this->characteristic = new Characteristic($request->all());
@@ -84,7 +84,7 @@ class CharacteristicsController extends Controller {
     $product->characteristics()->save($this->characteristic);
 
     flash('Caracteristicas del producto creadas exitosamente.');
-    return redirect()->action('ProductsController@show', $id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -99,7 +99,7 @@ class CharacteristicsController extends Controller {
 
     if($this->modelValidator->notOwner($this->characteristic->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->characteristic->product->id);
+      return redirect()->action('ProductsController@show', $this->characteristic->product->slug);
     endif;
 
     return view('characteristic.edit')->with(['characteristic' => $this->characteristic]);
@@ -117,14 +117,14 @@ class CharacteristicsController extends Controller {
 
     if($this->modelValidator->notOwner($this->characteristic->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->characteristic->product->id);
+      return redirect()->action('ProductsController@show', $this->characteristic->product->slug);
     endif;
 
     $this->characteristic->updated_by = $this->userId;
     $this->characteristic->update($request->all());
 
     flash('Caracteristicas del Producto Actualizadas exitosamente.');
-    return redirect()->action('ProductsController@show', $this->characteristic->product->id);
+    return redirect()->action('ProductsController@show', $this->characteristic->product->slug);
   }
 
   /**

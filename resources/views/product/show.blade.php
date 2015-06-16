@@ -22,7 +22,7 @@
       <div class="col-md-7">
         <h1>{{ $product->title }}</h1>
         <p>
-          Por: {!! link_to_action('MakersController@show', $product->maker->name.'.', $product->maker->id) !!}
+          Por: {!! link_to_action('MakersController@show', $product->maker->name, $product->maker->slug) !!}
         </p>
         <p id="product-description">
           {!! $product->description !!}

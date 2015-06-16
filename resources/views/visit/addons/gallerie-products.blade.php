@@ -8,7 +8,7 @@
         class="img-responsive"/>
       <div class="caption" data-related-product="{{ $product->sub_category->id }}">
         <h3>
-          {!! link_to_action('ProductsController@show', $product->title, $product->id) !!}
+          {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}
         </h3>
       </div>
     </div>

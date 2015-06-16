@@ -101,7 +101,8 @@ class SubCategoriesController extends Controller {
    */
   public function show($id, VisitsService $visits)
   {
-    $subCat = SubCategory::findOrFail($id);
+    if(!$subCat = SubCategory::where('slug', $id)->first())
+      $subCat = SubCategory::findOrFail($id);
 
     $subCats = $subCat->category->sub_categories()->get();
 
@@ -149,7 +150,7 @@ class SubCategoriesController extends Controller {
       endif;
     endif;
 
-    return redirect()->action('SubCategoriesController@show', $this->subCat->id);
+    return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
   }
 
   /**

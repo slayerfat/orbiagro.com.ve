@@ -40,16 +40,16 @@ class NutritionalsController extends Controller {
    */
   public function create($id)
   {
-    $product = Product::findOrFail($id)->load('mechanical');
+    $product = Product::findOrFail($id)->load('nutritional');
 
     if($this->modelValidator->notOwner($product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if ($product->nutritional) {
       flash()->error('Este Producto ya posee Valores Nutricionales, por favor actualice las existentes.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     }
 
     return view('nutritional.create')->with([
@@ -65,16 +65,16 @@ class NutritionalsController extends Controller {
    */
   public function store($id, NutritionalRequest $request)
   {
-    $product = Product::findOrFail($id)->load('mechanical');
+    $product = Product::findOrFail($id)->load('nutritional');
 
     if($this->modelValidator->notOwner($product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if ($product->nutritional) :
       flash()->error('Este Producto ya posee Valores Nutricionales, por favor actualice las existentes.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     $this->nutritional = new Nutritional($request->all());
@@ -84,7 +84,7 @@ class NutritionalsController extends Controller {
     $product->nutritional()->save($this->nutritional);
 
     flash('Valores Nutricionales del producto creados exitosamente.');
-    return redirect()->action('ProductsController@show', $id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -99,7 +99,7 @@ class NutritionalsController extends Controller {
 
     if($this->modelValidator->notOwner($this->nutritional->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->nutritional->product->id);
+      return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
     endif;
 
     return view('nutritional.edit')->with(['nutritional' => $this->nutritional]);
@@ -117,14 +117,14 @@ class NutritionalsController extends Controller {
 
     if($this->modelValidator->notOwner($this->nutritional->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->nutritional->product->id);
+      return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
     endif;
 
     $this->nutritional->updated_by = $this->userId;
     $this->nutritional->update($request->all());
 
     flash('Valores Nutricionales del Producto Actualizados exitosamente.');
-    return redirect()->action('ProductsController@show', $this->nutritional->product->id);
+    return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
   }
 
   /**

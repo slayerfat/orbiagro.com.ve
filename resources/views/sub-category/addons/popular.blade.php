@@ -25,7 +25,7 @@
                 class="img-responsive"/>
               <div class="caption">
                 <h4>
-                  {!! link_to_action('ProductsController@show', $product->title, $product->id) !!}
+                  {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}
                 </h4>
               </div>
             </div>

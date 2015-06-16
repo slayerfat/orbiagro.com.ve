@@ -83,7 +83,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->username }} <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
               <li>
-                {!! link_to_action('UsersController@show', 'Perfil', Auth::user()->id) !!}
+                {!! link_to_action('UsersController@show', 'Perfil', Auth::user()->name) !!}
               </li>
               <li><a href="/auth/logout">Salir</a></li>
             </ul>

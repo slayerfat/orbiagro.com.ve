@@ -6,7 +6,7 @@
 <div class="carrusel-cats">
   @foreach($cats as $cat)
     <div>
-      <a href="{!! action($title == ('Rubros') ? 'SubCategoriesController@show' : 'CategoriesController@show', $cat->id) !!}">
+      <a href="{!! action($title == ('Rubros') ? 'SubCategoriesController@show' : 'CategoriesController@show', $cat->slug) !!}">
         <img
         src="{!! asset($cat->image->path) !!}"
         alt="{{ $cat->image->alt }}"

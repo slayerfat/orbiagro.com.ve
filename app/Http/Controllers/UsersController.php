@@ -69,7 +69,7 @@ class UsersController extends Controller {
     $profile->users()->save($this->user);
 
     flash()->success('El Usuario ha sido creado exitosamente');
-    return redirect()->action('UsersController@show', $this->user->id);
+    return redirect()->action('UsersController@show', $this->user->name);
   }
 
   /**
@@ -80,7 +80,8 @@ class UsersController extends Controller {
    */
   public function show($id)
   {
-    $user = User::with('person', 'products', 'profile')->findOrFail($id);
+    if(!$user = User::with('person', 'products', 'profile')->where('name', $id)->first())
+      $user = User::with('person', 'products', 'profile')->findOrFail($id);
 
     $products = \App\Product::where('user_id', $user->id)->paginate(4);
 
@@ -124,7 +125,7 @@ class UsersController extends Controller {
     $user->save();
 
     flash()->success('El Usuario ha sido actualizado correctamente.');
-    return redirect()->action('UsersController@show', $id);
+    return redirect()->action('UsersController@show', $user->name);
   }
 
   /**

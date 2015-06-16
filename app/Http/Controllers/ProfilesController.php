@@ -72,7 +72,8 @@ class ProfilesController extends Controller {
    */
   public function show($id)
   {
-    $this->profile = Profile::with('users')->findOrFail($id);
+    if(!$this->profile = Profile::with('users')->where('slug', $id)->first())
+      $this->profile = Profile::with('users')->findOrFail($id);
 
     return view('profile.show')->with(['profile' => $this->profile]);
   }

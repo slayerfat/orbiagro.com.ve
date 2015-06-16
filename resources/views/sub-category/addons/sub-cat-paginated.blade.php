@@ -9,16 +9,16 @@
       <div class="col-sm-12 well">
         <div class="row">
           <div class="col-xs-8">
-            <h1>{!! link_to_action('SubCategoriesController@show', $cat->description, $cat->id) !!}</h1>
+            <h1>{!! link_to_action('SubCategoriesController@show', $cat->description, $cat->slug) !!}</h1>
             <h2>
-              <a href="{!! action('SubCategoriesController@show', $cat->id) !!}">
+              <a href="{!! action('SubCategoriesController@show', $cat->slug) !!}">
                 <em>{{$cat->products->count()}} Productos</em>
               </a>
             </h2>
             <h3>{{$cat->info}}</h3>
           </div>
           <div class="col-xs-4">
-            <a href="{!! action('SubCategoriesController@show', $cat->id) !!}">
+            <a href="{!! action('SubCategoriesController@show', $cat->slug) !!}">
               <img
               src="{!! asset($cat->image->path) !!}"
               alt="{{$cat->image->alt}}"

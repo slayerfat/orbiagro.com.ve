@@ -46,7 +46,7 @@ class FeaturesController extends Controller {
     if ($product->features->count() < 5) :
       if($this->modelValidator->notOwner($product->user->id)) :
         flash()->error('Ud. no tiene permisos para esta accion.');
-        return redirect()->action('ProductsController@show', $id);
+        return redirect()->action('ProductsController@show', $product->slug);
       endif;
       return view('feature.create')->with([
         'product' => $product,
@@ -55,7 +55,7 @@ class FeaturesController extends Controller {
     endif;
 
     flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
-    return redirect()->action('ProductsController@show', $id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -77,7 +77,7 @@ class FeaturesController extends Controller {
     // el producto puede tener como maximo 5 features
     if ($product->features->count() >= 5) :
       flash()->error('Este Producto ya posee 5 distintivos, por favor actualice los existentes.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if($this->modelValidator->notOwner($product->user->id)) :
@@ -104,13 +104,13 @@ class FeaturesController extends Controller {
       {
         flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado');
         return redirect()
-          ->action('ProductsController@show', $product->id)
+          ->action('ProductsController@show', $product->slug)
           ->withErrors($upload->errors);
       }
 
     $upload->createImage($request->file('image'), $this->feature);
 
-    return redirect()->action('ProductsController@show', $product->id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -125,7 +125,7 @@ class FeaturesController extends Controller {
 
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     return view('feature.edit')->with(['feature' => $this->feature]);
@@ -146,7 +146,7 @@ class FeaturesController extends Controller {
 
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     $this->feature->updated_by = $this->userId;
@@ -164,7 +164,7 @@ class FeaturesController extends Controller {
       {
         flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
         return redirect()
-          ->action('ProductsController@show', $this->feature->product->id)
+          ->action('ProductsController@show', $this->feature->product->slug)
           ->withErrors($upload->errors);
       }
 
@@ -177,11 +177,11 @@ class FeaturesController extends Controller {
       {
         flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado');
         return redirect()
-          ->action('ProductsController@show', $this->feature->product->id)
+          ->action('ProductsController@show', $this->feature->product->slug)
           ->withErrors($upload->errors);
       }
 
-    return redirect()->action('ProductsController@show', $this->feature->product->id);
+    return redirect()->action('ProductsController@show', $this->feature->product->slug);
   }
 
   /**

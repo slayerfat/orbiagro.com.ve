@@ -63,7 +63,7 @@ class MakersController extends Controller {
     $upload->createImage($request->file('image'), $this->maker);
 
     flash()->success('Fabricante creado exitosamente.');
-    return redirect()->action('MakersController@show', $this->maker->id);
+    return redirect()->action('MakersController@show', $this->maker->slug);
   }
 
   /**
@@ -74,7 +74,9 @@ class MakersController extends Controller {
    */
   public function show($id)
   {
-    $this->maker = Maker::with('products')->findOrFail($id);
+    if(!$this->maker = Maker::with('products')->where('slug', $id)->first())
+      $this->maker = Maker::with('products')->findOrFail($id);
+
     return view('maker.show')->with(['maker' => $this->maker]);
   }
 
@@ -116,11 +118,11 @@ class MakersController extends Controller {
       {
         flash()->warning('El Fabricante ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
         return redirect()
-          ->action('MakersController@show', $this->maker->id)
+          ->action('MakersController@show', $this->maker->slug)
           ->withErrors($upload->errors);
       }
 
-    return redirect()->action('MakersController@show', $this->maker->id);
+    return redirect()->action('MakersController@show', $this->maker->slug);
   }
 
   /**

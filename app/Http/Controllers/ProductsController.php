@@ -94,7 +94,7 @@ class ProductsController extends Controller {
     $upload->createImages($request->file('images'), $product);
 
     flash('El Producto ha sido creado con exito.');
-    return redirect()->action('ProductsController@show', $product->id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -106,7 +106,7 @@ class ProductsController extends Controller {
   public function show($id, Request $request, VisitsService $visits)
   {
     if(!$product = Product::where('slug', $id)->first())
-    $product = Product::findOrFail($id);
+      $product = Product::findOrFail($id);
 
     $visits->setNewVisit('product', $product->id);
     $visitedProducts = $visits->getVisitedProducts();
@@ -136,7 +136,7 @@ class ProductsController extends Controller {
   {
     if(!$this->user->isOwnerOrAdmin($id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if($product = Product::where('slug', $id)->first())
@@ -165,7 +165,7 @@ class ProductsController extends Controller {
   {
     if(!$this->user->isOwnerOrAdmin($id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     $product = Product::with('direction')->findOrFail($id);
@@ -191,7 +191,7 @@ class ProductsController extends Controller {
     $map->save();
 
     flash('El Producto ha sido actualizado con exito.');
-    return redirect()->action('ProductsController@show', $id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**

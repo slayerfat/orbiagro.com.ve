@@ -4,7 +4,7 @@
       <div class="col-xs-12">
         <div class="media product-media">
           <div class="media-left product-image-container">
-            <a href="{!! action('ProductsController@show', $product->id) !!}">
+            <a href="{!! action('ProductsController@show', $product->slug) !!}">
               <img
                 class="media-object product-image"
                 src="{!! asset($product->images()->first()->path) !!}"
@@ -13,7 +13,7 @@
             </a>
           </div>
           <div class="media-body product-details-container">
-            <a href="{!! action('ProductsController@show', $product->id) !!}">
+            <a href="{!! action('ProductsController@show', $product->slug) !!}">
               <h4 class="media-heading product-title">{{ $product->title }}</h4>
             </a>
             <div class="col-md-3 product-price">

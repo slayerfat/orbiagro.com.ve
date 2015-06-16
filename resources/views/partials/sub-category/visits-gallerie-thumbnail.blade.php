@@ -8,7 +8,7 @@
         class="img-responsive"/>
       <div class="caption" data-related-subCat-visits="{{ $subCat->id }}">
         <h3>
-          {!! link_to_action('SubCategoriesController@show', $subCat->description, $subCat->id) !!}
+          {!! link_to_action('SubCategoriesController@show', $subCat->description, $subCat->slug) !!}
         </h3>
       </div>
     </div>

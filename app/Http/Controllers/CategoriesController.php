@@ -90,7 +90,8 @@ class CategoriesController extends Controller {
    */
   public function show($id)
   {
-    $cat = Category::findOrFail($id);
+    if(!$cat = Category::where('slug', $id)->first())
+      $cat = Category::findOrFail($id);
 
     $subCats = $cat->sub_categories;
 
@@ -131,7 +132,7 @@ class CategoriesController extends Controller {
       endif;
     endif;
 
-    return redirect()->action('CategoriesController@show', $id);
+    return redirect()->action('CategoriesController@show', $this->cat->slug);
   }
 
   /**

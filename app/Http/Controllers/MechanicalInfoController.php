@@ -44,12 +44,12 @@ class MechanicalInfoController extends Controller {
 
     if($this->modelValidator->notOwner($product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if ($product->mechanical) {
       flash()->error('Este Producto ya posee informacion mecanica, por favor actualice el existente.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     }
 
     return view('mechanicalInfo.create')->with([
@@ -69,12 +69,12 @@ class MechanicalInfoController extends Controller {
 
     if($this->modelValidator->notOwner($product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if ($product->mechanical) :
       flash()->error('Este Producto ya posee informacion mecanica, por favor actualice el existente.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     $this->mech = new MechanicalInfo($request->all());
@@ -84,7 +84,7 @@ class MechanicalInfoController extends Controller {
     $product->mechanical()->save($this->mech);
 
     flash('Información Mecanica creada exitosamente.');
-    return redirect()->action('ProductsController@show', $id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -99,7 +99,7 @@ class MechanicalInfoController extends Controller {
 
     if($this->modelValidator->notOwner($this->mech->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->mech->product->id);
+      return redirect()->action('ProductsController@show', $this->mech->product->slug);
     endif;
 
     return view('mechanicalInfo.edit')->with(['mech' => $this->mech]);
@@ -117,14 +117,14 @@ class MechanicalInfoController extends Controller {
 
     if($this->modelValidator->notOwner($this->mech->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->mech->product->id);
+      return redirect()->action('ProductsController@show', $this->mech->product->slug);
     endif;
 
     $this->mech->updated_by = $this->userId;
     $this->mech->update($request->all());
 
     flash('Información Mecanica Actualizada exitosamente.');
-    return redirect()->action('ProductsController@show', $this->mech->product->id);
+    return redirect()->action('ProductsController@show', $this->mech->product->slug);
   }
 
   /**

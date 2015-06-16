@@ -8,7 +8,7 @@
         {!! link_to_action('ProductsController@index', 'Productos') !!}
       </li>
       <li>
-        {!! link_to_action('CategoriesController@show', $subCat->category->description, $subCat->category->id) !!}
+        {!! link_to_action('CategoriesController@show', $subCat->category->description, $subCat->category->slug) !!}
       </li>
       <li class="active">
         <em>
