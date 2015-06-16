@@ -6,16 +6,14 @@
 
 @section('content')
 
-  @if(Auth::user())
-    @if(Auth::user()->isOwnerOrAdmin($product->id))
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-2">
-            {!! link_to_action('ProductsController@edit', 'Editar', $product->id, ['class' => 'btn btn-default btn-block']) !!}
-          </div>
+  @if(Auth::user() and Auth::user()->isOwnerOrAdmin($product->id))
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-2">
+          {!! link_to_action('ProductsController@edit', 'Editar', $product->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
       </div>
-    @endif
+    </div>
   @endif
 
   @include('product.breadcrumbs', $product)
@@ -24,7 +22,7 @@
       <div class="col-md-7">
         <h1>{{ $product->title }}</h1>
         <p>
-          Por: {!! link_to_action('MakersController@show', $product->maker->name.'.', $product->maker->id) !!}
+          Por: {!! link_to_action('MakersController@show', $product->maker->name, $product->maker->slug) !!}
         </p>
         <p id="product-description">
           {!! $product->description !!}

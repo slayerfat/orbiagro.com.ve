@@ -2,7 +2,7 @@
 $I = new AcceptanceTester($scenario);
 $I->wantTo('edit a product while im not logged in');
 $I->expect('to redirected to login form');
-$I->amOnPage('/productos/1/edit');
+$I->amOnPage('/productos/1/editar');
 $I->expect('to see the login form');
 $I->see('Entrar', '.panel-heading');
 $I->seeElement('form');

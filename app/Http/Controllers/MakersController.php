@@ -1,11 +1,28 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use Auth;
+use App\Http\Requests\MakerRequest;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
+use App\Maker;
+
+use App\Mamarrachismo\Upload;
 
 class MakersController extends Controller {
+
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct(Maker $maker)
+  {
+    $this->middleware('auth', ['except' => ['show']]);
+    $this->middleware('user.admin', ['except' => ['show']]);
+    $this->user   = Auth::user();
+    $this->userId = Auth::id();
+    $this->maker = $maker;
+  }
 
   /**
    * Display a listing of the resource.
@@ -14,7 +31,9 @@ class MakersController extends Controller {
    */
   public function index()
   {
-    //
+    $makers = Maker::with('products')->get();
+
+    return view('maker.index', compact('makers'));
   }
 
   /**
@@ -24,7 +43,7 @@ class MakersController extends Controller {
    */
   public function create()
   {
-    //
+    return view('maker.create')->with(['maker' => $this->maker]);
   }
 
   /**
@@ -32,9 +51,19 @@ class MakersController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(MakerRequest $request, Upload $upload)
   {
-    //
+    $this->maker->fill($request->all());
+
+    $this->maker->save();
+
+    // para los archivos
+    $upload->userId = $this->userId;
+
+    $upload->createImage($request->file('image'), $this->maker);
+
+    flash()->success('Fabricante creado exitosamente.');
+    return redirect()->action('MakersController@show', $this->maker->slug);
   }
 
   /**
@@ -45,7 +74,10 @@ class MakersController extends Controller {
    */
   public function show($id)
   {
-    //
+    if(!$this->maker = Maker::with('products')->where('slug', $id)->first())
+      $this->maker = Maker::with('products')->findOrFail($id);
+
+    return view('maker.show')->with(['maker' => $this->maker]);
   }
 
   /**
@@ -56,7 +88,9 @@ class MakersController extends Controller {
    */
   public function edit($id)
   {
-    //
+    $this->maker = Maker::findOrFail($id);
+
+    return view('maker.edit')->with(['maker' => $this->maker]);
   }
 
   /**
@@ -65,9 +99,30 @@ class MakersController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, MakerRequest $request, Upload $upload)
   {
-    //
+    $this->maker = Maker::findOrFail($id);
+    $this->maker->update($request->all());
+
+    flash()->success('Fabricante Actualizado exitosamente.');
+
+    // de FeatureController...
+    // TODO: mejorar?
+    // para guardar la imagen y modelo
+    if ($request->hasFile('image'))
+      try
+      {
+        $upload->updateImage($request->file('image'), $this->maker, $this->maker->image);
+      }
+      catch (\Exception $e)
+      {
+        flash()->warning('El Fabricante ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
+        return redirect()
+          ->action('MakersController@show', $this->maker->slug)
+          ->withErrors($upload->errors);
+      }
+
+    return redirect()->action('MakersController@show', $this->maker->slug);
   }
 
   /**

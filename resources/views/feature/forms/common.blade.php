@@ -24,3 +24,12 @@
     </div>
   </div>
 @stop
+
+@section('feature-file')
+  <div class="form-group">
+    {!! Form::label('file', 'Archivo Relacionado:', ['class' => 'col-md-2 control-label']) !!}
+    <div class="col-md-10">
+      <input type="file" name="file" class="form-control" id="file" accept=".pdf, .doc, .docx">
+    </div>
+  </div>
+@stop

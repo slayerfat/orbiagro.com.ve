@@ -20,7 +20,7 @@ class CreateSubCategoriesTable extends Migration {
             ->references('id')
             ->on('categories')
             ->onDelete('cascade');
-      $table->string('description');
+      $table->string('description')->unique();
       $table->string('info');
       $table->string('slug');
       $table->timestamps();

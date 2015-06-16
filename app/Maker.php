@@ -60,9 +60,9 @@ class Maker extends Model {
    * en donde $a es una instancia de User y
    * $b es una instancia de Direction
    */
-   public function images()
+   public function image()
   {
-    return $this->morphMany('App\Image', 'imageable');
+    return $this->morphOne('App\Image', 'imageable');
   }
 
 }

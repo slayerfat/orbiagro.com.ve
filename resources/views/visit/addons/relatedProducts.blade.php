@@ -1,5 +1,5 @@
-<div class="container">
-  @unless($visitedProducts->isEmpty())
+@unless($visitedProducts->isEmpty())
+  <div class="container">
     <div class="row">
       <div class="col-xs-12" id="products-visits">
         <h1>Ultimos Productos que ha visitado</h1>
@@ -9,7 +9,7 @@
       @include('visit.addons.gallerie-products')
     </div>
     @foreach($visitedProducts as $visited)
-      <div class="row related-subcategory-product" id="{{ $visited->sub_category->id }}">
+      <div class="row related-subcategory-product" id="products-visits-{{ $visited->sub_category->id }}">
         <?php $products = App\SubCategory::find($visited->sub_category->id)->products->take(6); ?>
         <div class="col-xs-12">
           <h3>Recomendaciones por visitar la Categoria {{ $visited->sub_category->description }}</h3>
@@ -23,7 +23,7 @@
                 class="img-responsive"/>
               <div class="caption">
                 <h4>
-                  {!! link_to_action('ProductsController@show', $product->title, $product->id) !!}
+                  {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}
                 </h4>
               </div>
             </div>
@@ -31,5 +31,9 @@
         @endforeach
       </div>
     @endforeach
-  @endunless
-</div>
+  </div>
+@endunless
+
+@section('relatedProducts-js')
+  <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
+@stop

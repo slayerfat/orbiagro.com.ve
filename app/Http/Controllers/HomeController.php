@@ -3,7 +3,7 @@
 use App\SubCategory;
 use App\Promotion;
 use App\PromoType;
-use App\Mamarrachismo\VisitedProductsFinder;
+use App\Mamarrachismo\VisitsService;
 
 class HomeController extends Controller {
 
@@ -12,7 +12,7 @@ class HomeController extends Controller {
    *
    * @return Response
    */
-  public function index(VisitedProductsFinder $visitedFinder)
+  public function index()
   {
     $sub_category = SubCategory::has('products')->random()->first();
 
@@ -23,9 +23,7 @@ class HomeController extends Controller {
     // selecciona las promociones existentes segun el tipo ya seleccionado
     $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
 
-    $visitedProducts = $visitedFinder->getVisitedProducts();
-
-    return view('home.index', compact('sub_category', 'promotions', 'visitedProducts'));
+    return view('home.index', compact('sub_category', 'promotions'));
   }
 
   public function unverified()

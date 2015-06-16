@@ -114,7 +114,7 @@ return [
     'number'           => 'Numero',
     'apartment_id'     => 'Apartamento',
     'username'         => 'Seudonimo',
-    'name'             => 'Nombre',
+    'name'             => 'Seudonimo',
     'email'            => 'E-mail',
     'password'         => 'Contraseña',
     'exact_direction'  => 'Direccion',

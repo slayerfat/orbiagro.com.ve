@@ -12,7 +12,7 @@ class SubCategory extends Model {
   // --------------------------------------------------------------------------
   public function setDescriptionAttribute($value)
   {
-    $this->attributes['description'] = ModelValidation::byLenght($value);
+    $this->attributes['description'] = ModelValidation::byLenght($value, 3);
     if($this->attributes['description'])
       $this->attributes['slug'] = str_slug($this->attributes['description']);
   }
@@ -24,7 +24,7 @@ class SubCategory extends Model {
 
   public function setSlugAttribute($value)
   {
-    if (ModelValidation::byLenght($value)) :
+    if (ModelValidation::byLenght($value, 3)) :
       $this->attributes['slug'] = str_slug($value);
     else:
       $this->attributes['slug'] = null;
@@ -99,6 +99,11 @@ class SubCategory extends Model {
   public function image()
   {
     return $this->morphOne('App\Image', 'imageable');
+  }
+
+  public function visits()
+  {
+    return $this->morphMany('App\Visit', 'visitable');
   }
 
 }

@@ -11,7 +11,7 @@ use App\Product;
 use App\Category;
 use App\SubCategory;
 
-use App\Mamarrachismo\VisitedProductsFinder;
+use App\Mamarrachismo\VisitsService;
 use App\Mamarrachismo\Upload;
 
 class SubCategoriesController extends Controller {
@@ -26,6 +26,7 @@ class SubCategoriesController extends Controller {
   public function __construct(SubCategory $subCat)
   {
     $this->middleware('auth', ['except' => ['index', 'show']]);
+    $this->middleware('user.admin', ['except' => ['index', 'show']]);
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->subCat = $subCat;
@@ -36,10 +37,8 @@ class SubCategoriesController extends Controller {
    *
    * @return Response
    */
-  public function index(VisitedProductsFinder $visitedFinder)
+  public function index()
   {
-    $visitedProducts = $visitedFinder->getVisitedProducts();
-
     // TODO: closure? : subcat ... function($query) ...
     // $todo = SubCategory::with(['products' => function($query){
     // 	// $query(get 9 random products...);
@@ -64,11 +63,6 @@ class SubCategoriesController extends Controller {
    */
   public function create()
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
     $cats = Category::lists('description', 'id');
 
     return view('sub-category.create')->with([
@@ -84,12 +78,6 @@ class SubCategoriesController extends Controller {
    */
   public function store(SubCategoryRequest $request, Upload $upload)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $cat = Category::findOrFail($request->input('category_id'));
 
     // para los archivos del rubro
@@ -111,17 +99,18 @@ class SubCategoriesController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id, VisitedProductsFinder $visitedFinder)
+  public function show($id, VisitsService $visits)
   {
-    $subCat = SubCategory::findOrFail($id);
+    if(!$subCat = SubCategory::where('slug', $id)->first())
+      $subCat = SubCategory::findOrFail($id);
 
     $subCats = $subCat->category->sub_categories()->get();
 
     $products = Product::where('sub_category_id', $id)->paginate(20);
 
-    $visitedProducts = $visitedFinder->getVisitedProducts();
+    $visits->setNewVisit('subCat', $id);
 
-    return view('sub-category.show', compact('products', 'visitedProducts', 'subCat', 'subCats'));
+    return view('sub-category.show', compact('products', 'subCat', 'subCats'));
   }
 
   /**
@@ -132,12 +121,6 @@ class SubCategoriesController extends Controller {
    */
   public function edit($id)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $this->subCat = SubCategory::findOrFail($id);
 
     $cats = Category::lists('description', 'id');
@@ -156,12 +139,6 @@ class SubCategoriesController extends Controller {
    */
   public function update($id, SubCategoryRequest $request, Upload $upload)
   {
-    if(!$this->user->isAdmin())
-    {
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('HomeController@index');
-    }
-
     $this->subCat = SubCategory::findOrFail($id)->load('image');
 
     $this->subCat->update($request->all());
@@ -173,7 +150,7 @@ class SubCategoriesController extends Controller {
       endif;
     endif;
 
-    return redirect()->action('SubCategoriesController@show', $this->subCat->id);
+    return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
   }
 
   /**

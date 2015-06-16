@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use Faker\Factory as Faker;
+
 class CategoryTableSeeder extends Seeder {
 
   /**
@@ -16,9 +18,12 @@ class CategoryTableSeeder extends Seeder {
       'Productos Alimenticios'
     ];
 
+    $faker  = Faker::create('es_ES');
+
     foreach($types as $category):
       $category = App\Category::create([
         'description' => $category,
+        'info'        => $faker->text(),
         'slug'        => str_slug($category, '-')
       ]);
     endforeach;

@@ -65,7 +65,7 @@ class MakerTest extends \Codeception\TestCase\Test
   public function testLogoAlt()
   {
     $this->assertEquals('orbiagro.com.ve subastas compra y venta: '.$this->tester->slug,
-      $this->tester->images()->first()->alt);
+      $this->tester->image->alt);
   }
 
 }

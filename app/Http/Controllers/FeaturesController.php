@@ -46,7 +46,7 @@ class FeaturesController extends Controller {
     if ($product->features->count() < 5) :
       if($this->modelValidator->notOwner($product->user->id)) :
         flash()->error('Ud. no tiene permisos para esta accion.');
-        return redirect()->action('ProductsController@show', $id);
+        return redirect()->action('ProductsController@show', $product->slug);
       endif;
       return view('feature.create')->with([
         'product' => $product,
@@ -55,7 +55,7 @@ class FeaturesController extends Controller {
     endif;
 
     flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
-    return redirect()->action('ProductsController@show', $id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -77,26 +77,40 @@ class FeaturesController extends Controller {
     // el producto puede tener como maximo 5 features
     if ($product->features->count() >= 5) :
       flash()->error('Este Producto ya posee 5 distintivos, por favor actualice los existentes.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     if($this->modelValidator->notOwner($product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
     endif;
 
     $this->feature->title       = $request->input('title');
     $this->feature->description = $request->input('description');
     $this->feature->created_by  = $this->userId;
     $this->feature->updated_by  = $this->userId;
+
     $product->features()->save($this->feature);
+
+    flash('Distintivo creado correctamente.');
 
     // para guardar la imagen y modelo
 
+    if ($request->hasFile('file'))
+      try
+      {
+        $upload->createFile($request->file('file'), $this->feature);
+      }
+      catch (\Exception $e)
+      {
+        flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado');
+        return redirect()
+          ->action('ProductsController@show', $product->slug)
+          ->withErrors($upload->errors);
+      }
+
     $upload->createImage($request->file('image'), $this->feature);
 
-    flash('Distintivos actualizado correctamente.');
-    return redirect()->action('ProductsController@show', $product->id);
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -111,7 +125,7 @@ class FeaturesController extends Controller {
 
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     return view('feature.edit')->with(['feature' => $this->feature]);
@@ -127,23 +141,47 @@ class FeaturesController extends Controller {
    */
   public function update($id, FeatureRequest $request, Upload $upload)
   {
+    // se carga el producto para el redirect (id)
     $this->feature = Feature::findOrFail($id)->load('product');
 
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $id);
+      return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
     $this->feature->updated_by = $this->userId;
     $this->feature->update($request->all());
     flash('El Distintivo ha sido actualizado correctamente.');
-    // para guardar la imagen y modelo
-    if ($request->hasFile('image')) :
-      if (!$upload->updateImage($request->file('image'), $this->feature, $this->feature->image))
-        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-    endif;
 
-    return redirect()->action('ProductsController@show', $this->feature->product->id);
+    // TODO: mejorar?
+    // para guardar la imagen y modelo
+    if ($request->hasFile('image'))
+      try
+      {
+        $upload->updateImage($request->file('image'), $this->feature, $this->feature->image);
+      }
+      catch (\Exception $e)
+      {
+        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
+        return redirect()
+          ->action('ProductsController@show', $this->feature->product->slug)
+          ->withErrors($upload->errors);
+      }
+
+    if ($request->hasFile('file'))
+      try
+      {
+        $upload->updateFile($request->file('file'), $this->feature->product, $this->feature->file);
+      }
+      catch (\Exception $e)
+      {
+        flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado');
+        return redirect()
+          ->action('ProductsController@show', $this->feature->product->slug)
+          ->withErrors($upload->errors);
+      }
+
+    return redirect()->action('ProductsController@show', $this->feature->product->slug);
   }
 
   /**

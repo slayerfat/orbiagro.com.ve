@@ -150,6 +150,8 @@ return [
     'App\Providers\ConfigServiceProvider',
     'App\Providers\EventServiceProvider',
     'App\Providers\RouteServiceProvider',
+    'App\Providers\ViewServiceProvider',
+
     'Laracasts\Flash\FlashServiceProvider'
 
   ],

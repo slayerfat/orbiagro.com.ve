@@ -11,6 +11,7 @@ class UserTest extends \Codeception\TestCase\Test
   protected function _before()
   {
     $this->tester = User::where('name', 'tester')->first();
+    $this->data = ['', 'a', -1];
   }
 
   protected function _after()
@@ -99,6 +100,24 @@ class UserTest extends \Codeception\TestCase\Test
   {
     $this->assertNotEmpty($this->tester->purchases);
     $this->assertGreaterThan(0, $this->tester->purchases->first()->quantity);
+  }
+
+  public function testPasswordAttribute()
+  {
+    $this->assertNotEmpty($this->tester->password);
+    $obj = new User;
+    foreach($this->data as $value):
+      $obj->password = $value;
+      $this->assertNull($obj->password);
+    endforeach;
+  }
+
+  public function testPasswordShouldBeEncrypted()
+  {
+    $obj = new User;
+    $obj->password = 'validPassword';
+    $this->assertEquals(60, strlen($obj->password));
+    $this->assertNotEquals('validPassword', strlen($obj->password));
   }
 
 }

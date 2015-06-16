@@ -45,14 +45,40 @@ class CategoryTest extends \Codeception\TestCase\Test
     $this->assertNotEmpty($this->tester->image);
   }
 
-  public function testDescriptionFormat()
+  public function testCorrectDescriptionFormat()
+  {
+    $obj = new Category;
+    foreach($this->data as $value):
+      $obj->description = $value;
+      $this->assertNull($obj->description);
+      $this->assertNull($obj->slug);
+    endforeach;
+    $this->tester->description = 'tetsuo kaneda tetsuo kaneda';
+    $this->assertEquals('Tetsuo kaneda tetsuo kaneda', $this->tester->description);
+    $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
+  }
+
+  public function testCorrectSlugFormat()
   {
     foreach($this->data as $value):
-      $this->tester->description = $value;
-      $this->assertNull($this->tester->description);
+      $this->tester->slug = $value;
+      $this->assertNull($this->tester->slug);
     endforeach;
-    $this->tester->description = 'tetsuo';
-    $this->assertEquals('Tetsuo', $this->tester->description);
+    $this->tester->slug = 'tetsuo kaneda tetsuo kaneda';
+    $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
+  }
+
+  public function testCorrectInfoFormat()
+  {
+    $obj = new Category;
+    foreach($this->data as $value):
+      $obj->info = $value;
+      $this->assertNull($obj->info);
+    endforeach;
+    $this->tester->info = 'tetsuo kaneda tetsuo kaneda';
+    $this->assertEquals('Tetsuo kaneda tetsuo kaneda.', $this->tester->info);
+    $this->tester->info = 'tetsuo kaneda tetsuo kaneda...';
+    $this->assertEquals('Tetsuo kaneda tetsuo kaneda...', $this->tester->info);
   }
 
 }

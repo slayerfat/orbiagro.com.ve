@@ -1,48 +1,72 @@
 <?php
 
+/**
+ * variable para españolificar las rutas
+ * @var array
+ */
+$español = ['except' => ['create', 'edit']];
+
 Route::get('/welcome', 'WelcomeController@index');
 
 Route::get('/', 'HomeController@index');
 
-Route::resource('usuarios', 'UsersController');
-Route::resource('productos', 'ProductsController');
+Route::get('usuarios/crear', ['uses' => 'UsersController@create', 'as' => 'usuarios.create']);
+Route::get('usuarios/{usuarios}/editar', ['uses' => 'UsersController@edit', 'as' => 'usuarios.edit']);
+Route::resource('usuarios', 'UsersController', $español);
+
+Route::get('productos/crear', ['uses' => 'ProductsController@create', 'as' => 'productos.create']);
+Route::get('productos/{productos}/editar', ['uses' => 'ProductsController@edit', 'as' => 'productos.edit']);
+Route::resource('productos', 'ProductsController', $español);
+
 // modelos asociados a producto
 Route::group(['prefix' => 'productos'], function(){
   // features
-  Route::get('/{productos}/feature/create', 'FeaturesController@create');
-  Route::post('/{productos}/feature', 'FeaturesController@store');
-  Route::get('/feature/{features}/edit', 'FeaturesController@edit');
-  Route::put('/feature/{features}', 'FeaturesController@update');
-  Route::patch('/feature/{features}', 'FeaturesController@update');
-  Route::delete('/feature/{features}', 'FeaturesController@destroy');
+  Route::get('/{productos}/distintivos/crear', 'FeaturesController@create');
+  Route::post('/{productos}/distintivos', 'FeaturesController@store');
+  Route::get('/distintivos/{features}/editar', 'FeaturesController@edit');
+  Route::put('/distintivos/{features}', 'FeaturesController@update');
+  Route::patch('/distintivos/{features}', 'FeaturesController@update');
+  Route::delete('/distintivos/{features}', 'FeaturesController@destroy');
 
   // mechanical info
-  Route::get('/{productos}/info-mecanica/create', 'MechanicalInfoController@create');
+  Route::get('/{productos}/info-mecanica/crear', 'MechanicalInfoController@create');
   Route::post('/{productos}/info-mecanica', 'MechanicalInfoController@store');
-  Route::get('/info-mecanica/{mechanicals}/edit', 'MechanicalInfoController@edit');
+  Route::get('/info-mecanica/{mechanicals}/editar', 'MechanicalInfoController@edit');
   Route::put('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
   Route::patch('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
   Route::delete('/info-mecanica/{mechanicals}', 'MechanicalInfoController@destroy');
 
   // characteristics
-  Route::get('/{productos}/caracteristicas/create', 'CharacteristicsController@create');
+  Route::get('/{productos}/caracteristicas/crear', 'CharacteristicsController@create');
   Route::post('/{productos}/caracteristicas', 'CharacteristicsController@store');
-  Route::get('/caracteristicas/{mechanicals}/edit', 'CharacteristicsController@edit');
+  Route::get('/caracteristicas/{mechanicals}/editar', 'CharacteristicsController@edit');
   Route::put('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
   Route::patch('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
   Route::delete('/caracteristicas/{mechanicals}', 'CharacteristicsController@destroy');
 
   // nutritional
-  Route::get('/{productos}/valores-nutricionales/create', 'NutritionalsController@create');
+  Route::get('/{productos}/valores-nutricionales/crear', 'NutritionalsController@create');
   Route::post('/{productos}/valores-nutricionales', 'NutritionalsController@store');
-  Route::get('/valores-nutricionales/{mechanicals}/edit', 'NutritionalsController@edit');
+  Route::get('/valores-nutricionales/{mechanicals}/editar', 'NutritionalsController@edit');
   Route::put('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
   Route::patch('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
   Route::delete('/valores-nutricionales/{mechanicals}', 'NutritionalsController@destroy');
 });
-Route::resource('categorias', 'CategoriesController');
-Route::resource('rubros', 'SubCategoriesController');
-Route::resource('fabricantes', 'MakersController');
+Route::get('categorias/crear', ['uses' => 'CategoriesController@create', 'as' => 'categorias.create']);
+Route::get('categorias/{categorias}/editar', ['uses' => 'CategoriesController@edit', 'as' => 'categorias.edit']);
+Route::resource('categorias', 'CategoriesController', $español);
+
+Route::get('rubros/crear', ['uses' => 'SubCategoriesController@create', 'as' => 'rubros.create']);
+Route::get('rubros/{rubros}/editar', ['uses' => 'SubCategoriesController@edit', 'as' => 'rubros.edit']);
+Route::resource('rubros', 'SubCategoriesController', $español);
+
+Route::get('fabricantes/crear', ['uses' => 'MakersController@create', 'as' => 'fabricantes.create']);
+Route::get('fabricantes/{fabricantes}/editar', ['uses' => 'MakersController@edit', 'as' => 'fabricantes.edit']);
+Route::resource('fabricantes', 'MakersController', $español);
+
+Route::get('perfiles/crear', ['uses' => 'ProfilesController@create', 'as' => 'perfiles.create']);
+Route::get('perfiles/{perfiles}/editar', ['uses' => 'ProfilesController@edit', 'as' => 'perfiles.edit']);
+Route::resource('perfiles', 'ProfilesController', $español);
 
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar

@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Mamarrachismo\ModelValidation;
+
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
   use Authenticatable, CanResetPassword, SoftDeletes;
@@ -35,6 +37,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   // --------------------------------------------------------------------------
   // Mutators
   // --------------------------------------------------------------------------
+  public function setPasswordAttribute($value)
+  {
+    if($pw = ModelValidation::byLenght($value, 6)) :
+      $this->attributes['password'] = bcrypt($pw);
+    else:
+      $this->attributes['password'] = null;
+    endif;
+
+  }
 
   // --------------------------------------------------------------------------
   // Scopes

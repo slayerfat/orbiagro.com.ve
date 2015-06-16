@@ -28,7 +28,7 @@ class CreatePeopleTable extends Migration {
       $table->string('last_name')->nullable();
       $table->string('first_surname');
       $table->string('last_surname')->nullable();
-      $table->string('identity_card');
+      $table->string('identity_card')->unique();
       $table->string('phone')->nullable();
       $table->date('birth_date')->nullable();
       $table->timestamps();
