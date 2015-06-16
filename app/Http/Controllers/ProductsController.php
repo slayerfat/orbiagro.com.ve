@@ -136,7 +136,7 @@ class ProductsController extends Controller {
   {
     if(!$this->user->isOwnerOrAdmin($id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $product->slug);
+      return redirect()->action('ProductsController@show', $id);
     endif;
 
     if($product = Product::where('slug', $id)->first())
@@ -165,7 +165,7 @@ class ProductsController extends Controller {
   {
     if(!$this->user->isOwnerOrAdmin($id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $product->slug);
+      return redirect()->action('ProductsController@show', $id);
     endif;
 
     $product = Product::with('direction')->findOrFail($id);
