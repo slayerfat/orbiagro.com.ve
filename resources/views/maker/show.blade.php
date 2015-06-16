@@ -5,6 +5,17 @@
 @stop
 
 @section('content')
+
+  @if(Auth::user() and Auth::user()->isAdmin())
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-2">
+          {!! link_to_action('MakersController@edit', 'Editar', $maker->id, ['class' => 'btn btn-default btn-block']) !!}
+        </div>
+      </div>
+    </div>
+  @endif
+
   <div class="container">
     <div class="row">
       <div class="col-sm-8">

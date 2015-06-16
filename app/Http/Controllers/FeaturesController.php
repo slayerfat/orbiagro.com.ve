@@ -141,6 +141,7 @@ class FeaturesController extends Controller {
    */
   public function update($id, FeatureRequest $request, Upload $upload)
   {
+    // se carga el producto para el redirect (id)
     $this->feature = Feature::findOrFail($id)->load('product');
 
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :

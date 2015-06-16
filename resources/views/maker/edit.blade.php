@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title')
-  - Crear - Fabricante
+  - Actualizar - Fabricante - {{$maker->name}}
 @stop
 
 @section('content')
@@ -9,15 +9,16 @@
     <div class="row">
       <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default">
-          <div class="panel-heading">Crear nuevo Fabricante</div>
+          <div class="panel-heading">Actualizar {{$maker->name}}</div>
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($maker, [
-              'action' => 'MakersController@store',
+              'method' => 'PATCH',
+              'action' => ['MakersController@update', $maker->id],
               'class'  => 'form-horizontal',
               'files'  => true
               ]) !!}
-              @include('maker.forms.body', ['textoBotonSubmit' => 'Añadir nuevo Fabricante'])
+              @include('maker.forms.body', ['textoBotonSubmit' => 'Actualizar Fabricante'])
             {!! Form::close() !!}
           </div>
         </div>

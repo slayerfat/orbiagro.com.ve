@@ -18,7 +18,7 @@ class NeoTableSeeder extends Seeder {
     $neo = App\User::create([
       'name'       => env('APP_USER'),
       'email'      => env('APP_USER_EMAIL'),
-      'password'   => Hash::make( env('APP_USER_PASSWORD') ),
+      'password'   => env('APP_USER_PASSWORD'),
       'profile_id' => $admin->id
     ]);
 
