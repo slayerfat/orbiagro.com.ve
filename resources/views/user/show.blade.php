@@ -16,25 +16,7 @@
   @endif --}}
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-2 sidebar">
-        <ul class="nav nav-sidebar">
-          <li class="active">
-            <a href="#">Resumen</a>
-          </li>
-          <li>
-            <a href="#">Información Personal</a>
-          </li>
-          <li>
-            <a href="#">Seguridad</a>
-          </li>
-          <li>
-            <a href="#">Productos</a>
-          </li>
-          <li>
-            <a href="#">Facturación</a>
-          </li>
-        </ul>
-      </div>
+      @include('user.addons.sidebar', ['active' => 'resumen'])
       {{-- user info --}}
       <div class="col-sm-4">
         <h1>
