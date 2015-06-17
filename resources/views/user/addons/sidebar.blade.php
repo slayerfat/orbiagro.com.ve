@@ -38,11 +38,7 @@ switch ($active)
       {!! link_to_action('UsersController@edit', 'Cuenta', $user->name) !!}
     </li>
     <li>
-      @if($user->person)
-        {!! link_to_action('PeopleController@edit', 'Información Personal', $user->name) !!}
-      @else
-        {!! link_to_action('PeopleController@create', 'Información Personal') !!}
-      @endif
+      {!! link_to_action($user->person ? 'PeopleController@edit':'PeopleController@create', 'Información Personal', $user->name) !!}
     </li>
     <li>
       <a href="#">Facturación</a>
