@@ -1,8 +1,4 @@
 <?php
-$resumen = null;
-$person = null;
-$products = null;
-$billing = null;
 switch ($active)
 {
   case 'resumen':
@@ -19,23 +15,17 @@ switch ($active)
     break;
   default:
     Log::warning('user.addon.sidebar: no se pudo identificar el vinculo activo');
-    break;
-}
-
-?>
+    break;}?>
 
 <div class="col-sm-2 sidebar">
   <ul class="nav nav-sidebar">
-    <li {{$resumen}}>
+    <li {{isset($resumen) ? $resumen:null}}>
       <a href="#">Resumen</a>
     </li>
-    <li {{$person}}>
-      <a href="#">Información Personal</a>
-    </li>
-    <li {{$products}}>
+    <li {{isset($products) ? $products:null}}>
       <a href="#">Productos</a>
     </li>
-    <li {{$billing}}>
+    <li {{isset($billing) ? $billing:null}}>
       <a href="#">Facturación</a>
     </li>
   </ul>
@@ -45,10 +35,14 @@ switch ($active)
       Editar
     </li>
     <li>
-      <a href="#">Información Personal</a>
+      {!! link_to_action('UsersController@edit', 'Cuenta', $user->name) !!}
     </li>
     <li>
-      <a href="#">Cuenta</a>
+      @if($user->person)
+        {!! link_to_action('PeopleController@edit', 'Información Personal', $user->name) !!}
+      @else
+        {!! link_to_action('PeopleController@create', 'Información Personal') !!}
+      @endif
     </li>
     <li>
       <a href="#">Facturación</a>

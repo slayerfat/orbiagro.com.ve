@@ -57,6 +57,10 @@ class ProductsController extends Controller {
    */
   public function create(Product $product)
   {
+    if($this->user->isDisabled()) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->back();
+    endif;
     $makers    = Maker::lists('name', 'id');
     $catModels = Category::with('sub_categories')->get();
 

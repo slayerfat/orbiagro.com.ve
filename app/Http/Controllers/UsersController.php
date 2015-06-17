@@ -96,7 +96,8 @@ class UsersController extends Controller {
    */
   public function edit($id)
   {
-    $user = User::with('profile')->findOrFail($id);
+    if(!$user = User::with('profile')->where('name', $id)->first())
+      $user = User::with('profile')->findOrFail($id);
 
     $profiles = Profile::lists('description', 'id');
 
