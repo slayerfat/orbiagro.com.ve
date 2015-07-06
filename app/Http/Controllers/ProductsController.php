@@ -97,7 +97,7 @@ class ProductsController extends Controller {
     // se iteran las imagenes y se guardan los modelos
     $upload->createImages($request->file('images'), $product);
 
-    flash('El Producto ha sido creado con exito.');
+    flash()->success('El Producto ha sido creado con exito.');
     return redirect()->action('ProductsController@show', $product->slug);
   }
 

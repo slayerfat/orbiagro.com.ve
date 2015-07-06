@@ -1,5 +1,5 @@
 @include('people.forms.common',[
-  'date' => $user->person->date ? $user->person->date:null
+  'date' => $user->person ? $user->person->date:null
 ])
 
 @yield('names')

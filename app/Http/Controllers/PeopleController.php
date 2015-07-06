@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use App\Http\Requests\PeopleRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -22,6 +22,7 @@ class PeopleController extends Controller {
   public function __construct(Person $person)
   {
     $this->middleware('auth');
+    $this->middleware('user.admin');
     $this->person = $person;
   }
 
@@ -35,9 +36,14 @@ class PeopleController extends Controller {
     if(!$user = User::where('name', $id)->first())
       $user = User::findOrFail($id);
 
+    $genders = Gender::lists('description', 'id');
+    $nationalities = Nationality::lists('description', 'id');
+
     return view('people.create')->with([
-      'person' => $this->person,
-      'user'   => $user
+      'person'        => $this->person,
+      'user'          => $user,
+      'genders'       => $genders,
+      'nationalities' => $nationalities,
     ]);
   }
 
@@ -46,9 +52,17 @@ class PeopleController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store($id, PeopleRequest $request)
   {
-    //
+    $user = User::findOrFail($id);
+    $this->person->fill($request->all());
+
+    $this->person->gender_id = $request->input('gender_id');
+    $this->person->nationality_id = $request->input('nationality_id');
+    $user->person()->save($this->person);
+
+    flash()->success('Los datos personales han sido actualizados con exito.');
+    return redirect()->action('UsersController@show', $user->name);
   }
 
   /**
@@ -79,9 +93,16 @@ class PeopleController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, PeopleRequest $request)
   {
-    //
+    $user = User::with('person')->findOrFail($id);
+    $user->person->fill($request->all());
+    $user->person->gender_id = $request->input('gender_id');
+    $user->person->nationality_id = $request->input('nationality_id');
+
+    $user->person->save();
+    flash()->success('Los datos personales han sido actualizados con exito.');
+    return redirect()->action('UsersController@show', $user->name);
   }
 
   /**

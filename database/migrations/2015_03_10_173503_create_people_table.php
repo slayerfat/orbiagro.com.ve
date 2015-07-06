@@ -20,15 +20,15 @@ class CreatePeopleTable extends Migration {
             ->references('id')
             ->on('users')
             ->onDelete('cascade');
-      $table->integer('gender_id')->unsigned();
+      $table->integer('gender_id')->nullable()->unsigned();
       $table->foreign('gender_id')->references('id')->on('genders');
-      $table->integer('nationality_id')->unsigned();
+      $table->integer('nationality_id')->nullable()->unsigned();
       $table->foreign('nationality_id')->references('id')->on('nationalities');
-      $table->string('first_name');
+      $table->string('first_name')->nullable();
       $table->string('last_name')->nullable();
-      $table->string('first_surname');
+      $table->string('first_surname')->nullable();
       $table->string('last_surname')->nullable();
-      $table->string('identity_card')->unique();
+      $table->string('identity_card')->nullable()->unique();
       $table->string('phone')->nullable();
       $table->date('birth_date')->nullable();
       $table->timestamps();

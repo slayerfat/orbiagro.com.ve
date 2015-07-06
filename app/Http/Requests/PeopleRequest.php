@@ -26,22 +26,27 @@ class PeopleRequest extends Request {
     {
       case 'POST':
         return [
-          'name'       => 'required|max:255|unique:users',
-          'email'      => 'required|email|max:255|unique:users',
-          'password'   => 'required|confirmed|min:6',
-          'profile_id' => 'required|numeric',
+          'identity_card'  => 'numeric|between:999999,99999999|unique:people',
+          'first_name'     => 'alpha|max:40',
+          'last_name'      => 'alpha|max:40',
+          'first_surname'  => 'alpha|max:40',
+          'last_surname'   => 'alpha|max:40',
+          'phone'          => 'max:40',
+          'birth_date'     => 'date',
+          'gender_id'      => 'numeric',
+          'nationality_id' => 'required_with:identity_card|numeric',
         ];
       case 'PUT':
       case 'PATCH':
         return [
-          'identity_card' => 'required|max:11|unique:people,identity_card,'.(int)$this->route('usuarios'),
-          'first_name'      => 'alpha|max:40',
+          'identity_card'  => 'numeric|between:999999,99999999|unique:people,identity_card,'.(int)$this->route('personas'),
+          'first_name'     => 'alpha|max:40',
           'last_name'      => 'alpha|max:40',
-          'first_surname'      => 'alpha|max:40',
-          'last_surname'      => 'alpha|max:40',
-          'phone' => 'numeric',
-          'birth_date' => 'numeric',
-          'gender_id' => 'numeric',
+          'first_surname'  => 'alpha|max:40',
+          'last_surname'   => 'alpha|max:40',
+          'phone'          => 'max:40',
+          'birth_date'     => 'date',
+          'gender_id'      => 'numeric',
           'nationality_id' => 'required_with:identity_card|numeric',
         ];
       default:break;
