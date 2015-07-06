@@ -1,8 +1,12 @@
-@include('people.forms.common')
+@include('people.forms.common',[
+  'date' => $user->person->date ? $user->person->date:null
+])
 
 @yield('names')
 @yield('surnames')
-@yield('ic-phone')
+@yield('ic-nat')
+@yield('gender-phone')
+@yield('birth_date')
 
 <div class="form-group">
   <div class="col-md-12">

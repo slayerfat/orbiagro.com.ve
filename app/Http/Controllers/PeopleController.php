@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Person;
+use App\Gender;
+use App\Nationality;
 
 class PeopleController extends Controller {
 
@@ -57,7 +59,18 @@ class PeopleController extends Controller {
    */
   public function edit($id)
   {
-    //
+    if(!$user = User::where('name', $id)->first())
+      $user = User::findOrFail($id);
+
+    $genders = Gender::lists('description', 'id');
+    $nationalities = Nationality::lists('description', 'id');
+
+    return view('people.edit')->with([
+      'person'        => $user->person,
+      'user'          => $user,
+      'genders'       => $genders,
+      'nationalities' => $nationalities,
+    ]);
   }
 
   /**
