@@ -15,12 +15,16 @@ Route::get('usuarios/{usuarios}/editar', ['uses' => 'UsersController@edit', 'as'
 Route::resource('usuarios', 'UsersController', $espanol);
 
 Route::group(['prefix' => 'usuarios'], function() use($espanol){
-  Route::get('personas/{usuarios}/crear', ['uses' => 'PeopleController@create', 'as' => 'personas.create']);
-  Route::get('personas/{usuarios}/editar', ['uses' => 'PeopleController@edit', 'as' => 'personas.edit']);
-  Route::post('personas/{usuarios}', ['uses' => 'PeopleController@store', 'as' => 'personas.store']);
-  Route::put('personas/{personas}', ['uses' => 'PeopleController@update', 'as' => 'personas.update']);
-  Route::patch('personas/{personas}', ['uses' => 'PeopleController@update', 'as' => 'personas.patch']);
-  Route::delete('personas/{personas}', ['uses' => 'PeopleController@destroy', 'as' => 'personas.destroy']);
+  // datos personales de un usuario
+  Route::get('datos-personales/{usuarios}/crear', ['uses' => 'PeopleController@create', 'as' => 'personas.create']);
+  Route::get('datos-personales/{usuarios}/editar', ['uses' => 'PeopleController@edit', 'as' => 'personas.edit']);
+  Route::post('datos-personales/{usuarios}', ['uses' => 'PeopleController@store', 'as' => 'personas.store']);
+  Route::put('datos-personales/{personas}', ['uses' => 'PeopleController@update', 'as' => 'personas.update']);
+  Route::patch('datos-personales/{personas}', ['uses' => 'PeopleController@update', 'as' => 'personas.patch']);
+  Route::delete('datos-personales/{personas}', ['uses' => 'PeopleController@destroy', 'as' => 'personas.destroy']);
+
+  // productos de un usuario
+  Route::get('{usuarios}/productos', ['uses' => 'UsersController@products', 'as' => 'usuarios.products']);
 });
 
 Route::get('productos/crear', ['uses' => 'ProductsController@create', 'as' => 'productos.create']);

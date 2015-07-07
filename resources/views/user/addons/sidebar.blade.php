@@ -20,10 +20,10 @@ switch ($active)
 <div class="col-sm-2 sidebar">
   <ul class="nav nav-sidebar">
     <li {{isset($resumen) ? $resumen:null}}>
-      <a href="#">Resumen</a>
+      {!! link_to_action('UsersController@show', 'Resumen', $user->name) !!}
     </li>
     <li {{isset($products) ? $products:null}}>
-      <a href="#">Productos</a>
+      {!! link_to_action('UsersController@products', 'Productos', $user->name) !!}
     </li>
     <li {{isset($billing) ? $billing:null}}>
       <a href="#">Facturación</a>

@@ -39,6 +39,21 @@ class UsersController extends Controller {
   }
 
   /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function products($id)
+  {
+    if(!$user = User::with('products')->where('name', $id)->first())
+      $user = User::with('products')->findOrFail($id);
+
+    $productsBag = $user->products->groupBy('sub_category_id');
+
+    return view('user.products', compact('user', 'productsBag'));
+  }
+
+  /**
    * Show the form for creating a new resource.
    *
    * @return Response
