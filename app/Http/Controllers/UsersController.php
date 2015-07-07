@@ -54,6 +54,29 @@ class UsersController extends Controller {
   }
 
   /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function productVisits($id)
+  {
+    if(!$user = User::with(['visits' => function($query){
+      $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
+    }])->where('name', $id)->first())
+      $user = User::with(['visits' => function($query){
+        $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
+      }])->findOrFail($id);
+
+    // la coleccion de productos
+    $products = collect();
+    $user->visits->each(function($visit) use($products){
+      $products = $products->push($visit->visitable);
+    });
+
+    return view('user.productsVisits', compact('user', 'products'));
+  }
+
+  /**
    * Show the form for creating a new resource.
    *
    * @return Response

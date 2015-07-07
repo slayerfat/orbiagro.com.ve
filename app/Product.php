@@ -82,6 +82,11 @@ class Product extends Model {
     }
   }
 
+  public function scopeLatest($query)
+  {
+    return $query->orderBy('updated_at', 'desc');
+  }
+
   // --------------------------------------------------------------------------
   // Relaciones
   // --------------------------------------------------------------------------

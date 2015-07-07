@@ -7,17 +7,16 @@
 @section('content')
   <div class="container-fluid">
     <div class="row">
-      @include('user.addons.sidebar', ['active' => 'products'])
+      @include('user.addons.sidebar', ['active' => 'productsVisits'])
       <div class="col-sm-8">
         @include('partials.products.detailed', [
-          'product' => $user->products()->latest()->first(),
-          'title' => 'Ultimo Producto'
+          'product' => $products->first(),
+          'title' => 'El ultimo Producto que ha visitado'
         ])
       </div>
     </div>
   </div>
-  @include('user.addons.products-paginated')
-  @include('visit.addons.relatedProducts')
+  @include('user.addons.productsVisits-paginated')
   @include('sub-category.addons.visited')
 @stop
 

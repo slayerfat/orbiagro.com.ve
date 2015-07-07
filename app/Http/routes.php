@@ -25,6 +25,9 @@ Route::group(['prefix' => 'usuarios'], function() use($espanol){
 
   // productos de un usuario
   Route::get('{usuarios}/productos', ['uses' => 'UsersController@products', 'as' => 'usuarios.products']);
+
+  // visitas de productos de un usuario
+  Route::get('{usuarios}/visitas/productos', ['uses' => 'UsersController@productVisits', 'as' => 'usuarios.products.visits']);
 });
 
 Route::get('productos/crear', ['uses' => 'ProductsController@create', 'as' => 'productos.create']);
