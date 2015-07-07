@@ -5,7 +5,7 @@
 @stop
 
 @section('content')
-  @include('user.addons.products-paginated', ['title' => "Productos de {$user->name}"])
+  @include('user.addons.products-paginated')
   @include('visit.addons.relatedProducts')
   @include('sub-category.addons.visited')
 @stop

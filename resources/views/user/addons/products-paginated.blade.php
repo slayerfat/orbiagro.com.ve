@@ -1,12 +1,13 @@
 <div class="container">
     @unless($productsBag->isEmpty())
-      @if(isset($title))
-        <div class="row">
-          <div class="col-xs-12">
-            <h1>{{$title}}</h1>
-          </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <h1>
+            Productos relacionados con
+            {!! link_to_action('UsersController@show', $user->name, $user->name) !!}
+          </h1>
         </div>
-      @endif
+      </div>
       @foreach($productsBag as $products)
         {{-- TODO: mejorar --}}
         <?php $products = collect($products) ?>
