@@ -45,7 +45,7 @@
   </div>
 @else
   @if(Auth::user())
-    @if(Auth::user()->isOwnerOrAdmin($product->id))
+    @if(Auth::user()->isOwnerOrAdmin($product->user_id))
       {!! link_to_action('FeaturesController@create', 'Crear nuevo Distintivo', $product->id) !!}
     @endif
   @else

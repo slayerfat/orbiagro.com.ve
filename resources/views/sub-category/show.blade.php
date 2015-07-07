@@ -6,7 +6,7 @@
 
 @section('content')
 
-  @if(Auth::user() and Auth::user()->isOwnerOrAdmin($subCat->id))
+  @if(Auth::user() and Auth::user()->isAdmin($subCat->id))
     <div class="container">
       <div class="row">
         <div class="col-xs-2">

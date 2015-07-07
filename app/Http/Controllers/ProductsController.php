@@ -110,8 +110,8 @@ class ProductsController extends Controller {
    */
   public function show($id, Request $request, VisitsService $visits)
   {
-    if(!$product = Product::where('slug', $id)->first())
-      $product = Product::findOrFail($id);
+    if(!$product = Product::with('user')->where('slug', $id)->first())
+      $product = Product::with('user')->findOrFail($id);
 
     $visits->setNewVisit('product', $product->id);
     $visitedProducts = $visits->getVisitedProducts();
@@ -119,7 +119,7 @@ class ProductsController extends Controller {
     $visitedSubCats  = $visits->getVisitedSubCats();
 
     if($this->user) :
-      if($this->user->isOwnerOrAdmin($product->id)) :
+      if($this->user->isOwnerOrAdmin($product->user_id)) :
         $isUserValid = true;
       else :
         $isUserValid = false;
@@ -139,23 +139,19 @@ class ProductsController extends Controller {
    */
   public function edit($id)
   {
-    if(!$this->user->isOwnerOrAdmin($id)) :
+    if(!$product = Product::with('user')->where('slug', $id)->first())
+      $product = Product::with('user')->findOrFail($id);
+
+    if(!$this->user->isOwnerOrAdmin($product->user_id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
       return redirect()->action('ProductsController@show', $id);
     endif;
-
-    if($product = Product::where('slug', $id)->first())
-
-    return view('product.edit', compact('product'));
-
-    $product = Product::findOrFail($id);
 
     $makers = Maker::lists('name', 'id');
 
     $catModels = Category::with('sub_categories')->get();
 
     $cats = $this->toAsocArray($catModels);
-
 
     return view('product.edit', compact('product', 'makers', 'cats'));
   }
@@ -168,12 +164,11 @@ class ProductsController extends Controller {
    */
   public function update($id, ProductRequest $request)
   {
-    if(!$this->user->isOwnerOrAdmin($id)) :
+    $product = Product::with('direction', 'user')->findOrFail($id);
+    if(!$this->user->isOwnerOrAdmin($product->user_id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
       return redirect()->action('ProductsController@show', $id);
     endif;
-
-    $product = Product::with('direction')->findOrFail($id);
     $product->updated_by = $this->userId;
     $product->update($request->all());
 
