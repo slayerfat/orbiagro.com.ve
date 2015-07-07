@@ -28,6 +28,7 @@ class ProductsController extends Controller {
   public function __construct()
   {
     $this->middleware('auth', ['except' => ['index', 'show']]);
+    $this->middleware('user.unverified', ['except' => ['index', 'show']]);
     $this->user   = Auth::user();
     $this->userId = Auth::id();
   }

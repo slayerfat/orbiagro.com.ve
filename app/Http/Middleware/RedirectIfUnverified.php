@@ -13,10 +13,10 @@ class RedirectIfUnverified {
    */
   public function handle($request, Closure $next)
   {
-    if ( $request->user()->disabled() )
+    if ( $request->user()->hasConfirmation() )
     {
-      flash()->error('Ud. todavia no ha verificado su cuenta en el sistema.');
-      return redirect('/por-verificar');
+      flash()->warning('Ud. todavia no ha verificado su cuenta en el sistema.');
+      return redirect()->back();
     }
     return $next($request);
   }

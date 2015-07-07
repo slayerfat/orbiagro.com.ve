@@ -68,6 +68,7 @@ Route::group(['prefix' => 'productos'], function(){
   Route::patch('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
   Route::delete('/valores-nutricionales/{mechanicals}', 'NutritionalsController@destroy');
 });
+
 Route::get('categorias/crear', ['uses' => 'CategoriesController@create', 'as' => 'categorias.create']);
 Route::get('categorias/{categorias}/editar', ['uses' => 'CategoriesController@edit', 'as' => 'categorias.edit']);
 Route::resource('categorias', 'CategoriesController', $espanol);

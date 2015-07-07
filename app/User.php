@@ -134,6 +134,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return false;
   }
 
+  public function hasConfirmation()
+  {
+   if ($this->isDisabled() || $this->confirmation) return true;
+    return false;
+  }
+
   /**
    * chequea si el id del foreign key del producto es igual al id del usuario
    *
