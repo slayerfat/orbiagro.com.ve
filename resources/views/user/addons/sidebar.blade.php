@@ -29,15 +29,14 @@ switch ($active)
       {!! link_to_action('UsersController@products', 'Productos', $user->name) !!}
     </li>
     @if(Auth::id() == $user->id || Auth::user()->isAdmin())
-      <li {{isset($billing) ? $billing:null}}>
+      {{-- <li {{isset($billing) ? $billing:null}}>
         <a href="#">Facturación</a>
-      </li>
+      </li> --}}
       <li {{isset($productsVisits) ? $productsVisits:null}}>
         {!! link_to_action('UsersController@productVisits', 'Productos Visitados', $user->name) !!}
       </li>
     @endif
   </ul>
-
   @if(Auth::id() == $user->id || Auth::user()->isAdmin())
     <ul class="nav nav-sidebar">
       <li class="sidebar-header">
@@ -49,9 +48,9 @@ switch ($active)
       <li>
         {!! link_to_action($user->person ? 'PeopleController@edit':'PeopleController@create', 'Información Personal', $user->name) !!}
       </li>
-      <li>
+      {{-- <li>
         <a href="#">Facturación</a>
-      </li>
+      </li> --}}
       <li>
         <a href="#">Mas pronto!</a>
       </li>

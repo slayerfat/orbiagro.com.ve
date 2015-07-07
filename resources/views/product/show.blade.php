@@ -88,8 +88,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-6" id="features">
-        @include('product.addons.features', $product)
+      <div class="col-sm-6">
+        @include('product.addons.characteristics', $product)
       </div>
       <div class="col-sm-6">
         @include('product.addons.mechanical', $product)
@@ -97,10 +97,12 @@
     </div>
     <div class="row">
       <div class="col-sm-6">
-        @include('product.addons.characteristics', $product)
-      </div>
-      <div class="col-sm-6">
         @include('product.addons.nutritional', $product)
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12" id="features">
+        @include('product.addons.features', $product)
       </div>
     </div>
   </div>

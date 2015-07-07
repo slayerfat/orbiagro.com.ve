@@ -29,6 +29,8 @@
               <img
                 src="{!! asset($feature->image->path) !!}"
                 alt="{{ $feature->image->alt }}"
+                width="384"
+                style="margin:auto;"
                 class="img-responsive" />
             @endif
 
