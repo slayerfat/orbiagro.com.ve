@@ -147,7 +147,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
    */
   public function isOwner($id)
   {
-    if ($this->attributes['id'] === $id) return true;
+    if ($this->attributes['id'] === $id ||
+      $this->attributes['name'] === $id) return true;
     return false;
   }
 

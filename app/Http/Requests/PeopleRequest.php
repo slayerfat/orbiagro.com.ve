@@ -1,5 +1,6 @@
 <?php namespace App\Http\Requests;
 
+use Auth;
 use App\Http\Requests\Request;
 
 class PeopleRequest extends Request {
@@ -11,7 +12,7 @@ class PeopleRequest extends Request {
    */
   public function authorize()
   {
-    return true;
+    return Auth::user()->isOwnerOrAdmin($this->route('datos-personales'));
   }
 
   /**
