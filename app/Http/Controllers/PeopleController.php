@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Auth;
 use App\Http\Requests\PeopleRequest;
 use App\Http\Controllers\Controller;
 
@@ -22,8 +23,9 @@ class PeopleController extends Controller {
   public function __construct(Person $person)
   {
     $this->middleware('auth');
-    $this->middleware('user.admin');
+    // $this->middleware('user.admin');
     $this->person = $person;
+    $this->user = Auth::user();
   }
 
   /**
@@ -35,6 +37,11 @@ class PeopleController extends Controller {
   {
     if(!$user = User::where('name', $id)->first())
       $user = User::findOrFail($id);
+
+    if(!$this->user->isOwnerOrAdmin($user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->back();
+    endif;
 
     $genders = Gender::lists('description', 'id');
     $nationalities = Nationality::lists('description', 'id');
@@ -75,6 +82,11 @@ class PeopleController extends Controller {
   {
     if(!$user = User::where('name', $id)->first())
       $user = User::findOrFail($id);
+
+    if(!$this->user->isOwnerOrAdmin($user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('UsersController@show', $user->name);
+    endif;
 
     $genders = Gender::lists('description', 'id');
     $nationalities = Nationality::lists('description', 'id');

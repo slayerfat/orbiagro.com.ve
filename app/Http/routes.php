@@ -98,11 +98,13 @@ Route::get('home', function(){
 });
 
 // para ajax de direcciones
-Route::get('/estados', 'DirectionsController@states');
-Route::get('/municipios/{id}', 'DirectionsController@towns');
-Route::get('/municipio/{id}', 'DirectionsController@town');
-Route::get('/parroquias/{id}', 'DirectionsController@parishes');
-Route::get('/parroquia/{id}', 'DirectionsController@parish');
+Route::group(['middleware' => 'auth'], function(){
+  Route::get('/estados', 'DirectionsController@states');
+  Route::get('/municipios/{id}', 'DirectionsController@towns');
+  Route::get('/municipio/{id}', 'DirectionsController@town');
+  Route::get('/parroquias/{id}', 'DirectionsController@parishes');
+  Route::get('/parroquia/{id}', 'DirectionsController@parish');
+});
 
 Route::controllers([
   'auth' => 'Auth\AuthController',

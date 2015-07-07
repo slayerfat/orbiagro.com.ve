@@ -22,7 +22,7 @@ class UsersController extends Controller {
   public function __construct(User $user)
   {
     $this->middleware('auth');
-    $this->middleware('user.admin');
+    $this->middleware('user.admin', ['only' => 'index']);
     $this->user = $user;
   }
 
@@ -66,6 +66,11 @@ class UsersController extends Controller {
       $user = User::with(['visits' => function($query){
         $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
       }])->findOrFail($id);
+
+    if(!Auth::user()->isOwnerOrAdmin($user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->back();
+    endif;
 
     // la coleccion de productos
     $products = collect();
@@ -136,6 +141,11 @@ class UsersController extends Controller {
   {
     if(!$user = User::with('profile')->where('name', $id)->first())
       $user = User::with('profile')->findOrFail($id);
+
+    if(!Auth::user()->isOwnerOrAdmin($user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->back();
+    endif;
 
     $profiles = Profile::lists('description', 'id');
 

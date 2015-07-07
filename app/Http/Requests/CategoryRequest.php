@@ -1,5 +1,6 @@
 <?php namespace App\Http\Requests;
 
+use Auth;
 use App\Http\Requests\Request;
 
 class CategoryRequest extends Request {
@@ -11,7 +12,7 @@ class CategoryRequest extends Request {
    */
   public function authorize()
   {
-    return true;
+    return Auth::user()->isAdmin();
   }
 
   /**
