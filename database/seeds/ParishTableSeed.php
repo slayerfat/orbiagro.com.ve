@@ -11,6 +11,7 @@ class ParishTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de Parish! ***");
     DB::statement("INSERT INTO parishes
       (town_id, description, created_at, updated_at)
       VALUES

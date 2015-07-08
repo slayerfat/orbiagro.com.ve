@@ -15,6 +15,7 @@ class CharacteristicTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de Characteristics! ***");
     $faker  = Faker::create('es_ES');
     $user   = User::where('name', 'tester')->first();
 

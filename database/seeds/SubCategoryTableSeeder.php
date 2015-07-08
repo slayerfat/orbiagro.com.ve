@@ -13,6 +13,7 @@ class SubCategoryTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de SubCategory! ***");
     $types = [
       'Productos Agro-Industriales' => [
         'Maquinaria Pesada',

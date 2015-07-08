@@ -11,6 +11,7 @@ class PromoTypesTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de PromoType! ***");
     $types = [
       'Producto sin imagen',
       '1:1 300x300',

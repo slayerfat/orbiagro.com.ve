@@ -11,6 +11,8 @@ class TesterBillingTableSeeder extends Seeder {
 
   public function run()
   {
+    $this->command->info("*** Empezando creacion de TESTER: Billing! ***");
+
     $faker = Faker::create('es_ES');
     $users = User::all();
 

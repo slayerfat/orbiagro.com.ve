@@ -44,7 +44,7 @@ class Product extends Model {
 
   public function setQuantityAttribute($value)
   {
-    $this->attributes['price'] = (integer)ModelValidation::byNonNegative($value);
+    $this->attributes['quantity'] = (integer)ModelValidation::byNonNegative($value);
   }
 
   public function setPriceAttribute($value)

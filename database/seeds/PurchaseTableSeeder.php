@@ -8,6 +8,7 @@ class PurchaseTableSeeder extends Seeder {
 
   public function run()
   {
+    $this->command->info("*** Empezando creacion de Purchases! ***");
     $user    = User::first();
     $products = Product::all();
 

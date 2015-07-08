@@ -16,6 +16,7 @@ class TesterImagesTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de TESTER: Images! ***");
     $faker = Faker::create('es_ES');
     $user  = User::where('name', 'tester')->first();
 

@@ -153,11 +153,12 @@ class ProductTest extends \Codeception\TestCase\Test
 
   public function testQuantityAttribute()
   {
-    $obj = new Product;
-    foreach($this->data as $value):
-      $obj->quantity = $value;
-      $this->assertNull($obj->quantity);
-    endforeach;
+    $this->tester->quantity = -1;
+    $this->assertEquals(0, $this->tester->quantity);
+    $this->tester->quantity = 'a';
+    $this->assertEquals(0, $this->tester->quantity);
+    $this->tester->quantity = '';
+    $this->assertEquals(0, $this->tester->quantity);
   }
 
 }

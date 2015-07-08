@@ -11,6 +11,8 @@ class NeoTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion del ELEGIDO! ***");
+
     $gender = App\Gender::where('description', 'Masculino')->first();
     $parish = App\Parish::find(1);
     $nationality = App\Nationality::where('description', 'Extrangero')->first();

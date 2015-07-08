@@ -11,6 +11,8 @@ class GenderTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de Gender! ***");
+
     $types = [
       'Masculino',
       'Femenino'
