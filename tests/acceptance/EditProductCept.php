@@ -5,4 +5,4 @@ $dummy = App\User::where('name', 'dummy')->first();
 $I->amLoggedAs($dummy);
 $I->expect('to fail the product edit');
 $I->amOnPage('/productos/1/editar');
-$I->see('x');
+$I->see('Ud. no tiene permisos para esta accion.');
