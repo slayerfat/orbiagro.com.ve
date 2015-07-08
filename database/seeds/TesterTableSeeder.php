@@ -12,34 +12,35 @@ class TesterTableSeeder extends Seeder {
   public function run()
   {
     $this->command->info('--- SOLO PARA PRUEBAS ---');
-    $this->command->info('--- tester ---');
+    $this->command->info('--- TESTER ---');
     $gender = App\Gender::where('description', 'Masculino')->first();
     $parish = App\Parish::find(1);
     $nationality = App\Nationality::where('description', 'Venezolano')->first();
     $profile = App\Profile::where('description', 'Administrador')->first();
-    $tester = DB::table('users')->insert([
-      'name'       => 'tester',
-      'email'      => 'tester@tester.com',
-      'password'   => Hash::make('tester'),
-      'profile_id' => $profile->id,
-      'created_at' => 'current_timestampt',
-      'updated_at' => 'current_timestampt'
-    ]);
+    // fix build #202
+    $tester = new App\User;
+    $tester->name       = 'tester';
+    $tester->email      = 'tester@tester.com';
+    $tester->password   = Hash::make('tester');
+    $tester->profile_id = $profile->id;
+    $tester->created_at = Carbon\Carbon::now();
+    $tester->updated_at = Carbon\Carbon::now();
+    $tester->save();
 
     $tester = App\User::where('name', 'tester')->first();
 
-    $person = DB::table('people')->insert([
-      'user_id'        => $tester->id,
-      'gender_id'      => $gender->id,
-      'nationality_id' => $nationality->id,
-      'first_name'     => 'tester',
-      'first_surname'  => 'tester',
-      'identity_card'  => '10000001',
-      'phone'          => '+58-(212)-111-2233',
-      'birth_date'     => '1999-09-09',
-      'created_at'     => 'current_timestampt',
-      'updated_at'     => 'current_timestampt'
-    ]);
+    $person = new App\Person;
+    $person->user_id        = $tester->id;
+    $person->gender_id      = $gender->id;
+    $person->nationality_id = $nationality->id;
+    $person->first_name     = 'tester';
+    $person->first_surname  = 'tester';
+    $person->identity_card  = '10000001';
+    $person->phone          = '+58-(212)-111-2233';
+    $person->birth_date     = '1999-09-09';
+    $person->created_at     = Carbon\Carbon::now();
+    $person->updated_at     = Carbon\Carbon::now();
+    $tester->person()->save($person);
 
     $direction = new App\Direction;
 
@@ -50,31 +51,32 @@ class TesterTableSeeder extends Seeder {
 
     $tester->person->direction()->save($direction);
 
-    $this->command->info('--- dummy ---');
+    $this->command->info('--- DUMMY ---');
     $profile = App\Profile::where('description', 'Usuario')->first();
-    $tester = DB::table('users')->insert([
-      'name'       => 'dummy',
-      'email'      => 'dummy@tester.com',
-      'password'   => Hash::make('dummypw'),
-      'profile_id' => $profile->id,
-      'created_at' => 'current_timestampt',
-      'updated_at' => 'current_timestampt'
-    ]);
+
+    $tester = new App\User;
+    $tester->name       = 'dummy';
+    $tester->email      = 'dummy@tester.com';
+    $tester->password   = Hash::make('dummypw');
+    $tester->profile_id = $profile->id;
+    $tester->created_at = Carbon\Carbon::now();
+    $tester->updated_at = Carbon\Carbon::now();
+    $tester->save();
 
     $tester = App\User::where('name', 'dummy')->first();
 
-    $person = DB::table('people')->insert([
-      'user_id'        => $tester->id,
-      'gender_id'      => $gender->id,
-      'nationality_id' => $nationality->id,
-      'first_name'     => 'dummy',
-      'first_surname'  => 'dummy',
-      'identity_card'  => '10000002',
-      'phone'          => '+58-(212)-444-5566',
-      'birth_date'     => '1999-09-09',
-      'created_at'     => 'current_timestampt',
-      'updated_at'     => 'current_timestampt'
-    ]);
+    $person = new App\Person;
+    $person->user_id        = $tester->id;
+    $person->gender_id      = $gender->id;
+    $person->nationality_id = $nationality->id;
+    $person->first_name     = 'dummy';
+    $person->first_surname  = 'dummy';
+    $person->identity_card  = '10000002';
+    $person->phone          = '+58-(212)-444-5566';
+    $person->birth_date     = '1999-09-09';
+    $person->created_at     = Carbon\Carbon::now();
+    $person->updated_at     = Carbon\Carbon::now();
+    $tester->person()->save($person);
 
     $direction = new App\Direction;
 

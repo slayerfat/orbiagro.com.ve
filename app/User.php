@@ -40,7 +40,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   public function setPasswordAttribute($value)
   {
     if($pw = ModelValidation::byLenght($value, 6)) :
-      $this->attributes['password'] = bcrypt($pw);
+      $this->attributes['password'] = $pw;
     else:
       $this->attributes['password'] = null;
     endif;
@@ -134,6 +134,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return false;
   }
 
+  public function hasConfirmation()
+  {
+   if ($this->isDisabled() || $this->confirmation) return true;
+    return false;
+  }
+
   /**
    * chequea si el id del foreign key del producto es igual al id del usuario
    *
@@ -141,7 +147,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
    */
   public function isOwner($id)
   {
-    if ($this->attributes['id'] === $id) return true;
+    if ($this->attributes['id'] === $id ||
+      $this->attributes['name'] === $id) return true;
     return false;
   }
 

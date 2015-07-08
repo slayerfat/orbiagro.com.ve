@@ -21,7 +21,7 @@ class TesterMakerTableSeed extends Seeder {
 
     $subcat = App\SubCategory::all();
     foreach($subcat as $subcategory):
-      for ($i=0; $i < 2; $i++) :
+      for ($i=0; $i < 1; $i++) :
         $company = $faker->company();
         $maker = App\Maker::create([
           'name'   => $company,
@@ -49,7 +49,7 @@ class TesterMakerTableSeed extends Seeder {
         $image->alt        = $maker->slug;
         $image->created_by = $user->id;
         $image->updated_by = $user->id;
-        $maker->images()->save($image);
+        $maker->image()->save($image);
       endfor;
     endforeach;
     $this->command->info('Creacion de compañias completa.');

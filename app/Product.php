@@ -44,7 +44,7 @@ class Product extends Model {
 
   public function setQuantityAttribute($value)
   {
-    $this->attributes['price'] = (integer)ModelValidation::byNonNegative($value);
+    $this->attributes['quantity'] = (integer)ModelValidation::byNonNegative($value);
   }
 
   public function setPriceAttribute($value)
@@ -80,6 +80,11 @@ class Product extends Model {
     }else{
       $query->orderByRaw('RAND()');
     }
+  }
+
+  public function scopeLatest($query)
+  {
+    return $query->orderBy('updated_at', 'desc');
   }
 
   // --------------------------------------------------------------------------

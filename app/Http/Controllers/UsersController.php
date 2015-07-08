@@ -22,7 +22,7 @@ class UsersController extends Controller {
   public function __construct(User $user)
   {
     $this->middleware('auth');
-    $this->middleware('user.admin');
+    $this->middleware('user.admin', ['only' => 'index']);
     $this->user = $user;
   }
 
@@ -36,6 +36,49 @@ class UsersController extends Controller {
     $users = User::with('person')->get();
 
     return view('user.index', compact('users'));
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function products($id)
+  {
+    if(!$user = User::with('products')->where('name', $id)->first())
+      $user = User::with('products')->findOrFail($id);
+
+    $productsBag = $user->products->groupBy('sub_category_id');
+
+    return view('user.products', compact('user', 'productsBag'));
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function productVisits($id)
+  {
+    if(!$user = User::with(['visits' => function($query){
+      $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
+    }])->where('name', $id)->first())
+      $user = User::with(['visits' => function($query){
+        $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
+      }])->findOrFail($id);
+
+    if(!Auth::user()->isOwnerOrAdmin($user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->back();
+    endif;
+
+    // la coleccion de productos
+    $products = collect();
+    $user->visits->each(function($visit) use($products){
+      $products = $products->push($visit->visitable);
+    });
+
+    return view('user.productsVisits', compact('user', 'products'));
   }
 
   /**
@@ -64,7 +107,7 @@ class UsersController extends Controller {
 
     $this->user->name     = $request->input('name');
     $this->user->email    = $request->input('email');
-    $this->user->password = $request->input('password');
+    $this->user->password = bcrypt($request->input('password'));
 
     $profile->users()->save($this->user);
 
@@ -96,7 +139,13 @@ class UsersController extends Controller {
    */
   public function edit($id)
   {
-    $user = User::with('profile')->findOrFail($id);
+    if(!$user = User::with('profile')->where('name', $id)->first())
+      $user = User::with('profile')->findOrFail($id);
+
+    if(!Auth::user()->isOwnerOrAdmin($user->id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->back();
+    endif;
 
     $profiles = Profile::lists('description', 'id');
 
@@ -119,7 +168,7 @@ class UsersController extends Controller {
 
     if (trim($request->input('password')) != '')
     {
-      $user->password = $request->input('password');
+      $user->password = bcrypt($request->input('password'));
     }
 
     $user->save();

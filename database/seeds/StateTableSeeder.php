@@ -11,6 +11,7 @@ class StateTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de State! ***");
     DB::statement("INSERT INTO states
       (id, description, created_at, updated_at)
       VALUES

@@ -137,6 +137,8 @@ return [
     'quantity'         => 'Cantidad',
     'images'           => 'Imagenes',
     'image'            => 'Imagen',
+    'phone'            => 'Teléfono',
+    'birth_date'       => 'Fecha de nacimiento',
   ],
 
 ];

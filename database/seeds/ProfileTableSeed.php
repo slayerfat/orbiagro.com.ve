@@ -11,6 +11,7 @@ class ProfileTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de Profile! ***");
     $types = [
       'Administrador',
       'Usuario',

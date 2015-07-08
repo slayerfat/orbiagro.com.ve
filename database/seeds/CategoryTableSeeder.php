@@ -13,6 +13,8 @@ class CategoryTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de Category! ***");
+
     $types = [
       'Productos Agro-Industriales',
       'Productos Alimenticios'

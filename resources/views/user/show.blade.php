@@ -5,7 +5,7 @@
 @stop
 
 @section('content')
-  @if(Auth::user() and Auth::user()->isAdmin())
+  {{-- @if(Auth::user() and Auth::user()->isAdmin())
     <div class="container">
       <div class="row">
         <div class="col-xs-2">
@@ -13,9 +13,10 @@
         </div>
       </div>
     </div>
-  @endif
-  <div class="container">
+  @endif --}}
+  <div class="container-fluid">
     <div class="row">
+      @include('user.addons.sidebar', ['active' => 'resumen'])
       {{-- user info --}}
       <div class="col-sm-4">
         <h1>
@@ -42,7 +43,7 @@
       </div>
       {{-- productos --}}
       @unless($products->isEmpty())
-        <div class="col-sm-8">
+        <div class="col-sm-6">
           <h1>Productos</h1>
           @include('partials.products.paginated', ['products' => $products])
         </div>

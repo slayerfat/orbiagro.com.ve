@@ -10,6 +10,7 @@ class Person extends Model {
     'last_name',
     'first_surname',
     'last_surname',
+    'identity_card',
     'phone',
     'birth_date'
   ];
@@ -65,27 +66,32 @@ class Person extends Model {
 
   public function setFirstNameAttribute($value)
   {
-    $this->attributes['first_name'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['first_name'] = ModelValidation::byLenght($value);
   }
 
   public function setLastNameAttribute($value)
   {
-    $this->attributes['last_name'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['last_name'] = ModelValidation::byLenght($value);
   }
 
   public function setFirstSurnameAttribute($value)
   {
-    $this->attributes['first_surname'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['first_surname'] = ModelValidation::byLenght($value);
   }
 
   public function setLastSurnameAttribute($value)
   {
-    $this->attributes['last_surname'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['last_surname'] = ModelValidation::byLenght($value);
   }
 
   public function setPhoneAttribute($value)
   {
     $this->attributes['phone'] = ModelValidation::parseRawPhone($value);
+  }
+
+  public function setBirthDateAttribute($value)
+  {
+    $this->attributes['birth_date'] = ModelValidation::byLenght($value);
   }
 
   /**

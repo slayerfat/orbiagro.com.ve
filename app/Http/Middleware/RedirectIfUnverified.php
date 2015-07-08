@@ -13,11 +13,18 @@ class RedirectIfUnverified {
    */
   public function handle($request, Closure $next)
   {
-    if ( $request->user()->disabled() )
+    if ( $request->user()->hasConfirmation() )
     {
-      flash()->error('Ud. todavia no ha verificado su cuenta en el sistema.');
+      flash()->warning('Ud. todavia no ha verificado su cuenta en el sistema.');
       return redirect('/por-verificar');
     }
+
+    if ( $request->user()->isDisabled() )
+    {
+      flash()->error('Ud. posee su cuenta desactivada, por favor contactenos a contacto@orbiagro.com.ve si considera que esto es un error.');
+      return redirect('/por-verificar');
+    }
+
     return $next($request);
   }
 

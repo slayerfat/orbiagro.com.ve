@@ -45,7 +45,7 @@ class ConfirmationsController extends Controller {
   public function generateConfirm()
   {
     $user = Auth::user();
-    if (!$user->confirmacion):
+    if (!$user->confirmation):
       return redirect('/');
     endif;
     $confirmation = new UserConfirmation(['data' => true]);
@@ -62,7 +62,7 @@ class ConfirmationsController extends Controller {
     // array de destinatarios
     $emails = (array)$user->email;
     Email::enviarEmail($data, $emails);
-    flash('Nueva confirmacion generada, por favor revise su correo electronico.');
-    return redirect('/por-verificar');
+    flash()->success('Nueva confirmacion generada, por favor revise su correo electronico.');
+    return redirect('/');
   }
 }

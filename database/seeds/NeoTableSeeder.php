@@ -11,6 +11,8 @@ class NeoTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion del ELEGIDO! ***");
+
     $gender = App\Gender::where('description', 'Masculino')->first();
     $parish = App\Parish::find(1);
     $nationality = App\Nationality::where('description', 'Extrangero')->first();
@@ -18,7 +20,7 @@ class NeoTableSeeder extends Seeder {
     $neo = App\User::create([
       'name'       => env('APP_USER'),
       'email'      => env('APP_USER_EMAIL'),
-      'password'   => env('APP_USER_PASSWORD'),
+      'password'   => bcrypt(env('APP_USER_PASSWORD')),
       'profile_id' => $admin->id
     ]);
 

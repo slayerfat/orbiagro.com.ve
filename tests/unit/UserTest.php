@@ -112,12 +112,4 @@ class UserTest extends \Codeception\TestCase\Test
     endforeach;
   }
 
-  public function testPasswordShouldBeEncrypted()
-  {
-    $obj = new User;
-    $obj->password = 'validPassword';
-    $this->assertEquals(60, strlen($obj->password));
-    $this->assertNotEquals('validPassword', strlen($obj->password));
-  }
-
 }

@@ -106,7 +106,7 @@ class SubCategoriesController extends Controller {
 
     $subCats = $subCat->category->sub_categories()->get();
 
-    $products = Product::where('sub_category_id', $id)->paginate(20);
+    $products = Product::where('sub_category_id', $subCat->id)->paginate(20);
 
     $visits->setNewVisit('subCat', $id);
 

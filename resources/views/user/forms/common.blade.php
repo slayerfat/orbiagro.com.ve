@@ -33,10 +33,12 @@
 @stop
 
 @section('user-profile')
-  <div class="form-group">
-    {!! Form::label('profile_id', 'Perfil:', ['class' => 'col-md-2 control-label']) !!}
-    <div class="col-md-10">
-      {!! Form::select('profile_id', $profiles, null, ['class' => 'form-control']) !!}
+  @if(Auth::user() and Auth::user()->isAdmin())
+    <div class="form-group">
+      {!! Form::label('profile_id', 'Perfil:', ['class' => 'col-md-2 control-label']) !!}
+      <div class="col-md-10">
+        {!! Form::select('profile_id', $profiles, null, ['class' => 'form-control']) !!}
+      </div>
     </div>
-  </div>
+  @endif
 @stop

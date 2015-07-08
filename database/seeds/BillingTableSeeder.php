@@ -14,7 +14,10 @@ class BillingTableSeeder extends Seeder {
     $faker = Faker::create('es_ES');
     $users = User::all();
 
+    $this->command->info("*** Empezando creacion de Billing! ***");
+
     foreach($users as $user):
+      $this->command->info("Dentro del bucle {$user->name}");
       $bank = Bank::orderByRaw('rand()')->first();
       $card = CardType::orderByRaw('rand()')->first();
       Billing::create([

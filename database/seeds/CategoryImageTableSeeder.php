@@ -9,6 +9,8 @@ class CategoryImageTableSeeder extends Seeder {
 
   public function run()
   {
+    $this->command->info("*** Empezando creacion de CategoryImage! ***");
+
     $cats = Category::all();
     $user = User::where('name', 'tester')->first();
     if(!$user) $user = User::where('name', env('APP_USER'))->first();

@@ -30,18 +30,20 @@ class TesterProductTableSeeder extends Seeder {
       $maker   = Maker::orderByRaw('RANDOM()')->first();
       $parish  = Parish::orderByRaw('RANDOM()')->first();
       $title   = $faker->sentence(5);
-      $product = Product::create([
-        'user_id'         => $user->id,
-        'maker_id'        => $maker->id,
-        'sub_category_id' => $subcategory->id,
-        'title'           => $title,
-        'description'     => $faker->text(),
-        'price'           => $faker->randomFloat(2, 100, 9999999999),
-        'quantity'        => $faker->numberBetween(1, 20),
-        'slug'            => str_slug($title),
-        'created_by'      => $user->id,
-        'updated_by'      => $user->id,
-      ]);
+      // fix build #202
+      $product = new Product;
+      $product->user_id         = $user->id;
+      $product->maker_id        = $maker->id;
+      $product->sub_category_id = $subcategory->id;
+      $product->title           = $title;
+      $product->description     = $faker->text();
+      $product->price           = $faker->randomFloat(2, 100, 9999999999);
+      $product->quantity        = $faker->randomDigitNotNull();
+      $product->slug            = str_slug($title);
+      $product->created_by      = $user->id;
+      $product->updated_by      = $user->id;
+      $product->save();
+
       $this->command->info("Producto {$product->title} creado!");
       $direction = new Direction;
       $direction->parish_id  = $parish->id;
@@ -58,18 +60,19 @@ class TesterProductTableSeeder extends Seeder {
     // para asegurarse que un producto tenga un parish de id 1
     $parish  = Parish::first();
     $title   = $faker->sentence(5);
-    $product = Product::create([
-      'user_id'         => $user->id,
-      'maker_id'        => $maker->id,
-      'sub_category_id' => $subcategory->id,
-      'title'           => $title,
-      'description'     => $faker->text(),
-      'price'           => $faker->randomFloat(2, 100, 9999999999),
-      'quantity'        => $faker->numberBetween(1, 20),
-      'slug'            => str_slug($title),
-      'created_by'      => $user->id,
-      'updated_by'      => $user->id,
-    ]);
+    // fix build #202
+    $product->user_id         = $user->id;
+    $product->maker_id        = $maker->id;
+    $product->sub_category_id = $subcategory->id;
+    $product->title           = $title;
+    $product->description     = $faker->text();
+    $product->price           = $faker->randomFloat(2, 100, 9999999999);
+    $product->quantity        = $faker->randomDigitNotNull();
+    $product->slug            = str_slug($title);
+    $product->created_by      = $user->id;
+    $product->updated_by      = $user->id;
+    $product->save();
+
     $this->command->info("Producto {$product->title} creado!");
     $direction = new Direction;
     $direction->parish_id  = $parish->id;

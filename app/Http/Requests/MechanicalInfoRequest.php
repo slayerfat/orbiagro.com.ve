@@ -1,6 +1,9 @@
 <?php namespace App\Http\Requests;
 
+use Auth;
 use App\Http\Requests\Request;
+
+use App\Product;
 
 class MechanicalInfoRequest extends Request {
 
@@ -11,7 +14,8 @@ class MechanicalInfoRequest extends Request {
    */
   public function authorize()
   {
-    return true;
+    $producto = Product::find($this->route('mechanicals'));
+    return Auth::user()->isOwnerOrAdmin($producto->user_id);
   }
 
   /**

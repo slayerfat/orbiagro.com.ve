@@ -1,3 +1,5 @@
+@extends('master')
+
 @section('title')
   - Index
 @stop

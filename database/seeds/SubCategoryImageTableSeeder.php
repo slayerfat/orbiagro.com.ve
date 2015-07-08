@@ -10,6 +10,7 @@ class SubCategoryImageTableSeeder extends Seeder {
 
   public function run()
   {
+    $this->command->info("*** Empezando creacion de SubCategoryImage! ***");
     $cats  = SubCategory::all();
     $faker = Faker::create('es_ES');
     $user  = User::where('name', 'tester')->first();

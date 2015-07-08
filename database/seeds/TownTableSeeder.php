@@ -11,6 +11,8 @@ class TownTableSeeder extends Seeder {
    */
   public function run()
   {
+    $this->command->info("*** Empezando creacion de Town! ***");
+    
     DB::statement("INSERT INTO towns
       (id, state_id, description, created_at, updated_at)
       VALUES

@@ -8,6 +8,7 @@ class BankTableSeeder extends Seeder {
 
   public function run()
   {
+    $this->command->info("*** Empezando creacion de Bank! ***");
     $faker = Faker::create('es_ES');
     $bank = Bank::create([
       'description' => 'Sin Banco Asociado',

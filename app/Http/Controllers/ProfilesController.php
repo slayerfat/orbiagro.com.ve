@@ -72,7 +72,7 @@ class ProfilesController extends Controller {
    */
   public function show($id)
   {
-    if(!$this->profile = Profile::with('users')->where('slug', $id)->first())
+    if(!$this->profile = Profile::with('users')->where('description', $id)->first())
       $this->profile = Profile::with('users')->findOrFail($id);
 
     return view('profile.show')->with(['profile' => $this->profile]);

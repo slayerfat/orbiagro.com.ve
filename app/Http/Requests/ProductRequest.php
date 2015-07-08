@@ -1,6 +1,9 @@
 <?php namespace App\Http\Requests;
 
+use Auth;
 use App\Http\Requests\Request;
+
+use App\Product;
 
 class ProductRequest extends Request {
 
@@ -11,7 +14,8 @@ class ProductRequest extends Request {
    */
   public function authorize()
   {
-    return true;
+    $producto = Product::find($this->route('productos'));
+    return Auth::user()->isOwnerOrAdmin($producto->user_id);
   }
 
   /**

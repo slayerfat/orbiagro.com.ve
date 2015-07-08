@@ -14,6 +14,8 @@ class TesterDatabaseSeeder extends Seeder {
   {
     Model::unguard();
 
+    $this->command->info("*** Empezando Migracion de TESTER! ***");
+
     $this->call('ProfileTableSeeder');
     $this->call('GenderTableSeeder');
     $this->call('NationalityTableSeeder');
@@ -39,6 +41,8 @@ class TesterDatabaseSeeder extends Seeder {
     $this->call('PromotionTableSeeder');
     $this->call('CategoryImageTableSeeder');
     $this->call('SubCategoryImageTableSeeder');
+
+    $this->command->info("*** Migracion terminada de TESTER! ***");
   }
 
 }

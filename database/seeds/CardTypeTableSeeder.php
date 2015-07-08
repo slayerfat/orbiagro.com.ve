@@ -7,6 +7,7 @@ class CardTypeTableSeeder extends Seeder {
 
   public function run()
   {
+    $this->command->info("*** Empezando creacion de CardType! ***");
     $data  = [
       'Visa',
       'MasterCard',

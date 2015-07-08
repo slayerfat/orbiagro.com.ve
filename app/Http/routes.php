@@ -4,7 +4,7 @@
  * variable para españolificar las rutas
  * @var array
  */
-$español = ['except' => ['create', 'edit']];
+$espanol = ['except' => ['create', 'edit']];
 
 Route::get('/welcome', 'WelcomeController@index');
 
@@ -12,11 +12,27 @@ Route::get('/', 'HomeController@index');
 
 Route::get('usuarios/crear', ['uses' => 'UsersController@create', 'as' => 'usuarios.create']);
 Route::get('usuarios/{usuarios}/editar', ['uses' => 'UsersController@edit', 'as' => 'usuarios.edit']);
-Route::resource('usuarios', 'UsersController', $español);
+Route::resource('usuarios', 'UsersController', $espanol);
+
+Route::group(['prefix' => 'usuarios'], function() use($espanol){
+  // datos personales de un usuario
+  Route::get('datos-personales/{usuarios}/crear', ['uses' => 'PeopleController@create', 'as' => 'personas.create']);
+  Route::get('datos-personales/{usuarios}/editar', ['uses' => 'PeopleController@edit', 'as' => 'personas.edit']);
+  Route::post('datos-personales/{usuarios}', ['uses' => 'PeopleController@store', 'as' => 'personas.store']);
+  Route::put('datos-personales/{personas}', ['uses' => 'PeopleController@update', 'as' => 'personas.update']);
+  Route::patch('datos-personales/{personas}', ['uses' => 'PeopleController@update', 'as' => 'personas.patch']);
+  Route::delete('datos-personales/{personas}', ['uses' => 'PeopleController@destroy', 'as' => 'personas.destroy']);
+
+  // productos de un usuario
+  Route::get('{usuarios}/productos', ['uses' => 'UsersController@products', 'as' => 'usuarios.products']);
+
+  // visitas de productos de un usuario
+  Route::get('{usuarios}/visitas/productos', ['uses' => 'UsersController@productVisits', 'as' => 'usuarios.products.visits']);
+});
 
 Route::get('productos/crear', ['uses' => 'ProductsController@create', 'as' => 'productos.create']);
 Route::get('productos/{productos}/editar', ['uses' => 'ProductsController@edit', 'as' => 'productos.edit']);
-Route::resource('productos', 'ProductsController', $español);
+Route::resource('productos', 'ProductsController', $espanol);
 
 // modelos asociados a producto
 Route::group(['prefix' => 'productos'], function(){
@@ -52,21 +68,22 @@ Route::group(['prefix' => 'productos'], function(){
   Route::patch('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
   Route::delete('/valores-nutricionales/{mechanicals}', 'NutritionalsController@destroy');
 });
+
 Route::get('categorias/crear', ['uses' => 'CategoriesController@create', 'as' => 'categorias.create']);
 Route::get('categorias/{categorias}/editar', ['uses' => 'CategoriesController@edit', 'as' => 'categorias.edit']);
-Route::resource('categorias', 'CategoriesController', $español);
+Route::resource('categorias', 'CategoriesController', $espanol);
 
 Route::get('rubros/crear', ['uses' => 'SubCategoriesController@create', 'as' => 'rubros.create']);
 Route::get('rubros/{rubros}/editar', ['uses' => 'SubCategoriesController@edit', 'as' => 'rubros.edit']);
-Route::resource('rubros', 'SubCategoriesController', $español);
+Route::resource('rubros', 'SubCategoriesController', $espanol);
 
 Route::get('fabricantes/crear', ['uses' => 'MakersController@create', 'as' => 'fabricantes.create']);
 Route::get('fabricantes/{fabricantes}/editar', ['uses' => 'MakersController@edit', 'as' => 'fabricantes.edit']);
-Route::resource('fabricantes', 'MakersController', $español);
+Route::resource('fabricantes', 'MakersController', $espanol);
 
 Route::get('perfiles/crear', ['uses' => 'ProfilesController@create', 'as' => 'perfiles.create']);
 Route::get('perfiles/{perfiles}/editar', ['uses' => 'ProfilesController@edit', 'as' => 'perfiles.edit']);
-Route::resource('perfiles', 'ProfilesController', $español);
+Route::resource('perfiles', 'ProfilesController', $espanol);
 
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar
@@ -81,11 +98,13 @@ Route::get('home', function(){
 });
 
 // para ajax de direcciones
-Route::get('/estados', 'DirectionsController@states');
-Route::get('/municipios/{id}', 'DirectionsController@towns');
-Route::get('/municipio/{id}', 'DirectionsController@town');
-Route::get('/parroquias/{id}', 'DirectionsController@parishes');
-Route::get('/parroquia/{id}', 'DirectionsController@parish');
+Route::group(['middleware' => 'auth'], function(){
+  Route::get('/estados', 'DirectionsController@states');
+  Route::get('/municipios/{id}', 'DirectionsController@towns');
+  Route::get('/municipio/{id}', 'DirectionsController@town');
+  Route::get('/parroquias/{id}', 'DirectionsController@parishes');
+  Route::get('/parroquia/{id}', 'DirectionsController@parish');
+});
 
 Route::controllers([
   'auth' => 'Auth\AuthController',
