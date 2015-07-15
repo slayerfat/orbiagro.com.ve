@@ -14,6 +14,13 @@
 
   @include('sub-category.addons.breadcrumbs-show')
   <div class="container" style="margin-top:15px;">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>
+          Productos dentro de {{$subCat->description}}
+        </h1>
+      </div>
+    </div>
     @include('partials.products.paginated')
   </div>
   @include('visit.addons.relatedProducts')

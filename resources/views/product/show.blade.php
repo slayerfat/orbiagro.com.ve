@@ -70,6 +70,9 @@
           Creado el: {{ $product->created_at }}
           Actualizado el: {{ $product->updated_at }}
         </p>
+        <p>
+          {!! link_to_action('SubCategoriesController@show', 'Producto en el Rubro '.$product->sub_category->description,$product->sub_category->slug ) !!}
+        </p>
       </div>
     </div>
   </div>

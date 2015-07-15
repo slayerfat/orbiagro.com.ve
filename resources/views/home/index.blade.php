@@ -10,6 +10,7 @@
   </div>
 
   @include('partials.orbiagro-info')
+  @include('category.addons.cat-list')
   @include('promotion.addons.4-4-4-gallerie')
   @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => link_to_action('SubCategoriesController@show', 'Rubro Destacado: '.$sub_category->description, $sub_category->slug)])
   @include('visit.addons.relatedProducts')
@@ -25,6 +26,7 @@
         autoplay: true,
         autoplaySpeed: 2000,
         dots: true,
+        arrows: false,
         infinite: true,
         speed: 300,
         slidesToShow: 1,

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Category;
 use App\SubCategory;
 use App\Promotion;
 use App\PromoType;
@@ -30,6 +31,8 @@ class HomeController extends Controller {
   {
     $sub_category = SubCategory::has('products')->random()->first();
 
+    $cats = Category::all();
+
     // TODO: mejorar logica de seleccion de tipos de promociones
     // TODO: abstraer a una clase o incluirlo dentro de la clase Promotion
     // selecciona los tipos especificos
@@ -39,7 +42,7 @@ class HomeController extends Controller {
 
     $this->seo()->opengraph()->setUrl(action('HomeController@index'));
 
-    return view('home.index', compact('sub_category', 'promotions'));
+    return view('home.index', compact('sub_category', 'promotions', 'cats'));
   }
 
   public function unverified()

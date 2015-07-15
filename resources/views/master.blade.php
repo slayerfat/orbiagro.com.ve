@@ -33,5 +33,7 @@
   <script src="{!! asset('js/vendor/bootstrap.min.js') !!}"></script>
   {{-- js de una libreria en alguna vista --}}
   @yield('js')
+
+  @include('partials.footer')
 </body>
 </html>
