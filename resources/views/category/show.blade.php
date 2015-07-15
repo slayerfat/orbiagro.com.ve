@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Categoria - {{ $cat->description }}
-@stop
-
 @section('content')
 
   @if(Auth::user() and Auth::user()->isAdmin())

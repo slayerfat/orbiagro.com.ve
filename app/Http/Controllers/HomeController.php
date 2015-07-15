@@ -5,7 +5,21 @@ use App\Promotion;
 use App\PromoType;
 use App\Mamarrachismo\VisitsService;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+
 class HomeController extends Controller {
+
+  use SEOToolsTrait;
+
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth', ['except' => 'index']);
+  }
 
   /**
    * Show the application dashboard to the user.
@@ -22,6 +36,8 @@ class HomeController extends Controller {
     $typesId = PromoType::whereIn('description', ['primavera', 'verano', 'otoño', 'invierno'])->lists('id');
     // selecciona las promociones existentes segun el tipo ya seleccionado
     $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
+
+    $this->seo()->opengraph()->setUrl(action('HomeController@index'));
 
     return view('home.index', compact('sub_category', 'promotions'));
   }

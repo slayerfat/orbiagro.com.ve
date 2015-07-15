@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Index - Categorias
-@stop
-
 @section('content')
   @include('category.addons.breadcrumbs-index')
   @include('sub-category.addons.subcat-gallerie', ['title' => "Rubro Destacado"])

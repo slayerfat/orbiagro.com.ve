@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Index
-@stop
-
 @section('content')
   <div class="container">
     <h1>

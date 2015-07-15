@@ -13,7 +13,7 @@ class RedirectIfVerified {
    */
   public function handle($request, Closure $next)
   {
-    if ( $request->user()->isVerified() )
+    if ( $request->user && $request->user()->isVerified() )
     {
       return redirect('/');
     }

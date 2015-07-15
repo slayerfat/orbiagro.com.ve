@@ -14,7 +14,11 @@ use App\SubCategory;
 use App\Mamarrachismo\VisitsService;
 use App\Mamarrachismo\Upload;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+
 class CategoriesController extends Controller {
+
+  use SEOToolsTrait;
 
   public $user, $userId, $cat;
 
@@ -47,6 +51,11 @@ class CategoriesController extends Controller {
         $productsCollection->push($subCat->products()->random()->take(6)->get());
       endforeach;
     endforeach;
+
+    $this->seo()->setTitle('Categorias en orbiagro.com.ve');
+    $this->seo()->setDescription('Categorias existentes es orbiagro.com.ve');
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('CategoriesController@index'));
 
     return view('category.index', compact('cats', 'productsCollection'));
   }
@@ -94,6 +103,11 @@ class CategoriesController extends Controller {
       $cat = Category::findOrFail($id);
 
     $subCats = $cat->sub_categories;
+
+    $this->seo()->setTitle($cat->description.' en orbiagro.com.ve');
+    $this->seo()->setDescription($cat->description.' existentes es orbiagro.com.ve');
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('CategoriesController@index'));
 
     return view('category.show', compact('cat', 'subCats'));
   }

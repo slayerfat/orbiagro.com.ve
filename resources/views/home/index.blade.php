@@ -11,10 +11,10 @@
 
   @include('partials.orbiagro-info')
   @include('promotion.addons.4-4-4-gallerie')
-  @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Rubro Destacado, '.$sub_category->description])
+  @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => link_to_action('SubCategoriesController@show', 'Rubro Destacado: '.$sub_category->description, $sub_category->slug)])
   @include('visit.addons.relatedProducts')
   @include('sub-category.addons.visited')
-  @include('sub-category.addons.popular', ['title' => 'Rubros Populares'])
+  @include('sub-category.addons.popular', ['title' => 'Visite los Rubros Populares'])
 @stop
 
 @section('js')
