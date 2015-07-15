@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Rubro - {{ $subCat->description }}
-@stop
-
 @section('content')
 
   @if(Auth::user() and Auth::user()->isAdmin($subCat->id))

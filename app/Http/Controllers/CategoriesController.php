@@ -104,10 +104,10 @@ class CategoriesController extends Controller {
 
     $subCats = $cat->sub_categories;
 
-    $this->seo()->setTitle($cat->description.' en orbiagro.com.ve');
-    $this->seo()->setDescription($cat->description.' existentes es orbiagro.com.ve');
+    $this->seo()->setTitle("{$cat->description} en orbiagro.com.ve");
+    $this->seo()->setDescription("{$cat->description} existentes es orbiagro.com.ve");
     // $this->seo()->setKeywords(); taxonomias
-    $this->seo()->opengraph()->setUrl(action('CategoriesController@index'));
+    $this->seo()->opengraph()->setUrl(action('CategoriesController@show', $id));
 
     return view('category.show', compact('cat', 'subCats'));
   }

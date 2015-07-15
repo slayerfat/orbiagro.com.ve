@@ -16,7 +16,11 @@ use App\MapDetail;
 use App\Direction;
 use App\Maker;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+
 class ProductsController extends Controller {
+
+  use SEOToolsTrait;
 
   public $user, $userId;
 
@@ -45,6 +49,11 @@ class ProductsController extends Controller {
     $subCats  = SubCategory::all();
 
     $visitedProducts = $visits->getVisitedProducts();
+
+    $this->seo()->setTitle('Productos en orbiagro.com.ve');
+    $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
 
     return view('product.index', compact(
       'products', 'cats', 'subCats', 'visitedProducts'
@@ -127,6 +136,11 @@ class ProductsController extends Controller {
     else :
       $isUserValid = false;
     endif;
+
+    $this->seo()->setTitle("{$product->title} - {$product->price_bs()}");
+    $this->seo()->setDescription("{$product->title} en {$product->sub_category->description}, consigue mas en {$product->sub_category->category->description} dentro de orbiagro.com.ve");
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('ProductsController@show', $id));
 
     return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
   }

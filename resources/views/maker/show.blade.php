@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Fabricante - {{$maker->name}}
-@stop
-
 @section('content')
 
   @if(Auth::user() and Auth::user()->isAdmin())

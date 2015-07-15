@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Fabricantes en el sistema
-@stop
-
 @section('css')
   <link rel="stylesheet" type="text/css" href="{!! asset('css/vendor/bootstrap-table.css') !!}">
 @stop

@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Index - Productos
-@stop
-
 @section('content')
 
   @unless(Request::input('page'))

@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Productos - {{ $product->price_bs() }} - {{ $product->title }}
-@stop
-
 @section('content')
 
   @if(Auth::user() and Auth::user()->isOwnerOrAdmin($product->user_id))
