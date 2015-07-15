@@ -152,7 +152,8 @@ return [
     'App\Providers\RouteServiceProvider',
     'App\Providers\ViewServiceProvider',
 
-    'Laracasts\Flash\FlashServiceProvider'
+    'Laracasts\Flash\FlashServiceProvider',
+    'Artesaos\SEOTools\Providers\SEOToolsServiceProvider'
 
   ],
 
@@ -209,7 +210,8 @@ return [
     'Html'      => 'Illuminate\Html\HtmlFacade',
     'Flash'     => 'Laracasts\Flash\Flash',
     'Faker'     => 'Faker\Factory',
-    'Date'      => 'Jenssegers\Date\Date'
+    'Date'      => 'Jenssegers\Date\Date',
+    'SEO'       => 'Artesaos\SEOTools\Facades\SEOTools',
 
   ],
 
