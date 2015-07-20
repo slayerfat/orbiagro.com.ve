@@ -170,8 +170,10 @@ class Upload {
    *
    * @return boolean
    */
-  public function updateImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel, Image $imageModel)
+  public function updateImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel, Image $imageModel = null)
   {
+    if ($imageModel == null) return $this->createImage($file, $parentModel);
+
     $this->path = $this->generatePathFromModel($parentModel);
 
     // el validador
@@ -210,7 +212,7 @@ class Upload {
 
     // el validador
     $validator = Validator::make(['file' => $file], $this->fileRules);
-    if (!$validator->fails())
+    if ($validator->fails())
     {
       $this->errors = $validator->errors()->all();
       throw new Exception("Error, archivo no valido", 3);
@@ -234,8 +236,10 @@ class Upload {
    *
    * @return boolean
    */
-  public function updateFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel = null, File $fileModel)
+  public function updateFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel = null, File $fileModel = null)
   {
+    if ($fileModel == null) return $this->createFile($file, $parentModel);
+
     $this->path = $this->generatePathFromModel($parentModel);
 
     // el validador
@@ -378,7 +382,8 @@ class Upload {
         return "promos/{$model->id}";
 
       default:
-        throw new Exception("Error: modelo desconocido, no se puede crear ruta", 2);
+        throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo vardump: "
+          .var_dump($model)." typeof modelo ".gettype($model), 2);
         break;
 
     endswitch;

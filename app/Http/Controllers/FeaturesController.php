@@ -108,7 +108,20 @@ class FeaturesController extends Controller {
           ->withErrors($upload->errors);
       }
 
-    $upload->createImage($request->file('image'), $this->feature);
+    // TODO: mejorar?
+    // para guardar la imagen y modelo
+    if ($request->hasFile('image'))
+      try
+      {
+        $upload->createImage($request->file('image'), $this->feature);
+      }
+      catch (\Exception $e)
+      {
+        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser creada.');
+        return redirect()
+          ->action('ProductsController@show', $product->slug)
+          ->withErrors($upload->errors);
+      }
 
     return redirect()->action('ProductsController@show', $product->slug);
   }
@@ -144,6 +157,9 @@ class FeaturesController extends Controller {
     // se carga el producto para el redirect (id)
     $this->feature = Feature::findOrFail($id)->load('product');
 
+    // para dates
+    $upload->userId = $this->userId;
+
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
       return redirect()->action('ProductsController@show', $product->slug);
@@ -171,7 +187,7 @@ class FeaturesController extends Controller {
     if ($request->hasFile('file'))
       try
       {
-        $upload->updateFile($request->file('file'), $this->feature->product, $this->feature->file);
+        $upload->updateFile($request->file('file'), $this->feature, $this->feature->file);
       }
       catch (\Exception $e)
       {
