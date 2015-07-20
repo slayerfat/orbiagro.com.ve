@@ -34,6 +34,7 @@
   {{-- js de una libreria en alguna vista --}}
   @yield('js')
 
-  @include('partials.footer')
+  @include('partials.footer-center')
+  {{-- @include('partials.footer-listed') --}}
 </body>
 </html>
