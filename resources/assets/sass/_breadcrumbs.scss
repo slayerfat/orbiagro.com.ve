@@ -1,0 +1,13 @@
+// https://github.com/twbs/bootstrap-sass/issues/919
+// /\\00a0 fix
+.breadcrumb {
+
+  > li {
+
+    + li:before {
+      color: $breadcrumb-color;
+      content: $breadcrumb-separator;
+      padding: 0 5px;
+    }
+  }
+}
