@@ -151,6 +151,7 @@ return [
     'App\Providers\EventServiceProvider',
     'App\Providers\RouteServiceProvider',
     'App\Providers\ViewServiceProvider',
+    'App\Providers\ImageDeleteServiceProvider',
 
     'Laracasts\Flash\FlashServiceProvider',
     'Artesaos\SEOTools\Providers\SEOToolsServiceProvider'

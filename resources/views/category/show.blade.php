@@ -8,6 +8,11 @@
         <div class="col-xs-2">
           {!! link_to_action('CategoriesController@edit', 'Editar', $cat->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
+        <div class="col-xs-2">
+          {!! Form::open(['method' => 'DELETE', 'action' => ['CategoriesController@destroy', $cat->id]]) !!}
+          {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
+          {!! Form::close() !!}
+        </div>
       </div>
     </div>
   @endif
@@ -25,4 +30,6 @@
   @yield('relatedProducts-js')
   @yield('popular-subCats-js')
   @yield('visited-subCats-js')
+  {{-- js de eliminar recurso --}}
+  <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 @stop

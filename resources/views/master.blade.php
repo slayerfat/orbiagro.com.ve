@@ -34,9 +34,6 @@
   <!-- javascript -->
   <script src="{!! asset('js/vendor/jquery.min.js') !!}"></script>
   <script src="{!! asset('js/vendor/bootstrap.min.js') !!}"></script>
-  <script type="text/javascript">
-
-  </script>
   {{-- js de una libreria en alguna vista --}}
   @yield('js')
 </body>
