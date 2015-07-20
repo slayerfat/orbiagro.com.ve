@@ -16,7 +16,7 @@ class CreateNutritionalsTable extends Migration {
     {
       $table->increments('id');
       $table->integer('product_id')->unsigned();
-      $table->foreign('product_id')->references('id')->on('products');
+      $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
       $table->date('due')->nullable();
       $table->timestamps();
       $table->integer('created_by')->unsigned();

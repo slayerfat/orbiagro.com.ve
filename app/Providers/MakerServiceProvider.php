@@ -23,7 +23,7 @@ class MakerServiceProvider extends ServiceProvider {
 
     Maker::deleted(function($model){
       if ($this->image) $this->image->delete();
-      return Storage::disk('public')->deleteDirectory("maker/{$this->id}");
+      return Storage::disk('public')->deleteDirectory("makers/{$this->id}");
     });
   }
 

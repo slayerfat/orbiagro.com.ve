@@ -216,7 +216,11 @@ class ProductsController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $product = Product::findOrFail($id)->load('image');
+    $product->delete();
+
+    flash()->success('El Producto ha sido eliminado correctamente.');
+    return redirect()->action('ProductsController@index');
   }
 
   /**
