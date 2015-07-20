@@ -15,8 +15,13 @@ class SubCategoryServiceProvider extends ServiceProvider {
   public function boot()
   {
     SubCategory::deleting(function($model){
-      if ($model->image) $model->image->delete();
-      return Storage::disk('public')->deleteDirectory("sub-category/{$model->id}");
+      $this->image = $model->image;
+      $this->id = $model->id;
+    });
+
+    SubCategory::deleted(function($model){
+      if ($this->image) $this->image->delete();
+      return Storage::disk('public')->deleteDirectory("sub-category/{$this->id}");
     });
   }
 

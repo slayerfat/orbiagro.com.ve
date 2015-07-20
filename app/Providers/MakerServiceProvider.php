@@ -2,26 +2,39 @@
 
 use Illuminate\Support\ServiceProvider;
 
+use App\Maker;
+use Storage;
+
 class MakerServiceProvider extends ServiceProvider {
 
-	/**
-	 * Bootstrap the application services.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		//
-	}
+  protected $image, $id;
 
-	/**
-	 * Register the application services.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		//
-	}
+  /**
+   * Bootstrap the application services.
+   *
+   * @return void
+   */
+  public function boot()
+  {
+    Maker::deleting(function($model){
+      $this->image = $model->image;
+      $this->id = $model->id;
+    });
+
+    Maker::deleted(function($model){
+      if ($this->image) $this->image->delete();
+      return Storage::disk('public')->deleteDirectory("maker/{$this->id}");
+    });
+  }
+
+  /**
+   * Register the application services.
+   *
+   * @return void
+   */
+  public function register()
+  {
+    //
+  }
 
 }

@@ -147,7 +147,11 @@ class MakersController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $this->maker = Maker::findOrFail($id)->load('image');
+    $this->maker->delete();
+
+    flash()->success('El Fabricante ha sido eliminado correctamente.');
+    return redirect()->action('CategoriesController@index');
   }
 
 }
