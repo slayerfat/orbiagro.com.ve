@@ -175,7 +175,6 @@ class SubCategoriesController extends Controller {
   public function destroy($id)
   {
     $this->subCat = SubCategory::findOrFail($id)->load('image');
-    $this->subCat->image->delete();
     $this->subCat->delete();
 
     flash()->success('El Rubro ha sido eliminado correctamente.');

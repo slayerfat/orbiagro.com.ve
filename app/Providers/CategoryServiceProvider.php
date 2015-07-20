@@ -2,10 +2,10 @@
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Image;
-use File;
+use App\Category;
+use Storage;
 
-class ImageDeleteServiceProvider extends ServiceProvider {
+class CategoryServiceProvider extends ServiceProvider {
 
   /**
    * Bootstrap the application services.
@@ -14,9 +14,9 @@ class ImageDeleteServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    Image::deleting(function($image){
-      if(File::isFile($image->path))
-        return File::delete($image->path);
+    Category::deleting(function($model){
+      if ($model->image) $model->image->delete();
+      return Storage::disk('public')->deleteDirectory("category/{$model->id}");
     });
   }
 

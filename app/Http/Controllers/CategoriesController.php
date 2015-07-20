@@ -158,7 +158,6 @@ class CategoriesController extends Controller {
   public function destroy($id)
   {
     $this->cat = category::findOrFail($id)->load('image');
-    $this->cat->image->delete();
     $this->cat->delete();
 
     flash()->success('La Categoria ha sido eliminada correctamente.');
