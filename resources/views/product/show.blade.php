@@ -66,9 +66,15 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <p>
-          Creado el: {{ $product->created_at }}
-          Actualizado el: {{ $product->updated_at }}
+        <p class="product-dates">
+          Creado
+          {!! Date::parse($product->created_at)->diffForHumans() !!}.
+          @unless($product->created_at == $product->updated_at)
+            <i>
+              Ultima actualizacion
+              {!! Date::parse($product->updated_at)->diffForHumans() !!}.
+            </i>
+          @endunless
         </p>
         <p>
           {!! link_to_action('SubCategoriesController@show', 'Producto en el Rubro '.$product->sub_category->description,$product->sub_category->slug ) !!}
