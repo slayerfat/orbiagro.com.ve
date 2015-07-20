@@ -22,19 +22,22 @@
 <body>
   @include('partials.navbar')
 
-  <div class="container">
+  <div class="container flashes">
     @include('flash::message')
   </div>
 
   @yield('content')
 
+  @include('partials.footer-center')
+  {{-- @include('partials.footer-listed') --}}
+
   <!-- javascript -->
   <script src="{!! asset('js/vendor/jquery.min.js') !!}"></script>
   <script src="{!! asset('js/vendor/bootstrap.min.js') !!}"></script>
+  <script type="text/javascript">
+
+  </script>
   {{-- js de una libreria en alguna vista --}}
   @yield('js')
-
-  @include('partials.footer-center')
-  {{-- @include('partials.footer-listed') --}}
 </body>
 </html>

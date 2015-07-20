@@ -7,8 +7,8 @@ var mapOptions;
 function initialize(latitude, longitude, zoom) {
   if (latitude === undefined || longitude === undefined)
   {
-    latitude = 10.5000;
-    longitude = -66.9667;
+    latitude  = 7.0695837;
+    longitude = -65.582422;
   }
   if (zoom === undefined)
   {

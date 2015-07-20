@@ -53,6 +53,8 @@ class Registrar implements RegistrarContract {
     $emails = (array)$user->email;
     Email::enviarEmail($data, $emails);
 
+    flash()->info('Usuario creado exitosamene, un correo de confirmación ha sido enviado a '.$user->email);
+
     return $user;
   }
 
