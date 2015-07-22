@@ -216,7 +216,7 @@ class ProductsController extends Controller {
    */
   public function destroy($id)
   {
-    $product = Product::findOrFail($id)->load('image');
+    $product = Product::findOrFail($id)->load('images');
     $product->delete();
 
     flash()->success('El Producto ha sido eliminado correctamente.');

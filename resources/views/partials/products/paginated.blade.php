@@ -5,11 +5,13 @@
         <div class="media product-media">
           <div class="media-left product-image-container">
             <a href="{!! action('ProductsController@show', $product->slug) !!}">
-              <img
-                class="media-object product-image"
-                src="{!! asset($product->images()->first()->path) !!}"
-                alt="{{ $product->images()->first()->alt }}"
-                width="128" height="128">
+              @unless($product->images->isEmpty())
+                <img
+                  class="media-object product-image"
+                  src="{!! asset($product->images()->first()->path) !!}"
+                  alt="{{ $product->images()->first()->alt }}"
+                  width="128" height="128">
+              @endunless
             </a>
           </div>
           <div class="media-body product-details-container">

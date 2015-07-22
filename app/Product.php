@@ -1,11 +1,14 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Mamarrachismo\CheckDollar as Dollar;
 use App\Mamarrachismo\ModelValidation;
 use App\Mamarrachismo\Transformer;
 
 class Product extends Model {
+
+  use SoftDeletes;
 
   protected $fillable = [
     'user_id',
@@ -17,6 +20,13 @@ class Product extends Model {
     'quantity',
     'slug'
   ];
+
+  /**
+   * The attributes that should be mutated to dates.
+   *
+   * @var array
+   */
+  protected $dates = ['deleted_at'];
 
   // --------------------------------------------------------------------------
   // Mutators

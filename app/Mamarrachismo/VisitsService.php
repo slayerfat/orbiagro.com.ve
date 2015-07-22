@@ -118,8 +118,12 @@ class VisitsService {
 
     if(Auth::user()) :
       if($visits = Auth::user()->visits()->where('visitable_type', 'App\Product')->with('visitable')->get()) :
-        foreach ($visits as $visit) {
-          $this->bag[] = $visit->visitable->id;
+        foreach ($visits as $visit)
+        {
+          if ($visit->visitable)
+          {
+            $this->bag[] = $visit->visitable->id;
+          }
         }
         $products = Product::find($this->bag);
         $products->load('user', 'sub_category');

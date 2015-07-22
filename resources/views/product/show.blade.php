@@ -8,6 +8,11 @@
         <div class="col-xs-2">
           {!! link_to_action('ProductsController@edit', 'Editar', $product->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
+        <div class="col-xs-2">
+          {!! Form::open(['method' => 'DELETE', 'action' => ['ProductsController@destroy', $product->id]]) !!}
+          {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
+          {!! Form::close() !!}
+        </div>
       </div>
     </div>
   @endif
@@ -143,4 +148,5 @@
   {{-- CKEDITOR --}}
   <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
   <script src="{!! asset('js/editor/products.js') !!}"></script>
+  <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 @stop

@@ -163,4 +163,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return $this->isOwner($id);
   }
 
+  /**
+   * devuelve los productos eliminados relacionados con un usuario
+   *
+   * @param int $quantity la cantidad a tomar
+   */
+  public function latestDeletedProducts($quantity = 5)
+  {
+    return $this->products()->onlyTrashed()->latest()->take($quantity)->get();
+  }
+
 }
