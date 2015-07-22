@@ -157,8 +157,17 @@ class CategoriesController extends Controller {
    */
   public function destroy($id)
   {
-    $this->cat = category::findOrFail($id)->load('image');
-    $this->cat->delete();
+    $this->cat = category::findOrFail($id);
+
+    try
+    {
+      $this->cat->delete();
+    }
+    catch (\Exception $e)
+    {
+      flash()->error('Para poder eliminar esta Categoria, no deben haber productos asociados.');
+      return redirect()->action('CategoriesController@show', $this->cat->slug);
+    }
 
     flash()->success('La Categoria ha sido eliminada correctamente.');
     return redirect()->action('CategoriesController@index');

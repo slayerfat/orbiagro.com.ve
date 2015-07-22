@@ -147,8 +147,23 @@ class MakersController extends Controller {
    */
   public function destroy($id)
   {
-    $this->maker = Maker::findOrFail($id)->load('image');
-    $this->maker->delete();
+    $this->maker = Maker::findOrFail($id);
+
+    try
+    {
+      $this->maker->delete();
+    }
+    catch (\Exception $e)
+    {
+      dd($e->errorInfo[0]);
+      if ($e instanceof \QueryException && $e->errorInfo[0] == '23000')
+      {
+        flash()->error('Para poder eliminar este Fabricante, no deben haber productos asociados.');
+        return redirect()->action('MakersController@show', $this->maker->slug);
+      }
+      \Log::error($e);
+      abort(500);
+    }
 
     flash()->success('El Fabricante ha sido eliminado correctamente.');
     return redirect()->action('CategoriesController@index');
