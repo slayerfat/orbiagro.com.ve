@@ -216,11 +216,59 @@ class ProductsController extends Controller {
    */
   public function destroy($id)
   {
-    $product = Product::findOrFail($id)->load('images');
+    $product = Product::findOrFail($id);
+
+    if(!$this->user->isOwnerOrAdmin($product->user_id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@show', $id);
+    endif;
+
     $product->delete();
 
-    flash()->success('El Producto ha sido eliminado correctamente.');
+    flash()->info('El Producto ha sido eliminado correctamente.');
     return redirect()->action('ProductsController@index');
+  }
+
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function forceDestroy($id)
+  {
+    $product = Product::where('id', $id)->withTrashed()->firstOrFail();
+
+    if(!$this->user->isOwnerOrAdmin($product->user_id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@index');
+    endif;
+
+    $product->forceDelete();
+
+    flash()->info('El Producto ha sido eliminado permanentemente.');
+    return redirect()->action('ProductsController@index');
+  }
+
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function restore($id)
+  {
+    $product = Product::where('id', $id)->withTrashed()->firstOrFail();
+
+    if(!$this->user->isOwnerOrAdmin($product->user_id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@index');
+    endif;
+
+    $product->restore();
+
+    flash()->success('El Producto ha sido restaurado exitosamente.');
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**

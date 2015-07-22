@@ -16,15 +16,11 @@
         @if(Auth::user() and Auth::user()->isOwnerOrAdmin($user->id))
           <div class="row">
             <div class="col-xs-12">
-              <h1>
-                Ultimos Productos eliminados
-              </h1>
               @if($user->latestDeletedProducts())
-                @foreach($user->latestDeletedProducts() as $product)
-                  <h2>
-                    {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}
-                  </h2>
-                @endforeach
+                @include('partials.products.user-deleted', [
+                  'products' => $user->latestDeletedProducts(),
+                  'title'    => 'Ultimos Productos eliminados',
+                  ])
               @endif
             </div>
           </div>
@@ -42,4 +38,5 @@
   @yield('relatedProducts-js')
   @yield('popular-subCats-js')
   @yield('visited-subCats-js')
+  <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 @stop

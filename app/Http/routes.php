@@ -32,6 +32,8 @@ Route::group(['prefix' => 'usuarios'], function() use($espanol){
 
 Route::get('productos/crear', ['uses' => 'ProductsController@create', 'as' => 'productos.create']);
 Route::get('productos/{productos}/editar', ['uses' => 'ProductsController@edit', 'as' => 'productos.edit']);
+Route::post('productos/{productos}/restore', ['uses' => 'ProductsController@restore', 'as' => 'productos.restore']);
+Route::delete('productos/{productos}/forceDestroy', ['uses' => 'ProductsController@forceDestroy', 'as' => 'productos.forceDestroy']);
 Route::resource('productos', 'ProductsController', $espanol);
 
 // modelos asociados a producto
