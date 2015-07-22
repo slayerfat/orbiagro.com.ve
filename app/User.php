@@ -173,4 +173,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     return $this->products()->onlyTrashed()->latest()->take($quantity)->get();
   }
 
+  /**
+   * forceDeleting es el atributo relacionado cuando
+   * algun modelo es eliminado de verdad
+   * en la aplicacion.
+   *
+   * @return boolean
+   */
+  public function isForceDeleting()
+  {
+    return $this->forceDeleting;
+  }
+
 }

@@ -16,6 +16,9 @@ switch ($active)
   case 'billing':
     $billing = 'class=active';
     break;
+  case 'userDestroy':
+    $userDestroy = 'active';
+    break;
   default:
     Log::warning('user.addon.sidebar: no se pudo identificar el vinculo activo');
     break;}?>
@@ -47,6 +50,9 @@ switch ($active)
       </li>
       <li>
         {!! link_to_action($user->person ? 'PeopleController@edit':'PeopleController@create', 'Información Personal', $user->name) !!}
+      </li>
+      <li class="sidebar-destroy {{isset($userDestroy) ? $userDestroy:null}}">
+        {!! link_to_action('UsersController@preDestroy', 'Eliminar Cuenta', $user->name) !!}
       </li>
       {{-- <li>
         <a href="#">Facturación</a>

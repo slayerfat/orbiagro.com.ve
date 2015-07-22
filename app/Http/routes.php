@@ -12,6 +12,10 @@ Route::get('/', 'HomeController@index');
 
 Route::get('usuarios/crear', ['uses' => 'UsersController@create', 'as' => 'usuarios.create']);
 Route::get('usuarios/{usuarios}/editar', ['uses' => 'UsersController@edit', 'as' => 'usuarios.edit']);
+
+// elimina el modelo de la base de datos
+Route::delete('usuarios/{usuarios}/forceDestroy', ['uses' => 'UsersController@forceDestroy', 'as' => 'usuarios.forceDestroy']);
+
 Route::resource('usuarios', 'UsersController', $espanol);
 
 Route::group(['prefix' => 'usuarios'], function() use($espanol){
@@ -28,12 +32,18 @@ Route::group(['prefix' => 'usuarios'], function() use($espanol){
 
   // visitas de productos de un usuario
   Route::get('{usuarios}/visitas/productos', ['uses' => 'UsersController@productVisits', 'as' => 'usuarios.products.visits']);
+
+  // UX de un usuario que quiere eliminar su cuenta
+  Route::get('{usuarios}/confirmar-eliminacion', ['uses' => 'UsersController@preDestroy', 'as' => 'usuarios.preDestroy']);
 });
 
 Route::get('productos/crear', ['uses' => 'ProductsController@create', 'as' => 'productos.create']);
 Route::get('productos/{productos}/editar', ['uses' => 'ProductsController@edit', 'as' => 'productos.edit']);
 Route::post('productos/{productos}/restore', ['uses' => 'ProductsController@restore', 'as' => 'productos.restore']);
+
+// elimina el modelo de la base de datos
 Route::delete('productos/{productos}/forceDestroy', ['uses' => 'ProductsController@forceDestroy', 'as' => 'productos.forceDestroy']);
+
 Route::resource('productos', 'ProductsController', $espanol);
 
 // modelos asociados a producto

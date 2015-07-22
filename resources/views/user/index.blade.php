@@ -43,6 +43,9 @@
             <th data-field="phone" data-sortable="true" data-switchable="true">
               Teléfono
             </th>
+            <th data-field="status" data-sortable="true" data-switchable="true">
+              Estatus
+            </th>
           </thead>
           <tbody>
             @foreach ($users as $user)
@@ -62,6 +65,9 @@
                   </td>
                   <td>
                     {{ $user->person->phone }}
+                  </td>
+                  <td>
+                    {{ $user->deleted_at }}
                   </td>
                 @endif
               </tr>
