@@ -155,8 +155,7 @@ class MakersController extends Controller {
     }
     catch (\Exception $e)
     {
-      dd($e->errorInfo[0]);
-      if ($e instanceof \QueryException && $e->errorInfo[0] == '23000')
+      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
       {
         flash()->error('Para poder eliminar este Fabricante, no deben haber productos asociados.');
         return redirect()->action('MakersController@show', $this->maker->slug);

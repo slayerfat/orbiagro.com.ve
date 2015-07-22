@@ -165,8 +165,13 @@ class CategoriesController extends Controller {
     }
     catch (\Exception $e)
     {
-      flash()->error('Para poder eliminar esta Categoria, no deben haber productos asociados.');
-      return redirect()->action('CategoriesController@show', $this->cat->slug);
+      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
+      {
+        flash()->error('Para poder eliminar esta Categoria, no deben haber productos asociados.');
+        return redirect()->action('CategoriesController@show', $this->cat->slug);
+      }
+      \Log::error($e);
+      abort(500);
     }
 
     flash()->success('La Categoria ha sido eliminada correctamente.');

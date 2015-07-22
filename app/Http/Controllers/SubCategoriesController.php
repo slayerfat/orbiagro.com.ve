@@ -174,8 +174,22 @@ class SubCategoriesController extends Controller {
    */
   public function destroy($id)
   {
-    $this->subCat = SubCategory::findOrFail($id)->load('image');
-    $this->subCat->delete();
+    $this->subCat = SubCategory::findOrFail($id);
+
+    try
+    {
+      $this->subCat->delete();
+    }
+    catch (\Exception $e)
+    {
+      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
+      {
+        flash()->error('Para poder eliminar este Rubro, no deben haber productos asociados.');
+        return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
+      }
+      \Log::error($e);
+      abort(500);
+    }
 
     flash()->success('El Rubro ha sido eliminado correctamente.');
     return redirect()->action('SubCategoriesController@index');
