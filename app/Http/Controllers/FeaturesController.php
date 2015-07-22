@@ -208,7 +208,17 @@ class FeaturesController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $feature = Feature::findOrFail($id)->load('product');
+
+    if(!$this->user->isOwnerOrAdmin($feature->product->user_id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@show', $feature->product->slug);
+    endif;
+
+    $feature->delete();
+
+    flash()->info('El Distintivo ha sido eliminado correctamente.');
+    return redirect()->action('ProductsController@show', $feature->product->slug);
   }
 
 }
