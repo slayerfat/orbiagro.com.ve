@@ -237,4 +237,25 @@ class UsersController extends Controller {
     return view('user.destroy', compact('user'));
   }
 
+  /**
+   * Restores the specified resource.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function restore($id)
+  {
+    $user = User::where('id', $id)->withTrashed()->firstOrFail();
+
+    if(!$this->user->isOwnerOrAdmin($user->user_id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('UsersController@index');
+    endif;
+
+    $user->restore();
+
+    flash()->success('El Producto ha sido restaurado exitosamente.');
+    return redirect()->action('ProductsController@show', $user->name);
+  }
+
 }

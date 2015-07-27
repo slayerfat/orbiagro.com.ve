@@ -251,7 +251,7 @@ class ProductsController extends Controller {
   }
 
   /**
-   * Remove the specified resource from storage.
+   * Restores the specified resource.
    *
    * @param  int  $id
    * @return Response
