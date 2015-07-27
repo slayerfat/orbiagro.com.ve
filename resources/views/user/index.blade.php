@@ -46,6 +46,7 @@
             <th data-field="status" data-sortable="true" data-switchable="true">
               Estatus
             </th>
+            <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Acciones</th>
           </thead>
           <tbody>
             @foreach ($users as $user)
@@ -81,5 +82,6 @@
 
 @section('js')
   <script src="{!! asset('js/vendor/bootstrap-table.js') !!}"></script>
+  <script src="{!! asset('js/show/bootstrap-table.js') !!}"></script>
   <script src="{!! asset('js/vendor/bootstrap-table-es-CR.js') !!}"></script>
 @stop
