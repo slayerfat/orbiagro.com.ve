@@ -18,7 +18,7 @@
   @endif
 
   @include('product.addons.breadcrumbs-show')
-  
+
   <div class="container">
     <div class="row">
       <div class="col-md-7">
@@ -120,6 +120,8 @@
 
   @include('product.addons.direction', $product)
 
+  @include('product.addons.providers', $product)
+
   @include('visit.addons.relatedProducts')
 
   @include('partials.disclaimer')
@@ -152,4 +154,5 @@
   <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 
   @yield('productFeature-js')
+  @yield('productProvider-js')
 @stop

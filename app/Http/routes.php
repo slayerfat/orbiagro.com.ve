@@ -93,6 +93,14 @@ Route::group(['prefix' => 'productos'], function(){
   Route::put('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
   Route::patch('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
   Route::delete('/valores-nutricionales/{mechanicals}', 'NutritionalsController@destroy');
+
+  // providers
+  Route::get('/{productos}/proveedores/crear', 'ProductsProvidersController@create');
+  Route::post('/{productos}/proveedores', 'ProductsProvidersController@store');
+  Route::get('/proveedores/{proveedores}/editar', 'ProductsProvidersController@edit');
+  Route::put('/proveedores/{proveedores}', 'ProductsProvidersController@update');
+  Route::patch('/proveedores/{proveedores}', 'ProductsProvidersController@update');
+  Route::delete('/proveedores/{productos}/{proveedoresNombre}', 'ProductsProvidersController@destroy');
 });
 
 Route::get('categorias/crear', ['uses' => 'CategoriesController@create', 'as' => 'categorias.create']);
