@@ -127,15 +127,4 @@ class NutritionalsController extends Controller {
     return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    //
-  }
-
 }

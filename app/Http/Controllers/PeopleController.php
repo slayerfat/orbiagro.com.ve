@@ -117,15 +117,4 @@ class PeopleController extends Controller {
     return redirect()->action('UsersController@show', $user->name);
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    //
-  }
-
 }
