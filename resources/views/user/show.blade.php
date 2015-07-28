@@ -19,7 +19,7 @@
         <h2>
           <small>{{$user->profile->description}}</small>
         </h2>
-        @if($user->person)
+        @if(Auth::user()->isAdmin() && $user->person)
           <h2>
             {{$user->person->formatted_names()}}
           </h2>

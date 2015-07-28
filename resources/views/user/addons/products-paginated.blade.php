@@ -3,8 +3,7 @@
       <div class="row">
         <div class="col-xs-12">
           <h1>
-            Productos relacionados con
-            {!! link_to_action('UsersController@show', $user->name, $user->name) !!}
+            {!! link_to_action('UsersController@show', "Productos relacionados con {$user->name}", $user->name) !!}
           </h1>
         </div>
       </div>
