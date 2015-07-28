@@ -22,7 +22,7 @@ class UsersController extends Controller {
   public function __construct(User $user)
   {
     $this->middleware('auth');
-    $this->middleware('user.admin', ['only' => 'index', 'forceDestroy']);
+    $this->middleware('user.admin', ['only' => 'index', 'forceDestroy', 'restore']);
     $this->user = $user;
   }
 
@@ -125,6 +125,22 @@ class UsersController extends Controller {
   {
     if(!$user = User::with('person', 'products', 'profile')->where('name', $id)->first())
       $user = User::with('person', 'products', 'profile')->findOrFail($id);
+
+    $products = \App\Product::where('user_id', $user->id)->paginate(4);
+
+    return view('user.show', compact('user', 'products'));
+  }
+
+  /**
+   * Display the specified resource.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function showTrashed($id)
+  {
+    if(!$user = User::with('person', 'products', 'profile')->where('name', $id)->withTrashed()->first())
+      $user = User::with('person', 'products', 'profile')->withTrashed()->findOrFail($id);
 
     $products = \App\Product::where('user_id', $user->id)->paginate(4);
 
@@ -247,15 +263,10 @@ class UsersController extends Controller {
   {
     $user = User::where('id', $id)->withTrashed()->firstOrFail();
 
-    if(!$this->user->isOwnerOrAdmin($user->user_id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('UsersController@index');
-    endif;
-
     $user->restore();
 
-    flash()->success('El Producto ha sido restaurado exitosamente.');
-    return redirect()->action('ProductsController@show', $user->name);
+    flash()->success('El Usuario ha sido restaurado exitosamente.');
+    return redirect()->action('UsersController@show', $user->name);
   }
 
 }

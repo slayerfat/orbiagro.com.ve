@@ -51,9 +51,22 @@ switch ($active)
       <li>
         {!! link_to_action($user->person ? 'PeopleController@edit':'PeopleController@create', 'Información Personal', $user->name) !!}
       </li>
-      <li class="sidebar-destroy {{isset($userDestroy) ? $userDestroy:null}}">
-        {!! link_to_action('UsersController@preDestroy', 'Eliminar Cuenta', $user->name) !!}
-      </li>
+      @unless($user->deleted_at)
+        <li class="sidebar-destroy {{isset($userDestroy) ? $userDestroy:null}}">
+          {!! link_to_action('UsersController@preDestroy', 'Eliminar Cuenta', $user->name) !!}
+        </li>
+      @else
+        <li class="sidebar-destroy">
+          <a href="#" onclick='deleteResourceFromAnchor({{"\"restore-user-$user->id\""}})'>Restaurar Cuenta</a>
+        </li>
+        {!! Form::open([
+          'method' => 'POST',
+          'action' => ['UsersController@restore', $user->id],
+          'class' => 'hidden',
+          'id' => "restore-user-{$user->id}"]) !!}
+        {!! Form::close() !!}
+        <script type="text/javascript" src="{!! asset('js/show/deleteResourceFromAnchor.js') !!}"></script>
+      @endunless
       {{-- <li>
         <a href="#">Facturación</a>
       </li> --}}

@@ -30,6 +30,9 @@ Route::group(['prefix' => 'usuarios'], function() use($espanol){
   // restaura al usuario en la base de datos
   Route::post('{usuarios}/restore', ['uses' => 'UsersController@restore', 'as' => 'usuarios.restore']);
 
+  // muestra al usuario desactivado
+  Route::get('eliminados/{usuarios}', ['uses' => 'UsersController@showTrashed', 'as' => 'usuarios.trashed']);
+
   // elimina el modelo de la base de datos
   Route::delete('{usuarios}/forceDestroy', ['uses' => 'UsersController@forceDestroy', 'as' => 'usuarios.forceDestroy']);
 

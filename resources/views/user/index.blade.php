@@ -34,6 +34,9 @@
             <th data-field="email" data-sortable="true" data-switchable="true">
               Correo Electrónico
             </th>
+            <th data-field="status" data-sortable="true" data-switchable="true">
+              Estatus
+            </th>
             <th data-field="first_name" data-sortable="true" data-switchable="false">
               Primer Nombre
             </th>
@@ -42,9 +45,6 @@
             </th>
             <th data-field="phone" data-sortable="true" data-switchable="true">
               Teléfono
-            </th>
-            <th data-field="status" data-sortable="true" data-switchable="true">
-              Estatus
             </th>
             <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Acciones</th>
           </thead>
@@ -57,6 +57,9 @@
                 <td>
                   {{ $user->email }}
                 </td>
+                <td>
+                  {{ $user->deleted_at }}
+                </td>
                 @if($user->person)
                   <td>
                     {{ $user->person->first_name }}
@@ -66,9 +69,6 @@
                   </td>
                   <td>
                     {{ $user->person->phone }}
-                  </td>
-                  <td>
-                    {{ $user->deleted_at }}
                   </td>
                 @endif
               </tr>
@@ -85,6 +85,9 @@
   <script src="{!! asset('js/vendor/bootstrap-table-es-CR.js') !!}"></script>
   <script src="{!! asset('js/show/bootstrap-table.js') !!}"></script>
   <script type="text/javascript">
-    initBootstrapTable("{!! action('UsersController@show', 'no-data') !!}")
+    initBootstrapTable(
+      "{!! action('UsersController@show', 'no-data') !!}",
+      "{!! action('UsersController@showTrashed', 'no-data') !!}"
+    )
   </script>
 @stop

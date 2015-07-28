@@ -5,15 +5,6 @@
 @stop
 
 @section('content')
-  {{-- @if(Auth::user() and Auth::user()->isAdmin())
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-2">
-          {!! link_to_action('UsersController@edit', 'Editar', $user->id, ['class' => 'btn btn-default btn-block']) !!}
-        </div>
-      </div>
-    </div>
-  @endif --}}
   <div class="container-fluid">
     <div class="row">
       @include('user.addons.sidebar', ['active' => 'resumen'])
