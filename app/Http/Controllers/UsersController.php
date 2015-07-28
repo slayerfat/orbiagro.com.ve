@@ -214,16 +214,16 @@ class UsersController extends Controller {
     }
 
     flash()->success('El Usuario ha sido eliminado correctamente.');
-    return redirect()->action('UsersController@index');
+    return redirect()->action('UsersController@show', $user->id);
   }
 
-  public function forceDestroy()
+  public function forceDestroy($id)
   {
-    $this->user = User::findOrFail($id);
+    $user = User::where('id', $id)->withTrashed()->firstOrFail();
 
     try
     {
-      $this->user->forceDelete();
+      $user->forceDelete();
     }
     catch (\Exception $e)
     {

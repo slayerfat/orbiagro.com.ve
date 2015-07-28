@@ -56,7 +56,7 @@ switch ($active)
           {!! link_to_action('UsersController@preDestroy', 'Eliminar Cuenta', $user->name) !!}
         </li>
       @else
-        <li class="sidebar-destroy">
+        <li>
           <a href="#" onclick='deleteResourceFromAnchor({{"\"restore-user-$user->id\""}})'>Restaurar Cuenta</a>
         </li>
         {!! Form::open([
@@ -64,6 +64,15 @@ switch ($active)
           'action' => ['UsersController@restore', $user->id],
           'class' => 'hidden',
           'id' => "restore-user-{$user->id}"]) !!}
+        {!! Form::close() !!}
+        <li class="sidebar-destroy">
+          <a href="#" onclick='deleteResourceFromAnchor({{"\"forceDestroy-user-$user->id\""}})'>Destruir Cuenta</a>
+        </li>
+        {!! Form::open([
+          'method' => 'DELETE',
+          'action' => ['UsersController@forceDestroy', $user->id],
+          'class' => 'hidden',
+          'id' => "forceDestroy-user-{$user->id}"]) !!}
         {!! Form::close() !!}
         <script type="text/javascript" src="{!! asset('js/show/deleteResourceFromAnchor.js') !!}"></script>
       @endunless
