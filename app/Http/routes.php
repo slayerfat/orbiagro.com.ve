@@ -103,6 +103,9 @@ Route::get('rubros/crear', ['uses' => 'SubCategoriesController@create', 'as' => 
 Route::get('rubros/{rubros}/editar', ['uses' => 'SubCategoriesController@edit', 'as' => 'rubros.edit']);
 Route::resource('rubros', 'SubCategoriesController', $espanol);
 
+// encontrar un listado de rubros segun su categoria:
+Route::get('categorias/{categorias}/rubros', ['uses' => 'SubCategoriesController@indexByCategory', 'as' => 'rubros.category.index']);
+
 Route::get('fabricantes/crear', ['uses' => 'MakersController@create', 'as' => 'fabricantes.create']);
 Route::get('fabricantes/{fabricantes}/editar', ['uses' => 'MakersController@edit', 'as' => 'fabricantes.edit']);
 Route::resource('fabricantes', 'MakersController', $espanol);

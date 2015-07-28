@@ -65,6 +65,28 @@ class SubCategoriesController extends Controller {
   }
 
   /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function indexByCategory($categoryId)
+  {
+    if(!$subCats = Category::where('slug', $categoryId)->first()->sub_categories)
+      $subCats = Category::findOrFail($categoryId)->sub_categories;
+    $productsCollection = collect();
+
+    foreach ($subCats as $cat) {
+      $productsCollection->push($cat->products()->random()->take(12)->get());
+    }
+
+    $this->seo()->setTitle('Rubros en orbiagro.com.ve');
+    $this->seo()->setDescription('Rubros en existencia en orbiagro.com.ve');
+    $this->seo()->opengraph()->setUrl(action('SubCategoriesController@index'));
+
+    return view('sub-category.index', compact('subCats', 'productsCollection'));
+  }
+
+  /**
    * Show the form for creating a new resource.
    *
    * @return Response

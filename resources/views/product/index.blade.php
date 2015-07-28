@@ -2,7 +2,13 @@
 
 @section('content')
 
-  @include('product.addons.breadcrumbs-index')
+  @if(preg_match('/rubros\//', Request::path()))
+    @include('product.addons.breadcrumbs-index-sub-category')
+  @elseif(preg_match('/categorias\//', Request::path()))
+    @include('product.addons.breadcrumbs-index-category', ['cat' => $products->first()->sub_category->category])
+  @else
+    @include('product.addons.breadcrumbs-index')
+  @endif
 
   @unless(Request::input('page'))
     <div class="container">

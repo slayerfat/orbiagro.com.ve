@@ -5,18 +5,13 @@
         {!! link_to_action('HomeController@index', 'Inicio') !!}
       </li>
       <li>
-        {!! link_to_action('CategoriesController@index', 'Categorias') !!}
-      </li>
-      <li class="active">
-        <em>
-          {{$cat->description}}
-        </em>
+        {!! link_to_action('CategoriesController@show', $cat->description, $cat->slug) !!}
       </li>
       <li>
         {!! link_to_action('SubCategoriesController@indexByCategory', 'Rubros', $cat->slug) !!}
       </li>
-      <li>
-        {!! link_to_action('ProductsController@indexByCategory', 'Productos', $cat->slug) !!}
+      <li class="active">
+        Productos
       </li>
     </ol>
   </div>
