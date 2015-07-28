@@ -1,7 +1,13 @@
 @extends('master')
 
 @section('content')
-  @include('sub-category.addons.breadcrumbs-index')
+
+  @if(preg_match('/categorias\//', Request::path()))
+    @include('sub-category.addons.breadcrumbs-index-category', ['cat' => $subCats->first()->category])
+  @else
+    @include('sub-category.addons.breadcrumbs-index')
+  @endif
+
   @include('sub-category.addons.subcat-gallerie', ['title' => "Rubro Destacado"])
   @include('sub-category.addons.sub-cat-paginated')
   @include('visit.addons.relatedProducts')

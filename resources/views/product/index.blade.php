@@ -3,10 +3,13 @@
 @section('content')
 
   @if(preg_match('/rubros\//', Request::path()))
-    @include('product.addons.breadcrumbs-index-sub-category')
+    <?php $productsTitle = "Productos en {$products->first()->sub_category->description}" ?>
+    @include('product.addons.breadcrumbs-index-sub-category', ['subCat' => $products->first()->sub_category])
   @elseif(preg_match('/categorias\//', Request::path()))
+    <?php $productsTitle = "Productos en {$products->first()->sub_category->category->description}" ?>
     @include('product.addons.breadcrumbs-index-category', ['cat' => $products->first()->sub_category->category])
   @else
+    <?php $productsTitle = 'Productos en orbiagro.com.ve' ?>
     @include('product.addons.breadcrumbs-index')
   @endif
 
@@ -30,6 +33,7 @@
   <div class="container" style="margin-top: 15px;">
     <div class="row">
       <div class="col-xs-12">
+        <h1>{{ $productsTitle }}</h1>
         @include('partials.products.paginated')
       </div>
     </div>
