@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder {
     $this->call('CategoryTableSeeder');
     $this->call('SubCategoryTableSeeder');
     $this->call('MakerTableSeeder');
+    $this->call('ProviderTableSeed');
     $this->call('ProductTableSeeder');
     $this->call('FeatureTableSeeder');
     $this->call('CharacteristicTableSeeder');
@@ -38,6 +39,7 @@ class DatabaseSeeder extends Seeder {
     $this->call('VisitTableSeeder');
     $this->call('ImagesTableSeeder');
     $this->call('PromoTypesTableSeeder');
+    $this->call('ProductProviderTableSeed');
     $this->call('PromotionTableSeeder');
     $this->call('CategoryImageTableSeeder');
     $this->call('SubCategoryImageTableSeeder');

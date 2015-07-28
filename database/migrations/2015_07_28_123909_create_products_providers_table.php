@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductPromotionTable extends Migration {
+class CreateProductsProvidersTable extends Migration {
 
   /**
    * Run the migrations.
@@ -12,12 +12,13 @@ class CreateProductPromotionTable extends Migration {
    */
   public function up()
   {
-    Schema::create('product_promotion', function(Blueprint $table)
+    Schema::create('product_provider', function(Blueprint $table)
     {
       $table->integer('product_id')->unsigned();
       $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-      $table->integer('promotion_id')->unsigned();
-      $table->foreign('promotion_id')->references('id')->on('promotions')->onDelete('cascade');
+      $table->integer('provider_id')->unsigned();
+      $table->foreign('provider_id')->references('id')->on('providers');
+      $table->string('sku')->nullable();
     });
   }
 
@@ -28,7 +29,7 @@ class CreateProductPromotionTable extends Migration {
    */
   public function down()
   {
-    Schema::drop('product_promotion');
+    Schema::drop('product_provider');
   }
 
 }

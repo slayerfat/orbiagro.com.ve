@@ -158,6 +158,10 @@ class Product extends Model {
    return $this->belongsToMany('App\User')->withPivot('quantity')->withTimestamps();
   }
 
+  public function providers()
+  {
+   return $this->belongsToMany('App\Provider')->withPivot('sku');
+  }
 
   // --------------------------------------------------------------------------
   // Polymorphic

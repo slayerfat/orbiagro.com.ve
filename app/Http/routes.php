@@ -114,6 +114,10 @@ Route::get('perfiles/crear', ['uses' => 'ProfilesController@create', 'as' => 'pe
 Route::get('perfiles/{perfiles}/editar', ['uses' => 'ProfilesController@edit', 'as' => 'perfiles.edit']);
 Route::resource('perfiles', 'ProfilesController', $espanol);
 
+Route::get('proveedores/crear', ['uses' => 'ProvidersController@create', 'as' => 'proveedores.create']);
+Route::get('proveedores/{proveedores}/editar', ['uses' => 'ProvidersController@edit', 'as' => 'proveedores.edit']);
+Route::resource('proveedores', 'ProvidersController', $espanol);
+
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar
   Route::get('/por-verificar', 'HomeController@unverified');
