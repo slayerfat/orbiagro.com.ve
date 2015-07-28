@@ -20,6 +20,11 @@ class CreateProvidersTable extends Migration {
       $table->string('url')->nullable();
       $table->string('contact_name')->nullable();
       $table->string('contact_title')->nullable();
+      $table->string('contact_email')->nullable();
+      $table->string('contact_phone_1')->nullable();
+      $table->string('contact_phone_2')->nullable();
+      $table->string('contact_phone_3')->nullable();
+      $table->string('contact_phone_4')->nullable();
       $table->string('email')->nullable();
       $table->string('phone_1')->nullable();
       $table->string('phone_2')->nullable();

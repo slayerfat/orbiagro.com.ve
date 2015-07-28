@@ -165,7 +165,7 @@ class MakersController extends Controller {
     }
 
     flash()->success('El Fabricante ha sido eliminado correctamente.');
-    return redirect()->action('CategoriesController@index');
+    return redirect()->action('MakersController@index');
   }
 
 }

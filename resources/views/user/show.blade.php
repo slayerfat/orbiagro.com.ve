@@ -13,7 +13,7 @@
         <h1>
           {{$user->name}}
           <small>
-            {{$user->email}}
+            {!! Html::mailto($user->email) !!}
           </small>
         </h1>
         <h2>
@@ -27,7 +27,8 @@
             Cedula: {{$user->person->identity_card}}
           </h3>
           <h3>
-            {{$user->person->nationality->description}}, {{$user->person->gender->description}}
+            {{$user->person->nationality->description}},
+            {{$user->person->gender->description}}
           </h3>
           <h3>{{$user->person->phone}}</h3>
         @endif

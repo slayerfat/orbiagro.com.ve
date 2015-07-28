@@ -26,19 +26,24 @@ class ProviderTableSeed extends Seeder {
       $this->command->info("Provider name: {$name}");
       $this->command->info("Provider slug: ".str_slug($name));
       App\Provider::create([
-        'name'          => $name,
-        'slug'          => str_slug($name),
-        'url'           => $faker->url(),
-        'contact_name'  => $faker->name(),
-        'contact_title' => $faker->title(),
-        'email'         => $faker->safeEmail(),
-        'phone_1'       => $faker->phoneNumber(),
-        'phone_2'       => $faker->phoneNumber(),
-        'phone_3'       => $faker->phoneNumber(),
-        'phone_4'       => $faker->phoneNumber(),
-        'trust'         => rand(1, 100),
-        'created_by'    => $user->id,
-        'updated_by'    => $user->id,
+        'name'            => $name,
+        'slug'            => str_slug($name),
+        'url'             => $faker->url(),
+        'contact_name'    => $faker->name(),
+        'contact_title'   => $faker->title(),
+        'contact_email'   => $faker->safeEmail(),
+        'contact_phone_1' => $faker->phoneNumber(),
+        'contact_phone_2' => $faker->phoneNumber(),
+        'contact_phone_3' => $faker->phoneNumber(),
+        'contact_phone_4' => $faker->phoneNumber(),
+        'email'           => $faker->safeEmail(),
+        'phone_1'         => $faker->phoneNumber(),
+        'phone_2'         => $faker->phoneNumber(),
+        'phone_3'         => $faker->phoneNumber(),
+        'phone_4'         => $faker->phoneNumber(),
+        'trust'           => rand(1, 100),
+        'created_by'      => $user->id,
+        'updated_by'      => $user->id,
       ]);
     endforeach;
 

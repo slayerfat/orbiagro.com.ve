@@ -1,9 +1,8 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use Auth;
+use App\Http\Requests\ProviderRequest;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
 
 use App\Provider;
 
@@ -38,7 +37,9 @@ class ProvidersController extends Controller {
    */
   public function create()
   {
-    //
+    $provider = new Provider;
+
+    return view('provider.create', compact('provider'));
   }
 
   /**
@@ -46,9 +47,16 @@ class ProvidersController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(ProviderRequest $request)
   {
-    //
+    $provider = new Provider($request->all());
+    $provider->created_by = Auth::id();
+    $provider->updated_by = Auth::id();
+
+    $provider->save();
+
+    flash()->success('Proveedor creado exitosamente.');
+    return redirect()->action('ProvidersController@show', $provider->id);
   }
 
   /**
@@ -59,7 +67,9 @@ class ProvidersController extends Controller {
    */
   public function show($id)
   {
-    //
+    $provider = Provider::with('products')->findOrFail($id);
+
+    return view('provider.show', compact('provider'));
   }
 
   /**
@@ -70,7 +80,9 @@ class ProvidersController extends Controller {
    */
   public function edit($id)
   {
-    //
+    $provider = Provider::findOrFail($id);
+
+    return view('provider.edit', compact('provider'));
   }
 
   /**
@@ -79,9 +91,14 @@ class ProvidersController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, ProviderRequest $request)
   {
-    //
+    $provider = Provider::findOrFail($id);
+    $provider->updated_by = Auth::id();
+    $provider->update($request->all());
+
+    flash()->success('Proveedor actualizado exitosamente.');
+    return redirect()->action('ProvidersController@show', $provider->id);
   }
 
   /**
@@ -92,7 +109,25 @@ class ProvidersController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $provider = Provider::findOrFail($id);
+
+    try
+    {
+      $provider->delete();
+    }
+    catch (\Exception $e)
+    {
+      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
+      {
+        flash()->error('Para poder eliminar este Proveedor, no deben haber elementos asociados.');
+        return redirect()->action('ProvidersController@show', $id);
+      }
+      \Log::error($e);
+      abort(500);
+    }
+
+    flash()->success('El Proveedor ha sido eliminado correctamente.');
+    return redirect()->action('ProvidersController@index');
   }
 
 }
