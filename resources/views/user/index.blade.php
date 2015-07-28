@@ -28,7 +28,7 @@
           data-sort-name="first_name"
           >
           <thead>
-            <th data-field="name" data-sortable="true" data-switchable="true">
+            <th data-field="resource" data-sortable="true" data-switchable="true">
               Seudónimo
             </th>
             <th data-field="email" data-sortable="true" data-switchable="true">
@@ -83,6 +83,7 @@
 @section('js')
   <script src="{!! asset('js/vendor/bootstrap-table.js') !!}"></script>
   <script src="{!! asset('js/vendor/bootstrap-table-es-CR.js') !!}"></script>
+  {{-- añade iconos en la tabla con actividades genericas --}}
   <script src="{!! asset('js/show/bootstrap-table.js') !!}"></script>
   <script type="text/javascript">
     initBootstrapTable(

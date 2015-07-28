@@ -30,17 +30,25 @@ function operateFormatter(value, row, index) {
 
   // el url con la direccion correcta para laravel
   var url;
+
+  // si no existe estatus porque el recurso
+  // no tiene softdeletes
+  if (row.status === undefined)
+  {
+    row.status = ''; // string porque status contiene un date
+  }
+
   // si el length mayor a 0, el usuario esta desactivado
   // porque status contiene nulo cuando no esta desactivado
   if (row.status.trim().length > 0)
   {
-    url = $().bootstrapTable.transformUrl(row.name.trim(), 'trashed');
+    url = $().bootstrapTable.transformUrl(row.resource.trim(), 'trashed');
   }
   else
   {
-    url = $().bootstrapTable.transformUrl(row.name.trim());
+    url = $().bootstrapTable.transformUrl(row.resource.trim());
   }
-  // console.log('row.name.trim(): ' + row.name.trim() + ' url: ' + url);
+  // console.log('row.resource.trim(): ' + row.resource.trim() + ' url: ' + url);
   console.log(row.status.trim().length);
 
   return [

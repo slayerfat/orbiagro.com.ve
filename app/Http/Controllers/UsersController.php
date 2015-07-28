@@ -214,7 +214,7 @@ class UsersController extends Controller {
     }
 
     flash()->success('El Usuario ha sido eliminado correctamente.');
-    return redirect()->action('UsersController@show', $user->id);
+    return redirect()->action('UsersController@showTrashed', $this->user->id);
   }
 
   public function forceDestroy($id)
