@@ -14,11 +14,6 @@
     <hr/>
     <div class="row">
       <div class="col-sm-12">
-        <div class="col-xs-2">
-          {!! Form::open(['method' => 'DELETE', 'action' => ['UsersController@destroy']]) !!}
-          {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'id' => 'user-destroy']) !!}
-          {!! Form::close() !!}
-        </div>
         <table
           id="tabla"
           data-toggle="table"
@@ -88,9 +83,8 @@
 @section('js')
   <script src="{!! asset('js/vendor/bootstrap-table.js') !!}"></script>
   <script src="{!! asset('js/vendor/bootstrap-table-es-CR.js') !!}"></script>
-  <script type="text/javascript">
-    var test = [];
-    test.url = 'test';
-  </script>
   <script src="{!! asset('js/show/bootstrap-table.js') !!}"></script>
+  <script type="text/javascript">
+    initBootstrapTable("{!! action('UsersController@show', 'no-data') !!}")
+  </script>
 @stop
