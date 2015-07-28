@@ -54,6 +54,12 @@ Route::delete('productos/{productos}/forceDestroy', ['uses' => 'ProductsControll
 
 Route::resource('productos', 'ProductsController', $espanol);
 
+// encontrar un listado de productos segun su categoria:
+Route::get('categorias/{categorias}/productos', ['uses' => 'ProductsController@indexByCategory', 'as' => 'productos.category.index']);
+
+// encontrar un listado de productos segun su rubro:
+Route::get('rubros/{rubros}/productos', ['uses' => 'ProductsController@indexBySubCategory', 'as' => 'productos.subcategory.index']);
+
 // modelos asociados a producto
 Route::group(['prefix' => 'productos'], function(){
   // features

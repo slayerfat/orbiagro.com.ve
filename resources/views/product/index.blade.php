@@ -2,6 +2,8 @@
 
 @section('content')
 
+  @include('product.addons.breadcrumbs-index')
+
   @unless(Request::input('page'))
     <div class="container">
       <div class="row">

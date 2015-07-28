@@ -17,7 +17,8 @@
     </div>
   @endif
 
-  @include('product.breadcrumbs', $product)
+  @include('product.addons.breadcrumbs-show')
+  
   <div class="container">
     <div class="row">
       <div class="col-md-7">

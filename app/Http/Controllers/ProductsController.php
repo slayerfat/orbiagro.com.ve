@@ -61,6 +61,56 @@ class ProductsController extends Controller {
   }
 
   /**
+   * Display a listing of the resource according to category.
+   *
+   * @todo refactor
+   *
+   * @return Response
+   */
+  public function indexByCategory($categoryId, VisitsService $visits)
+  {
+    if(!$products = Category::where('slug', $categoryId)->first()->products()->paginate(20))
+      $products = Category::findOrFail($categoryId)->products()->paginate(20);
+    $cats     = Category::all();
+    $subCats  = Category::where('slug', $categoryId)->first()->sub_categories;
+
+    $visitedProducts = $visits->getVisitedProducts();
+
+    $this->seo()->setTitle('Productos en orbiagro.com.ve');
+    $this->seo()->setDescription("Productos y Articulos de {$subCats->first()->category->description} en existencia en orbiagro.com.ve");
+    $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
+
+    return view('product.index', compact(
+      'products', 'cats', 'subCats', 'visitedProducts'
+    ));
+  }
+
+  /**
+   * Display a listing of the resource according to sub-category.
+   *
+   * @todo refactor
+   *
+   * @return Response
+   */
+  public function indexBySubCategory($subCategoryId, VisitsService $visits)
+  {
+    if(!$products = SubCategory::where('slug', $subCategoryId)->first()->products()->paginate(20))
+      $products = SubCategory::findOrFail($subCategoryId)->products()->paginate(20);
+    $cats     = Category::all();
+    $subCats  = SubCategory::all();
+
+    $visitedProducts = $visits->getVisitedProducts();
+
+    $this->seo()->setTitle('Productos en orbiagro.com.ve');
+    $this->seo()->setDescription("Productos y Articulos de {$products->first()->sub_category->description} en existencia en orbiagro.com.ve");
+    $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
+
+    return view('product.index', compact(
+      'products', 'cats', 'subCats', 'visitedProducts'
+    ));
+  }
+
+  /**
    * Show the form for creating a new resource.
    *
    * @return Response
@@ -117,7 +167,7 @@ class ProductsController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id, Request $request, VisitsService $visits)
+  public function show($id, VisitsService $visits)
   {
     if(!$product = Product::with('user')->where('slug', $id)->first())
       $product = Product::with('user')->findOrFail($id);

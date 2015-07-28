@@ -73,4 +73,9 @@ class Category extends Model {
     return $this->morphOne('App\Image', 'imageable');
   }
 
+  public function products()
+  {
+    return $this->hasManyThrough('App\product', 'App\SubCategory');
+  }
+
 }
