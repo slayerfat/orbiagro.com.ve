@@ -8,7 +8,7 @@
 <div class="form-group">
   {!! Form::label('provider_id', 'Proveedor:', ['class' => 'col-md-3 control-label']) !!}
   <div class="col-md-9">
-    {!! Form::select('provider_id', $providers, null, ['class' => 'form-control']) !!}
+    {!! Form::select('provider_id', $providers, $providerId, ['class' => 'form-control']) !!}
   </div>
 </div>
 

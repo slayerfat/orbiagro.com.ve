@@ -46,7 +46,7 @@
                   {{$provider->pivot->sku ? $provider->pivot->sku : '-'}}
                 </td>
                 <td>
-                  <a class="provider-table-edit" href="{!! action('ProductsProvidersController@edit', $product->id) !!}" data-resource="{{$product->id}}" title="Consultar">
+                  <a class="provider-table-edit" href="{!! action('ProductsProvidersController@edit', [$product->id, $provider->id]) !!}" data-resource="{{$product->id}}" title="Consultar">
                     <i class="glyphicon glyphicon-edit"></i>
                   </a>
                   <a

@@ -17,14 +17,17 @@ class ProductsProvidersController extends Controller {
    */
   public function create($productId)
   {
-    if(!$product = Product::with('user')->where('slug', $productId)->first())
-      $product = Product::with('user')->findOrFail($productId);
+    if(!$product = Product::where('slug', $productId)->first())
+      $product = Product::findOrFail($productId);
 
     $providers = Provider::lists('name', 'id');
 
+    $provider = new Provider;
+    $providerId = null;
+
     $product->sku = null;
 
-    return view('product.provider.create', compact('product', 'providers'));
+    return view('product.provider.create', compact('product', 'providers', 'provider', 'providerId'));
   }
 
   /**
@@ -48,25 +51,22 @@ class ProductsProvidersController extends Controller {
   }
 
   /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
    * Show the form for editing the specified resource.
    *
    * @param  int  $id
    * @return Response
    */
-  public function edit($id)
+  public function edit($productId, $providerId)
   {
-    //
+    if(!$product = Product::where('slug', $productId)->first())
+      $product = Product::findOrFail($productId);
+
+    $providers = Provider::lists('name', 'id');
+    $provider  = $product->providers()->where('provider_id', $providerId)->first();
+
+    $product->sku = $provider->pivot->sku;
+
+    return view('product.provider.edit', compact('product', 'providers', 'providerId'));
   }
 
   /**
@@ -75,9 +75,19 @@ class ProductsProvidersController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($productId, $providerId, Request $request)
   {
-    //
+    $this->validate($request, [
+      'provider_id' => 'required|numeric'
+    ]);
+
+    if(!$product = Product::where('slug', $productId)->first())
+      $product = Product::findOrFail($productId);
+
+    $product->providers()->updateExistingPivot($providerId, ['sku' => $request->input('sku'), 'provider_id' => $request->input('provider_id')]);
+
+    flash()->success('El Proveedor fue asociado con exito.');
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**
@@ -88,8 +98,8 @@ class ProductsProvidersController extends Controller {
    */
   public function destroy($productId, $providerId)
   {
-    if(!$product = Product::with('user')->where('slug', $productId)->first())
-      $product = Product::with('user')->findOrFail($productId);
+    if(!$product = Product::where('slug', $productId)->first())
+      $product = Product::findOrFail($productId);
 
     $provider = Provider::findOrFail($providerId);
 

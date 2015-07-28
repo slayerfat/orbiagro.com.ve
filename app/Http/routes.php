@@ -97,9 +97,9 @@ Route::group(['prefix' => 'productos'], function(){
   // providers
   Route::get('/{productos}/proveedores/crear', 'ProductsProvidersController@create');
   Route::post('/{productos}/proveedores', 'ProductsProvidersController@store');
-  Route::get('/proveedores/{proveedores}/editar', 'ProductsProvidersController@edit');
-  Route::put('/proveedores/{proveedores}', 'ProductsProvidersController@update');
-  Route::patch('/proveedores/{proveedores}', 'ProductsProvidersController@update');
+  Route::get('/proveedores/{productos}/{proveedores}/editar', 'ProductsProvidersController@edit');
+  Route::put('/proveedores/{productos}/{proveedores}', 'ProductsProvidersController@update');
+  Route::patch('/proveedores/{productos}/{proveedores}', 'ProductsProvidersController@update');
   Route::delete('/proveedores/{productos}/{proveedoresNombre}', 'ProductsProvidersController@destroy');
 });
 
