@@ -23,6 +23,10 @@ class CreateMapDetailsTable extends Migration {
       $table->double('latitude', 17, 15);
       $table->double('longitude', 18, 15);
       $table->tinyInteger('zoom')->unisgned();
+      $table->integer('created_by')->unsigned();
+      $table->foreign('created_by')->references('id')->on('users');
+      $table->integer('updated_by')->unsigned();
+      $table->foreign('updated_by')->references('id')->on('users');
       $table->timestamps();
     });
   }

@@ -14,6 +14,15 @@ class SubCategoryServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
+    SubCategory::creating(function($model){
+      $model->created_by = Auth::id();
+      $model->updated_by = Auth::id();
+    });
+
+    SubCategory::updating(function($model){
+      $model->updated_by = Auth::id();
+    });
+
     SubCategory::deleting(function($model){
       $this->image = $model->image;
       $this->id = $model->id;

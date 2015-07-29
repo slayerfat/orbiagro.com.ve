@@ -20,6 +20,10 @@ class CreateVisitsTable extends Migration {
       $table->integer('visitable_id')->unsigned();
       $table->string('visitable_type');
       $table->integer('total')->unsigned();
+      $table->integer('created_by')->unsigned();
+      $table->foreign('created_by')->references('id')->on('users');
+      $table->integer('updated_by')->unsigned();
+      $table->foreign('updated_by')->references('id')->on('users');
       $table->timestamps();
     });
   }

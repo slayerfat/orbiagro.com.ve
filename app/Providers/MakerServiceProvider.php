@@ -16,6 +16,15 @@ class MakerServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
+    Maker::creating(function($model){
+      $model->created_by = Auth::id();
+      $model->updated_by = Auth::id();
+    });
+
+    Maker::updating(function($model){
+      $model->updated_by = Auth::id();
+    });
+
     Maker::deleting(function($model){
       $this->image = $model->image;
       $this->id = $model->id;

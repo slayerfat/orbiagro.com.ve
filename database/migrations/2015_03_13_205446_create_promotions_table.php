@@ -23,6 +23,10 @@ class CreatePromotionsTable extends Migration {
       $table->integer('static')->unsigned()->nullable();
       $table->date('begins');
       $table->date('ends');
+      $table->integer('created_by')->unsigned();
+      $table->foreign('created_by')->references('id')->on('users');
+      $table->integer('updated_by')->unsigned();
+      $table->foreign('updated_by')->references('id')->on('users');
       $table->timestamps();
     });
   }

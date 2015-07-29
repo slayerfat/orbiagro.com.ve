@@ -1,12 +1,11 @@
-<?php namespace App\Providers;
+<?php namespace App\Providers\Internal;
 
 use Illuminate\Support\ServiceProvider;
 
 use Auth;
-use App\Image;
-use File;
+use App\Visit;
 
-class ImageDeleteServiceProvider extends ServiceProvider {
+class VisitServiceProvider extends ServiceProvider {
 
   /**
    * Bootstrap the application services.
@@ -15,18 +14,15 @@ class ImageDeleteServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    Image::creating(function($model){
+    $id = Auth::id();
+
+    Visit::creating(function($model){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Image::updating(function($model){
+    Visit::updating(function($model){
       $model->updated_by = $id;
-    });
-
-    Image::deleting(function($image){
-      if(File::isFile($image->path))
-        return File::delete($image->path);
     });
   }
 

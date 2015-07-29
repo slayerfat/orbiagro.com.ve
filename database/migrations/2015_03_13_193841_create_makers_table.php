@@ -19,6 +19,10 @@ class CreateMakersTable extends Migration {
       $table->string('slug');
       $table->string('domain')->nullable();
       $table->string('url')->nullable();
+      $table->integer('created_by')->unsigned();
+      $table->foreign('created_by')->references('id')->on('users');
+      $table->integer('updated_by')->unsigned();
+      $table->foreign('updated_by')->references('id')->on('users');
       $table->timestamps();
     });
   }

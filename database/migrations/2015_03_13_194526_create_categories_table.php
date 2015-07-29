@@ -18,6 +18,10 @@ class CreateCategoriesTable extends Migration {
       $table->string('description')->unique();
       $table->string('info');
       $table->string('slug');
+      $table->integer('created_by')->unsigned();
+      $table->foreign('created_by')->references('id')->on('users');
+      $table->integer('updated_by')->unsigned();
+      $table->foreign('updated_by')->references('id')->on('users');
       $table->timestamps();
     });
   }

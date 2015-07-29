@@ -18,6 +18,10 @@ class CreateTownsTable extends Migration {
       $table->integer('state_id')->unsigned();
       $table->foreign('state_id')->references('id')->on('states');
       $table->string('description');
+      $table->integer('created_by')->unsigned();
+      $table->foreign('created_by')->references('id')->on('users');
+      $table->integer('updated_by')->unsigned();
+      $table->foreign('updated_by')->references('id')->on('users');
       $table->timestamps();
     });
   }
