@@ -3,10 +3,9 @@
 use Illuminate\Support\ServiceProvider;
 
 use Auth;
-use App\Image;
-use File;
+use App\Billing;
 
-class ImageDeleteServiceProvider extends ServiceProvider {
+class BillingServiceProvider extends ServiceProvider {
 
   /**
    * Bootstrap the application services.
@@ -17,18 +16,13 @@ class ImageDeleteServiceProvider extends ServiceProvider {
   {
     $id = Auth::id();
 
-    Image::creating(function($model){
+    Billing::creating(function($model){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Image::updating(function($model){
+    Billing::updating(function($model){
       $model->updated_by = $id;
-    });
-
-    Image::deleting(function($image){
-      if(File::isFile($image->path))
-        return File::delete($image->path);
     });
   }
 

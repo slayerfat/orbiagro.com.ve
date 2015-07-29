@@ -1,12 +1,12 @@
-<?php namespace App\Providers;
+<?php namespace App\Providers\Internal;
 
 use Illuminate\Support\ServiceProvider;
 
 use Auth;
-use App\Image;
-use File;
+use App\Bank;
+use App\CardType;
 
-class ImageDeleteServiceProvider extends ServiceProvider {
+class BankAndCardTypeServiceProvider extends ServiceProvider {
 
   /**
    * Bootstrap the application services.
@@ -17,18 +17,22 @@ class ImageDeleteServiceProvider extends ServiceProvider {
   {
     $id = Auth::id();
 
-    Image::creating(function($model){
+    Bank::creating(function($model){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Image::updating(function($model){
+    Bank::updating(function($model){
       $model->updated_by = $id;
     });
 
-    Image::deleting(function($image){
-      if(File::isFile($image->path))
-        return File::delete($image->path);
+    CardType::creating(function($model){
+      $model->created_by = $id;
+      $model->updated_by = $id;
+    });
+
+    CardType::updating(function($model){
+      $model->updated_by = $id;
     });
   }
 
