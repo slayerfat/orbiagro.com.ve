@@ -15,23 +15,23 @@ class BankAndCardTypeServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    Bank::creating(function($model){
+    Bank::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Bank::updating(function($model){
+    Bank::updating(function($model) use($id){
       $model->updated_by = $id;
     });
 
-    CardType::creating(function($model){
+    CardType::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    CardType::updating(function($model){
+    CardType::updating(function($model) use($id){
       $model->updated_by = $id;
     });
   }

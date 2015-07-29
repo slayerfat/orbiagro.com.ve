@@ -15,23 +15,23 @@ class PromosServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    Promotion::creating(function($model){
+    Promotion::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Promotion::updating(function($model){
+    Promotion::updating(function($model) use($id){
       $model->updated_by = $id;
     });
 
-    PromoType::creating(function($model){
+    PromoType::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    PromoType::updating(function($model){
+    PromoType::updating(function($model) use($id){
       $model->updated_by = $id;
     });
   }

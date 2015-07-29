@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 
+use App\User;
+use App\Person;
+
 class NeoTableSeeder extends Seeder {
 
   /**
@@ -16,16 +19,11 @@ class NeoTableSeeder extends Seeder {
     $gender = App\Gender::where('description', 'Masculino')->first();
     $parish = App\Parish::find(1);
     $nationality = App\Nationality::where('description', 'Extrangero')->first();
-    $admin = App\Profile::where('description', 'Administrador')->first();
-    $neo = App\User::create([
-      'name'       => env('APP_USER'),
-      'email'      => env('APP_USER_EMAIL'),
-      'password'   => bcrypt(env('APP_USER_PASSWORD')),
-      'profile_id' => $admin->id
-    ]);
 
-    $person = DB::table('people')->insert([
-      'user_id'        => $neo->id,
+    $user = User::where('name', env('APP_USER'))->firstOrFail();
+
+    $person = Person::create([
+      'user_id'        => $user->id,
       'gender_id'      => $gender->id,
       'nationality_id' => $nationality->id,
       'first_name'     => 'Keanu',
@@ -33,19 +31,20 @@ class NeoTableSeeder extends Seeder {
       'identity_card'  => '10000000',
       'phone'          => '2123332211',
       'birth_date'     => '1968-09-06',
-      'created_at'     => 'current_timestampt',
-      'updated_at'     => 'current_timestampt'
+      'created_at'     => Carbon\Carbon::now(),
+      'updated_at'     => Carbon\Carbon::now(),
+      'created_by'     => $user->id,
+      'updated_by'     => $user->id,
     ]);
 
-    $neo = App\User::where('name', env('APP_USER'))->first();
     $direction = new App\Direction;
 
     $direction->parish_id  = $parish->id;
     $direction->details    = 'Av. Tal, Calle tal.';
-    $direction->created_by = $neo->id;
-    $direction->updated_by = $neo->id;
+    $direction->created_by = $user->id;
+    $direction->updated_by = $user->id;
 
-    $neo->person->direction()->save($direction);
+    $person->direction()->save($direction);
 
     $this->command->info('EL ELEGIDO EXISTE EN EL SISTEMA!');
   }

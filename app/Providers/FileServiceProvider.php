@@ -14,14 +14,14 @@ class FileServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    File::creating(function($model){
+    File::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    File::updating(function($model){
+    File::updating(function($model) use($id){
       $model->updated_by = $id;
     });
   }

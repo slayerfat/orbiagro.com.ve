@@ -16,32 +16,32 @@ class DirDataModelsServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    State::creating(function($model){
+    State::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    State::updating(function($model){
+    State::updating(function($model) use($id){
       $model->updated_by = $id;
     });
 
-    Town::creating(function($model){
+    Town::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Town::updating(function($model){
+    Town::updating(function($model) use($id){
       $model->updated_by = $id;
     });
 
-    Parish::creating(function($model){
+    Parish::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Parish::updating(function($model){
+    Parish::updating(function($model) use($id){
       $model->updated_by = $id;
     });
   }

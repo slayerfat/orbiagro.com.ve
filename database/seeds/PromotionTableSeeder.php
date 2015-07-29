@@ -13,6 +13,7 @@ class PromotionTableSeeder extends Seeder {
   public function run()
   {
     $this->command->info("*** Empezando creacion de Promotion! ***");
+
     $user  = User::where('name', 'tester')->first();
 
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
@@ -27,6 +28,8 @@ class PromotionTableSeeder extends Seeder {
       'static'        => 100,
       'begins'        => Carbon::now()->subYears(4)->toDateString(),
       'ends'          => Carbon::now()->addYears(1)->toDateString(),
+      'created_by'    => $user->id,
+      'updated_by'    => $user->id,
     ]);
 
     // se empieza creado el directorio relacionado con la promo

@@ -16,13 +16,15 @@ class ProductServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
+    if (!$id = Auth::id()) return;
+
     Product::creating(function($model){
-      $model->created_by = Auth::id();
-      $model->updated_by = Auth::id();
+      $model->created_by = $id;
+      $model->updated_by = $id;
     });
 
     Product::updating(function($model){
-      $model->updated_by = Auth::id();
+      $model->updated_by = $id;
     });
 
     Product::deleting(function($model){

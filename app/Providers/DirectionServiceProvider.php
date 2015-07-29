@@ -14,13 +14,15 @@ class DirectionServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
+    if (!$id = Auth::id()) return;
+
     Direction::creating(function($model){
-      $model->created_by = Auth::id();
-      $model->updated_by = Auth::id();
+      $model->created_by = $id;
+      $model->updated_by = $id;
     });
 
     Direction::updating(function($model){
-      $model->updated_by = Auth::id();
+      $model->updated_by = $id;
     });
   }
 

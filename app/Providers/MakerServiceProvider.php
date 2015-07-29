@@ -2,6 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
+use Auth;
 use App\Maker;
 use Storage;
 
@@ -16,13 +17,15 @@ class MakerServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
+    if (!$id = Auth::id()) return;
+
     Maker::creating(function($model){
-      $model->created_by = Auth::id();
-      $model->updated_by = Auth::id();
+      $model->created_by = $id;
+      $model->updated_by = $id;
     });
 
     Maker::updating(function($model){
-      $model->updated_by = Auth::id();
+      $model->updated_by = $id;
     });
 
     Maker::deleting(function($model){

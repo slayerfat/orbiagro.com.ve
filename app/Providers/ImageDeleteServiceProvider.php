@@ -15,18 +15,18 @@ class ImageDeleteServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    Image::creating(function($model){
+    Image::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Image::updating(function($model){
+    Image::updating(function($model) use($id){
       $model->updated_by = $id;
     });
 
-    Image::deleting(function($image){
+    Image::deleting(function($image) use($id){
       if(File::isFile($image->path))
         return File::delete($image->path);
     });

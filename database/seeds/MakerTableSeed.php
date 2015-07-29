@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+
 use App\User;
 use App\Image;
 
@@ -26,10 +27,12 @@ class MakerTableSeeder extends Seeder {
       for ($i=0; $i < 2; $i++) :
         $company = $faker->company();
         $maker = App\Maker::create([
-          'name'   => $company,
-          'slug'   => str_slug($company),
-          'domain' => $faker->domainName(),
-          'url'    => $faker->url(),
+          'name'       => $company,
+          'slug'       => str_slug($company),
+          'domain'     => $faker->domainName(),
+          'url'        => $faker->url(),
+          'created_by' => $user->id,
+          'updated_by' => $user->id,
         ]);
         $maker->sub_categories()->attach($subcategory->id);
 

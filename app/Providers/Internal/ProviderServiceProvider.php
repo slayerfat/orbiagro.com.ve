@@ -14,14 +14,14 @@ class ProviderServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    Provider::creating(function($model){
+    Provider::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Provider::updating(function($model){
+    Provider::updating(function($model) use($id){
       $model->updated_by = $id;
     });
   }

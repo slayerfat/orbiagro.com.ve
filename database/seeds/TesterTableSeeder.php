@@ -13,20 +13,13 @@ class TesterTableSeeder extends Seeder {
   {
     $this->command->info('--- SOLO PARA PRUEBAS ---');
     $this->command->info('--- TESTER ---');
-    $gender = App\Gender::where('description', 'Masculino')->first();
-    $parish = App\Parish::find(1);
-    $nationality = App\Nationality::where('description', 'Venezolano')->first();
-    $profile = App\Profile::where('description', 'Administrador')->first();
-    // fix build #202
-    $tester = new App\User;
-    $tester->name       = 'tester';
-    $tester->email      = 'tester@tester.com';
-    $tester->password   = Hash::make('tester');
-    $tester->profile_id = $profile->id;
-    $tester->created_at = Carbon\Carbon::now();
-    $tester->updated_at = Carbon\Carbon::now();
-    $tester->save();
 
+    $gender      = App\Gender::where('description', 'Masculino')->first();
+    $parish      = App\Parish::find(1);
+    $nationality = App\Nationality::where('description', 'Venezolano')->first();
+    $profile     = App\Profile::where('description', 'Administrador')->first();
+
+    // fix build #202
     $tester = App\User::where('name', 'tester')->first();
 
     $person = new App\Person;
@@ -40,6 +33,8 @@ class TesterTableSeeder extends Seeder {
     $person->birth_date     = '1999-09-09';
     $person->created_at     = Carbon\Carbon::now();
     $person->updated_at     = Carbon\Carbon::now();
+    $person->created_by     = $user->id;
+    $person->updated_by     = $user->id;
     $tester->person()->save($person);
 
     $direction = new App\Direction;
@@ -76,6 +71,8 @@ class TesterTableSeeder extends Seeder {
     $person->birth_date     = '1999-09-09';
     $person->created_at     = Carbon\Carbon::now();
     $person->updated_at     = Carbon\Carbon::now();
+    $person->created_by     = $user->id;
+    $person->updated_by     = $user->id;
     $tester->person()->save($person);
 
     $direction = new App\Direction;

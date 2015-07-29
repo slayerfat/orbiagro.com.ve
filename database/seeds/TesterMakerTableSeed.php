@@ -28,6 +28,8 @@ class TesterMakerTableSeed extends Seeder {
           'slug'   => str_slug($company),
           'domain' => $faker->domainName(),
           'url'    => $faker->url(),
+          'created_by' => $user->id,
+          'updated_by' => $user->id,
         ]);
         $maker->sub_categories()->attach($subcategory->id);
 

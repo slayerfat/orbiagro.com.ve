@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\User;
+
 class PromoTypesTableSeeder extends Seeder {
 
   /**
@@ -12,6 +14,7 @@ class PromoTypesTableSeeder extends Seeder {
   public function run()
   {
     $this->command->info("*** Empezando creacion de PromoType! ***");
+
     $types = [
       'Producto sin imagen',
       '1:1 300x300',
@@ -26,12 +29,21 @@ class PromoTypesTableSeeder extends Seeder {
       'primavera',
     ];
 
+    $user   = User::where('name', 'tester')->first();
+
+    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+
     foreach($types as $type):
+      
       $type = App\PromoType::create([
         'description' => $type,
+        'created_by'  => $user->id,
+        'updated_by'  => $user->id,
       ]);
+
       $this->command->info("promotion type: {$type->description}.");
     endforeach;
+
     $this->command->info('tipos de promociones completa.');
   }
 

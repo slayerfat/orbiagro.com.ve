@@ -16,7 +16,6 @@ class TesterDatabaseSeeder extends Seeder {
 
     $this->command->info("*** Empezando Migracion de TESTER! ***");
 
-    $this->call('ProfileTableSeeder');
     $this->call('GenderTableSeeder');
     $this->call('NationalityTableSeeder');
     $this->call('TesterStateTableSeeder');

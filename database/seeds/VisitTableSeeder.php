@@ -16,6 +16,8 @@ class VisitTableSeeder extends Seeder {
     $visit = new Visit;
     $visit->user_id = $user->id;
     $visit->total = 1;
+    $visit->created_by = $user->id;
+    $visit->updated_by = $user->id;
     $product->visits()->save($visit);
 
     $this->command->info('Creacion de visita completada.');

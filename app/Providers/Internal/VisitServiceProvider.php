@@ -14,14 +14,14 @@ class VisitServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    Visit::creating(function($model){
+    Visit::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Visit::updating(function($model){
+    Visit::updating(function($model) use($id){
       $model->updated_by = $id;
     });
   }

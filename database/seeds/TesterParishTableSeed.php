@@ -13,9 +13,9 @@ class TesterParishTableSeeder extends Seeder {
   {
     $this->command->info("*** Empezando creacion de TESTER: Parish! ***");
     DB::statement("INSERT INTO parishes
-      (town_id, description, created_at, updated_at)
+      (town_id, description, created_at, updated_at, created_by, updated_by)
       VALUES
-      (1, 'Altagracia', current_timestamp, current_timestamp);");
+      (1, 'Altagracia', current_timestamp, current_timestamp, 1, 1);");
     $this->command->info('Las parroquias de venezuela fueron creadas por el elegido.');
   }
 

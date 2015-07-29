@@ -17,41 +17,41 @@ class ProductsDataModelsServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    Characteristic::creating(function($model){
+    Characteristic::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Characteristic::updating(function($model){
+    Characteristic::updating(function($model) use($id){
       $model->updated_by = $id;
     });
 
-    Feature::creating(function($model){
+    Feature::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Feature::updating(function($model){
+    Feature::updating(function($model) use($id){
       $model->updated_by = $id;
     });
 
-    MechanicalInfo::creating(function($model){
+    MechanicalInfo::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    MechanicalInfo::updating(function($model){
+    MechanicalInfo::updating(function($model) use($id){
       $model->updated_by = $id;
     });
 
-    Nutritional::creating(function($model){
+    Nutritional::creating(function($model) use($id){
       $model->created_by = $id;
       $model->updated_by = $id;
     });
 
-    Nutritional::updating(function($model){
+    Nutritional::updating(function($model) use($id){
       $model->updated_by = $id;
     });
   }

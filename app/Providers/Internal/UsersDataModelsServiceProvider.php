@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 
 use Auth;
-use App\Profile;
+use App\Gender;
 use App\Nationality;
 use App\Person;
 
@@ -16,34 +16,21 @@ class UsersDataModelsServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    $id = Auth::id();
+    if (!$id = Auth::id()) return;
 
-    Profile::creating(function($model){
-      $model->created_by = $id;
-      $model->updated_by = $id;
-    });
+    $models = ['Gender', 'Nationality', 'Person'];
 
-    Profile::updating(function($model){
-      $model->updated_by = $id;
-    });
+    foreach ($models as $m)
+    {
+      $m::creating(function($model) use($id){
+        $model->created_by = $id;
+        $model->updated_by = $id;
+      });
 
-    Nationality::creating(function($model){
-      $model->created_by = $id;
-      $model->updated_by = $id;
-    });
-
-    Nationality::updating(function($model){
-      $model->updated_by = $id;
-    });
-
-    Person::creating(function($model){
-      $model->created_by = $id;
-      $model->updated_by = $id;
-    });
-
-    Person::updating(function($model){
-      $model->updated_by = $id;
-    });
+      $m::updating(function($model) use($id){
+        $model->updated_by = $id;
+      });
+    }
   }
 
   /**

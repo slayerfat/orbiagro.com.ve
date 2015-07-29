@@ -12,11 +12,12 @@ class DatabaseSeeder extends Seeder {
    */
   public function run()
   {
+
+    // Telling Eloquent to allow mass assignment.
     Model::unguard();
 
     $this->command->info("*** Empezando Migracion! ***");
 
-    $this->call('ProfileTableSeeder');
     $this->call('GenderTableSeeder');
     $this->call('NationalityTableSeeder');
     $this->call('StateTableSeeder');
