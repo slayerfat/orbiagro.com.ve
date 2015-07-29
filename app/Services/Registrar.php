@@ -32,7 +32,7 @@ class Registrar implements RegistrarContract {
    */
   public function create(array $data)
   {
-    $profile      = Profile::where('description', 'Desactivado')->first();
+    $profile      = Profile::where('description', 'Desactivado')->firstOrFail();
     $confirmation = new UserConfirmation(['data' => true]);
 
     // nuevo usuario

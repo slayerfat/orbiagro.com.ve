@@ -15,16 +15,20 @@
 
   @unless(Request::input('page'))
     <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          @include('category.addons.gallery-slick', ['title' => 'Categorias', 'cats' => $cats])
+      @unless($cats->isEmpty())
+        <div class="row">
+          <div class="col-xs-12">
+            @include('category.addons.gallery-slick', ['title' => 'Categorias', 'cats' => $cats])
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          @include('category.addons.gallery-slick', ['title' => 'Rubros', 'cats' => $subCats])
+      @endunless
+      @unless($subCats->isEmpty())
+        <div class="row">
+          <div class="col-xs-12">
+            @include('category.addons.gallery-slick', ['title' => 'Rubros', 'cats' => $subCats])
+          </div>
         </div>
-      </div>
+      @endunless
     </div>
 
     {{-- TODO --}}
