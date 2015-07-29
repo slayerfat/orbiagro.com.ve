@@ -65,9 +65,9 @@ class ProductTableSeeder extends Seeder {
     $this->command->info("map details: 10.492315, -66.932899");
 
     $map = new MapDetail;
-    $map->latitude = 10.492315;
-    $map->longitude = -66.932899;
-    $map->zoom = 12;
+    $map->latitude   = 10.492315;
+    $map->longitude  = -66.932899;
+    $map->zoom       = 12;
     $map->created_by = $user->id;
     $map->updated_by = $user->id;
 

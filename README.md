@@ -8,7 +8,7 @@ en construcción.
 
 `http://forumsarchive.laravel.io/viewtopic.php?id=13280`
 
-`php artisan migrate:refresh --database codeception`
+`php artisan migrate:refresh --database codeception --env="testing"`
 
 `php artisan db:seed --class TesterDatabaseSeeder --database codeception`
 

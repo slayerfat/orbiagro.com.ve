@@ -82,6 +82,8 @@ class CreateProfilesTable extends Migration {
     $model->created_at = Carbon\Carbon::now();
     $model->updated_at = Carbon\Carbon::now();
 
+    Log::info('Creando nuevo usuario en seeding.', ['ambiente' => app()->environment()]);
+
     if (app()->environment() == 'testing')
     {
       $model->name       = 'tester';
@@ -92,7 +94,7 @@ class CreateProfilesTable extends Migration {
     {
       $model->name       = env('APP_USER');
       $model->email      = env('APP_USER_EMAIL');
-      $model->password   = env('APP_USER_PASSWORD');
+      $model->password   = Hash::make(env('APP_USER_PASSWORD'));
     }
 
     $model->save();
