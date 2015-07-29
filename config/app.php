@@ -152,11 +152,12 @@ return [
     'App\Providers\RouteServiceProvider',
     'App\Providers\ViewServiceProvider',
     'App\Providers\CategoryServiceProvider',
-    'App\Providers\SubCategoryServiceProvider',
+    'App\Providers\DirectionServiceProvider',
     'App\Providers\ImageDeleteServiceProvider',
     'App\Providers\MakerServiceProvider',
     'App\Providers\ProductServiceProvider',
     'App\Providers\PromoServiceProvider',
+    'App\Providers\SubCategoryServiceProvider',
 
     'Laracasts\Flash\FlashServiceProvider',
     'Artesaos\SEOTools\Providers\SEOToolsServiceProvider'

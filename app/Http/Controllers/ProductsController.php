@@ -22,7 +22,7 @@ class ProductsController extends Controller {
 
   use SEOToolsTrait;
 
-  public $user, $userId;
+  public $user;
 
   /**
    * Create a new controller instance.
@@ -34,7 +34,6 @@ class ProductsController extends Controller {
     $this->middleware('auth', ['except' => ['index', 'show']]);
     $this->middleware('user.unverified', ['except' => ['index', 'show']]);
     $this->user   = Auth::user();
-    $this->userId = Auth::id();
   }
 
   /**
@@ -137,17 +136,11 @@ class ProductsController extends Controller {
   public function store(ProductRequest $request, Upload $upload)
   {
     // se crean los modelos
-    $upload->userId = $this->userId;
+    $upload->userId = Auth::id();
     $data       = $request->all();
     $product    = new Product($data);
     $dir        = new Direction($data);
     $map        = new MapDetail($data);
-
-    // info adicional
-    $product->created_by = $this->userId;
-    $product->updated_by = $this->userId;
-    $dir->updated_by = $this->userId;
-    $dir->created_by = $this->userId;
 
     // se guardan los modelos
     $this->user->products()->save($product);
@@ -233,7 +226,7 @@ class ProductsController extends Controller {
       flash()->error('Ud. no tiene permisos para esta accion.');
       return redirect()->action('ProductsController@show', $id);
     endif;
-    $product->updated_by = $this->userId;
+
     $product->update($request->all());
 
     // modificado porque el modelo no queria
@@ -241,7 +234,7 @@ class ProductsController extends Controller {
     $direction = $product->direction;
     $direction->parish_id = $request->input('parish_id');
     $direction->details = $request->input('details');
-    $direction->updated_by = $this->userId;
+
     $direction->save();
 
     if(!$map = $direction->map)
@@ -287,7 +280,7 @@ class ProductsController extends Controller {
    */
   public function forceDestroy($id)
   {
-    $product = Product::where('id', $id)->withTrashed()->firstOrFail();
+    $product = Product::withTrashed()->findOrFail($id);
 
     if(!$this->user->isOwnerOrAdmin($product->user_id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
@@ -308,7 +301,7 @@ class ProductsController extends Controller {
    */
   public function restore($id)
   {
-    $product = Product::where('id', $id)->withTrashed()->firstOrFail();
+    $product = Product::withTrashed()->findOrFail($id);
 
     if(!$this->user->isOwnerOrAdmin($product->user_id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');

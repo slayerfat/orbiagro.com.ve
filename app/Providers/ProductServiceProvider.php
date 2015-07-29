@@ -2,6 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 
+use Auth;
+
 use App\Product;
 use Storage;
 
@@ -14,6 +16,15 @@ class ProductServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
+    Product::creating(function($model){
+      $model->created_by = Auth::id();
+      $model->updated_by = Auth::id();
+    });
+
+    Product::updating(function($model){
+      $model->updated_by = Auth::id();
+    });
+
     Product::deleting(function($model){
       if ($this->forceDeleting = $model->isForceDeleting())
       {
