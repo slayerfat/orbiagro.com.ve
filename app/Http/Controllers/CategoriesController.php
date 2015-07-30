@@ -87,7 +87,7 @@ class CategoriesController extends Controller {
 
     $upload->createImage($request->file('image'), $this->cat);
 
-    flash()->success('Rubro creado exitosamente.');
+    flash()->success('Categoria creada exitosamente.');
     return redirect()->action('CategoriesController@index');
   }
 

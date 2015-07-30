@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
-use Auth;
+// use Auth;
 use App\Image;
 use File;
 
@@ -15,18 +15,18 @@ class ImageDeleteServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    if (!$id = Auth::id()) return;
+    // if (!$id = Auth::id()) return;
+    //
+    // Image::creating(function($model) use($id){
+    //   $model->created_by = $id;
+    //   $model->updated_by = $id;
+    // });
+    //
+    // Image::updating(function($model) use($id){
+    //   $model->updated_by = $id;
+    // });
 
-    Image::creating(function($model) use($id){
-      $model->created_by = $id;
-      $model->updated_by = $id;
-    });
-
-    Image::updating(function($model) use($id){
-      $model->updated_by = $id;
-    });
-
-    Image::deleting(function($image) use($id){
+    Image::deleting(function($image){
       if(File::isFile($image->path))
         return File::delete($image->path);
     });

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
-use Auth;
+// use Auth;
 use App\SubCategory;
 use Storage;
 
@@ -15,16 +15,16 @@ class SubCategoryServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    if (!$id = Auth::id()) return;
-
-    SubCategory::creating(function($model){
-      $model->created_by = $id;
-      $model->updated_by = $id;
-    });
-
-    SubCategory::updating(function($model){
-      $model->updated_by = $id;
-    });
+    // if (!$id = Auth::id()) return;
+    //
+    // SubCategory::creating(function($model){
+    //   $model->created_by = $id;
+    //   $model->updated_by = $id;
+    // });
+    //
+    // SubCategory::updating(function($model){
+    //   $model->updated_by = $id;
+    // });
 
     SubCategory::deleting(function($model){
       $this->image = $model->image;

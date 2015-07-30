@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
-use Auth;
+// use Auth;
 use App\Category;
 use Storage;
 
@@ -15,16 +15,16 @@ class CategoryServiceProvider extends ServiceProvider {
    */
   public function boot()
   {
-    if (!$id = Auth::id()) return;
-
-    Category::creating(function($model){
-      $model->created_by = $id;
-      $model->updated_by = $id;
-    });
-
-    Category::updating(function($model){
-      $model->updated_by = $id;
-    });
+    // if (!$id = Auth::id()) return;
+    //
+    // Category::creating(function($model){
+    //   $model->created_by = $id;
+    //   $model->updated_by = $id;
+    // });
+    //
+    // Category::updating(function($model){
+    //   $model->updated_by = $id;
+    // });
 
     Category::deleting(function($model){
       $this->image = $model->image;

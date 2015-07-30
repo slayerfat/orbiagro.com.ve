@@ -75,7 +75,7 @@ class ProductsController extends Controller {
 
     $visitedProducts = $visits->getVisitedProducts();
 
-    $this->seo()->setTitle('Productos en orbiagro.com.ve');
+    $this->seo()->setTitle("Productos de {$subCats->first()->category->description} en orbiagro.com.ve");
     $this->seo()->setDescription("Productos y Articulos de {$subCats->first()->category->description} en existencia en orbiagro.com.ve");
     $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
 
@@ -100,7 +100,7 @@ class ProductsController extends Controller {
 
     $visitedProducts = $visits->getVisitedProducts();
 
-    $this->seo()->setTitle('Productos en orbiagro.com.ve');
+    $this->seo()->setTitle("Productos de {$products->first()->sub_category->description} en orbiagro.com.ve");
     $this->seo()->setDescription("Productos y Articulos de {$products->first()->sub_category->description} en existencia en orbiagro.com.ve");
     $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
 
