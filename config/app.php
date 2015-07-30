@@ -136,6 +136,9 @@ return [
     'Illuminate\Validation\ValidationServiceProvider',
     'Illuminate\View\ViewServiceProvider',
 
+    // 5.1
+    'Illuminate\Broadcasting\BroadcastServiceProvider',
+
     /**
      * Custom Service Providers:
      */
