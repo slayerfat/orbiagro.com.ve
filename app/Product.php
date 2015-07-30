@@ -1,14 +1,17 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Mamarrachismo\CheckDollar as Dollar;
 use App\Mamarrachismo\ModelValidation;
 use App\Mamarrachismo\Transformer;
 
+use App\Mamarrachismo\CheckDollar as Dollar;
+
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Product extends Model {
 
-  use SoftDeletes;
+  use SoftDeletes, InternalDBManagement;
 
   protected $fillable = [
     'user_id',

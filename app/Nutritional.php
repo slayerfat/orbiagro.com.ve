@@ -2,7 +2,11 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Nutritional extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['due'];
 

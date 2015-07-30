@@ -3,7 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class SubCategory extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['category_id', 'description', 'info'];
 

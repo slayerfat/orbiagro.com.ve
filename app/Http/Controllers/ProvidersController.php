@@ -50,8 +50,6 @@ class ProvidersController extends Controller {
   public function store(ProviderRequest $request)
   {
     $provider = new Provider($request->all());
-    $provider->created_by = Auth::id();
-    $provider->updated_by = Auth::id();
 
     $provider->save();
 
@@ -94,7 +92,7 @@ class ProvidersController extends Controller {
   public function update($id, ProviderRequest $request)
   {
     $provider = Provider::findOrFail($id);
-    $provider->updated_by = Auth::id();
+
     $provider->update($request->all());
 
     flash()->success('Proveedor actualizado exitosamente.');

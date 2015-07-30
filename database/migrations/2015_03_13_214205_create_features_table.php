@@ -19,11 +19,11 @@ class CreateFeaturesTable extends Migration {
       $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
       $table->string('title', 40);
       $table->string('description');
-      $table->timestamps();
       $table->integer('created_by')->unsigned();
       $table->foreign('created_by')->references('id')->on('users');
       $table->integer('updated_by')->unsigned();
       $table->foreign('updated_by')->references('id')->on('users');
+      $table->timestamps();
     });
   }
 

@@ -112,7 +112,7 @@ class PeopleController extends Controller {
     $user->person->gender_id = $request->input('gender_id');
     $user->person->nationality_id = $request->input('nationality_id');
 
-    $user->person->save();
+    $user->person->update();
     flash()->success('Los datos personales han sido actualizados con exito.');
     return redirect()->action('UsersController@show', $user->name);
   }

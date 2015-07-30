@@ -274,8 +274,6 @@ class Upload {
   private function createImageModel(array $array, $model)
   {
     $image = new Image($array);
-    $image->created_by = $this->userId;
-    $image->updated_by = $this->userId;
 
     switch (get_class($model)) :
 
@@ -316,8 +314,6 @@ class Upload {
   private function createFileModel(array $array, $model)
   {
     $file = new File($array);
-    $file->created_by = $this->userId;
-    $file->updated_by = $this->userId;
 
     switch (get_class($model)) :
 

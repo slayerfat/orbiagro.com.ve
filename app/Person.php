@@ -3,7 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Person extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = [
     'first_name',

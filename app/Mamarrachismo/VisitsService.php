@@ -219,10 +219,6 @@ class VisitsService {
           $visit = new Visit;
           $visit->total = $total;
           $visit->user_id = Auth::user()->id;
-
-          // por alguna razon VisitServiceProvider no se dispara correctamente
-          $visit->created_by = Auth::user()->id;
-          $visit->updated_by = Auth::user()->id;
           $product->visits()->save($visit);
         else:
           $visit = Auth::user()->visits()->where('visitable_id', $product->id)->first();

@@ -37,34 +37,19 @@ trait InternalDBManagement
       return parent::save();
     }
 
+    // se asigna el id
     $this->setUserid();
-    $this->attributes['created_by'] = $this->userId;
-    $this->attributes['updated_by'] = $this->userId;
-    parent::save();
-  }
 
-  /**
-   * se modifica el metodo save() de la clase para poder
-   * automaticamente añadir los atributos adicionales
-   * created_by y updated_by a la entidad.
-   *
-   * @method save
-   * @param  array $options Illuminate\Database\Eloquent\Model::save()
-   */
-  public function update(array $options = [])
-  {
-    // si la aplicacion esta por consola (artisan u otro)
-    // simplemente se guarda de forma normal.
-    if (app()->runningInConsole())
+    // si el modelo no exixte, se asigna el creado por
+    if (!$this->exists)
     {
-      return parent::update();
+      $this->attributes['created_by'] = $this->userId;
     }
 
-    dd('asd');
-
-    $this->setUserid();
+    // si existe o no, igual necesita un actualizado por
     $this->attributes['updated_by'] = $this->userId;
-    parent::update();
+
+    parent::save();
   }
 
   /**

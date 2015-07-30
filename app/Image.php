@@ -4,7 +4,11 @@ use Illuminate\Database\Eloquent\Model;
 use Storage;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Image extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['path', 'mime', 'alt'];
 

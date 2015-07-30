@@ -78,8 +78,6 @@ class MechanicalInfoController extends Controller {
     endif;
 
     $this->mech = new MechanicalInfo($request->all());
-    $this->mech->created_by = $this->userId;
-    $this->mech->updated_by = $this->userId;
 
     $product->mechanical()->save($this->mech);
 
@@ -120,7 +118,6 @@ class MechanicalInfoController extends Controller {
       return redirect()->action('ProductsController@show', $this->mech->product->slug);
     endif;
 
-    $this->mech->updated_by = $this->userId;
     $this->mech->update($request->all());
 
     flash('Información Mecanica Actualizada exitosamente.');

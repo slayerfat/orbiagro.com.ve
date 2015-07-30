@@ -86,8 +86,6 @@ class FeaturesController extends Controller {
 
     $this->feature->title       = $request->input('title');
     $this->feature->description = $request->input('description');
-    $this->feature->created_by  = $this->userId;
-    $this->feature->updated_by  = $this->userId;
 
     $product->features()->save($this->feature);
 
@@ -165,7 +163,6 @@ class FeaturesController extends Controller {
       return redirect()->action('ProductsController@show', $product->slug);
     endif;
 
-    $this->feature->updated_by = $this->userId;
     $this->feature->update($request->all());
     flash('El Distintivo ha sido actualizado correctamente.');
 

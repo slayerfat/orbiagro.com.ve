@@ -3,7 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Maker extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['name', 'domain', 'url'];
 

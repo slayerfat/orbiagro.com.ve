@@ -2,7 +2,11 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Parish extends Model {
+
+  use InternalDBManagement;
 
   /**
    * The attributes excluded from the model's JSON form.
