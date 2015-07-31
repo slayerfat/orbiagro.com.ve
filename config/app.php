@@ -142,8 +142,9 @@ return [
     /**
      * Custom Service Providers:
      */
-    'Illuminate\Html\HtmlServiceProvider',
+    // 'Illuminate\Html\HtmlServiceProvider',
     'Jenssegers\Date\DateServiceProvider',
+    Collective\Html\HtmlServiceProvider::class,
 
     /*
      * Application Service Providers...
@@ -224,8 +225,10 @@ return [
     /**
      * Custom Aliases:
      */
-    'Form'      => 'Illuminate\Html\FormFacade',
-    'Html'      => 'Illuminate\Html\HtmlFacade',
+    // 'Form'      => 'Illuminate\Html\FormFacade',
+    // 'Html'      => 'Illuminate\Html\HtmlFacade',
+    'Form'      => Collective\Html\FormFacade::class,
+    'Html'      => Collective\Html\HtmlFacade::class,
     'Flash'     => 'Laracasts\Flash\Flash',
     'Faker'     => 'Faker\Factory',
     'Date'      => 'Jenssegers\Date\Date',
