@@ -11,14 +11,11 @@ class VisitTableSeeder extends Seeder {
   {
     $this->command->info("*** Empezando creacion de Visits! ***");
 
-    $user = User::first();
     $product = Product::first();
-    $visit = new Visit;
-    $visit->user_id = $user->id;
-    $visit->total = 1;
-    $visit->created_by = $user->id;
-    $visit->updated_by = $user->id;
-    $product->visits()->save($visit);
+
+    factory(App\Visit::class, 3)->make()->each(function($visit) use($product){
+      $product->visits()->save($visit);
+    });
 
     $this->command->info('Creacion de visita completada.');
   }

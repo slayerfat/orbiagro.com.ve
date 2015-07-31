@@ -33,7 +33,7 @@ $factory->define(App\Billing::class, function ($faker) use($user){
     'bank_id'      => 1,
     'card_type_id' => 1,
     'card_number'  => $faker->creditCardNumber(),
-    'bank_account' => $faker->bankAccountNumber(),
+    'bank_account' => $faker->uuid,
     'expiration'   => $faker->creditCardExpirationDateString(),
     'comments'     => $faker->text(),
     'created_by'   => $user->id,
@@ -117,10 +117,10 @@ $factory->define(App\Person::class, function ($faker) use($user){
 
 $factory->define(App\Direction::class, function ($faker) use($user){
   return [
-    'parish_id'      => 1,
-    'details'        => $faker->streetAddress,
-    'created_by'     => $user->id,
-    'updated_by'     => $user->id,
+    'parish_id'  => 1,
+    'details'    => $faker->streetAddress,
+    'created_by' => $user->id,
+    'updated_by' => $user->id,
   ];
 });
 
@@ -151,7 +151,7 @@ $factory->define(App\MapDetail::class, function ($faker) use($user){
 
 $factory->define(App\Promotion::class, function ($faker) use($user){
   $number = rand(1, 100);
-  $promoType = PromoType::where('description', 'primavera')->first();
+  $promoType = App\PromoType::where('description', 'primavera')->first();
   return [
     'title'         => $faker->sentence(5),
     'promo_type_id' => $promoType->id,
@@ -159,6 +159,8 @@ $factory->define(App\Promotion::class, function ($faker) use($user){
     'static'        => $number,
     'begins'        => Carbon\Carbon::now()->subYears(4)->toDateString(),
     'ends'          => Carbon\Carbon::now()->addYears(1)->toDateString(),
+    'created_by'    => $user->id,
+    'updated_by'    => $user->id,
   ];
 });
 
@@ -186,8 +188,8 @@ $factory->define(App\Provider::class, function ($faker) use($user){
 
 $factory->define(App\Visit::class, function ($faker) use($user){
   return [
-    'user_id' => App\User::random()->first()->id,
-    'total' => rand(1, 100),
+    'user_id'    => App\User::random()->first()->id,
+    'total'      => rand(1, 100),
     'created_by' => $user->id,
     'updated_by' => $user->id,
   ];
