@@ -140,8 +140,13 @@ class Upload {
    *
    * @return boolean
    */
-  public function createDefaultImage($path, $model)
+  public function createDefaultImage($path = null, $model)
   {
+    if ($path == null && isset($this->path))
+    {
+      $path = $this->path;
+    }
+
     // el nombre del archivo
     $name = date('Ymdhmmss-').str_random(20);
     $path = "{$path}/{$name}.gif";

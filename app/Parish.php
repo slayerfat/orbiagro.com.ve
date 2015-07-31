@@ -3,10 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class Parish extends Model {
 
-  use InternalDBManagement;
+  use InternalDBManagement, CanSearchRandomly;
 
   /**
    * The attributes excluded from the model's JSON form.

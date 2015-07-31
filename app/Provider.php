@@ -3,10 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class Provider extends Model {
 
-  use InternalDBManagement;
+  use InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = [
     'name',
@@ -30,18 +31,6 @@ class Provider extends Model {
   // --------------------------------------------------------------------------
   // Scopes
   // --------------------------------------------------------------------------
-  public function scopeRandom($query)
-  {
-    if (env('APP_ENV') == 'ntesting')
-    {
-      $query->orderByRaw('RANDOM()');
-    }
-    else
-    {
-      $query->orderByRaw('RAND()');
-    }
-  }
-
 
   // --------------------------------------------------------------------------
   // Relaciones

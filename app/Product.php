@@ -8,10 +8,11 @@ use App\Mamarrachismo\CheckDollar as Dollar;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class Product extends Model {
 
-  use SoftDeletes, InternalDBManagement;
+  use SoftDeletes, InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = [
     'user_id',
@@ -86,15 +87,6 @@ class Product extends Model {
   // --------------------------------------------------------------------------
   // Scopes
   // --------------------------------------------------------------------------
-  public function scopeRandom($query)
-  {
-    if (env('APP_ENV') == 'ntesting') {
-      $query->orderByRaw('RANDOM()');
-    }else{
-      $query->orderByRaw('RAND()');
-    }
-  }
-
   public function scopeLatest($query)
   {
     return $query->orderBy('updated_at', 'desc');

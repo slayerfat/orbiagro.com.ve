@@ -23,22 +23,22 @@ class DatabaseSeeder extends Seeder {
     $this->call('StateTableSeeder');
     $this->call('TownTableSeeder');
     $this->call('ParishTableSeeder');
-    $this->call('NeoTableSeeder');
+    $this->call('PeopleTableSeeder');
     $this->call('CategoryTableSeeder');
     $this->call('SubCategoryTableSeeder');
     $this->call('MakerTableSeeder');
     $this->call('ProviderTableSeed');
     $this->call('ProductTableSeeder');
-    $this->call('FeatureTableSeeder');
-    $this->call('CharacteristicTableSeeder');
-    $this->call('NutritionalTableSeeder');
-    $this->call('MechanicalInfoTableSeeder');
+    // $this->call('FeatureTableSeeder');
+    // $this->call('CharacteristicTableSeeder');
+    // $this->call('NutritionalTableSeeder');
+    // $this->call('MechanicalInfoTableSeeder');
     $this->call('BankTableSeeder');
     $this->call('CardTypeTableSeeder');
     $this->call('BillingTableSeeder');
     $this->call('PurchaseTableSeeder');
     $this->call('VisitTableSeeder');
-    $this->call('ImagesTableSeeder');
+    // $this->call('ImagesTableSeeder');
     $this->call('PromoTypesTableSeeder');
     $this->call('ProductProviderTableSeed');
     $this->call('PromotionTableSeeder');
@@ -46,6 +46,9 @@ class DatabaseSeeder extends Seeder {
     $this->call('SubCategoryImageTableSeeder');
 
     $this->command->info("*** Migracion terminada! ***");
+
+    // Telling Eloquent to not allow mass assignment.
+    Model::reguard();
   }
 
 }

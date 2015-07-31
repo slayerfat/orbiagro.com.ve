@@ -3,10 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class Promotion extends Model {
 
-  use InternalDBManagement;
+  use InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = [
     'title',
@@ -94,14 +95,6 @@ class Promotion extends Model {
   // --------------------------------------------------------------------------
   // Scopes
   // --------------------------------------------------------------------------
-  public function scopeRandom($query)
-  {
-    if (env('APP_ENV') == 'ntesting') {
-      $query->orderByRaw('RANDOM()');
-    }else{
-      $query->orderByRaw('RAND()');
-    }
-  }
 
   // --------------------------------------------------------------------------
   // Relaciones

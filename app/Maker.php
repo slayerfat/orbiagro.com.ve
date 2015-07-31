@@ -4,10 +4,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class Maker extends Model {
 
-  use InternalDBManagement;
+  use InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = ['name', 'domain', 'url'];
 
@@ -54,10 +55,6 @@ class Maker extends Model {
   // --------------------------------------------------------------------------
   // Belongs to Many
   // --------------------------------------------------------------------------
-  public function sub_categories()
-  {
-    return $this->belongsToMany('App\SubCategory');
-  }
 
   // --------------------------------------------------------------------------
   // Polymorphic
