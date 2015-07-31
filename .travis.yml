@@ -4,3 +4,4 @@ php:
 
 before_script:
   - composer install --no-interaction
+  - touch storage/app/db.sqlite

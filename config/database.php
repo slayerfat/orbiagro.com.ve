@@ -48,13 +48,13 @@ return [
 
     'sqlite' => [
       'driver'   => 'sqlite',
-      'database' => __DIR__.'/../tests/_data/db.sqlite',
+      'database' => __DIR__.'/../storage/app/db.sqlite',
       'prefix'   => '',
     ],
 
     'codeception'  => [
         'driver'   => 'sqlite',
-        'database' => __DIR__.'/../tests/_data/db.sqlite',
+        'database' => __DIR__.'/../storage/app/db.sqlite',
         'prefix'   => '',
     ],
 
