@@ -32,7 +32,7 @@ class Provider extends Model {
   // --------------------------------------------------------------------------
   public function scopeRandom($query)
   {
-    if (env('APP_ENV') == 'testing')
+    if (env('APP_ENV') == 'ntesting')
     {
       $query->orderByRaw('RANDOM()');
     }
