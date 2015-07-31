@@ -17,10 +17,8 @@ $faker = Faker\Factory::create('es_ES');
 // usuario principal
 $user = App\User::where('name', env('APP_USER'))->first();
 
-// perfil del usuario
-$profileId = App\Profile::where('description', 'Usuario')->firstOrFail()->id;
-
-$factory->define(App\User::class, function ($faker) use($profileId){
+$factory->define(App\User::class, function ($faker) {
+  $profileId = App\Profile::where('description', 'Usuario')->firstOrFail()->id;
   return [
     'name'           => $faker->name,
     'email'          => $faker->email,
@@ -46,9 +44,8 @@ $factory->defineAs(App\Bank::class, 'sinBanco', function ($faker) use ($factory)
 
 $factory->define(App\Billing::class, function ($faker) use($user){
   return [
-    'user_id'      => App\User::all()->random()->id,
-    'bank_id'      => App\Bank::all()->random()->id,
-    'card_type_id' => App\CardType::all()->random()->id,
+    'bank_id'      => 1,
+    'card_type_id' => 1,
     'card_number'  => $faker->creditCardNumber(),
     'bank_account' => $faker->bankAccountNumber(),
     'expiration'   => $faker->creditCardExpirationDateString(),
@@ -121,7 +118,7 @@ $factory->define(App\Person::class, function ($faker) use($user){
     'gender_id'      => 1,
     'nationality_id' => 1,
     'first_name'     => $faker->firstName,
-    'first_surname'  => $faker->firstName,
+    'first_surname'  => $faker->lastName,
     'identity_card'  => rand(99999, 99999999),
     'phone'          => $faker->phoneNumber,
     'birth_date'     => $faker->date,
@@ -135,7 +132,7 @@ $factory->define(App\Person::class, function ($faker) use($user){
 $factory->define(App\Direction::class, function ($faker) use($user){
   return [
     'parish_id'      => 1,
-    'details'        => $faker->sentence,
+    'details'        => $faker->streetAddress,
     'created_by'     => $user->id,
     'updated_by'     => $user->id,
   ];
@@ -151,6 +148,51 @@ $factory->define(App\Product::class, function ($faker) use($user){
     'description'     => $faker->text(),
     'price'           => $faker->randomFloat(2, 100, 9999999999),
     'quantity'        => $faker->randomDigitNotNull(),
+    'created_by'      => $user->id,
+    'updated_by'      => $user->id,
+  ];
+});
+
+$factory->define(App\MapDetail::class, function ($faker) use($user){
+  return [
+    'latitude'   => 10.492315,
+    'longitude'  => -66.932899,
+    'zoom'       => rand(5, 12),
+    'created_by' => $user->id,
+    'updated_by' => $user->id,
+  ];
+});
+
+$factory->define(App\Promotion::class, function ($faker) use($user){
+  $number = rand(1, 100);
+  $promoType = PromoType::where('description', 'primavera')->first();
+  return [
+    'title'         => $faker->words,
+    'promo_type_id' => $promoType->id,
+    'percentage'    => $number / 10,
+    'static'        => $number,
+    'begins'        => Carbon::now()->subYears(4)->toDateString(),
+    'ends'          => Carbon::now()->addYears(1)->toDateString(),
+  ];
+});
+
+$factory->define(App\Provider::class, function ($faker) use($user){
+  return [
+    'name'            => $faker->company,
+    'url'             => $faker->url,
+    'contact_name'    => $faker->name,
+    'contact_title'   => $faker->title,
+    'contact_email'   => $faker->safeEmail,
+    'contact_phone_1' => $faker->phoneNumber,
+    'contact_phone_2' => $faker->phoneNumber,
+    'contact_phone_3' => $faker->phoneNumber,
+    'contact_phone_4' => $faker->phoneNumber,
+    'email'           => $faker->safeEmail,
+    'phone_1'         => $faker->phoneNumber,
+    'phone_2'         => $faker->phoneNumber,
+    'phone_3'         => $faker->phoneNumber,
+    'phone_4'         => $faker->phoneNumber,
+    'trust'           => rand(1, 100),
     'created_by'      => $user->id,
     'updated_by'      => $user->id,
   ];

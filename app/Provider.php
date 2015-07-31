@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Mamarrachismo\ModelValidation;
+
 use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
 
@@ -27,6 +29,25 @@ class Provider extends Model {
     'phone_4',
     'trust'
   ];
+
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
+  public function setNameAttribute($value)
+  {
+    $this->attributes['name'] = ModelValidation::byLenght($value);
+    if($this->attributes['name'])
+      $this->attributes['slug'] = str_slug($this->attributes['name']);
+  }
+
+  public function setSlugAttribute($value)
+  {
+    if (ModelValidation::byLenght($value)) :
+      $this->attributes['slug'] = str_slug($value);
+    else:
+      $this->attributes['slug'] = null;
+    endif;
+  }
 
   // --------------------------------------------------------------------------
   // Scopes
