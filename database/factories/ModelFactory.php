@@ -79,7 +79,7 @@ $factory->define(App\MechanicalInfo::class, function ($faker) use($user){
 });
 
 $factory->define(App\Nutritional::class, function ($faker) use($user){
-  $date = Carbon::now()->addDays(rand(1, 15))
+  $date = Carbon\Carbon::now()->addDays(rand(1, 15))
                         ->addMonths(rand(1, 11))
                         ->addYears(rand(1, 10))
                         ->toDateString();
@@ -108,8 +108,8 @@ $factory->define(App\Person::class, function ($faker) use($user){
     'identity_card'  => rand(99999, 99999999),
     'phone'          => $faker->phoneNumber,
     'birth_date'     => $faker->date,
-    'created_at'     => Carbon\Carbon::now(),
-    'updated_at'     => Carbon\Carbon::now(),
+    'created_at'     => Carbon\Carbon\Carbon::now(),
+    'updated_at'     => Carbon\Carbon\Carbon::now(),
     'created_by'     => $user->id,
     'updated_by'     => $user->id,
   ];
@@ -157,8 +157,8 @@ $factory->define(App\Promotion::class, function ($faker) use($user){
     'promo_type_id' => $promoType->id,
     'percentage'    => $number / 10,
     'static'        => $number,
-    'begins'        => Carbon::now()->subYears(4)->toDateString(),
-    'ends'          => Carbon::now()->addYears(1)->toDateString(),
+    'begins'        => Carbon\Carbon::now()->subYears(4)->toDateString(),
+    'ends'          => Carbon\Carbon::now()->addYears(1)->toDateString(),
   ];
 });
 
