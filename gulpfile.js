@@ -4,9 +4,9 @@ var elixir      = require('laravel-elixir'),
     bump        = require('gulp-bump'),
     filter      = require('gulp-filter'),
     tag_version = require('gulp-tag-version'),
-    imagemin    = require('gulp-imagemin'),
-    notify      = require('gulp-notify'),
-    _           = require('underscore');
+    imagemin    = require('gulp-imagemin');
+    // notify      = require('gulp-notify');
+    // _           = require('underscore');
 
 /**
  * Bumping version number and tagging the repository with it.
@@ -70,8 +70,8 @@ elixir.extend('imgOptimizer', function() {
  */
 
 elixir(function(mix) {
-  mix.sass('app.scss')
-     .imgOptimizer();
+  mix.sass('app.scss');
+  mix.imgOptimizer();
   mix.copy('vendor/bower_components/jquery/dist/jquery.min.js',
       'public/js/vendor/jquery.min.js')
       .copy('vendor/bower_components/jquery/dist/jquery.min.map',

@@ -1,6 +1,6 @@
-<?php
+<?php namespace Tests;
 
-class TestCase extends Illuminate\Foundation\Testing\TestCase {
+class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 
   /**
    * 5.1

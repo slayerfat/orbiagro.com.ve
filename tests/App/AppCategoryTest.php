@@ -1,11 +1,11 @@
-<?php namespace Tests;
+<?php namespace Tests\App;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use Tests\TestCase;
 
-class ExampleTest extends TestCase {
+class AppCategoryTest extends TestCase {
 
   use DatabaseTransactions;
 
@@ -16,9 +16,7 @@ class ExampleTest extends TestCase {
    */
   public function testBasicExample()
   {
-    $this->visit('/welcome')
-          ->see('orbiagro')
-          ->dontSee('Laravel 5');
+    $this->assertTrue(true);
   }
 
 }
