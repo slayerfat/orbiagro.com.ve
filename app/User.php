@@ -8,10 +8,11 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Mamarrachismo\ModelValidation;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-  use Authenticatable, CanResetPassword, SoftDeletes;
+  use Authenticatable, CanResetPassword, SoftDeletes, CanSearchRandomly;
 
   /**
    * The database table used by the model.

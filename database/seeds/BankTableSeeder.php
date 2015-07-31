@@ -25,7 +25,7 @@ class BankTableSeeder extends Seeder {
 
     $this->command->info("{$bank->description} creado.");
 
-    foreach(range(1, 10) as $index):
+    foreach(range(1, 2) as $index):
       $bank = Bank::create([
         'description' => 'Banco '.$faker->company(),
         'created_by'  => $user->id,

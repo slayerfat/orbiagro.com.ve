@@ -14,7 +14,7 @@ class PeopleTableSeeder extends Seeder {
    */
   public function run()
   {
-    $this->command->info("*** Empezando creacion People ***");
+    $this->command->info("*** Empezando creacion People para APP_USER ***");
 
     $user = User::where('name', env('APP_USER'))->firstOrFail();
 
@@ -42,7 +42,7 @@ class PeopleTableSeeder extends Seeder {
 
     $person->direction()->save($direction);
 
-    $this->command->info('Terminado People');
+    $this->command->info('Terminado People para APP_USER');
   }
 
 }

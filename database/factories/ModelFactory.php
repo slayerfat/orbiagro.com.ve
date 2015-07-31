@@ -28,20 +28,6 @@ $factory->define(App\User::class, function ($faker) {
   ];
 });
 
-$factory->define(App\Bank::class, function ($faker) use($user){
-  return [
-    'description' => 'Banco '.$faker->company(),
-    'created_by'  => $user->id,
-    'updated_by'  => $user->id,
-  ];
-});
-
-$factory->defineAs(App\Bank::class, 'sinBanco', function ($faker) use ($factory) {
-  $bank = $factory->raw(App\Bank::class);
-
-  return array_merge($bank, ['description' => 'Sin Banco Asociado']);
-});
-
 $factory->define(App\Billing::class, function ($faker) use($user){
   return [
     'bank_id'      => 1,
@@ -106,7 +92,7 @@ $factory->define(App\Nutritional::class, function ($faker) use($user){
 
 $factory->define(App\Feature::class, function ($faker) use($user){
   return [
-    'title'       => $faker->words,
+    'title'       => $faker->sentence(5),
     'description' => $faker->text,
     'created_by'  => $user->id,
     'updated_by'  => $user->id,
@@ -144,7 +130,7 @@ $factory->define(App\Product::class, function ($faker) use($user){
   return [
     'maker_id'        => $maker->id,
     'sub_category_id' => $subCat->id,
-    'title'           => $faker->words,
+    'title'           => $faker->sentence(5),
     'description'     => $faker->text(),
     'price'           => $faker->randomFloat(2, 100, 9999999999),
     'quantity'        => $faker->randomDigitNotNull(),
@@ -167,7 +153,7 @@ $factory->define(App\Promotion::class, function ($faker) use($user){
   $number = rand(1, 100);
   $promoType = PromoType::where('description', 'primavera')->first();
   return [
-    'title'         => $faker->words,
+    'title'         => $faker->sentence(5),
     'promo_type_id' => $promoType->id,
     'percentage'    => $number / 10,
     'static'        => $number,
@@ -195,5 +181,14 @@ $factory->define(App\Provider::class, function ($faker) use($user){
     'trust'           => rand(1, 100),
     'created_by'      => $user->id,
     'updated_by'      => $user->id,
+  ];
+});
+
+$factory->define(App\Visit::class, function ($faker) use($user){
+  return [
+    'user_id' => App\User::random()->first()->id,
+    'total' => rand(1, 100),
+    'created_by' => $user->id,
+    'updated_by' => $user->id,
   ];
 });

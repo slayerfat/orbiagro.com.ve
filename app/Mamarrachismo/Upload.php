@@ -51,7 +51,10 @@ class Upload {
 
   public function __construct($userID = null)
   {
-    $this->userId = $userID;
+    if ($userID !== null)
+    {
+      $this->userId = $userID;
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -279,6 +282,14 @@ class Upload {
   private function createImageModel(array $array, $model)
   {
     $image = new Image($array);
+
+    // si la aplicacion esta por consola (artisan u otro)
+    // se le asigna el created/updated by.
+    if (app()->runningInConsole())
+    {
+      $image->created_by = $this->userId;
+      $image->updated_by = $this->userId;
+    }
 
     switch (get_class($model)) :
 
