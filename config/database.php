@@ -49,13 +49,11 @@ return [
     'sqlite' => [
       'driver'   => 'sqlite',
       'database' => __DIR__.'/../storage/app/db.sqlite',
-      'prefix'   => '',
     ],
 
-    'codeception'  => [
-        'driver'   => 'sqlite',
-        'database' => __DIR__.'/../storage/app/db.sqlite',
-        'prefix'   => '',
+    'sqlite_memory' => [
+      'driver'   => 'sqlite',
+      'database' => ':memory:',
     ],
 
     'mysql' => [
