@@ -3,7 +3,7 @@
 use App\Characteristic;
 use Tests\TestCase;
 
-class AppCharacteristicTest extends TestCase {
+class CharacteristicTest extends TestCase {
 
   /**
    * El modelo a manipular.

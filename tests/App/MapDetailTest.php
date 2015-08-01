@@ -3,7 +3,7 @@
 use App\MapDetail;
 use Tests\TestCase;
 
-class AppMapDetailTest extends TestCase {
+class MapDetailTest extends TestCase {
 
   /**
    * El modelo a manipular.

@@ -3,7 +3,7 @@
 use App\Direction;
 use Tests\TestCase;
 
-class AppDirectionTest extends TestCase {
+class DirectionTest extends TestCase {
 
   /**
    * El modelo a manipular.

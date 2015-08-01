@@ -3,7 +3,7 @@
 use App\MechanicalInfo;
 use Tests\TestCase;
 
-class AppMechanicalInfoTest extends TestCase {
+class MechanicalInfoTest extends TestCase {
 
   /**
    * El modelo a manipular.

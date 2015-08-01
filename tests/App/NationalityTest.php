@@ -3,7 +3,7 @@
 use App\Nationality;
 use Tests\TestCase;
 
-class AppNationalityTest extends TestCase {
+class NationalityTest extends TestCase {
 
   /**
    * El modelo a manipular.

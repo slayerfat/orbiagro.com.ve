@@ -3,7 +3,7 @@
 use App\Feature;
 use Tests\TestCase;
 
-class AppFeatureTest extends TestCase {
+class FeatureTest extends TestCase {
 
   /**
    * El modelo a manipular.

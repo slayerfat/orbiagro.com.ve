@@ -3,7 +3,7 @@
 use App\Nutritional;
 use Tests\TestCase;
 
-class AppNutritionalTest extends TestCase {
+class NutritionalTest extends TestCase {
 
   /**
    * El modelo a manipular.

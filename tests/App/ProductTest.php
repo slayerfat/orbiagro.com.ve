@@ -4,7 +4,7 @@ use \Mockery;
 use App\Product;
 use Tests\TestCase;
 
-class AppProductTest extends TestCase {
+class ProductTest extends TestCase {
 
   /**
    * El modelo a manipular.

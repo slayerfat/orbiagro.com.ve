@@ -3,7 +3,7 @@
 use App\Person;
 use Tests\TestCase;
 
-class AppPersonTest extends TestCase {
+class PersonTest extends TestCase {
 
   /**
    * El modelo a manipular.

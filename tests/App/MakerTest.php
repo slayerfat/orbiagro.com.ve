@@ -3,7 +3,7 @@
 use App\Maker;
 use Tests\TestCase;
 
-class AppMakerTest extends TestCase {
+class MakerTest extends TestCase {
 
   /**
    * El modelo a manipular.

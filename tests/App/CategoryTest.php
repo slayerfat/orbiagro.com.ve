@@ -3,7 +3,7 @@
 use App\Category;
 use Tests\TestCase;
 
-class AppCategoryTest extends TestCase {
+class CategoryTest extends TestCase {
 
   /**
    * El modelo a manipular.

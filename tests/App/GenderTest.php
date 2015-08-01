@@ -3,7 +3,7 @@
 use App\Gender;
 use Tests\TestCase;
 
-class AppGenderTest extends TestCase {
+class GenderTest extends TestCase {
 
   /**
    * El modelo a manipular.

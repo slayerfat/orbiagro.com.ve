@@ -1,9 +1,9 @@
 <?php namespace Tests\App;
 
-use App\File;
+use App\Image;
 use Tests\TestCase;
 
-class AppFileTest extends TestCase {
+class ImageTest extends TestCase {
 
   /**
    * El modelo a manipular.
@@ -19,7 +19,13 @@ class AppFileTest extends TestCase {
   {
     parent::setUp();
 
-    $this->tester = new File;
+    $this->tester = new Image;
+  }
+
+  public function testCorrectFormattedAlt()
+  {
+    $this->tester->alt = 'tetsuo kaneda tetsuo kaneda';
+    $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.', $this->tester->alt);
   }
 
   /**
@@ -37,7 +43,9 @@ class AppFileTest extends TestCase {
       [''],
       ['a'],
       [-1],
+      ['nope.png'],
       ['dolares.bat']
     ];
   }
+
 }
