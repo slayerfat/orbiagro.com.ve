@@ -48,11 +48,19 @@ class Person extends Model {
 
   public function formatted_names()
   {
-    $names = ucfirst($this->attributes['first_name']).
-      ' '.
-      ucfirst($this->attributes['first_surname']);
+    if (isset($this->attributes['first_name'])
+      && isset($this->attributes['first_surname']))
+    {
+      return ucfirst($this->attributes['first_name']).
+        ' '.
+        ucfirst($this->attributes['first_surname']);
+    }
+    elseif (isset($this->attributes['first_name']))
+    {
+      return ucfirst($this->attributes['first_name']);
+    }
 
-    return $names;
+    return null;
   }
 
   public function getPhoneAttribute($value)
@@ -65,7 +73,7 @@ class Person extends Model {
    */
   public function setIdentityCardAttribute($value)
   {
-    $this->attributes['identity_card'] = ModelValidation::byNumeric($value);
+    $this->attributes['identity_card'] = ModelValidation::byNonNegative($value);
   }
 
   public function setFirstNameAttribute($value)

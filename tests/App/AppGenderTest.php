@@ -36,5 +36,4 @@ class AppGenderTest extends TestCase {
     $this->tester->description = $data;
     $this->assertNull($this->tester->description);
   }
-
 }
