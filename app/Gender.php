@@ -26,9 +26,9 @@ class Gender extends Model {
     return null;
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function people()
   {
     return $this->hasMany('App\Person');
