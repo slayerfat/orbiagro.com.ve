@@ -31,7 +31,7 @@ class AppDirectionTest extends TestCase {
   /**
    * @dataProvider defaultDataProvider
    */
-  public function testIncorrectDescriptionValueShouldBeNull($data)
+  public function testIncorrectDetailsValueShouldBeNull($data)
   {
     $this->tester->details = $data;
     $this->assertNull($this->tester->details);

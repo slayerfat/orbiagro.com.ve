@@ -21,6 +21,16 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
     return $app;
   }
 
+  /**
+   * la informacion necesaria para hacer las pruebas,
+   * este arreglo posee datos basicos, si es necesario
+   * otros datos se deberia crear un metodo mas especializado en el test.
+   *
+   * @see Tests\AppFileTest::dataProvider()
+   *
+   * @method defaultDataProvider
+   * @return array
+   */
   public function defaultDataProvider()
   {
     return [
@@ -29,5 +39,4 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
       [-1]
     ];
   }
-
 }
