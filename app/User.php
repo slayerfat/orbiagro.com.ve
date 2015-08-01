@@ -131,13 +131,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
   public function isVerified()
   {
-   if ($this->profile->description !== 'Desactivado') return true;
+    if ($this->profile->description !== 'Desactivado') return true;
     return false;
   }
 
   public function hasConfirmation()
   {
-   if ($this->isDisabled() || $this->confirmation) return true;
+    // if ($this->isDisabled() || $this->confirmation) return true;
+    // ??? porque isDisabled?
+    if ($this->confirmation) return true;
     return false;
   }
 
@@ -148,6 +150,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
    */
   public function isOwner($id)
   {
+    if (!isset($this->attributes['id']))
+    {
+      $this->attributes['id'] = null;
+    }
+
+    if (!isset($this->attributes['name']))
+    {
+      $this->attributes['name'] = null;
+    }
+
     if ($this->attributes['id'] === $id ||
       $this->attributes['name'] === $id) return true;
     return false;

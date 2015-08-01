@@ -14,7 +14,7 @@ class Gender extends Model {
   // --------------------------------------------------------------------------
   public function setDescriptionAttribute($value)
   {
-    $this->attributes['description'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['description'] = ModelValidation::byLenght($value);
   }
 
   // --------------------------------------------------------------------------

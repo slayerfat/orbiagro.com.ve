@@ -1,24 +1,21 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Mamarrachismo\ModelValidation;
 
 class Profile extends Model {
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setDescriptionAttribute($value)
   {
-    if($value == '') :
-      $this->attributes['description'] = null;
-    else:
-      $this->attributes['description'] = $value;
-    endif;
+    $this->attributes['description'] = ModelValidation::byLenght($value);
   }
 
-  /**
-   * Accessors
-   */
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getDescriptionAttribute($value)
   {
     if($value) return ucfirst($value);
