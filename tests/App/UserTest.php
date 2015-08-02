@@ -24,6 +24,38 @@ class UserTest extends TestCase {
     $this->mock = Mockery::mock('App\User')->makePartial();
   }
 
+  public function tearDown()
+  {
+    Mockery::close();
+
+    unset($this->tester);
+    unset($this->mock);
+
+    parent::tearDown();
+  }
+
+  public function testPersonRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasOne')
+      ->once()
+      ->with('App\Person')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->person());
+  }
+
+  public function testConfirmationRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasOne')
+      ->once()
+      ->with('App\Confirmation')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->confirmation());
+  }
+
   public function testProfileRelationship()
   {
     $this->mock
@@ -35,7 +67,7 @@ class UserTest extends TestCase {
     $this->assertEquals('mocked', $this->mock->profile());
   }
 
-  public function testBillingRelationship()
+  public function testBillingsRelationship()
   {
     $this->mock
       ->shouldReceive('hasMany')
@@ -44,6 +76,50 @@ class UserTest extends TestCase {
       ->andReturn('mocked');
 
     $this->assertEquals('mocked', $this->mock->billings());
+  }
+
+  public function testProductsRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasMany')
+      ->once()
+      ->with('App\Product')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->products());
+  }
+
+  public function testVisitsRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasMany')
+      ->once()
+      ->with('App\Visit')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->visits());
+  }
+
+  public function testPurchasesRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsToMany')
+      ->once()
+      ->with('App\Product')
+      ->andReturn(Mockery::self());
+
+    $this->mock
+      ->shouldReceive('withPivot')
+      ->once()
+      ->with('quantity')
+      ->andReturn(Mockery::self());
+
+    $this->mock
+      ->shouldReceive('withTimestamps')
+      ->once()
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->purchases());
   }
 
   public function testIsAdmin()
