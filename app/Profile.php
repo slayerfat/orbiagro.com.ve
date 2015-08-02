@@ -22,9 +22,9 @@ class Profile extends Model {
     return null;
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function users()
   {
     return $this->hasMany('App\User');

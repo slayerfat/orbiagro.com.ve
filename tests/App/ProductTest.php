@@ -15,6 +15,28 @@ class ProductTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Product;
+    $this->mock = Mockery::mock('App\Product')->makePartial();
+  }
+
+  public function tearDown()
+  {
+    Mockery::close();
+
+    unset($this->tester);
+    unset($this->mock);
+
+    parent::tearDown();
+  }
+
+  public function testUserRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\User')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->user());
   }
 
   public function testCorrectFormattedSlug()

@@ -1,5 +1,6 @@
 <?php namespace Tests\App;
 
+use \Mockery;
 use App\Gender;
 use Tests\TestCase;
 
@@ -14,6 +15,28 @@ class GenderTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Gender;
+    $this->mock = Mockery::mock('App\Gender')->makePartial();
+  }
+
+  public function tearDown()
+  {
+    Mockery::close();
+
+    unset($this->tester);
+    unset($this->mock);
+
+    parent::tearDown();
+  }
+
+  public function testPeopleRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasMany')
+      ->once()
+      ->with('App\Person')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->people());
   }
 
   public function testCorrectFormattedDescription()
