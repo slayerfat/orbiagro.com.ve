@@ -1,10 +1,13 @@
 <?php namespace Tests\App;
 
 use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\SubCategory;
 use Tests\TestCase;
 
 class SubCategoryTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html

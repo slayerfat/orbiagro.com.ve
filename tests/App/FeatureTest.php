@@ -1,9 +1,13 @@
 <?php namespace Tests\App;
 
+use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\Feature;
 use Tests\TestCase;
 
 class FeatureTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html

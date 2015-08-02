@@ -1,10 +1,13 @@
 <?php namespace Tests\App;
 
 use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\Product;
 use Tests\TestCase;
 
 class ProductTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html
@@ -18,16 +21,6 @@ class ProductTest extends TestCase {
     $this->mock = Mockery::mock('App\Product')->makePartial();
   }
 
-  public function tearDown()
-  {
-    Mockery::close();
-
-    unset($this->tester);
-    unset($this->mock);
-
-    parent::tearDown();
-  }
-
   public function testUserRelationship()
   {
     $this->mock
@@ -37,6 +30,144 @@ class ProductTest extends TestCase {
       ->andReturn('mocked');
 
     $this->assertEquals('mocked', $this->mock->user());
+  }
+
+  public function testMakerRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Maker')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->maker());
+  }
+
+  public function testSubCategoryRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\SubCategory')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->subCategory());
+  }
+
+  public function testFeaturesRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasMany')
+      ->once()
+      ->with('App\Feature')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->features());
+  }
+
+  public function testCharacteristicsRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasOne')
+      ->once()
+      ->with('App\Characteristic')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->characteristics());
+  }
+
+  public function testNutritionalRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasOne')
+      ->once()
+      ->with('App\Nutritional')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->nutritional());
+  }
+
+  public function testPurchasesRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsToMany')
+      ->once()
+      ->with('App\User')
+      ->andReturn(Mockery::self());
+
+    $this->mock
+      ->shouldReceive('withPivot')
+      ->once()
+      ->with('quantity')
+      ->andReturn(Mockery::self());
+
+    $this->mock
+      ->shouldReceive('withTimestamps')
+      ->once()
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->purchases());
+  }
+
+  public function testProvidersRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsToMany')
+      ->once()
+      ->with('App\Provider')
+      ->andReturn(Mockery::self());
+
+    $this->mock
+      ->shouldReceive('withPivot')
+      ->once()
+      ->with('sku')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->providers());
+  }
+
+  public function testDirectionRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphOne')
+      ->once()
+      ->with('App\Direction', 'directionable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->direction());
+  }
+
+  public function testFilesRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphMany')
+      ->once()
+      ->with('App\File', 'fileable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->files());
+  }
+
+  public function testImagesRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphMany')
+      ->once()
+      ->with('App\Image', 'imageable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->images());
+  }
+
+  public function testVisitsRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphMany')
+      ->once()
+      ->with('App\Visit', 'visitable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->visits());
   }
 
   public function testCorrectFormattedSlug()

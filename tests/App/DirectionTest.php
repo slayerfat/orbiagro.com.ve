@@ -1,9 +1,13 @@
 <?php namespace Tests\App;
 
+use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\Direction;
 use Tests\TestCase;
 
 class DirectionTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html

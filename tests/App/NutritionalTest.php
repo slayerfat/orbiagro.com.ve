@@ -1,9 +1,13 @@
 <?php namespace Tests\App;
 
+use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\Nutritional;
 use Tests\TestCase;
 
 class NutritionalTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html
@@ -14,6 +18,18 @@ class NutritionalTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Nutritional;
+    $this->mock = Mockery::mock('App\Nutritional')->makePartial();
+  }
+
+  public function testProductRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Product')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->product());
   }
 
   public function testCorrectFormattedDueDate()

@@ -1,9 +1,13 @@
 <?php namespace Tests\App;
 
+use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\Person;
 use Tests\TestCase;
 
 class PersonTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html
@@ -14,6 +18,51 @@ class PersonTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Person;
+    $this->mock = Mockery::mock('App\Person')->makePartial();
+  }
+
+  public function testGenderRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Gender')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->gender());
+  }
+
+  public function testNationalityRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Nationality')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->nationality());
+  }
+
+  public function testUserRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\User')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->user());
+  }
+
+  public function testDirectionRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphMany')
+      ->once()
+      ->with('App\Direction', 'directionable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->direction());
   }
 
   public function testCorrectFormattedNames()

@@ -1,10 +1,13 @@
 <?php namespace Tests\App;
 
 use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\Promotion;
 use Tests\TestCase;
 
 class PromotionTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html
@@ -16,16 +19,6 @@ class PromotionTest extends TestCase {
 
     $this->tester = new Promotion;
     $this->mock = Mockery::mock('App\Promotion')->makePartial();
-  }
-
-  public function tearDown()
-  {
-    Mockery::close();
-
-    unset($this->tester);
-    unset($this->mock);
-
-    parent::tearDown();
   }
 
   public function testProductsRelationship()

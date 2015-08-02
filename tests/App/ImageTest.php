@@ -1,9 +1,13 @@
 <?php namespace Tests\App;
 
+use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\Image;
 use Tests\TestCase;
 
 class ImageTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html

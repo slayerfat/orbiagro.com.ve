@@ -19,9 +19,9 @@ class Person extends Model {
     'birth_date'
   ];
 
-  /**
-   * Accessors
-   */
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getFirstNameAttribute($value)
   {
     if($value) return ucfirst($value);
@@ -68,9 +68,9 @@ class Person extends Model {
     return ModelValidation::parsePhone($value);
   }
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setIdentityCardAttribute($value)
   {
     $this->attributes['identity_card'] = ModelValidation::byNonNegative($value);
@@ -106,10 +106,13 @@ class Person extends Model {
     $this->attributes['birth_date'] = ModelValidation::byLenght($value);
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
 
+  // --------------------------------------------------------------------------
+  // Belongs To
+  // --------------------------------------------------------------------------
   public function gender()
   {
     return $this->belongsTo('App\Gender');
@@ -125,14 +128,9 @@ class Person extends Model {
     return $this->belongsTo('App\User');
   }
 
-  /**
-   * Relacion polimorfica
-   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-   *
-   * $a->person()->first()->direction()->save($b)
-   * en donde $a es una instancia de User y
-   * $b es una instancia de Direction
-   */
+  // --------------------------------------------------------------------------
+  // Polimorfica
+  // --------------------------------------------------------------------------
   public function direction()
   {
     return $this->morphMany('App\Direction', 'directionable');

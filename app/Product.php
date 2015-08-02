@@ -135,7 +135,7 @@ class Product extends Model {
     return $this->belongsTo('App\Maker');
   }
 
-  public function sub_category()
+  public function subCategory()
   {
     return $this->belongsTo('App\SubCategory');
   }

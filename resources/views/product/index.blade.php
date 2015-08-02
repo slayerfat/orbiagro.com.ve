@@ -3,11 +3,11 @@
 @section('content')
 
   @if(preg_match('/rubros\//', Request::path()))
-    <?php $productsTitle = "Productos en {$products->first()->sub_category->description}" ?>
-    @include('product.addons.breadcrumbs-index-sub-category', ['subCat' => $products->first()->sub_category])
+    <?php $productsTitle = "Productos en {$products->first()->subCategory->description}" ?>
+    @include('product.addons.breadcrumbs-index-sub-category', ['subCat' => $products->first()->subCategory])
   @elseif(preg_match('/categorias\//', Request::path()))
-    <?php $productsTitle = "Productos en {$products->first()->sub_category->category->description}" ?>
-    @include('product.addons.breadcrumbs-index-category', ['cat' => $products->first()->sub_category->category])
+    <?php $productsTitle = "Productos en {$products->first()->subCategory->category->description}" ?>
+    @include('product.addons.breadcrumbs-index-category', ['cat' => $products->first()->subCategory->category])
   @else
     <?php $productsTitle = 'Productos en orbiagro.com.ve' ?>
     @include('product.addons.breadcrumbs-index')

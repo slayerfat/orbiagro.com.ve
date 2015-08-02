@@ -83,13 +83,13 @@
           @endunless
         </p>
         <p>
-          {!! link_to_action('SubCategoriesController@show', 'Producto en el Rubro '.$product->sub_category->description,$product->sub_category->slug ) !!}
+          {!! link_to_action('SubCategoriesController@show', 'Producto en el Rubro '.$product->subCategory->description,$product->subCategory->slug ) !!}
         </p>
       </div>
     </div>
   </div>
 
-  <?php $sub_category = $product->sub_category ?>
+  <?php $sub_category = $product->subCategory ?>
   @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Productos Relacionados'])
 
   <div class="container">

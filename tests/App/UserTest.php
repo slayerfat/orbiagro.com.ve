@@ -1,10 +1,13 @@
 <?php namespace Tests\App;
 
 use \Mockery;
+use Tests\App\Traits\TearsDownMockery;
 use App\User;
 use Tests\TestCase;
 
 class UserTest extends TestCase {
+
+  use TearsDownMockery;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html
@@ -16,16 +19,6 @@ class UserTest extends TestCase {
 
     $this->tester = new User;
     $this->mock = Mockery::mock('App\User')->makePartial();
-  }
-
-  public function tearDown()
-  {
-    Mockery::close();
-
-    unset($this->tester);
-    unset($this->mock);
-
-    parent::tearDown();
   }
 
   public function testPersonRelationship()
