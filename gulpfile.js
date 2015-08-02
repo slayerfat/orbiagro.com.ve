@@ -12,9 +12,6 @@ var git         = require('gulp-git'),
 // minificacion de imagenes
 var imagemin    = require('gulp-imagemin');
 
-// ??? en este archivo nadie requiere underscore
-// var _           = require('underscore');
-
 /**
  * Bumping version number and tagging the repository with it.
  * Please read http://semver.org/
@@ -52,7 +49,7 @@ gulp.task('feature', function() { return inc('minor'); });
 gulp.task('release', function() { return inc('major'); });
 
 elixir.extend('imgOptimizer', function() {
-  gulp.task('img', function(){
+  new elixir.Task('img', function(){
     gulp.src('public/img/originals/*')
     .pipe(imagemin({
         progressive: true,
@@ -60,7 +57,6 @@ elixir.extend('imgOptimizer', function() {
     }))
     .pipe(gulp.dest('public/img'));
   });
-  return this.queueTask('img');
 });
 
 /*

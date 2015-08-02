@@ -7,10 +7,10 @@
     "gulp-git": "^1.1.0",
     "gulp-imagemin": "^2.2.1",
     "gulp-tag-version": "^1.2.1",
-    "laravel-elixir": "*"
+    "laravel-elixir": "*",
+    "gulp-notify": "^2.0.0"
   },
   "ignore": {
-    "gulp-notify": "^2.0.0",
     "underscore": "^1.7.0"
   },
   "name": "orbiagro",
