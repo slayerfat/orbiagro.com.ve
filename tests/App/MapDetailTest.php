@@ -18,6 +18,18 @@ class MapDetailTest extends TestCase {
     parent::setUp();
 
     $this->tester = new MapDetail;
+    $this->mock = Mockery::mock('App\MapDetail')->makePartial();
+  }
+
+  public function testDirectionRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Direction')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->direction());
   }
 
   public function testCorrectFormattedAttributes()

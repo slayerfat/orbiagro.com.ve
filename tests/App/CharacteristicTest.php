@@ -18,6 +18,18 @@ class CharacteristicTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Characteristic;
+    $this->mock = Mockery::mock('App\Characteristic')->makePartial();
+  }
+
+  public function testProductRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Product')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->product());
   }
 
   public function testHeightWidthDepthFormats()

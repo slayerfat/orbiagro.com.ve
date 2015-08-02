@@ -18,6 +18,18 @@ class MechanicalInfoTest extends TestCase {
     parent::setUp();
 
     $this->tester = new MechanicalInfo;
+    $this->mock = Mockery::mock('App\MechanicalInfo')->makePartial();
+  }
+
+  public function testProductRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Product')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->product());
   }
 
   public function testCorrectFormattedCylinders()

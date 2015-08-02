@@ -64,7 +64,7 @@ class Category extends Model {
   // --------------------------------------------------------------------------
   // Has Many
   // --------------------------------------------------------------------------
-  public function sub_categories()
+  public function subCategories()
   {
     return $this->hasMany('App\SubCategory');
   }

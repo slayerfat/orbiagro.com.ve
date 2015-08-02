@@ -18,6 +18,17 @@ class FileTest extends TestCase {
     parent::setUp();
 
     $this->tester = new File;
+    $this->mock = Mockery::mock('App\File')->makePartial();
+  }
+
+  public function testFilableRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphTo')
+      ->once()
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->filable());
   }
 
   /**

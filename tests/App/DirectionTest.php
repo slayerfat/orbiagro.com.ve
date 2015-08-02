@@ -18,6 +18,39 @@ class DirectionTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Direction;
+    $this->mock = Mockery::mock('App\Direction')->makePartial();
+  }
+
+  public function testDirectionRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphTo')
+      ->once()
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->directionable());
+  }
+
+  public function testMapRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasOne')
+      ->once()
+      ->with('App\MapDetail')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->map());
+  }
+
+  public function testParishRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Parish')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->parish());
   }
 
   public function testCorrectFormattedDetails()

@@ -18,6 +18,17 @@ class ImageTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Image;
+    $this->mock = Mockery::mock('App\Image')->makePartial();
+  }
+
+  public function testImageableRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphTo')
+      ->once()
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->imageable());
   }
 
   public function testCorrectFormattedAlt()

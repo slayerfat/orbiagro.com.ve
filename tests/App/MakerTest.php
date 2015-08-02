@@ -18,6 +18,29 @@ class MakerTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Maker;
+    $this->mock = Mockery::mock('App\Maker')->makePartial();
+  }
+
+  public function testProductsRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasMany')
+      ->once()
+      ->with('App\Product')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->products());
+  }
+
+  public function testImageRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphOne')
+      ->once()
+      ->with('App\Image', 'imageable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->image());
   }
 
   public function testCorrectFormattedName()

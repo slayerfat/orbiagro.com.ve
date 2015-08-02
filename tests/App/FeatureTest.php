@@ -18,6 +18,40 @@ class FeatureTest extends TestCase {
     parent::setUp();
 
     $this->tester = new Feature;
+    $this->mock = Mockery::mock('App\Feature')->makePartial();
+  }
+
+  public function testProductRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Product')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->product());
+  }
+
+  public function testImageRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphOne')
+      ->once()
+      ->with('App\Image', 'imageable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->image());
+  }
+
+  public function testFileRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphOne')
+      ->once()
+      ->with('App\File', 'fileable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->file());
   }
 
   public function testCorrectFormattedTitle()
