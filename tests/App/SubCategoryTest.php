@@ -19,6 +19,50 @@ class SubCategoryTest extends TestCase {
     $this->mock = Mockery::mock('App\SubCategory')->makePartial();
   }
 
+  public function testCategoryRelationship()
+  {
+    $this->mock
+      ->shouldReceive('belongsTo')
+      ->once()
+      ->with('App\Category')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->category());
+  }
+
+  public function testProductsRelationship()
+  {
+    $this->mock
+      ->shouldReceive('hasMany')
+      ->once()
+      ->with('App\Product')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->products());
+  }
+
+  public function testImageRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphOne')
+      ->once()
+      ->with('App\Image', 'imageable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->image());
+  }
+
+  public function testVisitsRelationship()
+  {
+    $this->mock
+      ->shouldReceive('morphMany')
+      ->once()
+      ->with('App\Visit', 'visitable')
+      ->andReturn('mocked');
+
+    $this->assertEquals('mocked', $this->mock->visits());
+  }
+
   public function testCorrectFormattedDescription()
   {
     $this->tester->description = 'tetsuo kaneda tetsuo kaneda';
