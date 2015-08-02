@@ -77,11 +77,11 @@ gulp.task('copy-app-files', function() {
   .src('vendor/bower_components/fontawesome/css/font-awesome.css.map')
   .pipe(gulp.dest('public/css/vendor'));
   gulp
-  .src('vendor/bower_components/fontawesome/fonts')
+  .src('vendor/bower_components/fontawesome/fonts/**/*')
   .pipe(gulp.dest('public/css/fonts'));
   // bootstrap
   gulp
-  .src('vendor/bower_components/bootstrap-sass/assets/fonts/bootstrap')
+  .src('vendor/bower_components/bootstrap-sass/assets/fonts/bootstrap/**/*')
   .pipe(gulp.dest('public/fonts/bootstrap'));
   gulp
   .src('vendor/bower_components/bootstrap/dist/js/bootstrap.min.js')
@@ -119,7 +119,7 @@ gulp.task('copy-app-files', function() {
   .pipe(gulp.dest('public/js/vendor'));
   // slick.js
   gulp
-  .src('vendor/bower_components/slick.js/slick/fonts')
+  .src('vendor/bower_components/slick.js/slick/fonts/**/*')
   .pipe(gulp.dest('public/css/fonts'));
   gulp
   .src('vendor/bower_components/slick.js/slick/slick.min.js')
