@@ -14,7 +14,7 @@
     "underscore": "^1.7.0"
   },
   "name": "orbiagro",
-  "version": "0.0.10-3",
+  "version": "0.0.10",
   "description": "orbiagro",
   "main": "gulpfile.js",
   "directories": {
