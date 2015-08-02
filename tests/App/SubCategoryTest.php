@@ -1,15 +1,10 @@
 <?php namespace Tests\App;
 
+use \Mockery;
 use App\SubCategory;
 use Tests\TestCase;
 
 class SubCategoryTest extends TestCase {
-
-  /**
-   * El modelo a manipular.
-   * @var Illuminate\Database\Eloquent\Model
-   */
-  protected $tester;
 
   /**
    * https://phpunit.de/manual/current/en/fixtures.html
@@ -20,6 +15,8 @@ class SubCategoryTest extends TestCase {
     parent::setUp();
 
     $this->tester = new SubCategory;
+
+    $this->mock = Mockery::mock('App\SubCategory')->makePartial();
   }
 
   public function testCorrectFormattedDescription()

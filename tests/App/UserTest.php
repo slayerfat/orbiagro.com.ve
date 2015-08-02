@@ -7,12 +7,6 @@ use Tests\TestCase;
 class UserTest extends TestCase {
 
   /**
-   * El modelo a manipular.
-   * @var Illuminate\Database\Eloquent\Model
-   */
-  protected $tester;
-
-  /**
    * https://phpunit.de/manual/current/en/fixtures.html
    * @method setUp
    */
@@ -50,7 +44,7 @@ class UserTest extends TestCase {
     $this->mock
       ->shouldReceive('hasOne')
       ->once()
-      ->with('App\Confirmation')
+      ->with('App\UserConfirmation')
       ->andReturn('mocked');
 
     $this->assertEquals('mocked', $this->mock->confirmation());

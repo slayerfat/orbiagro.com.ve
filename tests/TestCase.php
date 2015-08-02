@@ -3,9 +3,20 @@
 class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 
   /**
-   * 5.1
+   * Laravel 5.1
    */
   protected $baseUrl = 'http://localhost';
+
+  /**
+   * El modelo a manipular.
+   * @var Illuminate\Database\Eloquent\Model
+   */
+  protected $tester;
+
+  /**
+   * la instancia del Mockery a manipular
+   */
+  protected $mock;
 
   /**
    * Creates the application.
