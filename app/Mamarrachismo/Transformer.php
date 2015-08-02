@@ -307,6 +307,17 @@ class Transformer {
     return $transformer->parseNumberToReadable();
   }
 
+  /**
+   * invoca parseNumberToReadable;
+   *
+   * @param mixed $value el numero a cambiar.
+   */
+  public static function toNumber($value)
+  {
+    $transformer = new Transformer($value);
+    return $transformer->parseReadableToNumber();
+  }
+
   // --------------------------------------------------------------------------
   // Metodos privados
   // --------------------------------------------------------------------------

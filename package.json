@@ -8,8 +8,9 @@
     "gulp-imagemin": "^2.2.1",
     "gulp-tag-version": "^1.2.1",
     "laravel-elixir": "*",
-    "gulp-codeception": "^0.4.3",
-    "gulp-notify": "^2.0.0",
+    "gulp-notify": "^2.0.0"
+  },
+  "ignore": {
     "underscore": "^1.7.0"
   },
   "name": "orbiagro",

@@ -19,9 +19,9 @@ class Person extends Model {
     'birth_date'
   ];
 
-  /**
-   * Accessors
-   */
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getFirstNameAttribute($value)
   {
     if($value) return ucfirst($value);
@@ -48,11 +48,19 @@ class Person extends Model {
 
   public function formatted_names()
   {
-    $names = ucfirst($this->attributes['first_name']).
-      ' '.
-      ucfirst($this->attributes['first_surname']);
+    if (isset($this->attributes['first_name'])
+      && isset($this->attributes['first_surname']))
+    {
+      return ucfirst($this->attributes['first_name']).
+        ' '.
+        ucfirst($this->attributes['first_surname']);
+    }
+    elseif (isset($this->attributes['first_name']))
+    {
+      return ucfirst($this->attributes['first_name']);
+    }
 
-    return $names;
+    return null;
   }
 
   public function getPhoneAttribute($value)
@@ -60,12 +68,12 @@ class Person extends Model {
     return ModelValidation::parsePhone($value);
   }
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setIdentityCardAttribute($value)
   {
-    $this->attributes['identity_card'] = ModelValidation::byNumeric($value);
+    $this->attributes['identity_card'] = ModelValidation::byNonNegative($value);
   }
 
   public function setFirstNameAttribute($value)
@@ -98,10 +106,13 @@ class Person extends Model {
     $this->attributes['birth_date'] = ModelValidation::byLenght($value);
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
 
+  // --------------------------------------------------------------------------
+  // Belongs To
+  // --------------------------------------------------------------------------
   public function gender()
   {
     return $this->belongsTo('App\Gender');
@@ -117,14 +128,9 @@ class Person extends Model {
     return $this->belongsTo('App\User');
   }
 
-  /**
-   * Relacion polimorfica
-   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-   *
-   * $a->person()->first()->direction()->save($b)
-   * en donde $a es una instancia de User y
-   * $b es una instancia de Direction
-   */
+  // --------------------------------------------------------------------------
+  // Polimorfica
+  // --------------------------------------------------------------------------
   public function direction()
   {
     return $this->morphMany('App\Direction', 'directionable');

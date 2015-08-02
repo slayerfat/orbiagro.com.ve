@@ -2,11 +2,14 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Mamarrachismo\Transformer;
+
 use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class Promotion extends Model {
 
-  use InternalDBManagement;
+  use InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = [
     'title',
@@ -94,14 +97,6 @@ class Promotion extends Model {
   // --------------------------------------------------------------------------
   // Scopes
   // --------------------------------------------------------------------------
-  public function scopeRandom($query)
-  {
-    if (env('APP_ENV') == 'testing') {
-      $query->orderByRaw('RANDOM()');
-    }else{
-      $query->orderByRaw('RAND()');
-    }
-  }
 
   // --------------------------------------------------------------------------
   // Relaciones
@@ -138,16 +133,27 @@ class Promotion extends Model {
   /**
    * Devuelve el descuento estatico concadenado con Bs.
    */
-  public function static_bs()
+  public function readableStatic($otherNumber = null)
   {
-    if(isset($this->attributes['static'])) return "{$this->attributes['static']} Bs.";
-    return null;
+    if ($otherNumber)
+    {
+      return Transformer::toReadable($otherNumber);
+    }
+
+    if (!isset($this->attributes['static']))
+    {
+      return null;
+    }
+
+    $price = Transformer::toReadable($this->attributes['static']);
+
+    return "Bs. {$price}";
   }
 
   /**
    * Devuelve el descuento en porcentaje concadenado con %.
    */
-  public function percentage_pc()
+  public function readablePercentage()
   {
     if(isset($this->attributes['percentage'])) return "{$this->attributes['percentage']}%";
     return null;
@@ -156,7 +162,7 @@ class Promotion extends Model {
   /**
    * Devuelve el descuento en numero ej: 100 => 1, 10 => 0.1.
    */
-  public function percentage_raw()
+  public function decimalPercentage()
   {
     if(isset($this->attributes['percentage'])) return $this->attributes['percentage'] / 100;
     return null;

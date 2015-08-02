@@ -100,8 +100,8 @@ class ProductsController extends Controller {
 
     $visitedProducts = $visits->getVisitedProducts();
 
-    $this->seo()->setTitle("Productos de {$products->first()->sub_category->description} en orbiagro.com.ve");
-    $this->seo()->setDescription("Productos y Articulos de {$products->first()->sub_category->description} en existencia en orbiagro.com.ve");
+    $this->seo()->setTitle("Productos de {$products->first()->subCategory->description} en orbiagro.com.ve");
+    $this->seo()->setDescription("Productos y Articulos de {$products->first()->subCategory->description} en existencia en orbiagro.com.ve");
     $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
 
     return view('product.index', compact(
@@ -181,7 +181,7 @@ class ProductsController extends Controller {
     endif;
 
     $this->seo()->setTitle("{$product->title} - {$product->price_bs()}");
-    $this->seo()->setDescription("{$product->title} en {$product->sub_category->description}, consigue mas en {$product->sub_category->category->description} dentro de orbiagro.com.ve");
+    $this->seo()->setDescription("{$product->title} en {$product->subCategory->description}, consigue mas en {$product->subCategory->category->description} dentro de orbiagro.com.ve");
     // $this->seo()->setKeywords(); taxonomias
     $this->seo()->opengraph()->setUrl(action('ProductsController@show', $id));
 

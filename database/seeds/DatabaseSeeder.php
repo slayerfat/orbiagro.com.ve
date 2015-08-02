@@ -18,34 +18,40 @@ class DatabaseSeeder extends Seeder {
 
     $this->command->info("*** Empezando Migracion! ***");
 
-    $this->call('GenderTableSeeder');
-    $this->call('NationalityTableSeeder');
-    $this->call('StateTableSeeder');
-    $this->call('TownTableSeeder');
-    $this->call('ParishTableSeeder');
-    $this->call('NeoTableSeeder');
-    $this->call('CategoryTableSeeder');
-    $this->call('SubCategoryTableSeeder');
-    $this->call('MakerTableSeeder');
-    $this->call('ProviderTableSeed');
-    $this->call('ProductTableSeeder');
-    $this->call('FeatureTableSeeder');
-    $this->call('CharacteristicTableSeeder');
-    $this->call('NutritionalTableSeeder');
-    $this->call('MechanicalInfoTableSeeder');
-    $this->call('BankTableSeeder');
-    $this->call('CardTypeTableSeeder');
-    $this->call('BillingTableSeeder');
-    $this->call('PurchaseTableSeeder');
-    $this->call('VisitTableSeeder');
-    $this->call('ImagesTableSeeder');
-    $this->call('PromoTypesTableSeeder');
-    $this->call('ProductProviderTableSeed');
-    $this->call('PromotionTableSeeder');
-    $this->call('CategoryImageTableSeeder');
-    $this->call('SubCategoryImageTableSeeder');
+    // tablas secundarias
+    $this->call(GenderTableSeeder::class);
+    $this->call(NationalityTableSeeder::class);
+    $this->call(StateTableSeeder::class);
+    $this->call(TownTableSeeder::class);
+    $this->call(ParishTableSeeder::class);
+    $this->call(PeopleTableSeeder::class);
+    $this->call(CategoryTableSeeder::class);
+    $this->call(SubCategoryTableSeeder::class);
+    $this->call(CategoryImageTableSeeder::class);
+    $this->call(SubCategoryImageTableSeeder::class);
+    $this->call(MakerTableSeeder::class);
+    $this->call(BankTableSeeder::class);
+    $this->call(CardTypeTableSeeder::class);
+    $this->call(PromoTypesTableSeeder::class);
+
+    // tablas primarias
+    $this->call(ProviderTableSeed::class);
+    $this->call(ProductTableSeeder::class);
+    // $this->call(FeatureTableSeeder::class);
+    // $this->call(CharacteristicTableSeeder::class);
+    // $this->call(NutritionalTableSeeder::class);
+    // $this->call(MechanicalInfoTableSeeder::class);
+    $this->call(BillingTableSeeder::class);
+    $this->call(PurchaseTableSeeder::class);
+    $this->call(VisitTableSeeder::class);
+    // $this->call(ImagesTableSeeder::class);
+    $this->call(ProductProviderTableSeed::class);
+    $this->call(PromotionTableSeeder::class);
 
     $this->command->info("*** Migracion terminada! ***");
+
+    // Telling Eloquent to not allow mass assignment.
+    Model::reguard();
   }
 
 }

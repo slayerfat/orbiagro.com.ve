@@ -1,14 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
-use App\User;
-use App\SubCategory;
-use App\Maker;
-use App\Parish;
-use App\Direction;
-use App\MapDetail;
-use App\Product;
+
+use App\Mamarrachismo\Upload;
 
 class ProductTableSeeder extends Seeder {
 
@@ -21,59 +15,44 @@ class ProductTableSeeder extends Seeder {
   {
     $this->command->info("*** Empezando creacion de Product! ***");
 
-    $faker  = Faker::create('es_ES');
-    $subcat = SubCategory::all();
-    $user   = User::where('name', 'tester')->first();
+    // upload necesita el ID del usuario a asociar.
+    $this->upload = new Upload(1);
 
-    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+    // por cada usuario en el sistema, se pretende
+    // crear algunos productos con sus caracteristicas particulares.
+    App\User::all()->each(function($user){
+      // es necesario hacer esto por cada producto.
+      factory(App\Product::class, 20)->make()->each(function($product) use($user){
 
-    foreach($subcat as $subcategory):
-      $this->command->info('en bucle de subcat: '.$subcategory->slug);
-      foreach(range(1, 2) as $index) :
-        $maker   = Maker::orderByRaw('rand()')->first();
-        $parish  = Parish::orderByRaw('rand()')->first();
-        $title   = $faker->sentence(5);
-        // fix build #202
-        $product = new Product;
-        $product->user_id         = $user->id;
-        $product->maker_id        = $maker->id;
-        $product->sub_category_id = $subcategory->id;
-        $product->title           = $title;
-        $product->description     = $faker->text();
-        $product->price           = $faker->randomFloat(2, 100, 9999999999);
-        $product->quantity        = $faker->randomDigitNotNull();
-        $product->slug            = str_slug($title);
-        $product->created_by      = $user->id;
-        $product->updated_by      = $user->id;
-        $product->save();
+        // se guarda el producto en la base de datos.
+        $user->products()->save($product);
+        $this->command->info("--- guardado producto {$product->title} ---");
 
-        $this->command->info("Producto {$product->title} creado!");
+        // luego se guarda la direccion.
+        $product->direction()->save(factory(App\Direction::class)->make());
 
-        $direction = new Direction;
-        $direction->parish_id  = $parish->id;
-        $direction->details    = $faker->streetAddress();
-        $direction->created_by = $user->id;
-        $direction->updated_by = $user->id;
-        $product->direction()->save($direction);
-        $this->command->info("direccion: {$direction->details}");
-      endforeach;
-    endforeach;
+        // con la direccion se guardan los detalles del mapa.
+        $product->direction()
+                ->first()
+                ->map()
+                ->save(factory(App\MapDetail::class)->make());
 
-    $product = Product::first();
+        // se guarda la imagen del producto
+        // por estar nulo el primer argumento, saldra una
+        // imagen por defecto, -sin imagen-
+        $this->upload->createImage(null, $product);
 
-    // detalles del mapa
-    $this->command->info("map details: 10.492315, -66.932899");
+        // como los features tienen una imagen asociada
+        // se guarda la instancia como variable $f
+        // y se guarda una imagen.
+        $f = $product->features()->save(factory(App\Feature::class)->make());
+        $this->upload->createImage(null, $f);
 
-    $map = new MapDetail;
-    $map->latitude   = 10.492315;
-    $map->longitude  = -66.932899;
-    $map->zoom       = 12;
-    $map->created_by = $user->id;
-    $map->updated_by = $user->id;
-
-    $product->direction()->first()->map()->save($map);
-
-    $this->command->info('Creacion de productos completado.');
+        // estos son el resto de las entidades relacionadas con producto.
+        $product->characteristics()->save(factory(App\Characteristic::class)->make());
+        $product->nutritional()->save(factory(App\Nutritional::class)->make());
+        $product->mechanical()->save(factory(App\MechanicalInfo::class)->make());
+      });
+    });
   }
-
 }

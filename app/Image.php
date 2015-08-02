@@ -26,7 +26,7 @@ class Image extends Model {
 
   public function setAltAttribute($value)
   {
-    $this->attributes['alt'] = 'orbiagro.com.ve subastas compra y venta: '.str_slug($value);
+    $this->attributes['alt'] = str_slug($value).' en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.';
   }
 
   // --------------------------------------------------------------------------

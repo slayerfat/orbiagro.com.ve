@@ -8,9 +8,9 @@ class Bank extends Model {
 
   use InternalDBManagement;
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function billings()
   {
     return $this->hasMany('App\Billing');
