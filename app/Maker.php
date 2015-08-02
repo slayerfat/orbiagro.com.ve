@@ -3,14 +3,19 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
+
 class Maker extends Model {
+
+  use InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = ['name', 'domain', 'url'];
 
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setNameAttribute($value)
   {
     $this->attributes['name'] = ModelValidation::byLenght($value, 3);
@@ -27,39 +32,33 @@ class Maker extends Model {
     endif;
   }
 
-  /**
-   * Accessors
-   */
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
   public function getNameAttribute($value)
   {
     if($value) return ucfirst($value);
     return null;
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
+  // Has Many
+  // --------------------------------------------------------------------------
   public function products()
   {
     return $this->hasMany('App\Product');
   }
 
-  /**
-   * Belongs To Many
-   */
-  public function sub_categories()
-  {
-    return $this->belongsToMany('App\SubCategory');
-  }
+  // --------------------------------------------------------------------------
+  // Belongs to Many
+  // --------------------------------------------------------------------------
 
-  /**
-   * Relacion polimorfica
-   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-   *
-   * $a->images()->save($b)
-   * en donde $a es una instancia de User y
-   * $b es una instancia de Direction
-   */
+  // --------------------------------------------------------------------------
+  // Polymorphic
+  // --------------------------------------------------------------------------
    public function image()
   {
     return $this->morphOne('App\Image', 'imageable');

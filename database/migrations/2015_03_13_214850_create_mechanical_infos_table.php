@@ -16,7 +16,7 @@ class CreateMechanicalInfosTable extends Migration {
     {
       $table->increments('id');
       $table->integer('product_id')->unsigned();
-      $table->foreign('product_id')->references('id')->on('products');
+      $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
       $table->string('motor')->nullable();
       $table->string('motor_serial')->nullable();
       $table->string('model')->nullable();

@@ -78,8 +78,6 @@ class NutritionalsController extends Controller {
     endif;
 
     $this->nutritional = new Nutritional($request->all());
-    $this->nutritional->created_by = $this->userId;
-    $this->nutritional->updated_by = $this->userId;
 
     $product->nutritional()->save($this->nutritional);
 
@@ -120,22 +118,10 @@ class NutritionalsController extends Controller {
       return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
     endif;
 
-    $this->nutritional->updated_by = $this->userId;
     $this->nutritional->update($request->all());
 
     flash('Valores Nutricionales del Producto Actualizados exitosamente.');
     return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    //
   }
 
 }

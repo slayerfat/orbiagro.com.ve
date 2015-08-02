@@ -14,7 +14,11 @@ use App\SubCategory;
 use App\Mamarrachismo\VisitsService;
 use App\Mamarrachismo\Upload;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+
 class CategoriesController extends Controller {
+
+  use SEOToolsTrait;
 
   public $user, $userId, $cat;
 
@@ -48,6 +52,11 @@ class CategoriesController extends Controller {
       endforeach;
     endforeach;
 
+    $this->seo()->setTitle('Categorias en orbiagro.com.ve');
+    $this->seo()->setDescription('Categorias existentes es orbiagro.com.ve');
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('CategoriesController@index'));
+
     return view('category.index', compact('cats', 'productsCollection'));
   }
 
@@ -78,7 +87,7 @@ class CategoriesController extends Controller {
 
     $upload->createImage($request->file('image'), $this->cat);
 
-    flash()->success('Rubro creado exitosamente.');
+    flash()->success('Categoria creada exitosamente.');
     return redirect()->action('CategoriesController@index');
   }
 
@@ -94,6 +103,11 @@ class CategoriesController extends Controller {
       $cat = Category::findOrFail($id);
 
     $subCats = $cat->sub_categories;
+
+    $this->seo()->setTitle("{$cat->description} en orbiagro.com.ve");
+    $this->seo()->setDescription("{$cat->description} existentes es orbiagro.com.ve");
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('CategoriesController@show', $id));
 
     return view('category.show', compact('cat', 'subCats'));
   }
@@ -143,7 +157,25 @@ class CategoriesController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $this->cat = category::findOrFail($id);
+
+    try
+    {
+      $this->cat->delete();
+    }
+    catch (\Exception $e)
+    {
+      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
+      {
+        flash()->error('Para poder eliminar esta Categoria, no deben haber productos asociados.');
+        return redirect()->action('CategoriesController@show', $this->cat->slug);
+      }
+      \Log::error($e);
+      abort(500);
+    }
+
+    flash()->success('La Categoria ha sido eliminada correctamente.');
+    return redirect()->action('CategoriesController@index');
   }
 
 }

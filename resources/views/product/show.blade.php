@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Productos - {{ $product->price_bs() }} - {{ $product->title }}
-@stop
-
 @section('content')
 
   @if(Auth::user() and Auth::user()->isOwnerOrAdmin($product->user_id))
@@ -12,11 +8,17 @@
         <div class="col-xs-2">
           {!! link_to_action('ProductsController@edit', 'Editar', $product->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
+        <div class="col-xs-2">
+          {!! Form::open(['method' => 'DELETE', 'action' => ['ProductsController@destroy', $product->id]]) !!}
+          {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
+          {!! Form::close() !!}
+        </div>
       </div>
     </div>
   @endif
 
-  @include('product.breadcrumbs', $product)
+  @include('product.addons.breadcrumbs-show')
+
   <div class="container">
     <div class="row">
       <div class="col-md-7">
@@ -70,15 +72,24 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
+        <p class="product-dates">
+          Creado
+          {!! Date::parse($product->created_at)->diffForHumans() !!}.
+          @unless($product->created_at == $product->updated_at)
+            <i>
+              Ultima actualizacion
+              {!! Date::parse($product->updated_at)->diffForHumans() !!}.
+            </i>
+          @endunless
+        </p>
         <p>
-          Creado el: {{ $product->created_at }}
-          Actualizado el: {{ $product->updated_at }}
+          {!! link_to_action('SubCategoriesController@show', 'Producto en el Rubro '.$product->subCategory->description,$product->subCategory->slug ) !!}
         </p>
       </div>
     </div>
   </div>
 
-  <?php $sub_category = $product->sub_category ?>
+  <?php $sub_category = $product->subCategory ?>
   @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Productos Relacionados'])
 
   <div class="container">
@@ -109,6 +120,8 @@
 
   @include('product.addons.direction', $product)
 
+  @include('product.addons.providers', $product)
+
   @include('visit.addons.relatedProducts')
 
   @include('partials.disclaimer')
@@ -138,4 +151,8 @@
   {{-- CKEDITOR --}}
   <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
   <script src="{!! asset('js/editor/products.js') !!}"></script>
+  <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
+
+  @yield('productFeature-js')
+  @yield('productProvider-js')
 @stop

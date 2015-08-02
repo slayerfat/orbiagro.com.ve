@@ -3,7 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Feature extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['title', 'description'];
 
@@ -12,12 +16,12 @@ class Feature extends Model {
   // --------------------------------------------------------------------------
   public function setTitleAttribute($value)
   {
-    $this->attributes['title'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['title'] = ModelValidation::byLenght($value);
   }
 
   public function setDescriptionAttribute($value)
   {
-    $this->attributes['description'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['description'] = ModelValidation::byLenght($value);
   }
 
   // --------------------------------------------------------------------------

@@ -3,7 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 use Storage;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class File extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['path', 'mime'];
 

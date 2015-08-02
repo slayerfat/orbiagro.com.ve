@@ -119,7 +119,17 @@ class ProfilesController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $this->profile = Profile::findOrFail($id);
+
+    if(!$this->profile->users->isEmpty()) :
+      flash()->error('Para poder eliminar este perfil, debe estar vacio.');
+      return redirect()->action('ProfilesController@show', $this->profile->id);
+    endif;
+
+    $this->profile->delete();
+
+    flash()->info('El Perfil ha sido eliminado correctamente.');
+    return redirect()->action('ProfilesController@index');
   }
 
 }

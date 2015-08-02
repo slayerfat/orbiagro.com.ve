@@ -2,13 +2,17 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Nutritional extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['due'];
 
-  /**
-   * Mutators
-   */
+  // --------------------------------------------------------------------------
+  // Mutators
+  // --------------------------------------------------------------------------
   public function setDueAttribute($value)
   {
     $date = \DateTime::createFromFormat('Y-m-d', $value);
@@ -19,9 +23,13 @@ class Nutritional extends Model {
     endif;
   }
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------
+  // Belongs To
+  // --------------------------------------------------------------------------
   public function product()
   {
     return $this->belongsTo('App\Product');

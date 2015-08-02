@@ -1,11 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
+use Illuminate\Contracts\Auth\Guard;
+
 use App\Http\Requests\CharacteristicRequest;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
 
 use App\Product;
 use App\Characteristic;
@@ -24,11 +22,11 @@ class CharacteristicsController extends Controller {
    *
    * @return void
    */
-  public function __construct(Characteristic $characteristic)
+  public function __construct(Characteristic $characteristic, Guard $auth)
   {
     $this->middleware('auth');
-    $this->user   = Auth::user();
-    $this->userId = Auth::id();
+    $this->user   = $auth->user();
+    $this->userId = $auth->user()->id;
     $this->modelValidator = new ModelValidation($this->userId, $this->user);
     $this->characteristic = $characteristic;
   }
@@ -78,9 +76,6 @@ class CharacteristicsController extends Controller {
     endif;
 
     $this->characteristic = new Characteristic($request->all());
-    $this->characteristic->created_by = $this->userId;
-    $this->characteristic->updated_by = $this->userId;
-
     $product->characteristics()->save($this->characteristic);
 
     flash('Caracteristicas del producto creadas exitosamente.');
@@ -120,22 +115,10 @@ class CharacteristicsController extends Controller {
       return redirect()->action('ProductsController@show', $this->characteristic->product->slug);
     endif;
 
-    $this->characteristic->updated_by = $this->userId;
     $this->characteristic->update($request->all());
 
     flash('Caracteristicas del Producto Actualizadas exitosamente.');
     return redirect()->action('ProductsController@show', $this->characteristic->product->slug);
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    //
   }
 
 }

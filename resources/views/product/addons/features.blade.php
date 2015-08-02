@@ -16,6 +16,19 @@
             @if($isUserValid)
               {!! link_to_action('FeaturesController@edit', '| Actualizar', $feature->id) !!}
             @endif
+            @if($isUserValid)
+            <a
+              href="#"
+              onclick='deleteResourceFromAnchor({{"\"delete-feature-$feature->id\""}})'>
+              | Eliminar
+            </a>
+            {!! Form::open([
+              'method' => 'DELETE',
+              'action' => ['FeaturesController@destroy', $feature->id],
+              'class' => 'hidden',
+              'id' => "delete-feature-{$feature->id}"]) !!}
+            {!! Form::close() !!}
+            @endif
           </h4>
         </div>
         <div
@@ -54,3 +67,7 @@
     Sin información detallada
   @endif
 @endif
+
+@section('productFeature-js')
+  <script type="text/javascript" src="{!! asset('js/show/deleteResourceFromAnchor.js') !!}"></script>
+@stop

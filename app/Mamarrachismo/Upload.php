@@ -51,7 +51,10 @@ class Upload {
 
   public function __construct($userID = null)
   {
-    $this->userId = $userID;
+    if ($userID !== null)
+    {
+      $this->userId = $userID;
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -140,8 +143,13 @@ class Upload {
    *
    * @return boolean
    */
-  public function createDefaultImage($path, $model)
+  public function createDefaultImage($path = null, $model)
   {
+    if ($path == null && isset($this->path))
+    {
+      $path = $this->path;
+    }
+
     // el nombre del archivo
     $name = date('Ymdhmmss-').str_random(20);
     $path = "{$path}/{$name}.gif";
@@ -170,8 +178,10 @@ class Upload {
    *
    * @return boolean
    */
-  public function updateImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel, Image $imageModel)
+  public function updateImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel, Image $imageModel = null)
   {
+    if ($imageModel == null) return $this->createImage($file, $parentModel);
+
     $this->path = $this->generatePathFromModel($parentModel);
 
     // el validador
@@ -210,7 +220,7 @@ class Upload {
 
     // el validador
     $validator = Validator::make(['file' => $file], $this->fileRules);
-    if (!$validator->fails())
+    if ($validator->fails())
     {
       $this->errors = $validator->errors()->all();
       throw new Exception("Error, archivo no valido", 3);
@@ -234,8 +244,10 @@ class Upload {
    *
    * @return boolean
    */
-  public function updateFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel = null, File $fileModel)
+  public function updateFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel = null, File $fileModel = null)
   {
+    if ($fileModel == null) return $this->createFile($file, $parentModel);
+
     $this->path = $this->generatePathFromModel($parentModel);
 
     // el validador
@@ -270,8 +282,14 @@ class Upload {
   private function createImageModel(array $array, $model)
   {
     $image = new Image($array);
-    $image->created_by = $this->userId;
-    $image->updated_by = $this->userId;
+
+    // si la aplicacion esta por consola (artisan u otro)
+    // se le asigna el created/updated by.
+    if (app()->runningInConsole())
+    {
+      $image->created_by = $this->userId;
+      $image->updated_by = $this->userId;
+    }
 
     switch (get_class($model)) :
 
@@ -312,8 +330,6 @@ class Upload {
   private function createFileModel(array $array, $model)
   {
     $file = new File($array);
-    $file->created_by = $this->userId;
-    $file->updated_by = $this->userId;
 
     switch (get_class($model)) :
 
@@ -378,7 +394,8 @@ class Upload {
         return "promos/{$model->id}";
 
       default:
-        throw new Exception("Error: modelo desconocido, no se puede crear ruta", 2);
+        throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo vardump: "
+          .var_dump($model)." typeof modelo ".gettype($model), 2);
         break;
 
     endswitch;

@@ -16,9 +16,13 @@ use App\MapDetail;
 use App\Direction;
 use App\Maker;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+
 class ProductsController extends Controller {
 
-  public $user, $userId;
+  use SEOToolsTrait;
+
+  public $user;
 
   /**
    * Create a new controller instance.
@@ -30,7 +34,6 @@ class ProductsController extends Controller {
     $this->middleware('auth', ['except' => ['index', 'show']]);
     $this->middleware('user.unverified', ['except' => ['index', 'show']]);
     $this->user   = Auth::user();
-    $this->userId = Auth::id();
   }
 
   /**
@@ -45,6 +48,61 @@ class ProductsController extends Controller {
     $subCats  = SubCategory::all();
 
     $visitedProducts = $visits->getVisitedProducts();
+
+    $this->seo()->setTitle('Productos en orbiagro.com.ve');
+    $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
+
+    return view('product.index', compact(
+      'products', 'cats', 'subCats', 'visitedProducts'
+    ));
+  }
+
+  /**
+   * Display a listing of the resource according to category.
+   *
+   * @todo refactor
+   *
+   * @return Response
+   */
+  public function indexByCategory($categoryId, VisitsService $visits)
+  {
+    if(!$products = Category::where('slug', $categoryId)->first()->products()->paginate(20))
+      $products = Category::findOrFail($categoryId)->products()->paginate(20);
+    $cats     = Category::all();
+    $subCats  = Category::where('slug', $categoryId)->first()->sub_categories;
+
+    $visitedProducts = $visits->getVisitedProducts();
+
+    $this->seo()->setTitle("Productos de {$subCats->first()->category->description} en orbiagro.com.ve");
+    $this->seo()->setDescription("Productos y Articulos de {$subCats->first()->category->description} en existencia en orbiagro.com.ve");
+    $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
+
+    return view('product.index', compact(
+      'products', 'cats', 'subCats', 'visitedProducts'
+    ));
+  }
+
+  /**
+   * Display a listing of the resource according to sub-category.
+   *
+   * @todo refactor
+   *
+   * @return Response
+   */
+  public function indexBySubCategory($subCategoryId, VisitsService $visits)
+  {
+    if(!$products = SubCategory::where('slug', $subCategoryId)->first()->products()->paginate(20))
+      $products = SubCategory::findOrFail($subCategoryId)->products()->paginate(20);
+    $cats     = Category::all();
+    $subCats  = SubCategory::all();
+
+    $visitedProducts = $visits->getVisitedProducts();
+
+    $this->seo()->setTitle("Productos de {$products->first()->subCategory->description} en orbiagro.com.ve");
+    $this->seo()->setDescription("Productos y Articulos de {$products->first()->subCategory->description} en existencia en orbiagro.com.ve");
+    $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
 
     return view('product.index', compact(
       'products', 'cats', 'subCats', 'visitedProducts'
@@ -78,17 +136,11 @@ class ProductsController extends Controller {
   public function store(ProductRequest $request, Upload $upload)
   {
     // se crean los modelos
-    $upload->userId = $this->userId;
+    $upload->userId = Auth::id();
     $data       = $request->all();
     $product    = new Product($data);
     $dir        = new Direction($data);
     $map        = new MapDetail($data);
-
-    // info adicional
-    $product->created_by = $this->userId;
-    $product->updated_by = $this->userId;
-    $dir->updated_by = $this->userId;
-    $dir->created_by = $this->userId;
 
     // se guardan los modelos
     $this->user->products()->save($product);
@@ -108,7 +160,7 @@ class ProductsController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id, Request $request, VisitsService $visits)
+  public function show($id, VisitsService $visits)
   {
     if(!$product = Product::with('user')->where('slug', $id)->first())
       $product = Product::with('user')->findOrFail($id);
@@ -127,6 +179,11 @@ class ProductsController extends Controller {
     else :
       $isUserValid = false;
     endif;
+
+    $this->seo()->setTitle("{$product->title} - {$product->price_bs()}");
+    $this->seo()->setDescription("{$product->title} en {$product->subCategory->description}, consigue mas en {$product->subCategory->category->description} dentro de orbiagro.com.ve");
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('ProductsController@show', $id));
 
     return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
   }
@@ -169,7 +226,7 @@ class ProductsController extends Controller {
       flash()->error('Ud. no tiene permisos para esta accion.');
       return redirect()->action('ProductsController@show', $id);
     endif;
-    $product->updated_by = $this->userId;
+
     $product->update($request->all());
 
     // modificado porque el modelo no queria
@@ -177,7 +234,7 @@ class ProductsController extends Controller {
     $direction = $product->direction;
     $direction->parish_id = $request->input('parish_id');
     $direction->details = $request->input('details');
-    $direction->updated_by = $this->userId;
+
     $direction->save();
 
     if(!$map = $direction->map)
@@ -202,7 +259,59 @@ class ProductsController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $product = Product::findOrFail($id);
+
+    if(!$this->user->isOwnerOrAdmin($product->user_id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@show', $id);
+    endif;
+
+    $product->delete();
+
+    flash()->info('El Producto ha sido eliminado correctamente.');
+    return redirect()->action('ProductsController@index');
+  }
+
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function forceDestroy($id)
+  {
+    $product = Product::withTrashed()->findOrFail($id);
+
+    if(!$this->user->isOwnerOrAdmin($product->user_id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@index');
+    endif;
+
+    $product->forceDelete();
+
+    flash()->info('El Producto ha sido eliminado permanentemente.');
+    return redirect()->action('ProductsController@index');
+  }
+
+  /**
+   * Restores the specified resource.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function restore($id)
+  {
+    $product = Product::withTrashed()->findOrFail($id);
+
+    if(!$this->user->isOwnerOrAdmin($product->user_id)) :
+      flash()->error('Ud. no tiene permisos para esta accion.');
+      return redirect()->action('ProductsController@index');
+    endif;
+
+    $product->restore();
+
+    flash()->success('El Producto ha sido restaurado exitosamente.');
+    return redirect()->action('ProductsController@show', $product->slug);
   }
 
   /**

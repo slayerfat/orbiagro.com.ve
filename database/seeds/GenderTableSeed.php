@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\User;
+
 class GenderTableSeeder extends Seeder {
 
   /**
@@ -18,12 +20,18 @@ class GenderTableSeeder extends Seeder {
       'Femenino'
     ];
 
+    $user = User::where('name', 'tester')->first();
+
+    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+
     foreach($types as $gender):
       App\Gender::create([
-        'description' => $gender
+        'description' => $gender,
+        'created_by'  => $user->id,
+        'updated_by'  => $user->id,
       ]);
     endforeach;
-    $this->command->info('El Elegido necesita un Genero...');
+    $this->command->info('Generos creados.');
   }
 
 }

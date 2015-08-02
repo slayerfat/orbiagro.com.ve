@@ -2,17 +2,21 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Billing extends Model {
 
-  /**
-   * Relaciones
-   */
+  use InternalDBManagement;
+
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function bank()
   {
     return $this->belongsTo('App\Bank');
   }
 
-  public function card_type()
+  public function cardType()
   {
     return $this->belongsTo('App\CardType');
   }

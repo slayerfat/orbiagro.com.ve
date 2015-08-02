@@ -53,7 +53,7 @@
           @if (Auth::user()->isAdmin())
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                Mantenimiento
+                Mant.
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
@@ -68,6 +68,9 @@
                 <li class="divider"></li>
                 <li>{!! link_to_action('MakersController@create', 'Crear Fabricante') !!}</li>
                 <li>{!! link_to_action('MakersController@index', 'Consultar Fabricante') !!}</li>
+                <li class="divider"></li>
+                <li>{!! link_to_action('ProvidersController@create', 'Crear Proveedor') !!}</li>
+                <li>{!! link_to_action('ProvidersController@index', 'Consultar Proveedor') !!}</li>
               </ul>
             </li>
           @endif

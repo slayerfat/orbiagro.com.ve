@@ -3,7 +3,12 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
+
 class SubCategory extends Model {
+
+  use InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = ['category_id', 'description', 'info'];
 
@@ -56,14 +61,6 @@ class SubCategory extends Model {
   // --------------------------------------------------------------------------
   // Scopes
   // --------------------------------------------------------------------------
-  public function scopeRandom($query)
-  {
-    if (env('APP_ENV') == 'testing') {
-      $query->orderByRaw('RANDOM()');
-    }else{
-      $query->orderByRaw('RAND()');
-    }
-  }
 
   // --------------------------------------------------------------------------
   // Relaciones
@@ -88,10 +85,6 @@ class SubCategory extends Model {
   // --------------------------------------------------------------------------
   // Belongs To Many
   // --------------------------------------------------------------------------
-  public function makers()
-  {
-    return $this->belongsToMany('App\Maker');
-  }
 
   // --------------------------------------------------------------------------
   // Polymorphic

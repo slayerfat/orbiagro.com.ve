@@ -5,3 +5,27 @@
     margin-right: 10px;
   }
 }
+
+// listado de categorias
+.categorias-listado {
+
+  padding-bottom: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 1px;
+
+  ul {
+    .categorias-listado-descripcion {
+      list-style: none;
+      padding: 10px;
+    }
+  }
+
+  .lista {
+
+    float: left;
+    font-size: $font-size-large;
+    margin-right: 3%;
+    width: 30%;
+  }
+}

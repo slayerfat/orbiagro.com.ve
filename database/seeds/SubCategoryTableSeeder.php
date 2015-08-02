@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
 use Faker\Factory as Faker;
+
+use App\User;
 
 class SubCategoryTableSeeder extends Seeder {
 
@@ -30,8 +31,13 @@ class SubCategoryTableSeeder extends Seeder {
 
     $faker  = Faker::create('es_ES');
 
+    $user = User::where('name', 'tester')->first();
+
+    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+
     foreach($types as $category => $values):
       $this->command->info("$category");
+
       $cat = App\Category::where('description', $category)->first();
         foreach($values as $value):
           $this->command->info("$value");
@@ -39,7 +45,9 @@ class SubCategoryTableSeeder extends Seeder {
             'category_id' => $cat->id,
             'description' => $value,
             'info'        => $faker->text(),
-            'slug'        => str_slug($value, '-')
+            'slug'        => str_slug($value, '-'),
+            'created_by'  => $user->id,
+            'updated_by'  => $user->id,
           ]);
         endforeach;
     endforeach;

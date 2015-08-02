@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Rubro - {{ $subCat->description }}
-@stop
-
 @section('content')
 
   @if(Auth::user() and Auth::user()->isAdmin($subCat->id))
@@ -12,12 +8,24 @@
         <div class="col-xs-2">
           {!! link_to_action('SubCategoriesController@edit', 'Editar', $subCat->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
+        <div class="col-xs-2">
+          {!! Form::open(['method' => 'DELETE', 'action' => ['SubCategoriesController@destroy', $subCat->id]]) !!}
+          {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
+          {!! Form::close() !!}
+        </div>
       </div>
     </div>
   @endif
 
   @include('sub-category.addons.breadcrumbs-show')
   <div class="container" style="margin-top:15px;">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>
+          Productos dentro de {{$subCat->description}}
+        </h1>
+      </div>
+    </div>
     @include('partials.products.paginated')
   </div>
   @include('visit.addons.relatedProducts')
@@ -32,4 +40,5 @@
   @yield('relatedProducts-js')
   @yield('popular-subCats-js')
   @yield('visited-subCats-js')
+  <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 @stop

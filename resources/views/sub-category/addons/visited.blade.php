@@ -17,19 +17,21 @@
           <h3>Algunos Productos en {{ $subcat->description }}</h3>
         </div>
         @foreach($subcat->products()->random()->take(6)->get() as $product)
-          <div class="col-sm-2">
-            <div class="thumbnail">
-              <img
-                src="{!! asset($product->images->first()->path) !!}"
-                alt="{{ $product->images->first()->alt }}"
-                class="img-responsive"/>
-              <div class="caption">
-                <h4>
-                  {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}
-                </h4>
+          @unless($product->images->isEmpty())
+            <div class="col-sm-2">
+              <div class="thumbnail">
+                <img
+                  src="{!! asset($product->images->first()->path) !!}"
+                  alt="{{ $product->images->first()->alt }}"
+                  class="img-responsive"/>
+                <div class="caption">
+                  <h4>
+                    {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}
+                  </h4>
+                </div>
               </div>
             </div>
-          </div>
+          @endunless
         @endforeach
       </div>
     @endforeach

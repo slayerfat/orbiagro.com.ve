@@ -2,11 +2,15 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class CardType extends Model {
 
-  /**
-   * Relaciones
-   */
+  use InternalDBManagement;
+
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function billings()
   {
     return $this->hasMany('App\Billing');

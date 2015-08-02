@@ -22,7 +22,7 @@ class UsersController extends Controller {
   public function __construct(User $user)
   {
     $this->middleware('auth');
-    $this->middleware('user.admin', ['only' => 'index']);
+    $this->middleware('user.admin', ['only' => 'index', 'forceDestroy', 'restore']);
     $this->user = $user;
   }
 
@@ -33,7 +33,7 @@ class UsersController extends Controller {
    */
   public function index()
   {
-    $users = User::with('person')->get();
+    $users = User::with('person')->withTrashed()->get();
 
     return view('user.index', compact('users'));
   }
@@ -132,6 +132,22 @@ class UsersController extends Controller {
   }
 
   /**
+   * Display the specified resource.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function showTrashed($id)
+  {
+    if(!$user = User::with('person', 'products', 'profile')->where('name', $id)->withTrashed()->first())
+      $user = User::with('person', 'products', 'profile')->withTrashed()->findOrFail($id);
+
+    $products = \App\Product::where('user_id', $user->id)->paginate(4);
+
+    return view('user.show', compact('user', 'products'));
+  }
+
+  /**
    * Show the form for editing the specified resource.
    *
    * @param  int  $id
@@ -185,7 +201,72 @@ class UsersController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $this->user = User::findOrFail($id);
+
+    try
+    {
+      $this->user->delete();
+    }
+    catch (\Exception $e)
+    {
+      \Log::error($e);
+      abort(500);
+    }
+
+    flash()->success('El Usuario ha sido eliminado correctamente.');
+    return redirect()->action('UsersController@showTrashed', $this->user->id);
+  }
+
+  public function forceDestroy($id)
+  {
+    $user = User::where('id', $id)->withTrashed()->firstOrFail();
+
+    try
+    {
+      $user->forceDelete();
+    }
+    catch (\Exception $e)
+    {
+      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
+      {
+        flash()->error('Para poder eliminar este Usuario, no deben haber recursos asociados.');
+        return redirect()->action('UsersController@show', $user->name);
+      }
+      \Log::error($e);
+      abort(500);
+    }
+
+    flash()->success('El Usuario ha sido eliminado correctamente.');
+    return redirect()->action('UsersController@index');
+  }
+
+  /**
+   * UX del usuario que vaya a eliminar su cuenta.
+   *
+   * @return Response
+   */
+  public function preDestroy($id)
+  {
+    if(!$user = User::where('name', $id)->first())
+      $user = User::findOrFail($id);
+
+    return view('user.destroy', compact('user'));
+  }
+
+  /**
+   * Restores the specified resource.
+   *
+   * @param  int  $id
+   * @return Response
+   */
+  public function restore($id)
+  {
+    $user = User::where('id', $id)->withTrashed()->firstOrFail();
+
+    $user->restore();
+
+    flash()->success('El Usuario ha sido restaurado exitosamente.');
+    return redirect()->action('UsersController@show', $user->name);
   }
 
 }

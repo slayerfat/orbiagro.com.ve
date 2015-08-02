@@ -3,7 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Category extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['description', 'slug', 'info'];
 
@@ -60,7 +64,7 @@ class Category extends Model {
   // --------------------------------------------------------------------------
   // Has Many
   // --------------------------------------------------------------------------
-  public function sub_categories()
+  public function subCategories()
   {
     return $this->hasMany('App\SubCategory');
   }
@@ -71,6 +75,11 @@ class Category extends Model {
   public function image()
   {
     return $this->morphOne('App\Image', 'imageable');
+  }
+
+  public function products()
+  {
+    return $this->hasManyThrough('App\product', 'App\SubCategory');
   }
 
 }

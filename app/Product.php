@@ -1,11 +1,18 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\CheckDollar as Dollar;
 use App\Mamarrachismo\ModelValidation;
 use App\Mamarrachismo\Transformer;
 
+use App\Mamarrachismo\CheckDollar;
+
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
+
 class Product extends Model {
+
+  use SoftDeletes, InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = [
     'user_id',
@@ -17,6 +24,15 @@ class Product extends Model {
     'quantity',
     'slug'
   ];
+
+  /**
+   * The attributes that should be mutated to dates.
+   *
+   * @var array
+   */
+  protected $dates = ['deleted_at'];
+
+  protected $checkDollar;
 
   // --------------------------------------------------------------------------
   // Mutators
@@ -49,7 +65,20 @@ class Product extends Model {
 
   public function setPriceAttribute($value)
   {
-    $this->attributes['price'] = ModelValidation::byNonNegative($value);
+    if (ModelValidation::byNonNegative($value))
+    {
+      return $this->attributes['price'] = (double)$value;
+    }
+
+    elseif($number = Transformer::toNumber($value))
+    {
+      if ($number > 0)
+      {
+        return $this->attributes['price'] = $number;
+      }
+    }
+
+    return $this->attributes['price'] = null;
   }
 
   // --------------------------------------------------------------------------
@@ -70,18 +99,20 @@ class Product extends Model {
     return $this->get()->paginate(5);
   }
 
+  public function getPriceAttribute($value)
+  {
+    if (isset($value) && $value > 0)
+    {
+      return (double)$value;
+    }
+
+    return null;
+  }
+
+
   // --------------------------------------------------------------------------
   // Scopes
   // --------------------------------------------------------------------------
-  public function scopeRandom($query)
-  {
-    if (env('APP_ENV') == 'testing') {
-      $query->orderByRaw('RANDOM()');
-    }else{
-      $query->orderByRaw('RAND()');
-    }
-  }
-
   public function scopeLatest($query)
   {
     return $query->orderBy('updated_at', 'desc');
@@ -104,7 +135,7 @@ class Product extends Model {
     return $this->belongsTo('App\Maker');
   }
 
-  public function sub_category()
+  public function subCategory()
   {
     return $this->belongsTo('App\SubCategory');
   }
@@ -148,6 +179,10 @@ class Product extends Model {
    return $this->belongsToMany('App\User')->withPivot('quantity')->withTimestamps();
   }
 
+  public function providers()
+  {
+   return $this->belongsToMany('App\Provider')->withPivot('sku');
+  }
 
   // --------------------------------------------------------------------------
   // Polymorphic
@@ -182,38 +217,115 @@ class Product extends Model {
   // --------------------------------------------------------------------------
   // Metodos Publicos
   // --------------------------------------------------------------------------
-
-  public function check_dollar()
+  public function setDollar(CheckDollar $checkDollar)
   {
-    $obj = new Dollar;
-    if($obj->isValid()) return $obj->dollar->promedio;
+    $this->CheckDollar = $checkDollar;
+
+    return $this;
+  }
+
+  public function check_dollar(CheckDollar $checkDollar = null)
+  {
+    // si existe un parametro y es valido
+    if ($checkDollar !== null && $checkDollar->isValid())
+    {
+      return $checkDollar->dollar->promedio;
+    }
+
+    // no existe parametro pero existe como atributo
+    elseif ($checkDollar === null && isset($this->CheckDollar))
+    {
+      if($this->CheckDollar->isValid())
+      {
+        return $this->CheckDollar->dollar->promedio;
+      }
+    }
+
+    // no existe ni parametro ni atributo
+    elseif ($checkDollar === null)
+    {
+      $obj = new CheckDollar;
+      if($obj->isValid())
+      {
+        $this->CheckDollar = $obj;
+        return $obj->dollar->promedio;
+      }
+    }
+
     return null;
   }
 
-  public function price_dollar()
+  public function price_dollar(CheckDollar $checkDollar = null)
   {
-    $dollar = $this->check_dollar();
+    // si el objeto fue pasado como parametro
+    if ($checkDollar !== null && $checkDollar->isValid())
+    {
+      $dollar = $this->check_dollar($checkDollar);
+    }
 
-    if($dollar):
-      $value = $this->attributes['price'] / $dollar;
-      return "\${$value}";
-    else:
+    // si el objeto existe como atributo
+    elseif ($checkDollar === null && isset($this->CheckDollar))
+    {
+      $dollar = $this->check_dollar($this->CheckDollar);
+    }
+
+    // si no fue pasado ningun parametro
+    elseif ($checkDollar === null)
+    {
+      $checkDollar = new CheckDollar;
+
+      $dollar = $this->check_dollar($checkDollar);
+    }
+
+    // si existe un $dollar y existe el precio del producto:
+    if($dollar && isset($this->attributes['price']))
+    {
+      (int)$value = $this->attributes['price'] / $dollar;
+
+      return "\$ ".Transformer::toReadable($value);
+    }
+
+    return null;
+  }
+
+  public function price_bs($otherNumber = null)
+  {
+    if ($otherNumber)
+    {
+      return Transformer::toReadable($otherNumber);
+    }
+
+    if (!isset($this->attributes['price']))
+    {
       return null;
-    endif;
-  }
+    }
 
-  public function price_bs()
-  {
     $price = Transformer::toReadable($this->attributes['price']);
-    if(isset($this->attributes['price'])) return "Bs. {$price}";
-    return null;
+
+    return "Bs. {$price}";
   }
 
   public function price_formatted()
   {
-    $price = Transformer::toReadable($this->attributes['price']);
-    if(isset($this->attributes['price'])) return "{$price}";
+    if (isset($this->attributes['price']))
+    {
+      $price = Transformer::toReadable($this->attributes['price']);
+      return "{$price}";
+    }
+
     return null;
+  }
+
+  /**
+   * forceDeleting es el atributo relacionado cuando
+   * algun modelo es eliminado de verdad
+   * en la aplicacion.
+   *
+   * @return boolean
+   */
+  public function isForceDeleting()
+  {
+    return $this->forceDeleting;
   }
 
 }

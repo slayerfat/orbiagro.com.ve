@@ -4,6 +4,8 @@ use Illuminate\Database\Seeder;
 
 use Faker\Factory as Faker;
 
+use App\User;
+
 class CategoryTableSeeder extends Seeder {
 
   /**
@@ -22,11 +24,17 @@ class CategoryTableSeeder extends Seeder {
 
     $faker  = Faker::create('es_ES');
 
+    $user = User::where('name', 'tester')->first();
+
+    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+
     foreach($types as $category):
       $category = App\Category::create([
         'description' => $category,
         'info'        => $faker->text(),
-        'slug'        => str_slug($category, '-')
+        'slug'        => str_slug($category, '-'),
+        'created_by'  => $user->id,
+        'updated_by'  => $user->id,
       ]);
     endforeach;
     $this->command->info('El Elegido creo las categorias.');

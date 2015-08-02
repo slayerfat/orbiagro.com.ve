@@ -16,6 +16,9 @@ switch ($active)
   case 'billing':
     $billing = 'class=active';
     break;
+  case 'userDestroy':
+    $userDestroy = 'active';
+    break;
   default:
     Log::warning('user.addon.sidebar: no se pudo identificar el vinculo activo');
     break;}?>
@@ -48,6 +51,31 @@ switch ($active)
       <li>
         {!! link_to_action($user->person ? 'PeopleController@edit':'PeopleController@create', 'Información Personal', $user->name) !!}
       </li>
+      @unless($user->deleted_at)
+        <li class="sidebar-destroy {{isset($userDestroy) ? $userDestroy:null}}">
+          {!! link_to_action('UsersController@preDestroy', 'Eliminar Cuenta', $user->name) !!}
+        </li>
+      @else
+        <li>
+          <a href="#" onclick='deleteResourceFromAnchor({{"\"restore-user-$user->id\""}})'>Restaurar Cuenta</a>
+        </li>
+        {!! Form::open([
+          'method' => 'POST',
+          'action' => ['UsersController@restore', $user->id],
+          'class' => 'hidden',
+          'id' => "restore-user-{$user->id}"]) !!}
+        {!! Form::close() !!}
+        <li class="sidebar-destroy">
+          <a href="#" onclick='deleteResourceFromAnchor({{"\"forceDestroy-user-$user->id\""}})'>Destruir Cuenta</a>
+        </li>
+        {!! Form::open([
+          'method' => 'DELETE',
+          'action' => ['UsersController@forceDestroy', $user->id],
+          'class' => 'hidden',
+          'id' => "forceDestroy-user-{$user->id}"]) !!}
+        {!! Form::close() !!}
+        <script type="text/javascript" src="{!! asset('js/show/deleteResourceFromAnchor.js') !!}"></script>
+      @endunless
       {{-- <li>
         <a href="#">Facturación</a>
       </li> --}}

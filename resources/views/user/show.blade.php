@@ -5,15 +5,6 @@
 @stop
 
 @section('content')
-  {{-- @if(Auth::user() and Auth::user()->isAdmin())
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-2">
-          {!! link_to_action('UsersController@edit', 'Editar', $user->id, ['class' => 'btn btn-default btn-block']) !!}
-        </div>
-      </div>
-    </div>
-  @endif --}}
   <div class="container-fluid">
     <div class="row">
       @include('user.addons.sidebar', ['active' => 'resumen'])
@@ -22,13 +13,13 @@
         <h1>
           {{$user->name}}
           <small>
-            {{$user->email}}
+            {!! Html::mailto($user->email) !!}
           </small>
         </h1>
         <h2>
           <small>{{$user->profile->description}}</small>
         </h2>
-        @if($user->person)
+        @if(Auth::user()->isAdmin() && $user->person)
           <h2>
             {{$user->person->formatted_names()}}
           </h2>
@@ -36,7 +27,8 @@
             Cedula: {{$user->person->identity_card}}
           </h3>
           <h3>
-            {{$user->person->nationality->description}}, {{$user->person->gender->description}}
+            {{$user->person->nationality->description}},
+            {{$user->person->gender->description}}
           </h3>
           <h3>{{$user->person->phone}}</h3>
         @endif

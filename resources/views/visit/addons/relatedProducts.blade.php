@@ -9,18 +9,20 @@
       @include('visit.addons.gallerie-products')
     </div>
     @foreach($visitedProducts as $visited)
-      <div class="row related-subcategory-product" id="products-visits-{{ $visited->sub_category->id }}">
-        <?php $products = App\SubCategory::find($visited->sub_category->id)->products->take(6); ?>
+      <div class="row related-subcategory-product" id="products-visits-{{ $visited->subCategory->id }}">
+        <?php $products = App\SubCategory::find($visited->subCategory->id)->products->take(6); ?>
         <div class="col-xs-12">
-          <h3>Recomendaciones por visitar la Categoria {{ $visited->sub_category->description }}</h3>
+          <h3>Recomendaciones por visitar la Categoria {{ $visited->subCategory->description }}</h3>
         </div>
         @foreach($products as $product)
           <div class="col-sm-2">
             <div class="thumbnail">
-              <img
-                src="{!! asset($product->images->first()->path) !!}"
-                alt="{{ $product->images->first()->alt }}"
-                class="img-responsive"/>
+              @unless($product->images->isEmpty())
+                <img
+                  src="{!! asset($product->images->first()->path) !!}"
+                  alt="{{ $product->images->first()->alt }}"
+                  class="img-responsive"/>
+              @endunless
               <div class="caption">
                 <h4>
                   {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}

@@ -3,7 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Direction extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['parish_id', 'details'];
 
@@ -12,7 +16,7 @@ class Direction extends Model {
   // --------------------------------------------------------------------------
   public function setDetailsAttribute($value)
   {
-    $this->attributes['details'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['details'] = ModelValidation::byLenght($value);
   }
 
   // --------------------------------------------------------------------------

@@ -136,11 +136,15 @@ return [
     'Illuminate\Validation\ValidationServiceProvider',
     'Illuminate\View\ViewServiceProvider',
 
+    // 5.1
+    'Illuminate\Broadcasting\BroadcastServiceProvider',
+
     /**
      * Custom Service Providers:
      */
-    'Illuminate\Html\HtmlServiceProvider',
+    // 'Illuminate\Html\HtmlServiceProvider',
     'Jenssegers\Date\DateServiceProvider',
+    Collective\Html\HtmlServiceProvider::class,
 
     /*
      * Application Service Providers...
@@ -151,8 +155,24 @@ return [
     'App\Providers\EventServiceProvider',
     'App\Providers\RouteServiceProvider',
     'App\Providers\ViewServiceProvider',
+    // 'App\Providers\BillingServiceProvider',
+    'App\Providers\CategoryServiceProvider',
+    // 'App\Providers\DirectionServiceProvider',
+    // 'App\Providers\FileServiceProvider',
+    'App\Providers\ImageDeleteServiceProvider',
+    'App\Providers\MakerServiceProvider',
+    'App\Providers\ProductServiceProvider',
+    'App\Providers\SubCategoryServiceProvider',
+    // 'App\Providers\Internal\BankAndCardTypeServiceProvider',
+    // 'App\Providers\Internal\DirDataModelsServiceProvider',
+    // 'App\Providers\Internal\ProductsDataModelsServiceProvider',
+    // 'App\Providers\Internal\PromosServiceProvider',
+    // 'App\Providers\Internal\ProviderServiceProvider',
+    // 'App\Providers\Internal\UsersDataModelsServiceProvider',
+    // 'App\Providers\Internal\VisitServiceProvider',
 
-    'Laracasts\Flash\FlashServiceProvider'
+    'Laracasts\Flash\FlashServiceProvider',
+    'Artesaos\SEOTools\Providers\SEOToolsServiceProvider'
 
   ],
 
@@ -205,11 +225,14 @@ return [
     /**
      * Custom Aliases:
      */
-    'Form'      => 'Illuminate\Html\FormFacade',
-    'Html'      => 'Illuminate\Html\HtmlFacade',
+    // 'Form'      => 'Illuminate\Html\FormFacade',
+    // 'Html'      => 'Illuminate\Html\HtmlFacade',
+    'Form'      => Collective\Html\FormFacade::class,
+    'Html'      => Collective\Html\HtmlFacade::class,
     'Flash'     => 'Laracasts\Flash\Flash',
     'Faker'     => 'Faker\Factory',
-    'Date'      => 'Jenssegers\Date\Date'
+    'Date'      => 'Jenssegers\Date\Date',
+    'SEO'       => 'Artesaos\SEOTools\Facades\SEOTools',
 
   ],
 

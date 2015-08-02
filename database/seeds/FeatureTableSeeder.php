@@ -1,13 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
-use App\User;
-use App\SubCategory;
-use App\Image;
-use App\File;
-use App\Maker;
-use App\Product;
+
+use App\Mamarrachismo\Upload;
 
 class FeatureTableSeeder extends Seeder {
 
@@ -20,62 +15,14 @@ class FeatureTableSeeder extends Seeder {
   {
     $this->command->info("*** Empezando creacion de Feature! ***");
 
-    $faker = Faker::create('es_ES');
-    $user  = User::where('name', 'tester')->first();
+    // upload necesita el ID del usuario a asociar.
+    $this->upload = new Upload(1);
 
-    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+    App\Product::all()->each(function($product){
+      $f = $product->features()->save(factory(App\Feature::class)->make());
+      $this->upload->createImage(null, $f);
+    });
 
-    $products = Product::all();
-
-    // se empieza creado el directorio relacionado con el producto
-    // primero se elimina si existe
-    Storage::disk('public')->deleteDirectory("products");
-
-    foreach($products as $product):
-
-      // primero se crea el directorio
-      Storage::disk('public')->makeDirectory("products/{$product->id}");
-
-      $this->command->info("Producto {$product->slug}");
-      foreach(range(1, 2) as $index) :
-        $this->command->info("feature {$index}");
-        $feature              = new App\Feature;
-        $feature->title       = $faker->sentence(3);
-        $feature->description = $faker->text(100);
-        $feature->created_by  = $user->id;
-        $feature->updated_by  = $user->id;
-
-        $product->features()->save($feature);
-
-        // el nombre del archivo
-        $name = date('Ymdhmmss-').str_random(20);
-        // se copia el archivo
-        Storage::disk('public')->copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
-        $this->command->info("Creado products/{$product->id}/{$name}.gif");
-
-        // el modelo
-        $image             = new Image;
-        $image->path       = "products/{$product->id}/{$name}.gif";
-        $image->mime       = 'image/gif';
-        $image->alt        = $feature->title;
-        $image->created_by = $user->id;
-        $image->updated_by = $user->id;
-        $feature->image()->save($image);
-
-        // el archivo asociado
-        $name = date('Ymdhmmss-').str_random(20);
-        Storage::disk('public')->copy('file.pdf', "products/{$product->id}/{$name}.pdf");
-        $this->command->info("Creado products/{$product->id}/{$name}.pdf");
-
-        // el modelo
-        $file             = new File;
-        $file->path       = "products/{$product->id}/{$name}.pdf";
-        $file->mime       = "application/pdf";
-        $file->created_by = $user->id;
-        $file->updated_by = $user->id;
-        $feature->file()->save($file);
-      endforeach;
-    endforeach;
     $this->command->info('Creacion de features completado.');
   }
 

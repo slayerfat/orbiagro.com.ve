@@ -14,7 +14,11 @@ use App\SubCategory;
 use App\Mamarrachismo\VisitsService;
 use App\Mamarrachismo\Upload;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+
 class SubCategoriesController extends Controller {
+
+  use SEOToolsTrait;
 
   public $user, $userId, $subCat;
 
@@ -52,6 +56,32 @@ class SubCategoriesController extends Controller {
     foreach ($subCats as $cat) {
       $productsCollection->push($cat->products()->random()->take(12)->get());
     }
+
+    $this->seo()->setTitle('Rubros en orbiagro.com.ve');
+    $this->seo()->setDescription('Rubros en existencia en orbiagro.com.ve');
+    $this->seo()->opengraph()->setUrl(action('SubCategoriesController@index'));
+
+    return view('sub-category.index', compact('subCats', 'productsCollection'));
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function indexByCategory($categoryId)
+  {
+    if(!$subCats = Category::where('slug', $categoryId)->first()->sub_categories)
+      $subCats = Category::findOrFail($categoryId)->sub_categories;
+    $productsCollection = collect();
+
+    foreach ($subCats as $cat) {
+      $productsCollection->push($cat->products()->random()->take(12)->get());
+    }
+
+    $this->seo()->setTitle('Rubros en orbiagro.com.ve');
+    $this->seo()->setDescription('Rubros en existencia en orbiagro.com.ve');
+    $this->seo()->opengraph()->setUrl(action('SubCategoriesController@index'));
 
     return view('sub-category.index', compact('subCats', 'productsCollection'));
   }
@@ -110,6 +140,11 @@ class SubCategoriesController extends Controller {
 
     $visits->setNewVisit('subCat', $id);
 
+    $this->seo()->setTitle("{$subCat->description} en orbiagro.com.ve");
+    $this->seo()->setDescription("{$subCat->description} en {$subCat->category->description} dentro de orbiagro.com.ve");
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('SubCategoriesController@show', $id));
+
     return view('sub-category.show', compact('products', 'subCat', 'subCats'));
   }
 
@@ -161,7 +196,25 @@ class SubCategoriesController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $this->subCat = SubCategory::findOrFail($id);
+
+    try
+    {
+      $this->subCat->delete();
+    }
+    catch (\Exception $e)
+    {
+      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
+      {
+        flash()->error('Para poder eliminar este Rubro, no deben haber productos asociados.');
+        return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
+      }
+      \Log::error($e);
+      abort(500);
+    }
+
+    flash()->success('El Rubro ha sido eliminado correctamente.');
+    return redirect()->action('SubCategoriesController@index');
   }
 
 }

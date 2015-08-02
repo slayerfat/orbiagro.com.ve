@@ -19,6 +19,8 @@ class DirectionsController extends Controller {
 
   /**
    * los municipios del estado $id
+   *
+   * @param $id el id del municipio tal
    */
   public function towns($id)
   {
@@ -26,7 +28,9 @@ class DirectionsController extends Controller {
   }
 
   /**
-   * el estado del municipio $id
+   * todos los municipios que tengan el mismo estado del municipio $id
+   *
+   * @param $id el id del municipio tal
    */
   public function town($id)
   {
@@ -37,6 +41,8 @@ class DirectionsController extends Controller {
 
   /**
    * las parroquias del municipio $id
+   *
+   * @param $id el id de la parroquia tal
    */
   public function parishes($id)
   {
@@ -44,7 +50,9 @@ class DirectionsController extends Controller {
   }
 
   /**
-   * el municipio de la parroquia $id
+   * todas las parroquias que tengan el mismo municipio de la parroquia $id
+   *
+   * @param $id el id de la parroquia tal
    */
   public function parish($id)
   {

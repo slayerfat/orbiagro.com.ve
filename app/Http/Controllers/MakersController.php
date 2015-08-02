@@ -8,7 +8,11 @@ use App\Maker;
 
 use App\Mamarrachismo\Upload;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+
 class MakersController extends Controller {
+
+  use SEOToolsTrait;
 
   /**
    * Create a new controller instance.
@@ -32,6 +36,11 @@ class MakersController extends Controller {
   public function index()
   {
     $makers = Maker::with('products')->get();
+
+    $this->seo()->setTitle('Fabricantes en orbiagro.com.ve');
+    $this->seo()->setDescription('Fabricantes existentes es orbiagro.com.ve');
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('MakersController@index'));
 
     return view('maker.index', compact('makers'));
   }
@@ -76,6 +85,11 @@ class MakersController extends Controller {
   {
     if(!$this->maker = Maker::with('products')->where('slug', $id)->first())
       $this->maker = Maker::with('products')->findOrFail($id);
+
+    $this->seo()->setTitle("{$this->maker->name} y sus articulos en orbiagro.com.ve");
+    $this->seo()->setDescription("{$this->maker->name} y sus productos relacionados en orbiagro.com.ve");
+    // $this->seo()->setKeywords(); taxonomias
+    $this->seo()->opengraph()->setUrl(action('MakersController@show', $id));
 
     return view('maker.show')->with(['maker' => $this->maker]);
   }
@@ -133,7 +147,25 @@ class MakersController extends Controller {
    */
   public function destroy($id)
   {
-    //
+    $this->maker = Maker::findOrFail($id);
+
+    try
+    {
+      $this->maker->delete();
+    }
+    catch (\Exception $e)
+    {
+      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
+      {
+        flash()->error('Para poder eliminar este Fabricante, no deben haber productos asociados.');
+        return redirect()->action('MakersController@show', $this->maker->slug);
+      }
+      \Log::error($e);
+      abort(500);
+    }
+
+    flash()->success('El Fabricante ha sido eliminado correctamente.');
+    return redirect()->action('MakersController@index');
   }
 
 }

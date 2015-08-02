@@ -1,9 +1,5 @@
 @extends('master')
 
-@section('title')
-  - Fabricantes en el sistema
-@stop
-
 @section('css')
   <link rel="stylesheet" type="text/css" href="{!! asset('css/vendor/bootstrap-table.css') !!}">
 @stop
@@ -28,7 +24,7 @@
           data-sort-name="name"
           >
           <thead>
-            <th data-field="name" data-sortable="true" data-switchable="true">
+            <th data-field="resource" data-sortable="true" data-switchable="true">
               Nombre
             </th>
             <th data-field="domain" data-sortable="true" data-switchable="true">
@@ -40,6 +36,7 @@
             <th data-field="total" data-sortable="true" data-switchable="true">
               Productos
             </th>
+            <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Acciones</th>
           </thead>
           <tbody>
             @foreach ($makers as $maker)
@@ -68,4 +65,9 @@
 @section('js')
   <script src="{!! asset('js/vendor/bootstrap-table.js') !!}"></script>
   <script src="{!! asset('js/vendor/bootstrap-table-es-CR.js') !!}"></script>
+  {{-- añade iconos en la tabla con actividades genericas --}}
+  <script src="{!! asset('js/show/bootstrap-table.js') !!}"></script>
+  <script type="text/javascript">
+    initBootstrapTable("{!! action('MakersController@show', 'no-data') !!}")
+  </script>
 @stop

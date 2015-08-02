@@ -13,7 +13,11 @@ class NutritionalRequest extends Request {
    * @return bool
    */
   public function authorize()
-  {
+  {// si ruta es nula entonces se esta creado un nuevo recurso
+  if (!$this->route('mechanicals'))
+    return Auth::user()->isVerified();
+
+  // si ruta no es nula entonces se esta manipulando un recurso
     $producto = Product::find($this->route('mechanicals'));
     return Auth::user()->isOwnerOrAdmin($producto->user_id);
   }

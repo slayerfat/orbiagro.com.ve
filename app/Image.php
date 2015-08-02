@@ -4,7 +4,11 @@ use Illuminate\Database\Eloquent\Model;
 use Storage;
 use App\Mamarrachismo\ModelValidation;
 
+use App\Mamarrachismo\Traits\InternalDBManagement;
+
 class Image extends Model {
+
+  use InternalDBManagement;
 
   protected $fillable = ['path', 'mime', 'alt'];
 
@@ -22,7 +26,7 @@ class Image extends Model {
 
   public function setAltAttribute($value)
   {
-    $this->attributes['alt'] = 'orbiagro.com.ve subastas compra y venta: '.str_slug($value);
+    $this->attributes['alt'] = str_slug($value).' en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.';
   }
 
   // --------------------------------------------------------------------------

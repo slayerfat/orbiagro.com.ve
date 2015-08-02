@@ -1,17 +1,24 @@
-<?php
+<?php namespace Tests;
+
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+use Tests\TestCase;
 
 class ExampleTest extends TestCase {
 
-	/**
-	 * A basic functional test example.
-	 *
-	 * @return void
-	 */
-	public function testBasicExample()
-	{
-		$response = $this->call('GET', '/');
+  use DatabaseTransactions;
 
-		$this->assertEquals(200, $response->getStatusCode());
-	}
+  /**
+   * A basic functional test example.
+   *
+   * @return void
+   */
+  public function testBasicExample()
+  {
+    $this->visit('/welcome')
+          ->see('orbiagro')
+          ->dontSee('Laravel 5');
+  }
 
 }

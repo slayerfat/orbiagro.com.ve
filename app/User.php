@@ -8,10 +8,11 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Mamarrachismo\ModelValidation;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-  use Authenticatable, CanResetPassword, SoftDeletes;
+  use Authenticatable, CanResetPassword, SoftDeletes, CanSearchRandomly;
 
   /**
    * The database table used by the model.
@@ -104,7 +105,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   // --------------------------------------------------------------------------
   public function purchases()
   {
-   return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
+    return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
   }
 
   // --------------------------------------------------------------------------
@@ -130,13 +131,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
   public function isVerified()
   {
-   if ($this->profile->description !== 'Desactivado') return true;
+    if ($this->profile->description !== 'Desactivado') return true;
     return false;
   }
 
   public function hasConfirmation()
   {
-   if ($this->isDisabled() || $this->confirmation) return true;
+    // if ($this->isDisabled() || $this->confirmation) return true;
+    // ??? porque isDisabled?
+    if ($this->confirmation) return true;
     return false;
   }
 
@@ -147,6 +150,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
    */
   public function isOwner($id)
   {
+    if (!isset($this->attributes['id']))
+    {
+      $this->attributes['id'] = null;
+    }
+
+    if (!isset($this->attributes['name']))
+    {
+      $this->attributes['name'] = null;
+    }
+
     if ($this->attributes['id'] === $id ||
       $this->attributes['name'] === $id) return true;
     return false;
@@ -161,6 +174,28 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
   {
     if ($this->profile->description === 'Administrador') return true;
     return $this->isOwner($id);
+  }
+
+  /**
+   * devuelve los productos eliminados relacionados con un usuario
+   *
+   * @param int $quantity la cantidad a tomar
+   */
+  public function latestDeletedProducts($quantity = 5)
+  {
+    return $this->products()->onlyTrashed()->latest()->take($quantity)->get();
+  }
+
+  /**
+   * forceDeleting es el atributo relacionado cuando
+   * algun modelo es eliminado de verdad
+   * en la aplicacion.
+   *
+   * @return boolean
+   */
+  public function isForceDeleting()
+  {
+    return $this->forceDeleting;
   }
 
 }

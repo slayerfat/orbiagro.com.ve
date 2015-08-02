@@ -11,6 +11,11 @@
         <div class="col-xs-2">
           {!! link_to_action('ProfilesController@edit', 'Editar', $profile->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
+        <div class="col-xs-2">
+          {!! Form::open(['method' => 'DELETE', 'action' => ['ProfilesController@destroy', $profile->id]]) !!}
+          {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
+          {!! Form::close() !!}
+        </div>
       </div>
     </div>
   @endif
@@ -22,4 +27,8 @@
       </div>
     </div>
   </div>
+@stop
+
+@section('js')
+  <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 @stop

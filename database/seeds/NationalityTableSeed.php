@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\User;
+
 class NationalityTableSeeder extends Seeder {
 
   /**
@@ -17,9 +19,15 @@ class NationalityTableSeeder extends Seeder {
       'Extrangero'
     ];
 
+    $user = User::where('name', 'tester')->first();
+
+    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+
     foreach($types as $type):
       App\Nationality::create([
-        'description' => $type
+        'description' => $type,
+        'created_by' => $user->id,
+        'updated_by' => $user->id,
       ]);
     endforeach;
     $this->command->info('El Elegido necesita una Nacionalidad...');
