@@ -1,12 +1,19 @@
-var elixir      = require('laravel-elixir'),
-    gulp        = require('gulp'),
-    git         = require('gulp-git'),
+// laravel
+var elixir = require('laravel-elixir'),
+    gulp   = require('gulp'),
+    notify = require('gulp-notify');
+
+// git bump (v0.1.2) <-- gulp release|feature|patch|pre
+var git         = require('gulp-git'),
     bump        = require('gulp-bump'),
     filter      = require('gulp-filter'),
-    tag_version = require('gulp-tag-version'),
-    imagemin    = require('gulp-imagemin');
-    // notify      = require('gulp-notify');
-    // _           = require('underscore');
+    tag_version = require('gulp-tag-version');
+
+// minificacion de imagenes
+var imagemin    = require('gulp-imagemin');
+
+// ??? en este archivo nadie requiere underscore
+// var _           = require('underscore');
 
 /**
  * Bumping version number and tagging the repository with it.
@@ -45,7 +52,6 @@ gulp.task('feature', function() { return inc('minor'); });
 gulp.task('release', function() { return inc('major'); });
 
 elixir.extend('imgOptimizer', function() {
-
   gulp.task('img', function(){
     gulp.src('public/img/originals/*')
     .pipe(imagemin({
@@ -55,7 +61,6 @@ elixir.extend('imgOptimizer', function() {
     .pipe(gulp.dest('public/img'));
   });
   return this.queueTask('img');
-
 });
 
 /*
@@ -70,8 +75,6 @@ elixir.extend('imgOptimizer', function() {
  */
 
 elixir(function(mix) {
-  mix.sass('app.scss');
-  mix.imgOptimizer();
   mix.copy('vendor/bower_components/jquery/dist/jquery.min.js',
       'public/js/vendor/jquery.min.js')
       .copy('vendor/bower_components/jquery/dist/jquery.min.map',
@@ -141,4 +144,7 @@ elixir(function(mix) {
         'public/js/vendor/cropper.min.js')
       .copy('vendor/bower_components/cropper/dist/cropper.min.css',
         'public/css/vendor/cropper.min.css');
+  mix.sass('app.scss');
+  mix.imgOptimizer();
+  mix.phpUnit(null, { debug: false, notify: true });
 });
