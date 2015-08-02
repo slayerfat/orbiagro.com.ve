@@ -50,4 +50,9 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
       [-1]
     ];
   }
+
+  public function testBasicExample()
+  {
+    $this->assertTrue(true);
+  }
 }
