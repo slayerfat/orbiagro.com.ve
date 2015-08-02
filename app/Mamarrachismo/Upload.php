@@ -51,7 +51,10 @@ class Upload {
 
   public function __construct($userID = null)
   {
-    $this->userId = $userID;
+    if ($userID !== null)
+    {
+      $this->userId = $userID;
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -140,8 +143,13 @@ class Upload {
    *
    * @return boolean
    */
-  public function createDefaultImage($path, $model)
+  public function createDefaultImage($path = null, $model)
   {
+    if ($path == null && isset($this->path))
+    {
+      $path = $this->path;
+    }
+
     // el nombre del archivo
     $name = date('Ymdhmmss-').str_random(20);
     $path = "{$path}/{$name}.gif";
@@ -274,6 +282,14 @@ class Upload {
   private function createImageModel(array $array, $model)
   {
     $image = new Image($array);
+
+    // si la aplicacion esta por consola (artisan u otro)
+    // se le asigna el created/updated by.
+    if (app()->runningInConsole())
+    {
+      $image->created_by = $this->userId;
+      $image->updated_by = $this->userId;
+    }
 
     switch (get_class($model)) :
 

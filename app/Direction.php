@@ -16,7 +16,7 @@ class Direction extends Model {
   // --------------------------------------------------------------------------
   public function setDetailsAttribute($value)
   {
-    $this->attributes['details'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['details'] = ModelValidation::byLenght($value);
   }
 
   // --------------------------------------------------------------------------

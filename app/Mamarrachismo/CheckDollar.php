@@ -49,14 +49,25 @@ class CheckDollar {
 
   public function __construct()
   {
+    $this->time = new Carbon;
+
+    if (app()->environment() == 'testing')
+    {
+      return;
+    }
+
     $this->storage = new Storage;
-    $this->time    = new Carbon;
-    if($this->fileExists()):
-      return $this->parseDollarTodayJson();;
-    elseif($this->makeFile()):
+
+    if($this->fileExists())
+    {
+      return $this->parseDollarTodayJson();
+    }
+    elseif($this->makeFile())
+    {
       return self::__construct();
-    endif;
-    return false;
+    }
+
+    return;
   }
 
   // --------------------------------------------------------------------------

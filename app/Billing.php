@@ -8,15 +8,15 @@ class Billing extends Model {
 
   use InternalDBManagement;
 
-  /**
-   * Relaciones
-   */
+  // --------------------------------------------------------------------------
+  // Relaciones
+  // --------------------------------------------------------------------------
   public function bank()
   {
     return $this->belongsTo('App\Bank');
   }
 
-  public function card_type()
+  public function cardType()
   {
     return $this->belongsTo('App\CardType');
   }

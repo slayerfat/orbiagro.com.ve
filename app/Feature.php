@@ -16,12 +16,12 @@ class Feature extends Model {
   // --------------------------------------------------------------------------
   public function setTitleAttribute($value)
   {
-    $this->attributes['title'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['title'] = ModelValidation::byLenght($value);
   }
 
   public function setDescriptionAttribute($value)
   {
-    $this->attributes['description'] = ModelValidation::byLenght($value, 5);
+    $this->attributes['description'] = ModelValidation::byLenght($value);
   }
 
   // --------------------------------------------------------------------------

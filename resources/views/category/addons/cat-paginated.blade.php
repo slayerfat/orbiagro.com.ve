@@ -12,7 +12,7 @@
           <h1>{!! link_to_action('CategoriesController@show', $cat->description, $cat->slug) !!}</h1>
           <h2>
             <a href="{!! action('CategoriesController@show', $cat->slug) !!}">
-              <em>{{$cat->sub_categories->count()}} Rubros</em>
+              <em>{{$cat->subCategories->count()}} Rubros</em>
             </a>
           </h2>
           <h3>{{$cat->info}}</h3>

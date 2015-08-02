@@ -6,10 +6,10 @@
           {!! link_to_action('HomeController@index', 'Inicio') !!}
         </li>
         <li>
-          {!! link_to_action('CategoriesController@show', $product->sub_category->category->description, $product->sub_category->category->slug) !!}
+          {!! link_to_action('CategoriesController@show', $product->subCategory->category->description, $product->subCategory->category->slug) !!}
         </li>
         <li>
-          {!! link_to_action('SubCategoriesController@show', $product->sub_category->description, $product->sub_category->slug) !!}
+          {!! link_to_action('SubCategoriesController@show', $product->subCategory->description, $product->subCategory->slug) !!}
         </li>
         <li class="active">
           <em>

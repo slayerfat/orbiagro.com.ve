@@ -2,11 +2,14 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Mamarrachismo\ModelValidation;
+
 use App\Mamarrachismo\Traits\InternalDBManagement;
+use App\Mamarrachismo\Traits\CanSearchRandomly;
 
 class Provider extends Model {
 
-  use InternalDBManagement;
+  use InternalDBManagement, CanSearchRandomly;
 
   protected $fillable = [
     'name',
@@ -28,20 +31,36 @@ class Provider extends Model {
   ];
 
   // --------------------------------------------------------------------------
-  // Scopes
+  // Mutators
   // --------------------------------------------------------------------------
-  public function scopeRandom($query)
+  public function setNameAttribute($value)
   {
-    if (env('APP_ENV') == 'testing')
-    {
-      $query->orderByRaw('RANDOM()');
-    }
-    else
-    {
-      $query->orderByRaw('RAND()');
-    }
+    $this->attributes['name'] = ModelValidation::byLenght($value);
+    if($this->attributes['name'])
+      $this->attributes['slug'] = str_slug($this->attributes['name']);
   }
 
+  public function setSlugAttribute($value)
+  {
+    if (ModelValidation::byLenght($value)) :
+      $this->attributes['slug'] = str_slug($value);
+    else:
+      $this->attributes['slug'] = null;
+    endif;
+  }
+
+  // --------------------------------------------------------------------------
+  // Accessors
+  // --------------------------------------------------------------------------
+  public function getNameAttribute($value)
+  {
+    if($value) return ucfirst($value);
+    return null;
+  }
+
+  // --------------------------------------------------------------------------
+  // Scopes
+  // --------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------
   // Relaciones
