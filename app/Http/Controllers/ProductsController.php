@@ -71,7 +71,7 @@ class ProductsController extends Controller {
     if(!$products = Category::where('slug', $categoryId)->first()->products()->paginate(20))
       $products = Category::findOrFail($categoryId)->products()->paginate(20);
     $cats     = Category::all();
-    $subCats  = Category::where('slug', $categoryId)->first()->sub_categories;
+    $subCats  = Category::where('slug', $categoryId)->first()->subCategories;
 
     $visitedProducts = $visits->getVisitedProducts();
 
@@ -121,7 +121,7 @@ class ProductsController extends Controller {
       return redirect()->back();
     endif;
     $makers    = Maker::lists('name', 'id');
-    $catModels = Category::with('sub_categories')->get();
+    $catModels = Category::with('subCategories')->get();
 
     $cats = $this->toAsocArray($catModels);
 
@@ -206,7 +206,7 @@ class ProductsController extends Controller {
 
     $makers = Maker::lists('name', 'id');
 
-    $catModels = Category::with('sub_categories')->get();
+    $catModels = Category::with('subCategories')->get();
 
     $cats = $this->toAsocArray($catModels);
 
@@ -329,7 +329,7 @@ class ProductsController extends Controller {
     if(!$models) return null;
 
     foreach($models as $cat) :
-      foreach($cat->sub_categories as $subCat) :
+      foreach($cat->subCategories as $subCat) :
         $cats[$cat->description][$subCat->id] = $subCat->description;
       endforeach;
     endforeach;

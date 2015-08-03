@@ -71,8 +71,8 @@ class SubCategoriesController extends Controller {
    */
   public function indexByCategory($categoryId)
   {
-    if(!$subCats = Category::where('slug', $categoryId)->first()->sub_categories)
-      $subCats = Category::findOrFail($categoryId)->sub_categories;
+    if(!$subCats = Category::where('slug', $categoryId)->first()->subCategories)
+      $subCats = Category::findOrFail($categoryId)->subCategories;
     $productsCollection = collect();
 
     foreach ($subCats as $cat) {
@@ -115,7 +115,7 @@ class SubCategoriesController extends Controller {
 
     $this->subCat->fill($request->all());
 
-    $cat->sub_categories()->save($this->subCat);
+    $cat->subCategories()->save($this->subCat);
 
     $upload->createImage($request->file('image'), $this->subCat);
 
@@ -134,7 +134,7 @@ class SubCategoriesController extends Controller {
     if(!$subCat = SubCategory::where('slug', $id)->first())
       $subCat = SubCategory::findOrFail($id);
 
-    $subCats = $subCat->category->sub_categories()->get();
+    $subCats = $subCat->category->subCategories()->get();
 
     $products = Product::where('sub_category_id', $subCat->id)->paginate(20);
 
