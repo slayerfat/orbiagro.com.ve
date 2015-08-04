@@ -104,7 +104,7 @@ class VisitsService {
   {
     $this->checkAndStoreVisits(new Product);
 
-    return $this->findVisitedResource('Product');
+    return $this->findVisitedResource('App\Product');
   }
 
   // --------------------------------------------------------------------------
@@ -305,7 +305,7 @@ class VisitsService {
     // junto con el visitable (Producto, Rubro, Etc)
     $visits = Auth::user()
                 ->visits()
-                ->where('visitable_type', "App\{$model}")
+                ->where('visitable_type', "{$model}")
                 ->with('visitable')
                 ->get();
 

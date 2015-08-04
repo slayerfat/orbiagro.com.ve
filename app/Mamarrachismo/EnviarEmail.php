@@ -60,7 +60,7 @@ class EnviarEmail {
    *
    * @return array
    */
-  static function getAdminsEmail()
+  public static function getAdminsEmail()
   {
     $obj = new self;
 
@@ -72,7 +72,7 @@ class EnviarEmail {
    *
    * @return array
    */
-  static function getUsersEmail()
+  public static function getUsersEmail()
   {
     $obj = new self;
 
@@ -86,13 +86,15 @@ class EnviarEmail {
    * @param  array    $data  el array con los datos relacionados
    * @return boolean
    */
-  static function enviarEmail($data, $emails)
+  public static function enviarEmail($data, $emails)
   {
     // por si acaso...
-    if (!isset($data) and !isset($emails)) return null;
+    if (!isset($data) && !isset($emails)) return null;
+
     Mail::send($data['vista'], $data, function($message) use ($emails, $data){
       $message->to($emails)->subject($data['subject']);
     });
+
     return true;
   }
 }

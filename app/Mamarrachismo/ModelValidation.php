@@ -9,7 +9,15 @@ use App\User;
  */
 class ModelValidation {
 
-  public $userId, $user;
+  /**
+   * @var string
+   */
+  public $userId
+
+  /**
+   * @var App\User
+   */
+  public $user;
 
   public function __construct($userId = null, User $user = null)
   {
@@ -21,7 +29,7 @@ class ModelValidation {
    * Para saber si el usuario es o no el dueño
    * de un producto para editar.
    *
-   * @param int $id user's id.
+   * @param int $candidateId user's id.
    *
    * @return boolean
    */

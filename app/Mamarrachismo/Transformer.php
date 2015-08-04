@@ -24,6 +24,14 @@ class Transformer {
    */
   private $numberDotRegex  = '/^-?(?P<numbers>\d+|\d{1,3}(?P<last>\.\d{3})+)(?P<decimal>\.(\s)?\d*)?$/';
 
+  /**
+   * atributo utilizado para guardar el resultado
+   * de la expresion regular cuando se parsea.
+   *
+   * @var array
+   */
+  private $matches;
+
   public function __construct($number = null)
   {
     $this->number = $number;
@@ -98,9 +106,8 @@ class Transformer {
   /**
    * Chequea y devuelve el numero segun una cadena formateada.
    * ej: 987.654,32 -> 987654.32
-   * @param mixed $value el numero a transformar.
    *
-   * @return mixed.
+   * @return mixed
    */
   public function parseReadableToNumber()
   {
@@ -126,9 +133,8 @@ class Transformer {
   /**
    * Chequea y devuelve una cadena formateada segun el numero.
    * ej: 987654.32 -> 987.654,32
-   * @param string $value el texto a transformar.
    *
-   * @return mixed.
+   * @return mixed
    */
   public function parseNumberToReadable()
   {
@@ -168,8 +174,7 @@ class Transformer {
    * Metodo de apoyo para convertir numeros con unidades no base.
    * ej: toneladas a gramos.
    *
-   * @param  string $base  la unidad base de medida.
-   * @param  string $to    la unidad final de medida.
+   * @param  string $transformTo  hacia donde se va a cambiar
    * @return mixed
    */
   public function transformTo($transformTo)
@@ -177,19 +182,17 @@ class Transformer {
     switch ($transformTo) :
       case 'mm':
         return $this->toMillimeter();
-        break;
+
       // unidad de peso
       case 'g':
         return $this->toGram();
-        break;
 
       case 't':
         return $this->toTon();
-        break;
 
       default:
         throw new \Exception("Error, transformacion necesita unidad de destino", 1);
-        break;
+
     endswitch;
   }
 
@@ -204,32 +207,26 @@ class Transformer {
       // medidas de logitud
       case 'mm':
         return $this->fromMillimeter();
-        break;
 
       case 'cm':
         return true;
-        break;
 
       case 'm':
         return $this->fromMeter();
-        break;
 
       // medidas de peso
       case 'g':
         return $this->fromGram();
-        break;
 
       case 'kg':
         return true;
-        break;
 
       case 't':
         return $this->fromTon();
-        break;
 
       default:
         throw new \Exception("Error, transformacion necesita unidad base", 1);
-        break;
+
     endswitch;
   }
 
@@ -261,9 +258,9 @@ class Transformer {
   // --------------------------------------------------------------------------
 
   /**
-   * @param  mixed  $value el numero a transformar/convertir.
-   * @param  string $base  la unidad base de medida.
-   * @param  string $to    la unidad final de medida.
+   * @param  mixed  $value     el numero a transformar/convertir.
+   * @param  string $base      la unidad base de medida.
+   * @param  string $traformTo la unidad final de medida.
    * @return mixed
    */
   public static function transform($value, $base, $traformTo = null)

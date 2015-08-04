@@ -3,6 +3,7 @@
 use Exception;
 use Validator;
 use Storage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Auth;
 use App\Product;
@@ -68,8 +69,8 @@ class Upload {
   /**
    * crea la(s) imagen(es) relacionadas con algun modelo.
    *
-   * @param array  $array   El array con los objetos UploadedFiles.
-   * @param object $product El modelo a relacionar con la imagen.
+   * @param array  $array  El array con los objetos UploadedFiles.
+   * @param object $model  El modelo a relacionar con la imagen.
    *
    * @return boolean
    */
@@ -114,13 +115,13 @@ class Upload {
    *
    * @return boolean
    */
-  public function createImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $model)
+  public function createImage(UploadedFile $file = null, $model)
   {
     $this->path = $this->generatePathFromModel($model);
 
     // el validador
     $validator = Validator::make(['image' => $file], $this->imageRules);
-    if ($validator->fails())
+    if (!$file || $validator->fails())
     {
       // si las imagen no es valida crea una imagen por defecto
       return $this->createDefaultImage($this->path, $model);
@@ -145,7 +146,7 @@ class Upload {
    */
   public function createDefaultImage($path = null, $model)
   {
-    if ($path == null && isset($this->path))
+    if ($path === null && isset($this->path))
     {
       $path = $this->path;
     }
@@ -178,7 +179,7 @@ class Upload {
    *
    * @return boolean
    */
-  public function updateImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel, Image $imageModel = null)
+  public function updateImage(UploadedFile $file = null, $parentModel, Image $imageModel = null)
   {
     if ($imageModel == null) return $this->createImage($file, $parentModel);
 
@@ -186,7 +187,7 @@ class Upload {
 
     // el validador
     $validator = Validator::make(['image' => $file], $this->imageRules);
-    if ($validator->fails())
+    if (!$file || $validator->fails())
     {
       $this->errors = $validator->errors()->all();
       throw new Exception("Error, archivo no valido", 3);
@@ -214,13 +215,13 @@ class Upload {
    *
    * @return boolean
    */
-  public function createFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $model)
+  public function createFile(UploadedFile $file = null, $model)
   {
     $this->path = $this->generatePathFromModel($model);
 
     // el validador
     $validator = Validator::make(['file' => $file], $this->fileRules);
-    if ($validator->fails())
+    if ($file || $validator->fails())
     {
       $this->errors = $validator->errors()->all();
       throw new Exception("Error, archivo no valido", 3);
@@ -244,7 +245,7 @@ class Upload {
    *
    * @return boolean
    */
-  public function updateFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null, $parentModel = null, File $fileModel = null)
+  public function updateFile(UploadedFile $file = null, $parentModel = null, File $fileModel = null)
   {
     if ($fileModel == null) return $this->createFile($file, $parentModel);
 
@@ -252,7 +253,7 @@ class Upload {
 
     // el validador
     $validator = Validator::make(['file' => $file], $this->fileRules);
-    if ($validator->fails())
+    if (!$file || $validator->fails())
     {
       $this->errors = $validator;
       throw new Exception("Error, archivo no valido", 3);
@@ -277,7 +278,7 @@ class Upload {
    * @param array  $array el array que contiene los datos para la imagen.
    * @param Object $model el modelo a asociar.
    *
-   * @return boolean
+   * @return Illuminate\Database\Eloquent\Model
    */
   private function createImageModel(array $array, $model)
   {
@@ -313,7 +314,6 @@ class Upload {
 
       default:
         throw new Exception("Error: modelo desconocido, no se puede guardar imagen", 1);
-        break;
 
     endswitch;
   }
@@ -323,7 +323,6 @@ class Upload {
    *
    * @param array  $array el array que contiene los datos para la imagen.
    * @param Object $model el modelo a asociar.
-   * @param File   $file  dependencia.
    *
    * @return boolean
    */
@@ -341,7 +340,6 @@ class Upload {
 
       default:
         throw new Exception("Error: modelo desconocido, no se puede guardar archivo relacionado", 1);
-        break;
 
     endswitch;
   }
@@ -349,11 +347,11 @@ class Upload {
   /**
    * usado para crear en el disco duro el archivo relacionado a un producto.
    *
-   * @param  SymfonyComponentHttpFoundationFileUploadedFile $model
+   * @param  UploadedFile $file
    * @param  string $path la direccion a donde se guardara el archivo.
    * @return array  $data la carpeta, nombre y extension del archivo guardado.
    */
-  private function makeFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file, $path = null)
+  private function makeFile(UploadedFile $file, $path = null)
   {
     // el nombre del archivo
     $name = date('Ymdhmmss-').str_random(20);
@@ -394,9 +392,7 @@ class Upload {
         return "promos/{$model->id}";
 
       default:
-        throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo vardump: "
-          .var_dump($model)." typeof modelo ".gettype($model), 2);
-        break;
+        throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".gettype($model), 2);
 
     endswitch;
   }
