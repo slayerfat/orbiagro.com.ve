@@ -149,8 +149,8 @@
   {{-- galeria de productos visitados relacionados. --}}
   <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
   {{-- CKEDITOR --}}
-  <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
-  <script src="{!! asset('js/editor/products.js') !!}"></script>
+  {{-- <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
+  <script src="{!! asset('js/editor/products.js') !!}"></script> --}}
   <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 
   @yield('productFeature-js')
