@@ -42,26 +42,17 @@ class Transformer {
   // --------------------------------------------------------------------------
   public function fromMillimeter()
   {
-    if (is_numeric($this->number)) :
-      return $this->number /= 10;
-    endif;
-    return null;
+    return $this->number /= 10;
   }
 
   public function toMillimeter()
   {
-    if (is_numeric($this->number)) :
-      return $this->number *= 10;
-    endif;
-    return null;
+    return $this->number *= 10;
   }
 
   public function fromMeter()
   {
-    if (is_numeric($this->number)) :
-      return $this->number *= 100;
-    endif;
-    return null;
+    return $this->number *= 100;
   }
 
   // --------------------------------------------------------------------------
@@ -69,34 +60,22 @@ class Transformer {
   // --------------------------------------------------------------------------
   public function fromGram()
   {
-    if (is_numeric($this->number)) :
-      return $this->number /= 1000;
-    endif;
-    return null;
+    return $this->number /= 1000;
   }
 
   public function toGram()
   {
-    if (is_numeric($this->number)) :
-      return $this->number *= 1000;
-    endif;
-    return null;
+    return $this->number *= 1000;
   }
 
   public function fromTon()
   {
-    if (is_numeric($this->number)) :
-      return $this->number *= 1000;
-    endif;
-    return null;
+    return $this->number *= 1000;
   }
 
   public function toTon()
   {
-    if (is_numeric($this->number)) :
-      return $this->number /= 1000;
-    endif;
-    return null;
+    return $this->number /= 1000;
   }
 
   // --------------------------------------------------------------------------
@@ -111,23 +90,22 @@ class Transformer {
    */
   public function parseReadableToNumber()
   {
-    // se chequea el valor a comparar:
-    if(preg_match($this->numberComaRegex, $this->number, $this->matches)) :
-      // se quitan los puntos del string.
-      $cleanNumbers = str_replace('.', '', $this->matches['numbers']);
-      // si hay decimales en el string:
-      if(isset($this->matches['decimal'])):
-        // se cambian por comas los puntos.
-        $decimal = str_replace(',', '.', $this->matches['decimal']);
-        $number = "{$cleanNumbers}{$decimal}";
-        // se castea a float.
-        return (float)$number;
-      endif;
-      // si no hay decimales se castea a int.
-      return (int)$cleanNumbers;
-    endif;
-    // si no es un numero propiamente formateado
-    return null;
+    if (!$this->doRegex($this->number, $this->numberComaRegex))
+    {
+      return null;
+    }
+
+    // se quitan los puntos del string.
+    $numbers = str_replace('.', '', $this->matches['numbers']);
+
+    $numbers = $numbers + 0;
+
+    if ($this->isMatchesANegativeNumber())
+    {
+      $numbers = $numbers * -1;
+    }
+
+    return $this->attachMatchesDecimal($numbers);
   }
 
   /**
@@ -138,36 +116,40 @@ class Transformer {
    */
   public function parseNumberToReadable()
   {
-    // se chequea el valor a comparar:
-    if(preg_match($this->numberDotRegex, $this->number, $this->matches)) :
-      // se invierte la cadena para poder poner los puntos.
-      $numbers = strrev($this->matches['numbers']);
-      // la variable que contendra la cadena.
-      $formatted = '';
-      // variable de control para poner el punto en el lugar correcto.
-      $control = 1;
-      // se itera a travez de los numeros:
-      for($i = 1; $i <= strlen($numbers); $i++) :
-        if($control % 4 == 0) :
-          $formatted .= '.'.$numbers[$i-1];
-          $control = 2;
-        elseif($control % 4 != 0) :
-          $formatted .= $numbers[$i-1];
-          $control++;
-        endif;
-      endfor;
-      // se revierte a la forma original.
-      $numbers = strrev($formatted);
-      // si hay decimal se quitan los puntos y se devuelve.
-      if(isset($this->matches['decimal'])):
-        $decimal = str_replace('.', ',', $this->matches['decimal']);
-        return "{$numbers}{$decimal}";
+    if (!$this->doRegex($this->number, $this->numberDotRegex))
+    {
+      return null;
+    }
+
+    // se invierte la cadena para poder poner los puntos.
+    $numbers = strrev($this->matches['numbers']);
+
+    // la variable que contendra la cadena.
+    $formatted = '';
+
+    // variable de control para poner el punto en el lugar correcto.
+    $control = 1;
+
+    // se itera a travez de los numeros:
+    for($i = 1; $i <= strlen($numbers); $i++) :
+      if($control % 4 == 0) :
+        $formatted .= '.'.$numbers[$i-1];
+        $control = 2;
+      elseif($control % 4 != 0) :
+        $formatted .= $numbers[$i-1];
+        $control++;
       endif;
-      // si no hay decimales
-      return "{$numbers}";
-    endif;
-    // si no es numero
-    return null;
+    endfor;
+
+    // se revierte a la forma original.
+    $numbers = strrev($formatted);
+
+    if ($this->isMatchesANegativeNumber())
+    {
+      $numbers = '-'.$numbers;
+    }
+
+    return $this->attachMatchesDecimal($numbers);
   }
 
   /**
@@ -267,7 +249,7 @@ class Transformer {
   {
     $transformer = new Transformer($value);
 
-    if($traformTo) return $transformer->transformTo($traformTo);
+    if($traformTo !== null) return $transformer->transformTo($traformTo);
 
     return $transformer->make($base);
   }
@@ -318,6 +300,52 @@ class Transformer {
   // --------------------------------------------------------------------------
   // Metodos privados
   // --------------------------------------------------------------------------
+  private function attachMatchesDecimal($number)
+  {
+    // si no hay decimales se castea a int.
+    if(!isset($this->matches['decimal']))
+    {
+      return $number;
+    }
 
+    if (is_string($number))
+    {
+      $decimal = str_replace('.', ',', $this->matches['decimal']);
+      return "{$number}{$decimal}";
+    }
+    elseif (!is_string($number))
+    {
+      $decimal = str_replace(',', '.', $this->matches['decimal']);
+      $number = "{$number}{$decimal}";
+      return (float)$number;
+    }
+  }
 
+  private function doRegex($number = null, $regex)
+  {
+    if ($number !== null)
+    {
+      $this->number = $number;
+    }
+
+    // se chequea el valor a comparar:
+    if(!preg_match($regex, $this->number, $this->matches))
+    {
+      // si no hay resultados
+      return null;
+    }
+
+    return $this->matches;
+  }
+
+  private function isMatchesANegativeNumber()
+  {
+    // dentro del primer array, el primer caracter
+    if ($this->matches[0][0] == '-')
+    {
+      return true;
+    }
+
+    return false;
+  }
 }

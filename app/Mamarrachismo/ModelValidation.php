@@ -12,7 +12,7 @@ class ModelValidation {
   /**
    * @var string
    */
-  public $userId
+  public $userId;
 
   /**
    * @var App\User

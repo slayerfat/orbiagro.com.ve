@@ -31,13 +31,13 @@ class CheckDollar {
 
   /**
    * El objeto storage para manipular algun archivo
-   * @var Illuminate\Contracts\Filesystem\Factory
+   * @var \Illuminate\Contracts\Filesystem\Factory
    */
   private $storage;
 
   /**
    * El objeto Carbon con el timestamp
-   * @var Carbon\Carbon
+   * @var \Carbon\Carbon
    */
   private $time;
 

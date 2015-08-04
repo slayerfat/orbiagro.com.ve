@@ -278,7 +278,7 @@ class Upload {
    * @param array  $array el array que contiene los datos para la imagen.
    * @param Object $model el modelo a asociar.
    *
-   * @return Illuminate\Database\Eloquent\Model
+   * @return \Illuminate\Database\Eloquent\Model
    */
   private function createImageModel(array $array, $model)
   {

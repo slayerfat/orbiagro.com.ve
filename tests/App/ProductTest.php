@@ -296,8 +296,6 @@ class ProductTest extends TestCase {
    */
   public function testIncorrectPriceValueShouldBeNull($data)
   {
-    $this->markTestIncomplete('Faltan Pruebas de Transformer');
-
     $this->tester->price = $data;
     $this->assertNull($this->tester->price);
   }
