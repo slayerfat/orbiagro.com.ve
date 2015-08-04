@@ -29,7 +29,7 @@ class SubCategory extends Model {
 
   public function setSlugAttribute($value)
   {
-    if (ModelValidation::byLenght($value, 3)) :
+    if (ModelValidation::byLenght($value, 3) !== null) :
       $this->attributes['slug'] = str_slug($value);
     else:
       $this->attributes['slug'] = null;

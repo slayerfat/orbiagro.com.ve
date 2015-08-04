@@ -15,7 +15,7 @@ class ModelValidation {
   public $userId;
 
   /**
-   * @var App\User
+   * @var \App\User
    */
   public $user;
 
@@ -29,7 +29,7 @@ class ModelValidation {
    * Para saber si el usuario es o no el dueño
    * de un producto para editar.
    *
-   * @param int $candidateId user's id.
+   * @param string $candidateId user's id.
    *
    * @return boolean
    */

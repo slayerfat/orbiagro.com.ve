@@ -51,7 +51,7 @@ class Product extends Model {
 
   public function setSlugAttribute($value)
   {
-    if (ModelValidation::byLenght($value)) :
+    if (ModelValidation::byLenght($value) !== null) :
       $this->attributes['slug'] = str_slug($value);
     else:
       $this->attributes['slug'] = null;

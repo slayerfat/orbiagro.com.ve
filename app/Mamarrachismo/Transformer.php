@@ -191,7 +191,7 @@ class Transformer {
         return $this->fromMillimeter();
 
       case 'cm':
-        return true;
+        return $this->number;
 
       case 'm':
         return $this->fromMeter();
@@ -201,7 +201,7 @@ class Transformer {
         return $this->fromGram();
 
       case 'kg':
-        return true;
+        return $this->number;
 
       case 't':
         return $this->fromTon();

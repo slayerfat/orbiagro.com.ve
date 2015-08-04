@@ -25,7 +25,7 @@ class Maker extends Model {
   public function setSlugAttribute($value)
   {
     $slug = ModelValidation::byLenght($value, 3);
-    if($slug):
+    if($slug !== null):
       $this->attributes['slug'] = str_slug($slug);
     else:
       $this->attributes['slug'] = null;
