@@ -1,5 +1,6 @@
 <?php namespace App\Mamarrachismo;
 
+use Exception;
 Use Auth;
 Use Cookie;
 Use Carbon\Carbon;
@@ -47,15 +48,11 @@ class VisitsService {
         break;
 
       default:
-        throw new \Exception("Error, es necesario especificar modelo valido.", 3);
+        throw new Exception("Error, es necesario especificar modelo valido.", 3);
         break;
     }
 
-    $total = Cookie::get("{$model}s_{$id}");
-    $total = ($total) ? ($total + 1) : 1;
-    Cookie::queue("{$model}s.{$id}", $total);
-    Cookie::queue("{$model}LastVisited", $id);
-    if(!Cookie::get("{$model}VisitedAt")) $this->setUpdatedCookieDate($model);
+    $this->setNewVisitCookie($model, $id);
   }
 
   /**
@@ -77,7 +74,7 @@ class VisitsService {
         break;
 
       default:
-        throw new \Exception("Error, es necesario especificar modelo valido.", 2);
+        throw new Exception("Error, es necesario especificar modelo valido.", 2);
         break;
     }
 
@@ -105,33 +102,9 @@ class VisitsService {
    */
   public function getVisitedProducts()
   {
-    $array = Transformer::getArrayByKeyValue("/(products\_)+/", Cookie::get());
-    $parsed = $this->parseIdsInArrayKeys($array);
+    $this->checkAndStoreVisits(new Product);
 
-    if(!empty($parsed))
-    {
-      foreach ($parsed as $productID => $total) :
-        $this->bag[] = $productID;
-      endforeach;
-      $this->storeProductsVisits($parsed);
-    }
-
-    if(Auth::user()) :
-      if($visits = Auth::user()->visits()->where('visitable_type', 'App\Product')->with('visitable')->get()) :
-        foreach ($visits as $visit)
-        {
-          if ($visit->visitable)
-          {
-            $this->bag[] = $visit->visitable->id;
-          }
-        }
-        $products = Product::find($this->bag);
-        $products->load('user', 'sub_category');
-        return $products;
-      endif;
-    endif;
-
-    return Product::find($this->bag);
+    return $this->findVisitedResource('Product');
   }
 
   // --------------------------------------------------------------------------
@@ -145,27 +118,9 @@ class VisitsService {
    */
   public function getVisitedSubCats()
   {
-    $array = Transformer::getArrayByKeyValue("/(subCats\_)+/", Cookie::get());
-    $parsed = $this->parseIdsInArrayKeys($array);
+    $this->checkAndStoreVisits(new subCategory);
 
-    if(!empty($parsed))
-    {
-      foreach ($parsed as $subCatId => $total) :
-        $this->bag[] = $subCatId;
-      endforeach;
-      $this->storeSubCatsVisits($parsed);
-    }
-
-    if(Auth::user()) :
-      if($visits = Auth::user()->visits()->where('visitable_type', 'App\SubCategory')->with('visitable')->get()) :
-        foreach ($visits as $visit) {
-          $this->bag[] = $visit->visitable->id;
-        }
-        return SubCategory::find($this->bag);
-      endif;
-    endif;
-
-    return SubCategory::find($this->bag);
+    return $this->findVisitedResource('App\SubCategory');
   }
 
   // --------------------------------------------------------------------------
@@ -196,17 +151,26 @@ class VisitsService {
   /**
    * guarda las visitas a productos del usuario en la base de datos.
    *
-   * @param array $array el array a iterar (id => visitas).
+   * @param array  $array el array a iterar (id => visitas).
+   * @param Object $model el modelo a manipular.
    *
-   * @return void
+   * @return boolean
    */
-  private function storeProductsVisits($array)
+  private function storeResourceVisits($model, $array)
   {
     if(!Auth::user()) return null;
 
     if(!isset($array)) return null;
 
-    $date = Cookie::get("productVisitedAt");
+    $upperModel = (new \ReflectionClass($model))->getShortName();
+
+    if (!$upperModel)
+    {
+      throw new Exception("No se puede guardar visita sin un modelo asociado", 4);
+    }
+    $lowerModel = strtolower($upperModel);
+
+    $date = Cookie::get("{$lowerModel}VisitedAt");
 
     if(!$date) return null;
 
@@ -214,97 +178,149 @@ class VisitsService {
 
     // si la visita no existe en la base de datos se crea, sino se actualiza
     foreach($array as $id => $total) :
-      if($product = Product::find($id)) :
-        if(Auth::user()->visits()->where('visitable_id', $product->id)->get()->isEmpty()) :
-          $visit = new Visit;
-          $visit->total = $total;
-          $visit->user_id = Auth::user()->id;
-          $product->visits()->save($visit);
-        else:
-          $visit = Auth::user()->visits()->where('visitable_id', $product->id)->first();
-          $visit->total += $total;
-          $visit->save();
-        endif;
+
+      $model = $model::findOrFail($id);
+
+      if(Auth::user()->visits()->where('visitable_id', $model->id)->get()->isEmpty()) :
+        $visit = new Visit;
+        $visit->total = $total;
+        $visit->user_id = Auth::user()->id;
+        $model->visits()->save($visit);
+      else:
+        $visit = Auth::user()->visits()->where('visitable_id', $model->id)->first();
+        $visit->total += $total;
+        $visit->save();
       endif;
 
       // se resetea el contador a 1 o 0 dependiendo de la ultima visita.
-      if(intval(Cookie::get('productLastVisited')) == $id) :
-        Cookie::queue("products.{$id}", 1);
+      if(intval(Cookie::get("{$lowerModel}LastVisited")) == $id) :
+        Cookie::queue("{$lowerModel}s.{$id}", 1);
       else:
         // se elimina el contador.
-        Cookie::queue("products.{$id}", 0);
+        Cookie::queue("{$lowerModel}s.{$id}", 0);
       endif;
     endforeach;
     // se actualiza la fecha de edicion del cookie
-    $this->setUpdatedCookieDate('product');
-  }
-
-  /**
-   * guarda las visitas de rubros del usuario en la base de datos.
-   *
-   * @param array $array el array a iterar (id => visitas).
-   *
-   * @return void
-   */
-  private function storeSubCatsVisits($array)
-  {
-    if(!Auth::user()) return null;
-
-    if(!isset($array)) return null;
-
-    $date = Cookie::get("subCatVisitedAt");
-
-    if(!$date) return null;
-
-    if($date->diffInMinutes() < 5) return null;
-
-    // si la visita no existe en la base de datos se crea, sino se actualiza
-    foreach($array as $id => $total) :
-      if($subCat = SubCategory::find($id)) :
-        if(Auth::user()->visits()->where('visitable_id', $subCat->id)->get()->isEmpty()) :
-          $visit = new Visit;
-          $visit->total = $total;
-          $visit->user_id = Auth::user()->id;
-          $subCat->visits()->save($visit);
-        else:
-          $visit = Auth::user()->visits()->where('visitable_id', $subCat->id)->first();
-          $visit->total += $total;
-          $visit->save();
-        endif;
-      endif;
-
-      // se resetea el contador a 1 o 0 dependiendo de la ultima visita.
-      if(intval(Cookie::get('subCatLastVisited')) == $id) :
-        Cookie::queue("subCats.{$id}", 1);
-      else:
-        // se elimina el contador.
-        Cookie::queue("subCats.{$id}", 0);
-      endif;
-    endforeach;
-    // se actualiza la fecha de edicion del cookie
-    $this->setUpdatedCookieDate('subCat');
+    return $this->setUpdatedCookieDate($lowerModel);
   }
 
   /**
    * para darle una fecha al cookie
    *
-   * @return void
+   * @param  string $model el tipo de modelo al que se le asociara el cookie
+   * @return boolean
    */
   private function setUpdatedCookieDate($model)
   {
-    $carbon = Carbon::now();
-    $date = $carbon;
-    switch ($model) {
+    $date = Carbon::now();
+    switch ($model)
+    {
+      case 'Product':
       case 'product':
-        Cookie::queue("productVisitedAt", $date);
+        return Cookie::queue("productVisitedAt", $date);
         break;
+      case 'SubCategory':
+      case 'subcategory':
       case 'subCat':
-        Cookie::queue("subCatVisitedAt", $date);
+        return Cookie::queue("subCatVisitedAt", $date);
         break;
 
       default:
-        throw new \Exception("La fecha del cookie de visita no pudo ser procesada", 1);
+        throw new Exception("La fecha del cookie de visita no pudo ser procesada", 1);
         break;
     }
+  }
+
+  /**
+   * Crea un cookie relacionado a una vistita de algun recurso,
+   * ya sea un producto, rubro u otro tipo, genera el total y crea
+   * la fecha de la ultima visita para control.
+   *
+   * @method setNewVisitCookie
+   * @param  string            $model el nombre del modelo asociado
+   * @param  int               $id    el id del modelo a asociar
+   */
+  private function setNewVisitCookie($model, $id)
+  {
+    $total = Cookie::get("{$model}s_{$id}");
+    $total = ($total) ? ($total + 1) : 1;
+
+    Cookie::queue("{$model}s.{$id}", $total);
+    Cookie::queue("{$model}LastVisited", $id);
+
+    if(!Cookie::get("{$model}VisitedAt")) $this->setUpdatedCookieDate($model);
+  }
+
+  /**
+   * busca en las cookies guardadas del usuario e
+   * invoca storeResourceVisits para guardar las visitas.
+   *
+   * @method checkAndStoreVisits
+   * @param  string              $model El nombre del modelo
+   * @return boolean
+   */
+  private function checkAndStoreVisits($model)
+  {
+    // por ahora el key se implementa asi porque
+    // solo estan contemplados por ahora dos
+    // recursos que seran visitados.
+    $key = (new \ReflectionClass($model))
+      ->getShortName() == 'SubCategory' ? 'subCats' : 'products';
+
+    // se procesan las cookies del usuario
+    $array = Transformer::getArrayByKeyValue("/({$key}\_)+/", Cookie::get());
+    $parsed = $this->parseIdsInArrayKeys($array);
+
+    if(!empty($parsed)) return null;
+
+    // ??? ni idea.
+    // foreach ($parsed as $subCatId => $total) :
+    //   $this->bag[] = $subCatId;
+    // endforeach;
+    return $this->storeResourceVisits($model, $parsed);
+  }
+
+  /**
+   * Busca las visitas e itera para encontrar la coleccion
+   * de objetos (visitas de productos, rubros, etc)
+   * relacionados con el usuario.
+   *
+   * @method findVisitedResource
+   * @param  string               $model El modelo a manipular.
+   * @return Collection | boolean
+   */
+  private function findVisitedResource($model)
+  {
+    if(!Auth::user()) return null;
+
+    // se buscan las visitas que tengan
+    // el tipo de visitable igual al model solicitado,
+    // junto con el visitable (Producto, Rubro, Etc)
+    $visits = Auth::user()
+                ->visits()
+                ->where('visitable_type', "App\{$model}")
+                ->with('visitable')
+                ->get();
+
+    if(!$visits) return null;
+
+    foreach ($visits as $visit)
+    {
+      // visitable es el producto o subcategoria
+      // se chequea para ver si hay o no modelo (visitable->id)
+      if ($visit->visitable)
+      {
+        $this->bag[] = $visit->visitable->id;
+      }
+    }
+
+    $result = $model::find($this->bag);
+
+    if ($model == 'Product')
+    {
+      $result->load('user', 'subCategory');
+    }
+
+    return $result;
   }
 }
