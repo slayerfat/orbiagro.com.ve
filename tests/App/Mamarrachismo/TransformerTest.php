@@ -50,6 +50,18 @@ class TransformerTest extends TestCase {
     $this->assertEquals($exp, $this->tester->getArrayByPattern('/(foo)/', $data));
   }
 
+  public function testConversionMethods()
+  {
+    $this->tester->number = 10;
+    $this->assertEquals(1, $this->tester->fromMillimeter());
+    $this->assertEquals(10, $this->tester->toMillimeter());
+    $this->assertEquals(1000, $this->tester->fromMeter());
+    $this->assertEquals(1, $this->tester->fromGram());
+    $this->assertEquals(1000, $this->tester->toGram());
+    $this->assertEquals(1, $this->tester->toTon());
+    $this->assertEquals(1000, $this->tester->fromTon());
+  }
+
   public function testParseReadableToNumber()
   {
     $this->tester->number = '123.456,789';
