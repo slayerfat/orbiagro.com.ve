@@ -273,11 +273,18 @@ class VisitsService {
 
     if(!empty($parsed)) return null;
 
-    // ??? ni idea.
-    // foreach ($parsed as $subCatId => $total) :
-    //   $this->bag[] = $subCatId;
-    // endforeach;
+    // solo se regresa esto porque findVisitedResource regresa
+    // tambien una coleccion, asi que es redundante
+    // buscar y regresar una coleccion en este metodo.
     return $this->storeResourceVisits($model, $parsed);
+
+    // foreach ($parsed as $id => $total) :
+    //   $this->bag[] = $id;
+    // endforeach;
+    //
+    // $this->storeResourceVisits($model, $parsed);
+    //
+    // return $model::find($this->bag);
   }
 
   /**
