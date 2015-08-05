@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 
 // 5.1
 use App\User;
@@ -32,7 +33,7 @@ class AuthController extends Controller {
   |
   */
 
-  use AuthenticatesAndRegistersUsers;
+  use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
   /**
    * Create a new authentication controller instance.
