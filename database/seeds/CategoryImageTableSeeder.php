@@ -33,7 +33,7 @@ class CategoryImageTableSeeder extends Seeder {
       $image             = new Image;
       $image->path       = "category/{$cat->id}/{$name}.gif";
       $image->mime       = 'image/gif';
-      $image->alt        = $cat->title;
+      $image->alt        = $cat->description;
       $image->created_by = $user->id;
       $image->updated_by = $user->id;
       $cat->image()->save($image);
