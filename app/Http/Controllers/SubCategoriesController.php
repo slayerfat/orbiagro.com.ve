@@ -138,7 +138,7 @@ class SubCategoriesController extends Controller {
 
     $products = Product::where('sub_category_id', $subCat->id)->paginate(20);
 
-    $visits->setNewVisit('subCat', $id);
+    $visits->setNewVisit($subCat);
 
     $this->seo()->setTitle("{$subCat->description} en orbiagro.com.ve");
     $this->seo()->setDescription("{$subCat->description} en {$subCat->category->description} dentro de orbiagro.com.ve");

@@ -28,106 +28,99 @@ class VisitsService {
   // --------------------------------------------------------------------------
 
   /**
-   * @param int $id id del producto visitado.
+   * @param mixed $model el modelo a manipular.
    *
    * @return void
    */
-  public function setNewVisit($model = null, $id)
+  public function setNewVisit($model)
   {
-    switch (ucfirst($model))
+    switch (get_class($model))
     {
-      case 'SubCategory':
-      case 'SubCategories':
-      case 'SubCat':
-      case 'SubCats':
-        $model = 'subCat';
-        break;
-      case 'Product':
-      case 'Products':
-        $model = 'product';
-        break;
+      case 'App\SubCategory':
+      case 'App\Product':
+        return $this->setNewVisitCookie($model);
 
       default:
         throw new Exception("Error, es necesario especificar modelo valido.", 3);
-        break;
-    }
 
-    $this->setNewVisitCookie($model, $id);
+    }
   }
 
   /**
-   * @param string  $className  el nombre de la clase.
-   * @param int     $quantity   la cantidad a tomar.
+   * @param mixed  $model     el objeto a manipular.
+   * @param int    $quantity  la cantidad a tomar.
    *
    * @return Illuminate\Database\Eloquent\Collection
    */
-  public function getPopular($className = null, $quantity = 3)
+  public function getPopular($model, $quantity = 3)
   {
-    switch (ucfirst($className))
-    {
-      case 'SubCategory':
-      case 'SubCat':
-        $class = new SubCategory;
-        break;
-      case 'Product':
-        $class = new Product;
-        break;
+    $results = $this->findMostVisitedResource($model, $quantity);
 
-      default:
-        throw new Exception("Error, es necesario especificar modelo valido.", 2);
-        break;
-    }
+    if ($results->isEmpty()) return $results;
 
-    $results = Visit::selectRaw('visitable_id, sum(total)')
-      ->where('visitable_type', get_class($class))
-      ->groupBy('visitable_id')
-      ->orderBy('total', 'desc')
-      ->take($quantity)
-      ->get();
     $results->each(function($result){
       $this->bag[] = $result->visitable_id;
     });
 
-    return $class->with('products')->find($this->bag);
+    return $model->find($this->bag);
   }
-
-  // --------------------------------------------------------------------------
-  // Productos
-  // --------------------------------------------------------------------------
 
   /**
    * busca los productos dentro de los cookies y devuelve la coleccion.
    *
+   * @param mixed $obj el objeto a manipular.
    * @return Illuminate\Database\Eloquent\Collection
    */
-  public function getVisitedProducts()
+  public function getVisitedResources($obj)
   {
-    $this->checkAndStoreVisits(new Product);
+    $result = $this->checkAndStoreVisits($obj);
 
-    return $this->findVisitedResource('App\Product');
+    $visitedResources = $this->findVisitedResource($obj);
+
+    if ($visitedResources->isEmpty())
+    {
+      return $this->findResourceInDatabase($obj, $result);
+    }
+
+    return $visitedResources;
   }
-
-  // --------------------------------------------------------------------------
-  // Rubros
-  // --------------------------------------------------------------------------
-
-  /**
-   * busca los rubros dentro de los cookies y devuelve la coleccion.
-   *
-   * @return Illuminate\Database\Eloquent\Collection
-   */
-  public function getVisitedSubCats()
-  {
-    $this->checkAndStoreVisits(new subCategory);
-
-    return $this->findVisitedResource('App\SubCategory');
-  }
-
   // --------------------------------------------------------------------------
   // Funciones privadas
   // --------------------------------------------------------------------------
+  /**
+   * usado para determinar cuales son los recursos mas populares (count)
+   *
+   * @param mixed $model    el modelo, nos interesa la clase (App\Product)
+   * @param int   $quantity la cantidad a tomar
+   *
+   * @return Collection
+   */
+  private function findMostVisitedResource($model, $quantity)
+  {
+    return Visit::selectRaw('visitable_id, sum(total)')
+      ->where('visitable_type', get_class($model))
+      ->groupBy('visitable_id')
+      ->orderBy('total', 'desc')
+      ->take($quantity)
+      ->get();
+  }
 
+  /**
+   * utilizado para obtener los recursos guardados en cookies.
+   *
+   * @param mixed $model
+   * @param array $array el arreglo con ids a buscar.
+   *
+   * @return Collection
+   */
+  private function findResourceInDatabase($model, $array)
+  {
+    foreach ($array as $id) :
+      $this->bag[] = $id;
+    endforeach;
 
+    return $model::find($this->bag);
+  }
   /**
    * itera el array de los productos visitados y lo
    * cambia para que sea mas facil de manipular
@@ -162,15 +155,14 @@ class VisitsService {
 
     if(!isset($array)) return null;
 
-    $upperModel = (new \ReflectionClass($model))->getShortName();
+    $name = $this->findReflectionClassName($model);
 
-    if (!$upperModel)
+    if (!$name)
     {
       throw new Exception("No se puede guardar visita sin un modelo asociado", 4);
     }
-    $lowerModel = strtolower($upperModel);
 
-    $date = Cookie::get("{$lowerModel}VisitedAt");
+    $date = Cookie::get("{$name}VisitedAt");
 
     if(!$date) return null;
 
@@ -193,15 +185,12 @@ class VisitsService {
       endif;
 
       // se resetea el contador a 1 o 0 dependiendo de la ultima visita.
-      if(intval(Cookie::get("{$lowerModel}LastVisited")) == $id) :
-        Cookie::queue("{$lowerModel}s.{$id}", 1);
-      else:
-        // se elimina el contador.
-        Cookie::queue("{$lowerModel}s.{$id}", 0);
-      endif;
+      $value = intval(Cookie::get("{$name}LastVisited")) == $id ? 1 : 0;
+
+      Cookie::queue("{$name}.{$id}", $value);
     endforeach;
     // se actualiza la fecha de edicion del cookie
-    return $this->setUpdatedCookieDate($lowerModel);
+    return $this->setUpdatedCookieDate($model);
   }
 
   /**
@@ -213,22 +202,10 @@ class VisitsService {
   private function setUpdatedCookieDate($model)
   {
     $date = Carbon::now();
-    switch ($model)
-    {
-      case 'Product':
-      case 'product':
-        return Cookie::queue("productVisitedAt", $date);
-        break;
-      case 'SubCategory':
-      case 'subcategory':
-      case 'subCat':
-        return Cookie::queue("subCatVisitedAt", $date);
-        break;
 
-      default:
-        throw new Exception("La fecha del cookie de visita no pudo ser procesada", 1);
-        break;
-    }
+    $name = $this->findReflectionClassName($model);
+
+    return Cookie::queue("{$name}VisitedAt", $date);
   }
 
   /**
@@ -237,18 +214,19 @@ class VisitsService {
    * la fecha de la ultima visita para control.
    *
    * @method setNewVisitCookie
-   * @param  string            $model el nombre del modelo asociado
-   * @param  int               $id    el id del modelo a asociar
+   * @param  mixed             $model el nombre del modelo asociado
    */
-  private function setNewVisitCookie($model, $id)
+  private function setNewVisitCookie($model)
   {
-    $total = Cookie::get("{$model}s_{$id}");
+    $name = $this->findReflectionClassName($model);
+
+    $total = Cookie::get("{$name}_{$model->slug}");
     $total = ($total) ? ($total + 1) : 1;
 
-    Cookie::queue("{$model}s.{$id}", $total);
-    Cookie::queue("{$model}LastVisited", $id);
+    Cookie::queue("{$name}.{$model->slug}", $total);
+    Cookie::queue("{$name}LastVisited", $model->id);
 
-    if(!Cookie::get("{$model}VisitedAt")) $this->setUpdatedCookieDate($model);
+    if(!Cookie::get("{$name}VisitedAt")) $this->setUpdatedCookieDate($model);
   }
 
   /**
@@ -257,34 +235,25 @@ class VisitsService {
    *
    * @method checkAndStoreVisits
    * @param  string              $model El nombre del modelo
-   * @return boolean
+   * @return mixed
    */
   private function checkAndStoreVisits($model)
   {
-    // por ahora el key se implementa asi porque
-    // solo estan contemplados por ahora dos
-    // recursos que seran visitados.
-    $key = (new \ReflectionClass($model))
-      ->getShortName() == 'SubCategory' ? 'subCats' : 'products';
+    $key = $this->findReflectionClassName($model);
 
     // se procesan las cookies del usuario
     $array = Transformer::getArrayByKeyValue("/({$key}\_)+/", Cookie::get());
     $parsed = $this->parseIdsInArrayKeys($array);
 
-    if(!empty($parsed)) return null;
+    if(!empty($parsed))
+    {
+      // findVisitedResource regresa una coleccion.
+      $this->storeResourceVisits($model, $parsed);
 
-    // solo se regresa esto porque findVisitedResource regresa
-    // tambien una coleccion, asi que es redundante
-    // buscar y regresar una coleccion en este metodo.
-    return $this->storeResourceVisits($model, $parsed);
+      return $parsed;
+    }
 
-    // foreach ($parsed as $id => $total) :
-    //   $this->bag[] = $id;
-    // endforeach;
-    //
-    // $this->storeResourceVisits($model, $parsed);
-    //
-    // return $model::find($this->bag);
+    return collect();
   }
 
   /**
@@ -294,22 +263,22 @@ class VisitsService {
    *
    * @method findVisitedResource
    * @param  string               $model El modelo a manipular.
-   * @return Collection | boolean
+   * @return Collection
    */
   private function findVisitedResource($model)
   {
-    if(!Auth::user()) return null;
+    if(!Auth::user()) return collect();
 
     // se buscan las visitas que tengan
     // el tipo de visitable igual al model solicitado,
     // junto con el visitable (Producto, Rubro, Etc)
     $visits = Auth::user()
                 ->visits()
-                ->where('visitable_type', "{$model}")
+                ->where('visitable_type', get_class($model))
                 ->with('visitable')
                 ->get();
 
-    if(!$visits) return null;
+    if(!$visits) return $visits;
 
     foreach ($visits as $visit)
     {
@@ -321,13 +290,23 @@ class VisitsService {
       }
     }
 
-    $result = $model::find($this->bag);
-
-    if ($model == 'Product')
+    if (get_class($model) == 'Product')
     {
-      $result->load('user', 'subCategory');
+      return $model->load('user', 'subCategory');
     }
 
-    return $result;
+    return $model->find($this->bag);
+  }
+
+  /**
+   * genera el nombre de la clase sin el namespace:
+   * Algun\Namespace\Clase => Clase
+   *
+   * @param mixed $obj
+   * @return string
+   */
+  public function findReflectionClassName($obj)
+  {
+    return (new \ReflectionClass($obj))->getShortName();
   }
 }

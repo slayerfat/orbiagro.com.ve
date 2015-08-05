@@ -31,8 +31,18 @@ class ProductsController extends Controller {
    */
   public function __construct()
   {
-    $this->middleware('auth', ['except' => ['index', 'show']]);
-    $this->middleware('user.unverified', ['except' => ['index', 'show']]);
+    $this->middleware('auth', ['except' => [
+      'index',
+      'show',
+      'indexByCategory',
+      'indexBySubCategory'
+    ]]);
+    $this->middleware('user.unverified', ['except' => [
+      'index',
+      'show',
+      'indexByCategory',
+      'indexBySubCategory'
+    ]]);
     $this->user   = Auth::user();
   }
 
@@ -47,7 +57,7 @@ class ProductsController extends Controller {
     $cats     = Category::all();
     $subCats  = SubCategory::all();
 
-    $visitedProducts = $visits->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedResources(new Product);
 
     $this->seo()->setTitle('Productos en orbiagro.com.ve');
     $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
@@ -73,7 +83,7 @@ class ProductsController extends Controller {
     $cats     = Category::all();
     $subCats  = Category::where('slug', $categoryId)->first()->subCategories;
 
-    $visitedProducts = $visits->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedResources(new Product);
 
     $this->seo()->setTitle("Productos de {$subCats->first()->category->description} en orbiagro.com.ve");
     $this->seo()->setDescription("Productos y Articulos de {$subCats->first()->category->description} en existencia en orbiagro.com.ve");
@@ -98,7 +108,7 @@ class ProductsController extends Controller {
     $cats     = Category::all();
     $subCats  = SubCategory::all();
 
-    $visitedProducts = $visits->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedResources(new Product);
 
     $this->seo()->setTitle("Productos de {$products->first()->subCategory->description} en orbiagro.com.ve");
     $this->seo()->setDescription("Productos y Articulos de {$products->first()->subCategory->description} en existencia en orbiagro.com.ve");
@@ -165,10 +175,8 @@ class ProductsController extends Controller {
     if(!$product = Product::with('user')->where('slug', $id)->first())
       $product = Product::with('user')->findOrFail($id);
 
-    $visits->setNewVisit('product', $product->id);
-    $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopular('subCategory');
-    $visitedSubCats  = $visits->getVisitedSubCats();
+    $visits->setNewVisit($product);
+    $visitedProducts = $visits->getVisitedResources($product);
 
     if($this->user) :
       if($this->user->isOwnerOrAdmin($product->user_id)) :
