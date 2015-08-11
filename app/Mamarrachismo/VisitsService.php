@@ -168,10 +168,25 @@ class VisitsService {
 
     if($date->diffInMinutes() < 5) return null;
 
+    $this->createVisitModel($array, $name);
+
+    // se actualiza la fecha de edicion del cookie
+    return $this->setUpdatedCookieDate($model);
+  }
+
+  /**
+   * Usado para crear el modelo relacion al recurso, en este caso una visita.
+   * @param  array  $array el arreglo con los productos a relacionar
+   * @param  string $name  el nombre del recurso (Product, SubCategory, etc)
+   * @return void
+   */
+  private function createVisitModel($array, $name)
+  {
     // si la visita no existe en la base de datos se crea, sino se actualiza
     foreach($array as $id => $total) :
 
-      $model = $model::findOrFail($id);
+      if(!$model = $model::where('slug', $id)->first())
+        $model = $model::findOrFail($id);
 
       if(Auth::user()->visits()->where('visitable_id', $model->id)->get()->isEmpty()) :
         $visit = new Visit;
@@ -189,8 +204,6 @@ class VisitsService {
 
       Cookie::queue("{$name}.{$id}", $value);
     endforeach;
-    // se actualiza la fecha de edicion del cookie
-    return $this->setUpdatedCookieDate($model);
   }
 
   /**

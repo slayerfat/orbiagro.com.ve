@@ -221,7 +221,7 @@ class Upload {
 
     // el validador
     $validator = Validator::make(['file' => $file], $this->fileRules);
-    if ($file || $validator->fails())
+    if (!$file || $validator->fails())
     {
       $this->errors = $validator->errors()->all();
       throw new Exception("Error, archivo no valido", 3);
