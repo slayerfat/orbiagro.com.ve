@@ -145,6 +145,7 @@ return [
     // 'Illuminate\Html\HtmlServiceProvider',
     'Jenssegers\Date\DateServiceProvider',
     Collective\Html\HtmlServiceProvider::class,
+    Intervention\Image\ImageServiceProvider::class,
 
     /*
      * Application Service Providers...
@@ -225,14 +226,13 @@ return [
     /**
      * Custom Aliases:
      */
-    // 'Form'      => 'Illuminate\Html\FormFacade',
-    // 'Html'      => 'Illuminate\Html\HtmlFacade',
-    'Form'      => Collective\Html\FormFacade::class,
-    'Html'      => Collective\Html\HtmlFacade::class,
-    'Flash'     => 'Laracasts\Flash\Flash',
-    'Faker'     => 'Faker\Factory',
-    'Date'      => 'Jenssegers\Date\Date',
-    'SEO'       => 'Artesaos\SEOTools\Facades\SEOTools',
+    'Form'         => Collective\Html\FormFacade::class,
+    'Html'         => Collective\Html\HtmlFacade::class,
+    'Flash'        => 'Laracasts\Flash\Flash',
+    'Faker'        => 'Faker\Factory',
+    'Date'         => 'Jenssegers\Date\Date',
+    'SEO'          => 'Artesaos\SEOTools\Facades\SEOTools',
+    'Intervention' => 'Intervention\Image\Facades\Image',
 
   ],
 

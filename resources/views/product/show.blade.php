@@ -46,6 +46,16 @@
             <div class="slider slider-for">
               @foreach ($product->images as $image)
                 <div>
+                  @if(Auth::user() and Auth::user()->isOwnerOrAdmin($product->user_id))
+                    <span>
+                      <a href="{{ action('ImagesController@edit', $image->id) }}">
+                        <button
+                          type="button"
+                          name="image-edit"
+                          class="btn btn-default">Editar Imagen</button>
+                      </a>
+                    </span>
+                  @endif
                   <img
                     src="{!! asset($image->path) !!}"
                     alt="{{ $image->alt }}"
@@ -145,6 +155,9 @@
       centerMode: true,
       focusOnSelect: true
     });
+    // $('.slick-active').click(function(){
+    //   $(this).append('asdasd');
+    // });
   </script>
   {{-- galeria de productos visitados relacionados. --}}
   <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>

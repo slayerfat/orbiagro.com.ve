@@ -126,6 +126,10 @@ Route::get('proveedores/crear', ['uses' => 'ProvidersController@create', 'as' =>
 Route::get('proveedores/{proveedores}/editar', ['uses' => 'ProvidersController@edit', 'as' => 'proveedores.edit']);
 Route::resource('proveedores', 'ProvidersController', $espanol);
 
+Route::get('imagenes/crear', ['uses' => 'ImagesController@create', 'as' => 'imagenes.create']);
+Route::get('imagenes/{imagenes}/editar', ['uses' => 'ImagesController@edit', 'as' => 'imagenes.edit']);
+Route::resource('imagenes', 'ImagesController', $espanol);
+
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar
   Route::get('/por-verificar', 'HomeController@unverified');
