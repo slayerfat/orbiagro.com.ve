@@ -18,6 +18,10 @@ class CreateImagesTable extends Migration {
       $table->integer('imageable_id')->unsigned();
       $table->string('imageable_type');
       $table->string('path');
+      $table->string('original');
+      $table->string('small');
+      $table->string('medium');
+      $table->string('large');
       $table->string('mime');
       $table->string('alt');
       $table->timestamps();

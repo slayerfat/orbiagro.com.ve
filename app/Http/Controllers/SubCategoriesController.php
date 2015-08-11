@@ -12,7 +12,7 @@ use App\Category;
 use App\SubCategory;
 
 use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 

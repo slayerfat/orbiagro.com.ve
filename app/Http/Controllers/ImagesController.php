@@ -8,7 +8,7 @@ use Auth;
 use Intervention;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use App\Image;
 

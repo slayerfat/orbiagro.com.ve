@@ -17,14 +17,16 @@
           </h2>
           <h3>{{$cat->info}}</h3>
         </div>
-        <div class="col-xs-4">
-          <a href="{!! action('CategoriesController@show', $cat->slug) !!}">
-            <img
-            src="{!! asset($cat->image->path) !!}"
-            alt="{{$cat->image->alt}}"
-            class="img-responsive"/>
-          </a>
-        </div>
+        @if($cat->image)
+          <div class="col-xs-4">
+            <a href="{!! action('CategoriesController@show', $cat->slug) !!}">
+              <img
+              src="{!! asset($cat->image->path) !!}"
+              alt="{{$cat->image->alt}}"
+              class="img-responsive"/>
+            </a>
+          </div>
+        @endif
       </div>
     </div>
     @endforeach

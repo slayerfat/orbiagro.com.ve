@@ -11,7 +11,8 @@ use App\Product;
 use App\Feature;
 
 use App\Mamarrachismo\ModelValidation;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\File as UploadFile;
+use App\Mamarrachismo\Upload\Image as UploadImage;
 
 class FeaturesController extends Controller {
 
@@ -27,7 +28,6 @@ class FeaturesController extends Controller {
    */
   public function __construct(Feature $feature)
   {
-    $this->middleware('auth');
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->modelValidator = new ModelValidation($this->userId, $this->user);
@@ -64,15 +64,18 @@ class FeaturesController extends Controller {
    * @method store
    * @param  int            $id
    * @param  FeatureRequest $request
-   * @param  Upload         $upload  clase para subir archivos.
+   * @param  UploadImage    $uploadImage clase para subir imagenes.
+   * @param  UploadFile     $uploadFile  clase para subir archivos.
    *
    * @return Response
    */
-  public function store($id, FeatureRequest $request, Upload $upload)
+  public function store($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
   {
     $product = Product::findOrFail($id);
+
     // para los archivos del feature
-    $upload->userId = $this->userId;
+    $uploadImage->userId = $this->userId;
+    $uploadFile->userId  = $this->userId;
 
     // el producto puede tener como maximo 5 features
     if ($product->features->count() >= 5) :
@@ -96,7 +99,7 @@ class FeaturesController extends Controller {
     if ($request->hasFile('file'))
       try
       {
-        $upload->createFile($request->file('file'), $this->feature);
+        $uploadFile->createFile($request->file('file'), $this->feature);
       }
       catch (\Exception $e)
       {
@@ -111,7 +114,7 @@ class FeaturesController extends Controller {
     if ($request->hasFile('image'))
       try
       {
-        $upload->createImage($request->file('image'), $this->feature);
+        $uploadImage->createImage($request->file('image'), $this->feature);
       }
       catch (\Exception $e)
       {
@@ -147,16 +150,20 @@ class FeaturesController extends Controller {
    *
    * @param  int            $id
    * @param  FeatureRequest $request
-   * @param  Upload         $upload  clase para subir archivos.
+   * @param  UploadImage    $uploadImage clase para subir imagenes.
+   * @param  UploadFile     $uploadFile  clase para subir archivos.
+   *
    * @return Response
    */
-  public function update($id, FeatureRequest $request, Upload $upload)
+  public function update($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
   {
     // se carga el producto para el redirect (id)
     $this->feature = Feature::findOrFail($id)->load('product');
 
     // para dates
-    $upload->userId = $this->userId;
+    // para los archivos del feature
+    $uploadImage->userId = $this->userId;
+    $uploadFile->userId  = $this->userId;
 
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
@@ -171,7 +178,7 @@ class FeaturesController extends Controller {
     if ($request->hasFile('image'))
       try
       {
-        $upload->updateImage($request->file('image'), $this->feature, $this->feature->image);
+        $uploadImage->updateImage($request->file('image'), $this->feature, $this->feature->image);
       }
       catch (\Exception $e)
       {
@@ -184,7 +191,7 @@ class FeaturesController extends Controller {
     if ($request->hasFile('file'))
       try
       {
-        $upload->updateFile($request->file('file'), $this->feature, $this->feature->file);
+        $uploadFile->updateFile($request->file('file'), $this->feature, $this->feature->file);
       }
       catch (\Exception $e)
       {

@@ -61,7 +61,7 @@ Route::get('categorias/{categorias}/productos', ['uses' => 'ProductsController@i
 Route::get('rubros/{rubros}/productos', ['uses' => 'ProductsController@indexBySubCategory', 'as' => 'productos.subcategory.index']);
 
 // modelos asociados a producto
-Route::group(['prefix' => 'productos'], function(){
+Route::group(['prefix' => 'productos', 'middleware' => 'auth'], function(){
   // features
   Route::get('/{productos}/distintivos/crear', 'FeaturesController@create');
   Route::post('/{productos}/distintivos', 'FeaturesController@store');
@@ -101,6 +101,10 @@ Route::group(['prefix' => 'productos'], function(){
   Route::put('/proveedores/{productos}/{proveedores}', 'ProductsProvidersController@update');
   Route::patch('/proveedores/{productos}/{proveedores}', 'ProductsProvidersController@update');
   Route::delete('/proveedores/{productos}/{proveedoresNombre}', 'ProductsProvidersController@destroy');
+
+  // images
+  // Route::get('/{productos}/imagenes/crear', ['uses' => 'ProductsImagesController@create', 'as' => 'product.imagenes.create']);
+  // Route::post('/{productos}/imagenes', ['uses' => 'ProductsImagesController@store', 'as' => 'product.imagenes.store']);
 });
 
 Route::get('categorias/crear', ['uses' => 'CategoriesController@create', 'as' => 'categorias.create']);
@@ -126,9 +130,7 @@ Route::get('proveedores/crear', ['uses' => 'ProvidersController@create', 'as' =>
 Route::get('proveedores/{proveedores}/editar', ['uses' => 'ProvidersController@edit', 'as' => 'proveedores.edit']);
 Route::resource('proveedores', 'ProvidersController', $espanol);
 
-Route::get('imagenes/crear', ['uses' => 'ImagesController@create', 'as' => 'imagenes.create']);
-Route::get('imagenes/{imagenes}/editar', ['uses' => 'ImagesController@edit', 'as' => 'imagenes.edit']);
-Route::resource('imagenes', 'ImagesController', $espanol);
+Route::resource('imagenes', 'ImagesController', ['only' => ['edit', 'update', 'destroy']]);
 
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Maker;
 
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 

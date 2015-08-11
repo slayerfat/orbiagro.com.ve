@@ -1,70 +1,14 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace App\Mamarrachismo\Upload;
 
 use Exception;
 use Validator;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use Auth;
-use App\Product;
-use App\Feature;
-use App\SubCategory;
-use App\Category;
-use App\Image;
-use App\File;
+use App\Mamarrachismo\Upload\Upload;
+use App\Image as Model;
 
-class Upload {
-
-  /**
-   * @var mixed
-   */
-  public $errors;
-
-  /**
-   * @var int
-   */
-  public $userId;
-
-  /**
-   * el modelo a ser manipulado
-   *
-   * @var Object
-   */
-  public $model;
-
-  /**
-   * la direccion para guardar el archivo relacionado al modelo.
-   * @var string
-   */
-  private $path;
-
-  /**
-   * reglas para el validador.
-   * @var array
-   */
-  private $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
-
-  /**
-   * reglas para el validador.
-   * @var array
-   */
-  private $fileRules = ['file' => 'mimes:pdf|max:10000'];
-
-  public function __construct($userID = null)
-  {
-    if ($userID !== null)
-    {
-      $this->userId = $userID;
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // Funciones Publicas
-  // --------------------------------------------------------------------------
-
-  // --------------------------------------------------------------------------
-  // Imagenes
-  // --------------------------------------------------------------------------
+class Image extends Upload {
 
   /**
    * crea la(s) imagen(es) relacionadas con algun modelo.
@@ -175,11 +119,11 @@ class Upload {
    *
    * @param UploadedFile  $file         Objeto UploadedFiles con la imagen.
    * @param object        $parentModel  El modelo a actualizar.
-   * @param App\Image     $imageModel   El modelo de la imagen.
+   * @param App\Model     $imageModel   El modelo de la imagen.
    *
    * @return boolean
    */
-  public function updateImage(UploadedFile $file = null, $parentModel, Image $imageModel = null)
+  public function updateImage(UploadedFile $file = null, $parentModel, Model $imageModel = null)
   {
     if ($imageModel == null) return $this->createImage($file, $parentModel);
 
@@ -201,39 +145,6 @@ class Upload {
       return $this->createDefaultImage($this->path, $parentModel);
 
     return $imageModel->update($result);
-  }
-
-  // --------------------------------------------------------------------------
-  // Archivos
-  // --------------------------------------------------------------------------
-
-  /**
-   * crea la imagen relacionada con algun modelo.
-   *
-   * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
-   * @param object        $model El modelo relacionado para ser asociado.
-   *
-   * @return boolean
-   */
-  public function createFile(UploadedFile $file = null, $model)
-  {
-    $this->path = $this->generatePathFromModel($model);
-
-    // el validador
-    $validator = Validator::make(['file' => $file], $this->fileRules);
-    if (!$file || $validator->fails())
-    {
-      $this->errors = $validator->errors()->all();
-      throw new Exception("Error, archivo no valido", 3);
-    }
-
-    // se crea el archivo en el HD.
-    if (!$result = $this->makeFile($file, $this->path)) return false;
-
-    // se crea el modelo.
-    $this->createFileModel($result, $model);
-
-    return true;
   }
 
   /**
@@ -282,7 +193,7 @@ class Upload {
    */
   private function createImageModel(array $array, $model)
   {
-    $image = new Image($array);
+    $image = new Model($array);
 
     // si la aplicacion esta por consola (artisan u otro)
     // se le asigna el created/updated by.
@@ -314,85 +225,6 @@ class Upload {
 
       default:
         throw new Exception("Error: modelo desconocido, no se puede guardar imagen", 1);
-
-    endswitch;
-  }
-
-  /**
-   * crea el modelo nuevo de alguna imagen relacionada con algun producto.
-   *
-   * @param array  $array el array que contiene los datos para la imagen.
-   * @param Object $model el modelo a asociar.
-   *
-   * @return boolean
-   */
-  private function createFileModel(array $array, $model)
-  {
-    $file = new File($array);
-
-    switch (get_class($model)) :
-
-      case 'App\Product':
-        return $model->files()->save($file);
-
-      case 'App\Feature':
-        return $model->file()->save($file);
-
-      default:
-        throw new Exception("Error: modelo desconocido, no se puede guardar archivo relacionado", 1);
-
-    endswitch;
-  }
-
-  /**
-   * usado para crear en el disco duro el archivo relacionado a un producto.
-   *
-   * @param  UploadedFile $file
-   * @param  string $path la direccion a donde se guardara el archivo.
-   * @return array  $data la carpeta, nombre y extension del archivo guardado.
-   */
-  private function makeFile(UploadedFile $file, $path = null)
-  {
-    // el nombre del archivo
-    $name = date('Ymdhmmss-').str_random(20);
-
-    $ext = $file->getClientOriginalExtension();
-
-    $file->move($path, "{$name}.{$ext}");
-
-    // la data necesaria para crear el modelo de imagen.
-    $data = [
-      'path' => "$path/{$name}.{$ext}",
-      'mime' => $file->getClientMimeType()
-    ];
-
-    return $data;
-  }
-
-  private function generatePathFromModel($model)
-  {
-    switch (get_class($model)) :
-
-      case 'App\Product':
-        return "products/{$model->id}";
-
-      case 'App\Feature':
-        return "products/{$model->product->id}";
-
-      case 'App\Category':
-        return "category/{$model->id}";
-
-      case 'App\SubCategory':
-        return "sub-category/{$model->id}";
-
-      case 'App\Maker':
-        return "makers/{$model->id}";
-
-      case 'App\Promotion':
-        return "promos/{$model->id}";
-
-      default:
-        throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".gettype($model), 2);
 
     endswitch;
   }

@@ -27,15 +27,17 @@
               <a href="{{$maker->url}}">{{$maker->domain}}</a>
             </h2>
           </div>
-          <div class="media-right">
-            <a href="#">
-              <img
-                width="128" height="128"
-                class="media-object"
-                src="{{asset($maker->image->path)}}"
-                alt="{{$maker->image->alt}}">
-            </a>
-          </div>
+          @if($maker->image)
+            <div class="media-right">
+              <a href="#">
+                <img
+                  width="128" height="128"
+                  class="media-object"
+                  src="{{asset($maker->image->path)}}"
+                  alt="{{$maker->image->alt}}">
+              </a>
+            </div>
+          @endif
         </div>
       </div>
     </div>

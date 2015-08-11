@@ -7,11 +7,13 @@
   @foreach($cats as $cat)
     <div>
       <a href="{!! action($title == ('Rubros') ? 'SubCategoriesController@show' : 'CategoriesController@show', $cat->slug) !!}">
-        <img
-        src="{!! asset($cat->image->path) !!}"
-        alt="{{ $cat->image->alt }}"
-        width="150px"
-        height="150px"/>
+        @if($cat->image)
+          <img
+          src="{!! asset($cat->image->path) !!}"
+          alt="{{ $cat->image->alt }}"
+          width="150px"
+          height="150px"/>
+        @endif
       </a>
     </div>
   @endforeach
