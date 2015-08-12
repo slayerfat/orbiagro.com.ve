@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use App\User;
 
@@ -31,6 +32,8 @@ class SubCategoryTableSeeder extends Seeder {
 
     $faker  = Faker::create('es_ES');
 
+    $this->upload = new Upload(1);
+
     $user = User::where('name', 'tester')->first();
 
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
@@ -41,7 +44,7 @@ class SubCategoryTableSeeder extends Seeder {
       $cat = App\Category::where('description', $category)->first();
         foreach($values as $value):
           $this->command->info("$value");
-          App\SubCategory::create([
+          $subCat = App\SubCategory::create([
             'category_id' => $cat->id,
             'description' => $value,
             'info'        => $faker->text(),
@@ -49,6 +52,8 @@ class SubCategoryTableSeeder extends Seeder {
             'created_by'  => $user->id,
             'updated_by'  => $user->id,
           ]);
+
+          $this->upload->createImage(null, $subCat);
         endforeach;
     endforeach;
     $this->command->info('El Elegido creo las sub-categorias.');

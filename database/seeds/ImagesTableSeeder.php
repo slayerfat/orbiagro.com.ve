@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 use App\User;
 use App\Image;
 use App\File;
@@ -18,7 +17,6 @@ class ImagesTableSeeder extends Seeder {
   {
     $this->command->info("*** Empezando creacion de Images! ***");
 
-    $faker = Faker::create('es_ES');
     $user  = User::where('name', 'tester')->first();
 
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
@@ -36,6 +34,7 @@ class ImagesTableSeeder extends Seeder {
       // el modelo
       $image             = new Image;
       $image->path       = "products/{$product->id}/{$name}.gif";
+      $image->original   = $image->path;
       $image->mime       = 'image/gif';
       $image->alt        = $product->title;
       $image->created_by = $user->id;

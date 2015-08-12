@@ -3,6 +3,7 @@
 use Exception;
 use Validator;
 use Storage;
+use Intervention;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use App\Mamarrachismo\Upload\Upload;
@@ -89,7 +90,7 @@ class Image extends Upload {
    * @param string $path  La direccion a donde se guardara
    * @param object $model El modelo relacionado para ser asociado.
    *
-   * @return boolean
+   * @return \Illuminate\Database\Eloquent\Model
    */
   public function createDefaultImage($path = null, $model)
   {
@@ -120,71 +121,100 @@ class Image extends Upload {
   /**
    * actualiza la imagen relacionada con algun modelo.
    *
-   * @param UploadedFile  $file         Objeto UploadedFiles con la imagen.
-   * @param object        $parentModel  El modelo a actualizar.
-   * @param App\Model     $imageModel   El modelo de la imagen.
+   * @param UploadedFile  $file       Objeto UploadedFiles con la imagen.
+   * @param App\Image     $imageModel El modelo de la imagen.
+   * @param array         $options    las opcions relacionadas con Intervention.
    *
-   * @return boolean
+   * @return \Illuminate\Database\Eloquent\Model
    */
-  public function updateImage(UploadedFile $file = null, $parentModel, Model $imageModel = null)
+  public function updateImage(UploadedFile $file = null, Model $imageModel = null, array $options = null)
   {
+    $parentModel = $imageModel->imageable;
+
+    // si no hay algun modelo relacionado, se crea uno de cero.
     if ($imageModel == null) return $this->createImage($file, $parentModel);
 
     $this->path = $this->generatePathFromModel($parentModel);
 
     // el validador
     $validator = Validator::make(['image' => $file], $this->imageRules);
+
     if (!$file || $validator->fails())
     {
       $this->errors = $validator->errors()->all();
       throw new Exception("Error, archivo no valido", 3);
     }
+
     // se chequea si existe el archivo y se elimina
     if (Storage::disk('public')->exists($imageModel->path))
       Storage::disk('public')->delete($imageModel->path);
 
     // se crea la imagen en el HD y se actualiza el modelo.
-    if (!$result = $this->makeFile($file, $this->path))
+    if (!$result = $this->makeImageFile($file, $this->path, $options))
       return $this->createDefaultImage($this->path, $parentModel);
 
     return $imageModel->update($result);
   }
 
-  /**
-   * actualiza el archivo relacionado con algun modelo.
-   *
-   * @param UploadedFile  $file         Objeto UploadedFiles con la imagen.
-   * @param object        $parentModel  El modelo a actualizar.
-   * @param App\File      $fileModel    El modelo del archivo.
-   *
-   * @return boolean
-   */
-  public function updateFile(UploadedFile $file = null, $parentModel = null, File $fileModel = null)
-  {
-    if ($fileModel == null) return $this->createFile($file, $parentModel);
-
-    $this->path = $this->generatePathFromModel($parentModel);
-
-    // el validador
-    $validator = Validator::make(['file' => $file], $this->fileRules);
-    if (!$file || $validator->fails())
-    {
-      $this->errors = $validator;
-      throw new Exception("Error, archivo no valido", 3);
-    }
-
-    // se chequea si existe el archivo y se elimina
-    if (Storage::disk('public')->exists($fileModel->path))
-      Storage::disk('public')->delete($fileModel->path);
-
-    // se crea la imagen en el HD y se actualiza el modelo.
-    if ($result = $this->makeFile($file, $this->path))
-      return $fileModel->update($result);
-  }
-
   // --------------------------------------------------------------------------
   // Funciones Privadas
   // --------------------------------------------------------------------------
+
+  /**
+   * usado para crear en el disco duro el archivo relacionado a un producto.
+   *
+   * @param  UploadedFile $file
+   * @param  string       $path     la direccion a donde se guardara el archivo.
+   * @param  array        $options  las opcions relacionadas con Intervention.
+   *
+   * @return array        $data     la carpeta, nombre y
+   *                                extension del archivo guardado.
+   */
+  private function makeImageFile(UploadedFile $file, $path = null, array $options = null)
+  {
+    $data = parent::makeFile($file, $path);
+
+    $image = Intervention::make($data['path']);
+
+    $data['small']    = $data['dir'].'/s-'.$data['name'].'.'.$data['ext'];
+    $data['medium']   = $data['dir'].'/m-'.$data['name'].'.'.$data['ext'];
+    $data['large']    = $data['dir'].'/l-'.$data['name'].'.'.$data['ext'];
+    $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
+
+    $image->resize(128, null, function ($constraint) {
+        $constraint->aspectRatio();
+        $constraint->upsize();
+    })->save($data['small']);
+
+    $image = Intervention::make($data['path']);
+
+    $image->resize(512, null, function ($constraint) {
+        $constraint->aspectRatio();
+        $constraint->upsize();
+    })->save($data['medium']);
+
+    $image = Intervention::make($data['path']);
+
+    $image->resize(1024, null, function ($constraint) {
+        $constraint->aspectRatio();
+        $constraint->upsize();
+    })->save($data['large']);
+
+    if (!$options)
+    {
+      return $data;
+    }
+
+    // Intervention
+    foreach ($options as $method => $parameters)
+    {
+      dd($image);
+
+      $image->$method($parameters); //etc...
+    }
+
+    return $data;
+  }
 
   /**
    * crea el modelo nuevo de alguna imagen relacionada con algun producto.

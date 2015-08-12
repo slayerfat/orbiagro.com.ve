@@ -141,7 +141,7 @@ class CategoriesController extends Controller {
     flash()->success('La Categoria ha sido actualizada correctamente.');
 
     if ($request->hasFile('image')) :
-      if (!$upload->updateImage($request->file('image'), $this->cat, $this->cat->image)) :
+      if (!$upload->updateImage($request->file('image'), $this->cat->image)) :
         flash()->warning('La Categoria ha sido actualizada, pero la imagen asociada no pudo ser actualizada.');
       endif;
     endif;

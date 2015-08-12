@@ -35,6 +35,7 @@ class TesterImagesTableSeeder extends Seeder {
       // el modelo
       $image             = new Image;
       $image->path       = "products/{$product->id}/{$name}.gif";
+      $image->original   = $image->path;
       $image->mime       = 'image/gif';
       $image->alt        = $product->title;
       $image->created_by = $user->id;

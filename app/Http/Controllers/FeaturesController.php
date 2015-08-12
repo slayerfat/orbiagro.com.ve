@@ -139,7 +139,7 @@ class FeaturesController extends Controller {
 
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $product->slug);
+      return redirect()->action('ProductsController@show', $this->feature->product->slug);
     endif;
 
     return view('feature.edit')->with(['feature' => $this->feature]);
@@ -167,7 +167,7 @@ class FeaturesController extends Controller {
 
     if($this->modelValidator->notOwner($this->feature->product->user->id)) :
       flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $product->slug);
+      return redirect()->action('ProductsController@show', $this->feature->product->slug);
     endif;
 
     $this->feature->update($request->all());
@@ -178,7 +178,7 @@ class FeaturesController extends Controller {
     if ($request->hasFile('image'))
       try
       {
-        $uploadImage->updateImage($request->file('image'), $this->feature, $this->feature->image);
+        $uploadImage->updateImage($request->file('image'), $this->feature->image);
       }
       catch (\Exception $e)
       {

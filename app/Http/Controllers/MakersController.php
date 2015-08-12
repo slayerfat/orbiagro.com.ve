@@ -115,7 +115,7 @@ class MakersController extends Controller {
    */
   public function update($id, MakerRequest $request, Upload $upload)
   {
-    $this->maker = Maker::findOrFail($id);
+    $this->maker = Maker::findOrFail($id)->load('image');
     $this->maker->update($request->all());
 
     flash()->success('Fabricante Actualizado exitosamente.');
@@ -126,7 +126,7 @@ class MakersController extends Controller {
     if ($request->hasFile('image'))
       try
       {
-        $upload->updateImage($request->file('image'), $this->maker, $this->maker->image);
+        $upload->updateImage($request->file('image'), $this->maker->image);
       }
       catch (\Exception $e)
       {

@@ -51,10 +51,14 @@ class ImagesController extends Controller
 
     $image = Image::with('imageable')->findOrFail($id);
 
+    flash()->success('Imagen Actualizada exitosamente.');
+
     if ($request->file('image'))
     {
       // se iteran las imagenes y se guardan los modelos
-      $image = $upload->updateImage($request->file('image'), $image->imageable, $image);
+      $upload->updateImage($request->file('image'), $image);
+
+      return redirect()->action('ProductsController@show', $image->imageable->id);
     }
 
     $updatedImage = Intervention::make($image->path);
@@ -65,9 +69,6 @@ class ImagesController extends Controller
       $request->input('dataY')
     );
 
-    $upload->updateImage($updatedImage, $image->imageable, $image);
-
-    flash()->success('Imagen Actualizada exitosamente.');
     return redirect()->action('ProductsController@show', $image->imageable->id);
   }
 

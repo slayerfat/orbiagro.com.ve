@@ -179,11 +179,13 @@ class SubCategoriesController extends Controller {
     $this->subCat->update($request->all());
     flash()->success('El Rubro ha sido actualizado correctamente.');
 
-    if ($request->hasFile('image')) :
-      if (!$upload->updateImage($request->file('image'), $this->subCat, $this->subCat->image)) :
+    if ($request->hasFile('image'))
+    {
+      if (!$upload->updateImage($request->file('image'), $this->subCat->image))
+      {
         flash()->warning('El Rubro ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-      endif;
-    endif;
+      }
+    }
 
     return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
   }

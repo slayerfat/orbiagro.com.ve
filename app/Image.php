@@ -10,7 +10,9 @@ class Image extends Model {
 
   use InternalDBManagement;
 
-  protected $fillable = ['path', 'mime', 'alt'];
+  protected $fillable = [
+    'path', 'original', 'small', 'medium', 'large', 'mime', 'alt'
+  ];
 
   // --------------------------------------------------------------------------
   // Mutators

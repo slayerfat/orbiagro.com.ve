@@ -55,6 +55,7 @@ class Upload {
    *
    * @param  UploadedFile $file
    * @param  string $path la direccion a donde se guardara el archivo.
+   *
    * @return array  $data la carpeta, nombre y extension del archivo guardado.
    */
   protected function makeFile(UploadedFile $file, $path = null)
@@ -68,6 +69,9 @@ class Upload {
 
     // la data necesaria para crear el modelo de imagen.
     $data = [
+      'name' => $name,
+      'ext'  => $ext,
+      'dir'  => $path,
       'path' => "$path/{$name}.{$ext}",
       'mime' => $file->getClientMimeType()
     ];
