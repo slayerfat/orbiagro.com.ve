@@ -54,7 +54,7 @@ class ImagesController extends Controller
     if ($request->file('image'))
     {
       // se iteran las imagenes y se guardan los modelos
-      $upload->updateImage($request->file('image'), $image->imageable, $image);
+      $image = $upload->updateImage($request->file('image'), $image->imageable, $image);
     }
 
     $updatedImage = Intervention::make($image->path);

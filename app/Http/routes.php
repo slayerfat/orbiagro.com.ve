@@ -103,8 +103,8 @@ Route::group(['prefix' => 'productos', 'middleware' => 'auth'], function(){
   Route::delete('/proveedores/{productos}/{proveedoresNombre}', 'ProductsProvidersController@destroy');
 
   // images
-  // Route::get('/{productos}/imagenes/crear', ['uses' => 'ProductsImagesController@create', 'as' => 'product.imagenes.create']);
-  // Route::post('/{productos}/imagenes', ['uses' => 'ProductsImagesController@store', 'as' => 'product.imagenes.store']);
+  Route::get('/{productos}/imagenes/crear', ['uses' => 'ImagesController@createProduct', 'as' => 'product.imagenes.create']);
+  Route::post('/{productos}/imagenes', ['uses' => 'ImagesController@storeProduct', 'as' => 'product.imagenes.store']);
 });
 
 Route::get('categorias/crear', ['uses' => 'CategoriesController@create', 'as' => 'categorias.create']);
@@ -130,7 +130,8 @@ Route::get('proveedores/crear', ['uses' => 'ProvidersController@create', 'as' =>
 Route::get('proveedores/{proveedores}/editar', ['uses' => 'ProvidersController@edit', 'as' => 'proveedores.edit']);
 Route::resource('proveedores', 'ProvidersController', $espanol);
 
-Route::resource('imagenes', 'ImagesController', ['only' => ['edit', 'update', 'destroy']]);
+Route::get('imagenes/{imagenes}/editar', ['uses' => 'ImagesController@edit', 'as' => 'imagenes.edit']);
+Route::resource('imagenes', 'ImagesController', ['only' => ['update', 'destroy']]);
 
 Route::group(['middleware' => 'user.verified'], function(){
   // usuario por verificar

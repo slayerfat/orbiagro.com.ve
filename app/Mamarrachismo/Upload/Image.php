@@ -16,18 +16,26 @@ class Image extends Upload {
    * @param array  $array  El array con los objetos UploadedFiles.
    * @param object $model  El modelo a relacionar con la imagen.
    *
-   * @return boolean
+   * @return \Illuminate\Support\Collection
    */
   public function createImages(array $array = null, $model)
   {
+    $collection = collect();
+
     $this->path = $this->generatePathFromModel($model);
 
-    if(!$array) return $this->createDefaultImage($this->path, $model);
+    if(!$array)
+    {
+      $collection = $collection->push($this->createDefaultImage($this->path, $model));
 
-    foreach($array as $file) :
+      return $collection;
+    }
 
+    foreach($array as $file)
+    {
       // el validador
       $validator = Validator::make(['image' => $file], $this->imageRules);
+
       if ($validator->fails())
       {
         // si existe entre 0 y 1 en el array y la imagen es invalida
@@ -35,20 +43,24 @@ class Image extends Upload {
         if (sizeOf($array) <= 1)
         {
           // si las imagenes no son validas crea una imagen por defecto
-          return $this->createDefaultImage($this->path, $model);
+          $collection = $collection->push($this->createDefaultImage($this->path, $model));
+
+          return $collection;
         }
+
         $this->errors = $validator->errors()->all();
+
         throw new Exception("Error, Imagenes no validas.", 5);
       }
 
       // se crea la imagen en el HD.
-      if (!$result = $this->makeFile($file, $this->path)) return false;
+      if (!$result = $this->makeFile($file, $this->path)) return $collection;
 
       // se crea el modelo.
-      $this->createImageModel($result, $model);
-    endforeach;
+      $collection = $collection->push($this->createImageModel($result, $model));
+    }
 
-    return true;
+    return $collection;
   }
 
   /**
@@ -57,27 +69,18 @@ class Image extends Upload {
    * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
    * @param object        $model El modelo relacionado para ser asociado.
    *
-   * @return boolean
+   * @return \Illuminate\Support\Collection
    */
   public function createImage(UploadedFile $file = null, $model)
   {
-    $this->path = $this->generatePathFromModel($model);
+    $result = $this->createImages([$file], $model);
 
-    // el validador
-    $validator = Validator::make(['image' => $file], $this->imageRules);
-    if (!$file || $validator->fails())
+    if ($result->isEmpty())
     {
-      // si las imagen no es valida crea una imagen por defecto
-      return $this->createDefaultImage($this->path, $model);
+      return $result;
     }
 
-    // se crea la imagen en el HD.
-    if (!$result = $this->makeFile($file, $this->path)) return false;
-
-    // se crea el modelo.
-    $this->createImageModel($result, $model);
-
-    return true;
+    return $result->first();
   }
 
   /**
