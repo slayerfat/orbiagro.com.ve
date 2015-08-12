@@ -23,6 +23,10 @@ class ImagesTableSeeder extends Seeder {
 
     $products = Product::all();
 
+    // se elimina el directorio de todos los archivos
+    Storage::disk('public')->deleteDirectory('products');
+    Storage::disk('public')->makeDirectory('products');
+
     foreach($products as $product):
       $this->command->info("Producto {$product->slug}");
       // el nombre del archivo

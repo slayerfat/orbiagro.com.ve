@@ -8,7 +8,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8">
-        <img src="{!! asset($image->path) !!}" class="img-responsive" id="image">
+        <img src="{!! asset($image->original) !!}" class="img-responsive" id="image">
       </div>
       <div class="col-md-4">
         <div>

@@ -12,6 +12,10 @@ class PromotionTableSeeder extends Seeder {
 
     // upload necesita el ID del usuario a asociar.
     $this->upload = new Upload(1);
+    
+    // se elimina el directorio de todos los archivos
+    Storage::disk('public')->deleteDirectory('promos');
+    Storage::disk('public')->makeDirectory('promos');
 
     $product = App\Product::first();
 

@@ -38,6 +38,10 @@ class SubCategoryTableSeeder extends Seeder {
 
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
 
+    // se elimina el directorio de todos los archivos
+    Storage::disk('public')->deleteDirectory('sub-category');
+    Storage::disk('public')->makeDirectory('sub-category');
+
     foreach($types as $category => $values):
       $this->command->info("$category");
 

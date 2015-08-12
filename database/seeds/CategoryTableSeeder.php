@@ -28,6 +28,10 @@ class CategoryTableSeeder extends Seeder {
 
     $user = User::where('name', 'tester')->first();
 
+    // se elimina el directorio de todos los archivos
+    Storage::disk('public')->deleteDirectory('category');
+    Storage::disk('public')->makeDirectory('category');
+
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
 
     foreach($types as $category):

@@ -51,6 +51,8 @@ class ImagesController extends Controller
 
     $image = Image::with('imageable')->findOrFail($id);
 
+    $controller = $this->getControllerNameFromModel($image->imageable);
+
     flash()->success('Imagen Actualizada exitosamente.');
 
     if ($request->file('image'))
@@ -58,18 +60,20 @@ class ImagesController extends Controller
       // se iteran las imagenes y se guardan los modelos
       $upload->updateImage($request->file('image'), $image);
 
-      return redirect()->action('ProductsController@show', $image->imageable->id);
+      return redirect()->action("{$controller}@show", $image->imageable->slug);
     }
 
-    $updatedImage = Intervention::make($image->path);
-    $updatedImage->crop(
+    // http://image.intervention.io/api/crop
+    // se ajusta segun estos valores:
+    $upload->cropImage(
+      $image,
       $request->input('dataWidth'),
       $request->input('dataHeight'),
       $request->input('dataX'),
       $request->input('dataY')
     );
 
-    return redirect()->action('ProductsController@show', $image->imageable->id);
+    return redirect()->action("{$controller}@show", $image->imageable->slug);
   }
 
   /**
@@ -86,5 +90,33 @@ class ImagesController extends Controller
 
     flash()->success('Imagen Eliminada exitosamente.');
     return redirect()->action('ProductsController@show', $product->id);
+  }
+
+  protected function getControllerNameFromModel($model)
+  {
+    switch (get_class($model)) :
+
+      case 'App\Product':
+        return 'ProductsController';
+
+      case 'App\Feature':
+        return 'FeaturesController';
+
+      case 'App\Category':
+        return 'CategoriesController';
+
+      case 'App\SubCategory':
+        return 'SubCategoriesController';
+
+      case 'App\Maker':
+        return 'MakersController';
+
+      case 'App\Promotion':
+        return 'PromotionsController';
+
+      default:
+        throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".gettype($model), 2);
+
+    endswitch;
   }
 }

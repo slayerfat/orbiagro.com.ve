@@ -61,7 +61,7 @@ class Upload {
   protected function makeFile(UploadedFile $file, $path = null)
   {
     // el nombre del archivo
-    $name = date('Ymdhmmss-').str_random(20);
+    $name = date('Ymdhms-').str_random(16);
 
     $ext = $file->getClientOriginalExtension();
 

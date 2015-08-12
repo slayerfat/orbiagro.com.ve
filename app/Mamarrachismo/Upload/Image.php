@@ -55,7 +55,7 @@ class Image extends Upload {
       }
 
       // se crea la imagen en el HD.
-      if (!$result = $this->makeFile($file, $this->path)) return $collection;
+      if (!$result = $this->makeImageFile($file, $this->path)) return $collection;
 
       // se crea el modelo.
       $collection = $collection->push($this->createImageModel($result, $model));
@@ -139,15 +139,14 @@ class Image extends Upload {
     // el validador
     $validator = Validator::make(['image' => $file], $this->imageRules);
 
-    if (!$file || $validator->fails())
+    if (!isset($file) || $validator->fails())
     {
       $this->errors = $validator->errors()->all();
       throw new Exception("Error, archivo no valido", 3);
     }
 
-    // se chequea si existe el archivo y se elimina
-    if (Storage::disk('public')->exists($imageModel->path))
-      Storage::disk('public')->delete($imageModel->path);
+    // verdadero porque se eliminan TODOS los archivos
+    $this->deleteImageFiles($imageModel, true);
 
     // se crea la imagen en el HD y se actualiza el modelo.
     if (!$result = $this->makeImageFile($file, $this->path, $options))
@@ -156,10 +155,66 @@ class Image extends Upload {
     return $imageModel->update($result);
   }
 
+  public function cropImage(Model $image, $width, $height, $posX = null, $posY = null)
+  {
+    // se crea el objeto con el archivo real en el disco duro
+    $updatedImage = Intervention::make($image->original);
+
+    // http://image.intervention.io/api/crop
+    $updatedImage->crop($width, $height, $posX, $posY);
+
+    // se guarda el archivo
+    $updatedImage->save($image->path);
+
+    // falso porque no se eliminan TODOS los archivos
+    $this->deleteImageFiles($image, false);
+
+    $result = $this->createSmallMediumLargeFiles($updatedImage);
+
+    return $image->update($result);
+  }
+
   // --------------------------------------------------------------------------
   // Funciones Privadas
   // --------------------------------------------------------------------------
 
+  /**
+   * elimina todas las imagenes del disco duro
+   * @param App\Image     $imageModel El modelo de la imagen.
+   *
+   * @return void
+   */
+  private function deleteImageFiles($imageModel, $all)
+  {
+    $this->errors = [];
+
+    $attributes = ['small', 'medium', 'large'];
+
+    if ($all === true)
+    {
+      $attributes[] = 'original';
+      $attributes[] = 'path';
+    }
+
+    // se chequea si existe el archivo y se elimina
+    foreach ($attributes as $attribute)
+    {
+      if ($imageModel->$attribute !== null && trim($imageModel->$attribute) != '')
+      {
+        try
+        {
+          Storage::disk('public')->delete($imageModel->$attribute);
+        }
+        catch (Exception $e)
+        {
+          $this->errors['imageModel'] = $imageModel;
+          $this->errors['all'] = $all;
+          $this->errors['attributes'] = $attributes;
+          $this->errors["deleteImage: $attribute"] = $e;
+        }
+      }
+    }
+  }
   /**
    * usado para crear en el disco duro el archivo relacionado a un producto.
    *
@@ -174,31 +229,15 @@ class Image extends Upload {
   {
     $data = parent::makeFile($file, $path);
 
-    $image = Intervention::make($data['path']);
-
-    $data['small']    = $data['dir'].'/s-'.$data['name'].'.'.$data['ext'];
-    $data['medium']   = $data['dir'].'/m-'.$data['name'].'.'.$data['ext'];
-    $data['large']    = $data['dir'].'/l-'.$data['name'].'.'.$data['ext'];
     $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
 
-    $image->resize(128, null, function ($constraint) {
-        $constraint->aspectRatio();
-        $constraint->upsize();
-    })->save($data['small']);
+    Intervention::make($data['path'])->save($data['original']);
 
     $image = Intervention::make($data['path']);
 
-    $image->resize(512, null, function ($constraint) {
-        $constraint->aspectRatio();
-        $constraint->upsize();
-    })->save($data['medium']);
+    $result = $this->createSmallMediumLargeFiles($image);
 
-    $image = Intervention::make($data['path']);
-
-    $image->resize(1024, null, function ($constraint) {
-        $constraint->aspectRatio();
-        $constraint->upsize();
-    })->save($data['large']);
+    $data = $data + $result;
 
     if (!$options)
     {
@@ -211,6 +250,38 @@ class Image extends Upload {
       dd($image);
 
       $image->$method($parameters); //etc...
+    }
+
+    return $data;
+  }
+
+  private function createSmallMediumLargeFiles(Intervention\Image\Image $image)
+  {
+    $dir          = $image->dirname;
+    $filename     = $image->filename;
+    $ext          = $image->extension;
+    $originalPath = $dir.'/'.$image->basename;
+
+    $data = [
+      'small'  => $dir.'/s-'.$filename.'.'.$ext,
+      'medium' => $dir.'/m-'.$filename.'.'.$ext,
+      'large'  => $dir.'/l-'.$filename.'.'.$ext,
+    ];
+
+    $sizes = [
+      128  => $data['small'],
+      512  => $data['medium'],
+      1024 => $data['large']
+    ];
+
+    foreach ($sizes as $size => $path)
+    {
+      $image = Intervention::make($originalPath);
+
+      $image->resize($size, null, function ($constraint) {
+          $constraint->aspectRatio();
+          $constraint->upsize();
+      })->save($path);
     }
 
     return $data;
