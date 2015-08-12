@@ -95,34 +95,32 @@ class FeaturesController extends Controller {
     flash('Distintivo creado correctamente.');
 
     // para guardar la imagen y modelo
+    try
+    {
+      $uploadImage->createImage($request->file('image'), $this->feature);
+    }
+    catch (\Exception $e)
+    {
+      flash()->warning('Distintivo creado, pero la imagen asociada no pudo ser creada.');
+      return redirect()
+        ->action('ProductsController@show', $product->slug)
+        ->withErrors($uploadImage->errors);
+    }
 
-    if ($request->hasFile('file'))
+    if ($request->file('file'))
+    {
       try
       {
         $uploadFile->createFile($request->file('file'), $this->feature);
       }
       catch (\Exception $e)
       {
-        flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado');
+        flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado.');
         return redirect()
           ->action('ProductsController@show', $product->slug)
-          ->withErrors($upload->errors);
+          ->withErrors($uploadFile->errors);
       }
-
-    // TODO: mejorar?
-    // para guardar la imagen y modelo
-    if ($request->hasFile('image'))
-      try
-      {
-        $uploadImage->createImage($request->file('image'), $this->feature);
-      }
-      catch (\Exception $e)
-      {
-        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser creada.');
-        return redirect()
-          ->action('ProductsController@show', $product->slug)
-          ->withErrors($upload->errors);
-      }
+    }
 
     return redirect()->action('ProductsController@show', $product->slug);
   }
@@ -185,7 +183,7 @@ class FeaturesController extends Controller {
         flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
         return redirect()
           ->action('ProductsController@show', $this->feature->product->slug)
-          ->withErrors($upload->errors);
+          ->withErrors($uploadImage->errors);
       }
 
     if ($request->hasFile('file'))
@@ -195,10 +193,10 @@ class FeaturesController extends Controller {
       }
       catch (\Exception $e)
       {
-        flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado');
+        flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado.');
         return redirect()
           ->action('ProductsController@show', $this->feature->product->slug)
-          ->withErrors($upload->errors);
+          ->withErrors($uploadFile->errors);
       }
 
     return redirect()->action('ProductsController@show', $this->feature->product->slug);

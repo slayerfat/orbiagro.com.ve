@@ -48,7 +48,7 @@ class File extends Upload {
    *
    * @return boolean
    */
-  public function updateFile(UploadedFile $file = null, $parentModel = null, File $fileModel = null)
+  public function updateFile(UploadedFile $file = null, $parentModel = null, Model $fileModel = null)
   {
     if ($fileModel == null) return $this->createFile($file, $parentModel);
 
@@ -85,7 +85,7 @@ class File extends Upload {
    */
   private function createFileModel(array $array, $model)
   {
-    $file = new File($array);
+    $file = new Model($array);
 
     switch (get_class($model)) :
 

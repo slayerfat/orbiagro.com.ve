@@ -87,35 +87,40 @@ class Image extends Upload {
   /**
    * crea la imagen por defecto relacionada con algun modelo.
    *
-   * @param string $path  La direccion a donde se guardara
-   * @param object $model El modelo relacionado para ser asociado.
+   * @param string $modelPath  La direccion a donde se guardara
+   * @param object $model      El modelo relacionado para ser asociado.
    *
    * @return \Illuminate\Database\Eloquent\Model
    */
-  public function createDefaultImage($path = null, $model)
+  public function createDefaultImage($modelPath = null, $model)
   {
-    if ($path === null && isset($this->path))
+    if ($modelPath === null && isset($this->path))
     {
-      $path = $this->path;
+      $modelPath = $this->path;
     }
 
     // el nombre del archivo
     $name = date('Ymdhmmss-').str_random(20);
-    $path = "{$path}/{$name}.gif";
+    $path = "{$modelPath}/{$name}.gif";
+
     // se copia el archivo
-    if (Storage::disk('public')->copy('sin_imagen.gif', $path)) :
+    if (!Storage::disk('public')->copy('sin_imagen.gif', $path))
+    {
+      throw new \Exception("Error, Imagen por defecto no puede ser creada", 4);
+    }
 
-      // la data necesaria para crear el modelo de imagen.
-      $data = [
-        'path' => $path,
-        'mime' => 'image/gif'
-      ];
+    // la data necesaria para crear el modelo de imagen.
+    $data = [
+      'name' => $name,
+      'ext'  => 'gif',
+      'dir'  => $modelPath,
+      'path' => $path,
+      'mime' => 'image/gif'
+    ];
 
-      return $this->createImageModel($data, $model);
+    $data = $this->makeOriginalFile($data);
 
-    endif;
-
-    throw new \Exception("Error, Imagen por defecto no puede ser creada", 4);
+    return $this->createImageModel($data, $model);
   }
 
   /**
@@ -174,17 +179,13 @@ class Image extends Upload {
     return $image->update($result);
   }
 
-  // --------------------------------------------------------------------------
-  // Funciones Privadas
-  // --------------------------------------------------------------------------
-
   /**
    * elimina todas las imagenes del disco duro
    * @param App\Image     $imageModel El modelo de la imagen.
    *
    * @return void
    */
-  private function deleteImageFiles($imageModel, $all)
+  public function deleteImageFiles($imageModel, $all)
   {
     $this->errors = [];
 
@@ -215,6 +216,10 @@ class Image extends Upload {
       }
     }
   }
+
+  // --------------------------------------------------------------------------
+  // Funciones Privadas
+  // --------------------------------------------------------------------------
   /**
    * usado para crear en el disco duro el archivo relacionado a un producto.
    *
@@ -229,9 +234,7 @@ class Image extends Upload {
   {
     $data = parent::makeFile($file, $path);
 
-    $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
-
-    Intervention::make($data['path'])->save($data['original']);
+    $data = $this->makeOriginalFile($data);
 
     $image = Intervention::make($data['path']);
 
@@ -253,6 +256,17 @@ class Image extends Upload {
     }
 
     return $data;
+  }
+
+  private function makeOriginalFile(array $data)
+  {
+    $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
+
+    $image = Intervention::make($data['path'])->save($data['original']);
+
+    $result = $this->createSmallMediumLargeFiles($image);
+
+    return $data + $result;
   }
 
   private function createSmallMediumLargeFiles(Intervention\Image\Image $image)
