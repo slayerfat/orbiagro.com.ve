@@ -21,7 +21,7 @@
           <div class="col-xs-4">
             <a href="{!! action('CategoriesController@show', $cat->slug) !!}">
               <img
-              src="{!! asset($cat->image->path) !!}"
+              src="{!! asset($cat->image->medium) !!}"
               alt="{{$cat->image->alt}}"
               class="img-responsive"/>
             </a>

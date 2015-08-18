@@ -154,6 +154,8 @@ Route::group(['middleware' => 'auth'], function(){
   Route::get('/parroquia/{id}', 'DirectionsController@parish');
 });
 
+Route::resource('promociones', 'PromotionsController');
+
 Route::controllers([
   'auth' => 'Auth\AuthController',
   'password' => 'Auth\PasswordController',

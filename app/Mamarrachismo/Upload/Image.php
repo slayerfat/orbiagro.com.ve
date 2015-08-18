@@ -177,7 +177,7 @@ class Image extends Upload {
     // falso porque no se eliminan TODOS los archivos
     $this->deleteImageFiles($image, false);
 
-    $data = ['dir' => $this->generatePathFromModel($image)];
+    $data = ['dir' => $this->generatePathFromModel($image->imageable)];
 
     $result = $this->createSmallMediumLargeFiles($updatedImage, $data);
 
@@ -301,17 +301,20 @@ class Image extends Upload {
       throw new Exception('Error: no hay informacion sobre el directorio relacionado.', 6);
     }
 
+    // datos de la imagen
     $dir          = $image->dirname;
     $filename     = $image->filename;
     $ext          = $image->extension;
     $originalPath = $dir.'/'.$image->basename;
 
+    // datos para relacionar con el modelo
     $data = [
       'small'  => $data['dir'].'/s-'.$filename.'.'.$ext,
       'medium' => $data['dir'].'/m-'.$filename.'.'.$ext,
       'large'  => $data['dir'].'/l-'.$filename.'.'.$ext,
     ];
 
+    // para el foreach
     $sizes = [
       128  => $data['small'],
       512  => $data['medium'],
@@ -320,12 +323,11 @@ class Image extends Upload {
 
     foreach ($sizes as $size => $path)
     {
+      // se crea una instancia cada vez que inicia el ciclo
+      // para modificar la imagen original y no el resultado de la operacion
       $image = Intervention::make($originalPath);
 
-      $image->resize($size, null, function ($constraint) {
-          $constraint->aspectRatio();
-          $constraint->upsize();
-      })->save(public_path($path));
+      $image->fit($size)->save(public_path($path));
     }
 
     return $data;

@@ -52,14 +52,15 @@
   <script charset="utf-8">
     $(document).ready(function(){
       $('.carrusel-cats').slick({
-        autoplay: false,
-        autoplaySpeed: 2000,
-        dots: true,
         arrows:false,
-        infinite: true,
-        speed: 300,
-        slidesToShow: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
         centerMode: false,
+        dots: true,
+        infinite: false,
+        lazyLoad: 'ondemand',
+        speed: 300,
+        slidesToShow: 7,
         variableWidth: true
       });
     });
