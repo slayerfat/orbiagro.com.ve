@@ -120,6 +120,9 @@ class Image extends Upload {
 
     $data = $this->makeOriginalFile($data);
 
+    // para seeding y otros:
+    unset($data['name'], $data['ext'], $data['dir']);
+
     return $this->createImageModel($data, $model);
   }
 
@@ -169,12 +172,14 @@ class Image extends Upload {
     $updatedImage->crop($width, $height, $posX, $posY);
 
     // se guarda el archivo
-    $updatedImage->save($image->path);
+    $updatedImage->save(public_path($image->path));
 
     // falso porque no se eliminan TODOS los archivos
     $this->deleteImageFiles($image, false);
 
-    $result = $this->createSmallMediumLargeFiles($updatedImage);
+    $data = ['dir' => $this->generatePathFromModel($image)];
+
+    $result = $this->createSmallMediumLargeFiles($updatedImage, $data);
 
     return $image->update($result);
   }
@@ -238,7 +243,7 @@ class Image extends Upload {
 
     $image = Intervention::make($data['path']);
 
-    $result = $this->createSmallMediumLargeFiles($image);
+    $result = $this->createSmallMediumLargeFiles($image, $data);
 
     $data = $data + $result;
 
@@ -258,28 +263,53 @@ class Image extends Upload {
     return $data;
   }
 
+  /**
+   * crea la imagen no modificada asociada al modelo.
+   *
+   * @param  array  $data la informacion relacionada con la imagen a crear.
+   * @return array
+   */
   private function makeOriginalFile(array $data)
   {
+    if (!Storage::disk('public')->exists($data['path']))
+    {
+      throw new Exception('No existe archivo asociado en el disco.', 2);
+    }
+
     $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
 
-    $image = Intervention::make($data['path'])->save($data['original']);
+    $image = Intervention::make(public_path($data['path']))->save(public_path($data['original']));
 
-    $result = $this->createSmallMediumLargeFiles($image);
+    $result = $this->createSmallMediumLargeFiles($image, $data);
 
     return $data + $result;
   }
 
-  private function createSmallMediumLargeFiles(Intervention\Image\Image $image)
+  /**
+   * crea los archivos de diferentes tamaños relacionados con alguna imagen.
+   *
+   * @param  \Intervention\Image\Image  $image la instancia de la imagen relacionada.
+   * @param  array                      $data  los datos relacionados, por ahora
+   *                                           solo se necesita la direccion del
+   *                                           modelo (producto/id).
+   * @return array
+   */
+  private function createSmallMediumLargeFiles(Intervention\Image\Image $image, array $data)
   {
+    if (!isset($data['dir']))
+    {
+      throw new Exception('Error: no hay informacion sobre el directorio relacionado.', 6);
+    }
+
     $dir          = $image->dirname;
     $filename     = $image->filename;
     $ext          = $image->extension;
     $originalPath = $dir.'/'.$image->basename;
 
     $data = [
-      'small'  => $dir.'/s-'.$filename.'.'.$ext,
-      'medium' => $dir.'/m-'.$filename.'.'.$ext,
-      'large'  => $dir.'/l-'.$filename.'.'.$ext,
+      'small'  => $data['dir'].'/s-'.$filename.'.'.$ext,
+      'medium' => $data['dir'].'/m-'.$filename.'.'.$ext,
+      'large'  => $data['dir'].'/l-'.$filename.'.'.$ext,
     ];
 
     $sizes = [
@@ -295,7 +325,7 @@ class Image extends Upload {
       $image->resize($size, null, function ($constraint) {
           $constraint->aspectRatio();
           $constraint->upsize();
-      })->save($path);
+      })->save(public_path($path));
     }
 
     return $data;

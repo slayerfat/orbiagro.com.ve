@@ -1,13 +1,11 @@
 <div class="container">
   <div class="carrusel-main">
-    @if(isset($carruselCollection))
-      @unless($carruselCollection->isEmpty())
-        @foreach($carruselCollection as $item)
-          @if($item->image)
-            <div><img src="{!! $item->image->medium !!}" alt="{!! $item->image->alt !!}" /></div>
-          @endif
-        @endforeach
-      @endunless
+    @if(isset($carruselCollection) && !$carruselCollection->isEmpty())
+      @foreach($carruselCollection as $item)
+        @if($item->image)
+          <div><img src="{!! $item->image->medium !!}" alt="{!! $item->image->alt !!}" /></div>
+        @endif
+      @endforeach
     @endif
   </div>
 </div>

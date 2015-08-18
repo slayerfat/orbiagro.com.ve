@@ -32,8 +32,8 @@ class Carrusel {
       $collection->push($product);
     });
 
-    $promotions->each(function($product) use($collection){
-      $collection->push($product);
+    $promotions->each(function($promo) use($collection){
+      $collection->push($promo);
     });
 
     $collection = $collection->shuffle();

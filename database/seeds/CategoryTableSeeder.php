@@ -32,7 +32,7 @@ class CategoryTableSeeder extends Seeder {
     Storage::disk('public')->deleteDirectory('category');
     Storage::disk('public')->makeDirectory('category');
 
-    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+    if(!$user) $user = User::where('name', env('APP_USER'))->firstOrFail();
 
     foreach($types as $category):
       $category = App\Category::create([
