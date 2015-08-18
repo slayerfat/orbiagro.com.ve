@@ -155,7 +155,7 @@ class VisitsService {
 
     if(!isset($array)) return null;
 
-    $name = $this->findReflectionClassName($model);
+    $name = class_basename($model);
 
     if (!$name)
     {
@@ -232,7 +232,7 @@ class VisitsService {
   {
     $date = Carbon::now();
 
-    $name = $this->findReflectionClassName($model);
+    $name = class_basename($model);
 
     return Cookie::queue("{$name}VisitedAt", $date);
   }
@@ -247,7 +247,7 @@ class VisitsService {
    */
   private function setNewVisitCookie($model)
   {
-    $name = $this->findReflectionClassName($model);
+    $name = class_basename($model);
 
     $total = Cookie::get("{$name}_{$model->slug}");
     $total = ($total) ? ($total + 1) : 1;
@@ -268,7 +268,7 @@ class VisitsService {
    */
   private function checkAndStoreVisits($model)
   {
-    $key = $this->findReflectionClassName($model);
+    $key = class_basename($model);
 
     // se procesan las cookies del usuario
     $array = Transformer::getArrayByKeyValue("/({$key}\_)+/", Cookie::get());
@@ -325,17 +325,5 @@ class VisitsService {
     }
 
     return $model->find($this->bag);
-  }
-
-  /**
-   * genera el nombre de la clase sin el namespace:
-   * Algun\Namespace\Clase => Clase
-   *
-   * @param mixed $obj
-   * @return string
-   */
-  public function findReflectionClassName($obj)
-  {
-    return (new \ReflectionClass($obj))->getShortName();
   }
 }

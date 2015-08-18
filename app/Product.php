@@ -9,10 +9,11 @@ use App\Mamarrachismo\CheckDollar;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
+use App\Mamarrachismo\Traits\HasShortTitle;
 
 class Product extends Model {
 
-  use SoftDeletes, InternalDBManagement, CanSearchRandomly;
+  use SoftDeletes, InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
   protected $fillable = [
     'user_id',
