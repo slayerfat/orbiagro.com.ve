@@ -39,13 +39,10 @@
                   </a>
                 </span>
               @endif
-              <a href="#">
-                <img
-                  width="128" height="128"
-                  class="media-object"
-                  src="{{asset($maker->image->path)}}"
-                  alt="{{$maker->image->alt}}">
-              </a>
+              <img
+                class="media-object"
+                src="{{asset($maker->image->small)}}"
+                alt="{{$maker->image->alt}}">
             </div>
           @endif
         </div>

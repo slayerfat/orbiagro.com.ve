@@ -21,7 +21,7 @@
             <a href="{!! action('SubCategoriesController@show', $cat->slug) !!}">
               @if($cat->image)
                 <img
-                src="{!! asset($cat->image->path) !!}"
+                src="{!! asset($cat->image->medium) !!}"
                 alt="{{$cat->image->alt}}"
                 class="img-responsive"/>
               @endif

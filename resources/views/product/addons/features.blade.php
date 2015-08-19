@@ -38,9 +38,11 @@
           aria-labelledby="target_{{ $feature->id }}">
           <div class="panel-body">
             {{ $feature->description }}
+
+            {{-- TODO mejorar la imagen del feature --}}
             @if($feature->image)
               <img
-                src="{!! asset($feature->image->path) !!}"
+                src="{!! asset($feature->image->medium) !!}"
                 alt="{{ $feature->image->alt }}"
                 width="384"
                 style="margin:auto;"

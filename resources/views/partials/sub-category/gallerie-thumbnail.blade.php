@@ -4,7 +4,7 @@
       @if($subCat->image)
         <img
           data-related-subCat="{{ $subCat->id }}"
-          src="{!! asset($subCat->image->path) !!}"
+          src="{!! asset($subCat->image->medium) !!}"
           alt="{{ $subCat->image->alt }}"
           class="img-responsive"/>
       @endif

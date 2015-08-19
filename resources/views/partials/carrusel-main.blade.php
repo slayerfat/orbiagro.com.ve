@@ -28,7 +28,7 @@
     $(document).ready(function(){
       $('.carrusel-main').slick({
         arrows: false,
-        autoplay: false,
+        autoplay: true,
         autoplaySpeed: 3000,
         centerMode: false,
         dots: true,

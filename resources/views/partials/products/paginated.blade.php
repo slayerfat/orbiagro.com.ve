@@ -9,9 +9,8 @@
                 @unless($product->images->isEmpty())
                   <img
                     class="media-object product-image"
-                    src="{!! asset($product->images()->first()->path) !!}"
-                    alt="{{ $product->images()->first()->alt }}"
-                    width="128" height="128">
+                    src="{!! asset($product->image->small) !!}"
+                    alt="{{ $product->image->alt }}">
                 @endunless
               </a>
             </div>
