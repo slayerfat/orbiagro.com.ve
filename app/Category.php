@@ -5,10 +5,11 @@ use App\Mamarrachismo\ModelValidation;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
+use App\Mamarrachismo\Traits\HasShortTitle;
 
 class Category extends Model {
 
-  use InternalDBManagement, CanSearchRandomly;
+  use InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
   protected $fillable = ['description', 'slug', 'info'];
 
@@ -24,11 +25,12 @@ class Category extends Model {
 
   public function setSlugAttribute($value)
   {
-    if (ModelValidation::byLenght($value) !== null) :
-      $this->attributes['slug'] = str_slug($value);
-    else:
-      $this->attributes['slug'] = null;
-    endif;
+    if (ModelValidation::byLenght($value) !== null)
+    {
+      return $this->attributes['slug'] = str_slug($value);
+    }
+
+    return $this->attributes['slug'] = null;
   }
 
   public function setInfoAttribute($value)

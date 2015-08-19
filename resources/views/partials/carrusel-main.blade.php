@@ -8,13 +8,13 @@
               <img
                 class="img-responsive"
                 src="{!! $item->image->medium !!}"
+                {{-- src="http://placehold.it/512/<?php echo rand(1, 9999) ?>" --}}
                 alt="{!! $item->image->alt !!}" />
             </a>
-            <div class="slide__caption">
-              <h3>
-                <?php $title = $item->name ? $item->name : $item->title ?>
-                {{ $title ? $title : $item->description }}
-              </h3>
+            <div class="slide-caption">
+              <h2>
+                {{ $item->shortTitle() }}
+              </h2>
             </div>
           </div>
         @endif
@@ -28,7 +28,7 @@
     $(document).ready(function(){
       $('.carrusel-main').slick({
         arrows: false,
-        autoplay: true,
+        autoplay: false,
         autoplaySpeed: 3000,
         centerMode: false,
         dots: true,

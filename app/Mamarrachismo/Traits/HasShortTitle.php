@@ -16,5 +16,7 @@ trait HasShortTitle
     {
       return str_limit($this->attributes['name'], $length);
     }
+
+    return null;
   }
 }
