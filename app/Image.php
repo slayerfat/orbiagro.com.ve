@@ -19,16 +19,18 @@ class Image extends Model {
   // --------------------------------------------------------------------------
   public function setPathAttribute($value)
   {
-    if($this->file_exists($value)):
-      $this->attributes['path'] = $value;
-    else:
-      $this->attributes['path'] = null;
-    endif;
+    if($this->fileExists($value))
+    {
+      return $this->attributes['path'] = $value;
+    }
+
+    return $this->attributes['path'] = null;
   }
 
   public function setAltAttribute($value)
   {
-    $this->attributes['alt'] = str_slug($value).' en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.';
+    $this->attributes['alt'] = str_slug($value)
+      .' en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.';
   }
 
   // --------------------------------------------------------------------------
@@ -37,12 +39,15 @@ class Image extends Model {
   public function getPathAttribute($value)
   {
     if($value) return $value;
+
     return null;
   }
 
   /**
    * Relacion polimorfica
    * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+   *
+   * Category, SubCategory, Feature, Maker, Product, Promotion
    */
   public function imageable()
   {
@@ -52,15 +57,18 @@ class Image extends Model {
   // --------------------------------------------------------------------------
   // Private Methods
   // --------------------------------------------------------------------------
-  private function file_exists($path)
+  private function fileExists($path)
   {
-    if(Storage::disk('public')->exists($path)):
+    if(Storage::disk('public')->exists($path))
+    {
       return true;
-    elseif(Storage::disk('test')->exists($path)):
+    }
+    elseif(Storage::disk('test')->exists($path))
+    {
       return true;
-    else:
-      return false;
-    endif;
+    }
+
+    return false;
   }
 
 }

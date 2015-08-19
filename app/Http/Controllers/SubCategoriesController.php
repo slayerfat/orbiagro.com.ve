@@ -29,8 +29,14 @@ class SubCategoriesController extends Controller {
    */
   public function __construct(SubCategory $subCat)
   {
-    $this->middleware('auth', ['except' => ['index', 'show']]);
-    $this->middleware('user.admin', ['except' => ['index', 'show']]);
+    $this->middleware('auth',
+      ['except' => ['index', 'show', 'indexByCategory']
+    ]);
+
+    $this->middleware('user.admin',
+      ['except' => ['index', 'show', 'indexByCategory']
+    ]);
+
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->subCat = $subCat;
