@@ -19,7 +19,7 @@ class FeaturesController extends Controller {
 
   private $userId;
 
-  private $feature, $modelValidator;
+  private $feature;
 
   /**
    * Create a new controller instance.

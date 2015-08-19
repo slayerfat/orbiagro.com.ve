@@ -16,6 +16,8 @@ class ExampleTest extends TestCase {
    */
   public function testBasicExample()
   {
+    $this->markTestIncomplete();
+
     $this->visit('/welcome')
           ->see('orbiagro')
           ->dontSee('Laravel 5');
