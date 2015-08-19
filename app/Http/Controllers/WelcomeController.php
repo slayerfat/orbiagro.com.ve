@@ -20,7 +20,7 @@ class WelcomeController extends Controller {
    */
   public function __construct()
   {
-    $this->middleware('guest');
+    $this->middleware('user.admin');
   }
 
   /**
@@ -30,7 +30,15 @@ class WelcomeController extends Controller {
    */
   public function index()
   {
-    return view('welcome');
+    return $this->test();
+    // return view('welcome');
+  }
+
+  protected function test()
+  {
+    $method = 'error';
+    flash()->$method('Ud. no tiene permisos para esta accion.');
+    return redirect()->action('HomeController@index');
   }
 
 }
