@@ -13,6 +13,18 @@
           {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
           {!! Form::close() !!}
         </div>
+        @if($cat->image)
+          <div class="col-xs-2">
+            <span>
+              <a href="{{ action('ImagesController@edit', $cat->image->id) }}">
+                <button
+                  type="button"
+                  name="image-edit"
+                  class="btn btn-default">Editar Imagen</button>
+              </a>
+            </span>
+          </div>
+        @endif
       </div>
     </div>
   @endif

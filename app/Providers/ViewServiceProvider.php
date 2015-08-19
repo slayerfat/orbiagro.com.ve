@@ -25,6 +25,11 @@ class ViewServiceProvider extends ServiceProvider {
       'visit.addons.relatedProducts',
       'App\Http\Composers\Visits@composeRelatedProducts'
     );
+
+    view()->composer(
+      'partials.carrusel-main',
+      'App\Http\Composers\Carrusel@composeHomeCarruselImages'
+    );
   }
 
   /**

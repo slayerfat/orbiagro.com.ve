@@ -12,7 +12,7 @@ use App\Category;
 use App\SubCategory;
 
 use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
@@ -29,8 +29,14 @@ class SubCategoriesController extends Controller {
    */
   public function __construct(SubCategory $subCat)
   {
-    $this->middleware('auth', ['except' => ['index', 'show']]);
-    $this->middleware('user.admin', ['except' => ['index', 'show']]);
+    $this->middleware('auth',
+      ['except' => ['index', 'show', 'indexByCategory']
+    ]);
+
+    $this->middleware('user.admin',
+      ['except' => ['index', 'show', 'indexByCategory']
+    ]);
+
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->subCat = $subCat;
@@ -179,11 +185,13 @@ class SubCategoriesController extends Controller {
     $this->subCat->update($request->all());
     flash()->success('El Rubro ha sido actualizado correctamente.');
 
-    if ($request->hasFile('image')) :
-      if (!$upload->updateImage($request->file('image'), $this->subCat, $this->subCat->image)) :
+    if ($request->hasFile('image'))
+    {
+      if (!$upload->updateImage($request->file('image'), $this->subCat->image))
+      {
         flash()->warning('El Rubro ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-      endif;
-    endif;
+      }
+    }
 
     return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
   }

@@ -8,7 +8,7 @@ use Auth;
 use Intervention;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use App\Image;
 
@@ -51,24 +51,29 @@ class ImagesController extends Controller
 
     $image = Image::with('imageable')->findOrFail($id);
 
+    $data = $this->getControllerNameFromModel($image->imageable);
+
+    flash()->success('Imagen Actualizada exitosamente.');
+
     if ($request->file('image'))
     {
       // se iteran las imagenes y se guardan los modelos
-      $upload->updateImage($request->file('image'), $image->imageable, $image);
+      $upload->updateImage($request->file('image'), $image);
+
+      return redirect()->action($data['controller'], $data['id']);
     }
 
-    $updatedImage = Intervention::make($image->path);
-    $updatedImage->crop(
+    // http://image.intervention.io/api/crop
+    // se ajusta segun estos valores:
+    $upload->cropImage(
+      $image,
       $request->input('dataWidth'),
       $request->input('dataHeight'),
       $request->input('dataX'),
       $request->input('dataY')
     );
 
-    $upload->updateImage($updatedImage, $image->imageable, $image);
-
-    flash()->success('Imagen Actualizada exitosamente.');
-    return redirect()->action('ProductsController@show', $image->imageable->id);
+    return redirect()->action($data['controller'], $data['id']);
   }
 
   /**
@@ -85,5 +90,55 @@ class ImagesController extends Controller
 
     flash()->success('Imagen Eliminada exitosamente.');
     return redirect()->action('ProductsController@show', $product->id);
+  }
+
+  /**
+   * Utilizado para generar el nombre del controlador y
+   * el identificador necesario para encontrar el recurso.
+   *
+   * @param \Illuminate\Database\Eloquent\Model $model el modelo a manipular.
+   *
+   * @return array
+   */
+  protected function getControllerNameFromModel($model)
+  {
+    $array = ['controller' => '', 'id' => null];
+
+    switch (get_class($model)) :
+
+      case 'App\Product':
+        $array['controller'] = 'ProductsController@show';
+        break;
+
+      case 'App\Feature':
+        $array['controller'] = 'ProductsController@show';
+
+        $array['id'] = $model->product->id;
+        break;
+
+      case 'App\Category':
+        $array['controller'] = 'CategoriesController@show';
+        break;
+
+      case 'App\SubCategory':
+        $array['controller'] = 'SubCategoriesController@show';
+        break;
+
+      case 'App\Maker':
+        $array['controller'] = 'MakersController@show';
+        break;
+
+      case 'App\Promotion':
+        $array['controller'] = 'PromotionsController@show';
+        break;
+
+      default:
+        throw new \Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".get_class($model), 2);
+
+    endswitch;
+
+    $array['id'] = $array['id'] ? $array['id'] : $model->slug;
+
+    return $array;
   }
 }

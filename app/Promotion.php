@@ -3,13 +3,15 @@
 use Illuminate\Database\Eloquent\Model;
 
 use App\Mamarrachismo\Transformer;
+use App\Mamarrachismo\ModelValidation;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
+use App\Mamarrachismo\Traits\HasShortTitle;
 
 class Promotion extends Model {
 
-  use InternalDBManagement, CanSearchRandomly;
+  use InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
   protected $fillable = [
     'title',
@@ -25,63 +27,67 @@ class Promotion extends Model {
   // --------------------------------------------------------------------------
   public function setTitleAttribute($value)
   {
-    if($value != '' && strlen($value) >= 5):
-      $this->attributes['title'] = $value;
-      $this->attributes['slug']  = str_slug($value);
-    else:
-      $this->attributes['title'] = null;
-    endif;
+    $this->attributes['title'] = ModelValidation::byLenght($value);
+    if($this->attributes['title'])
+      $this->attributes['slug'] = str_slug($this->attributes['title']);
   }
 
   public function setSlugAttribute($value)
   {
-    if($value != '' && strlen($value) >= 5):
-      $this->attributes['slug']  = str_slug($value);
-    else:
-      $this->attributes['slug'] = null;
-    endif;
+    if (ModelValidation::byLenght($value) !== null)
+    {
+      return $this->attributes['slug'] = str_slug($value);
+    }
+
+    return $this->attributes['slug'] = null;
   }
 
   public function setBeginsAttribute($value)
   {
     $date = \DateTime::createFromFormat('Y-m-d', $value);
-    if($date):
-      $this->attributes['begins'] = $value;
-    else:
-      $this->attributes['begins'] = null;
-    endif;
+
+    if($date)
+    {
+      return $this->attributes['begins'] = $value;
+    }
+
+    return $this->attributes['begins'] = null;
   }
 
   public function setEndsAttribute($value)
   {
     $date = \DateTime::createFromFormat('Y-m-d', $value);
-    if($date):
-      $this->attributes['ends'] = $value;
-    else:
-      $this->attributes['ends'] = null;
-    endif;
+    if($date)
+    {
+      return $this->attributes['ends'] = $value;
+    }
+
+    return $this->attributes['ends'] = null;
   }
 
   public function setStaticAttribute($value)
   {
-    if($value > 0 && is_numeric($value)):
-      $this->attributes['static'] = $value;
-    else:
-      $this->attributes['static'] = null;
-    endif;
+    if($value > 0 && is_numeric($value))
+    {
+      return $this->attributes['static'] = $value;
+    }
+
+    return $this->attributes['static'] = null;
   }
 
   public function setPercentageAttribute($value)
   {
-    if($value > 0 && is_numeric($value)):
-      if ($this->isFloat($value)) :
-        $this->attributes['percentage'] = $value * 100;
-      else:
-      $this->attributes['percentage'] = $value;
-      endif;
-    else:
-      $this->attributes['percentage'] = null;
-    endif;
+    if($value > 0 && is_numeric($value))
+    {
+      if ($this->isFloat($value))
+      {
+        return $this->attributes['percentage'] = $value * 100;
+      }
+
+      return $this->attributes['percentage'] = $value;
+    }
+
+    return $this->attributes['percentage'] = null;
   }
 
 

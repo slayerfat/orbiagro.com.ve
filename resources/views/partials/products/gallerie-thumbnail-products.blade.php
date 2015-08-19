@@ -3,8 +3,8 @@
     <div class="thumbnail">
       @unless($product->images->isEmpty())
         <img
-          src="{!! asset($product->images->first()->path) !!}"
-          alt="{{ $product->images->first()->alt }}"
+          src="{!! asset($product->image->medium) !!}"
+          alt="{{ $product->image->alt }}"
           class="img-responsive"/>
       @endunless
       <div class="caption">

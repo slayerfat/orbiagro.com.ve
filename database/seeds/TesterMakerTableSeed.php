@@ -47,6 +47,7 @@ class TesterMakerTableSeed extends Seeder {
         // el modelo
         $image             = new Image;
         $image->path       = "makers/{$maker->id}/{$name}.gif";
+        $image->original   = $image->path;
         $image->mime       = 'image/gif';
         $image->alt        = $maker->slug;
         $image->created_by = $user->id;

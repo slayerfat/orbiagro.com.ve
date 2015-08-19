@@ -26,7 +26,6 @@ class MechanicalInfoController extends Controller {
    */
   public function __construct(MechanicalInfo $mech)
   {
-    $this->middleware('auth');
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->modelValidator = new ModelValidation($this->userId, $this->user);

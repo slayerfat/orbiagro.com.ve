@@ -27,15 +27,24 @@
               <a href="{{$maker->url}}">{{$maker->domain}}</a>
             </h2>
           </div>
-          <div class="media-right">
-            <a href="#">
+          @if($maker->image)
+            <div class="media-right">
+              @if(Auth::user() and Auth::user()->isOwnerOrAdmin($maker->user_id))
+                <span>
+                  <a href="{{ action('ImagesController@edit', $maker->image->id) }}">
+                    <button
+                      type="button"
+                      name="image-edit"
+                      class="btn btn-default">Editar Imagen</button>
+                  </a>
+                </span>
+              @endif
               <img
-                width="128" height="128"
                 class="media-object"
-                src="{{asset($maker->image->path)}}"
+                src="{{asset($maker->image->small)}}"
                 alt="{{$maker->image->alt}}">
-            </a>
-          </div>
+            </div>
+          @endif
         </div>
       </div>
     </div>

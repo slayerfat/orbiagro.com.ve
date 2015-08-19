@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use App\Product;
 use App\Category;

@@ -10,12 +10,16 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Feature;
 
-use App\Mamarrachismo\ModelValidation;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\File as UploadFile;
+use App\Mamarrachismo\Upload\Image as UploadImage;
 
 class FeaturesController extends Controller {
 
-  private $user, $userId, $feature, $modelValidator;
+  private $user;
+
+  private $userId;
+
+  private $feature, $modelValidator;
 
   /**
    * Create a new controller instance.
@@ -28,9 +32,10 @@ class FeaturesController extends Controller {
   public function __construct(Feature $feature)
   {
     $this->middleware('auth');
+
     $this->user   = Auth::user();
     $this->userId = Auth::id();
-    $this->modelValidator = new ModelValidation($this->userId, $this->user);
+
     $this->feature = $feature;
   }
 
@@ -43,19 +48,24 @@ class FeaturesController extends Controller {
   {
     $product = Product::findOrFail($id)->load('features', 'user');
 
-    if ($product->features->count() < 5) :
-      if($this->modelValidator->notOwner($product->user->id)) :
-        flash()->error('Ud. no tiene permisos para esta accion.');
-        return redirect()->action('ProductsController@show', $product->slug);
-      endif;
-      return view('feature.create')->with([
-        'product' => $product,
-        'feature' => $this->feature
-      ]);
-    endif;
+    if ($product->features->count() < 5)
+    {
+      if($this->user->isOwnerOrAdmin($product->user->id))
+      {
+        return view('feature.create')->with([
+          'product' => $product,
+          'feature' => $this->feature
+        ]);
+      }
 
-    flash()->error('Este Producto ya posee 5 features, por favor actualice los existentes.');
-    return redirect()->action('ProductsController@show', $product->slug);
+      return $this->redirectToController('ProductsController@show', $product->slug);
+    }
+
+    return $this->redirectToController(
+      'ProductsController@show',
+      $product->slug,
+      'Este Producto ya posee 5 Distintivos, por favor actualice los existentes.'
+    );
   }
 
   /**
@@ -64,25 +74,33 @@ class FeaturesController extends Controller {
    * @method store
    * @param  int            $id
    * @param  FeatureRequest $request
-   * @param  Upload         $upload  clase para subir archivos.
+   * @param  UploadImage    $uploadImage clase para subir imagenes.
+   * @param  UploadFile     $uploadFile  clase para subir archivos.
    *
    * @return Response
    */
-  public function store($id, FeatureRequest $request, Upload $upload)
+  public function store($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
   {
     $product = Product::findOrFail($id);
+
     // para los archivos del feature
-    $upload->userId = $this->userId;
+    $uploadImage->userId = $this->userId;
+    $uploadFile->userId  = $this->userId;
 
     // el producto puede tener como maximo 5 features
-    if ($product->features->count() >= 5) :
-      flash()->error('Este Producto ya posee 5 distintivos, por favor actualice los existentes.');
-      return redirect()->action('ProductsController@show', $product->slug);
-    endif;
+    if ($product->features->count() >= 5)
+    {
+      return $this->redirectToController(
+        'ProductsController@show',
+        $product->slug,
+        'Este Producto ya posee 5 Distintivos, por favor actualice los existentes.'
+      );
+    }
 
-    if($this->modelValidator->notOwner($product->user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-    endif;
+    if(!$this->user->isOwnerOrAdmin($product->user->id))
+    {
+      return $this->redirectToController('ProductsController@show', $product->slug);
+    }
 
     $this->feature->title       = $request->input('title');
     $this->feature->description = $request->input('description');
@@ -92,34 +110,26 @@ class FeaturesController extends Controller {
     flash('Distintivo creado correctamente.');
 
     // para guardar la imagen y modelo
+    try
+    {
+      $uploadImage->createImage($request->file('image'), $this->feature);
+    }
+    catch (\Exception $e)
+    {
+      flash()->warning('Distintivo creado, pero la imagen asociada no pudo ser creada.');
+    }
 
-    if ($request->hasFile('file'))
+    if ($request->file('file'))
+    {
       try
       {
-        $upload->createFile($request->file('file'), $this->feature);
+        $uploadFile->createFile($request->file('file'), $this->feature);
       }
       catch (\Exception $e)
       {
-        flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado');
-        return redirect()
-          ->action('ProductsController@show', $product->slug)
-          ->withErrors($upload->errors);
+        flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado.');
       }
-
-    // TODO: mejorar?
-    // para guardar la imagen y modelo
-    if ($request->hasFile('image'))
-      try
-      {
-        $upload->createImage($request->file('image'), $this->feature);
-      }
-      catch (\Exception $e)
-      {
-        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser creada.');
-        return redirect()
-          ->action('ProductsController@show', $product->slug)
-          ->withErrors($upload->errors);
-      }
+    }
 
     return redirect()->action('ProductsController@show', $product->slug);
   }
@@ -132,12 +142,12 @@ class FeaturesController extends Controller {
    */
   public function edit($id)
   {
-    $this->feature = Feature::findOrFail($id)->load('product');
+    $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
 
-    if($this->modelValidator->notOwner($this->feature->product->user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $product->slug);
-    endif;
+    if(!$this->user->isOwnerOrAdmin($this->feature->product->user->id))
+    {
+      return $this->redirectToController('ProductsController@show', $this->feature->product->slug);
+    }
 
     return view('feature.edit')->with(['feature' => $this->feature]);
   }
@@ -147,52 +157,55 @@ class FeaturesController extends Controller {
    *
    * @param  int            $id
    * @param  FeatureRequest $request
-   * @param  Upload         $upload  clase para subir archivos.
+   * @param  UploadImage    $uploadImage clase para subir imagenes.
+   * @param  UploadFile     $uploadFile  clase para subir archivos.
+   *
    * @return Response
    */
-  public function update($id, FeatureRequest $request, Upload $upload)
+  public function update($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
   {
     // se carga el producto para el redirect (id)
-    $this->feature = Feature::findOrFail($id)->load('product');
+    $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
 
     // para dates
-    $upload->userId = $this->userId;
+    // para los archivos del feature
+    $uploadImage->userId = $this->userId;
+    $uploadFile->userId  = $this->userId;
 
-    if($this->modelValidator->notOwner($this->feature->product->user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $product->slug);
-    endif;
+    if(!$this->user->isOwnerOrAdmin($this->feature->product->user->id))
+    {
+      return $this->redirectToController('ProductsController@show', $this->feature->product->slug);
+    }
 
     $this->feature->update($request->all());
+
     flash('El Distintivo ha sido actualizado correctamente.');
 
     // TODO: mejorar?
     // para guardar la imagen y modelo
     if ($request->hasFile('image'))
+    {
       try
       {
-        $upload->updateImage($request->file('image'), $this->feature, $this->feature->image);
+        $uploadImage->updateImage($request->file('image'), $this->feature->image);
       }
       catch (\Exception $e)
       {
         flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-        return redirect()
-          ->action('ProductsController@show', $this->feature->product->slug)
-          ->withErrors($upload->errors);
       }
+    }
 
     if ($request->hasFile('file'))
+    {
       try
       {
-        $upload->updateFile($request->file('file'), $this->feature, $this->feature->file);
+        $uploadFile->updateFile($request->file('file'), $this->feature, $this->feature->file);
       }
       catch (\Exception $e)
       {
-        flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado');
-        return redirect()
-          ->action('ProductsController@show', $this->feature->product->slug)
-          ->withErrors($upload->errors);
+        flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado.');
       }
+    }
 
     return redirect()->action('ProductsController@show', $this->feature->product->slug);
   }
@@ -205,17 +218,21 @@ class FeaturesController extends Controller {
    */
   public function destroy($id)
   {
-    $feature = Feature::findOrFail($id)->load('product');
+    $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
 
-    if(!$this->user->isOwnerOrAdmin($feature->product->user_id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $feature->product->slug);
-    endif;
+    if(!$this->user->isOwnerOrAdmin($this->feature->product->user->id))
+    {
+      return $this->redirectToController('ProductsController@show', $this->feature->product->slug);
+    }
 
-    $feature->delete();
+    $this->feature->delete();
 
-    flash()->info('El Distintivo ha sido eliminado correctamente.');
-    return redirect()->action('ProductsController@show', $feature->product->slug);
+    return $this->redirectToController(
+      'ProductsController@show',
+      $this->feature->product->slug,
+      'El Distintivo ha sido eliminado correctamente.',
+      'info'
+    );
   }
 
 }

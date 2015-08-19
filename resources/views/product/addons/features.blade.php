@@ -38,13 +38,28 @@
           aria-labelledby="target_{{ $feature->id }}">
           <div class="panel-body">
             {{ $feature->description }}
+
+            {{-- TODO mejorar la imagen del feature --}}
             @if($feature->image)
               <img
-                src="{!! asset($feature->image->path) !!}"
+                src="{!! asset($feature->image->medium) !!}"
                 alt="{{ $feature->image->alt }}"
                 width="384"
                 style="margin:auto;"
                 class="img-responsive" />
+
+              @if($isUserValid)
+                <div class="col-xs-2">
+                  <span>
+                    <a href="{{ action('ImagesController@edit', $feature->image->id) }}">
+                      <button
+                        type="button"
+                        name="image-edit"
+                        class="btn btn-default">Editar Imagen</button>
+                    </a>
+                  </span>
+                </div>
+              @endif
             @endif
 
             @if($feature->file)

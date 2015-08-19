@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 class DatabaseSeeder extends Seeder {
 
   /**
+   * usado para subir imagenes o archivos
+   * relacionados con algun modelo.
+   */
+  protected $upload;
+
+  /**
    * Run the database seeds.
    *
    * @return void
@@ -27,8 +33,6 @@ class DatabaseSeeder extends Seeder {
     $this->call(PeopleTableSeeder::class);
     $this->call(CategoryTableSeeder::class);
     $this->call(SubCategoryTableSeeder::class);
-    $this->call(CategoryImageTableSeeder::class);
-    $this->call(SubCategoryImageTableSeeder::class);
     $this->call(MakerTableSeeder::class);
     $this->call(BankTableSeeder::class);
     $this->call(CardTypeTableSeeder::class);
@@ -37,14 +41,9 @@ class DatabaseSeeder extends Seeder {
     // tablas primarias
     $this->call(ProviderTableSeed::class);
     $this->call(ProductTableSeeder::class);
-    // $this->call(FeatureTableSeeder::class);
-    // $this->call(CharacteristicTableSeeder::class);
-    // $this->call(NutritionalTableSeeder::class);
-    // $this->call(MechanicalInfoTableSeeder::class);
     $this->call(BillingTableSeeder::class);
     $this->call(PurchaseTableSeeder::class);
     $this->call(VisitTableSeeder::class);
-    // $this->call(ImagesTableSeeder::class);
     $this->call(ProductProviderTableSeed::class);
     $this->call(PromotionTableSeeder::class);
 

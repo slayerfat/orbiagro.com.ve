@@ -57,7 +57,7 @@
                     </span>
                   @endif
                   <img
-                    src="{!! asset($image->path) !!}"
+                    src="{!! asset($image->large) !!}"
                     alt="{{ $image->alt }}"
                     class="img-responsive"/>
                 </div>
@@ -67,7 +67,7 @@
               @foreach ($product->images as $image)
                 <div>
                   <img
-                    src="{!! asset($image->path) !!}"
+                    src="{!! asset($image->small) !!}"
                     alt="{{ $image->alt }}"
                     class="img-responsive"/>
                 </div>

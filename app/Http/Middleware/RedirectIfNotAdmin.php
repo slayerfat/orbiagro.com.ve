@@ -13,11 +13,13 @@ class RedirectIfNotAdmin {
    */
   public function handle($request, Closure $next)
   {
-    if ( !$request->user()->isAdmin() ) {
-      flash()->error('Ud. no tiene permisos para esta acción.');
-      return redirect()->back();
+    if ($request->user() && $request->user()->isAdmin())
+    {
+      return $next($request);
     }
-    return $next($request);
+
+    flash()->error('Ud. no tiene permisos para esta acción.');
+    return redirect()->back();
   }
 
 }

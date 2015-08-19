@@ -14,9 +14,8 @@
             @unless($product->images->isEmpty())
               <img
                 class="media-object product-image"
-                src="{!! asset($product->images()->first()->path) !!}"
-                alt="{{ $product->images()->first()->alt }}"
-                width="128" height="128">
+                src="{!! asset($product->image->small) !!}"
+                alt="{{ $product->image->alt }}">
             @endunless
           </a>
         </div>
@@ -54,27 +53,3 @@
     </div>
   </div>
 @endforeach
-
-{{-- @foreach($products as $product)
-  <div class="deleted-product">
-    <h1>
-      {{$title}}
-    </h1>
-    <h2>
-      {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}
-    </h2>
-    <div class="col-xs-6">
-      @unless($product->images->isEmpty())
-        <img
-          src="{!! asset($product->images->first()->path) !!}"
-          alt="{{ $product->images->first()->alt }}"
-          class="img-responsive"/>
-      @endunless
-    </div>
-    <div class="col-xs-6">
-      <p>
-        Fecha de eliminacion:
-      </p>
-    </div>
-  </div>
-@endforeach --}}

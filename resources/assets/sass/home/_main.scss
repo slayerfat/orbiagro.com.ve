@@ -4,3 +4,34 @@
   min-height: 150px;
   padding: 30px 0;
 }
+
+.slide {
+  position: relative;
+}
+
+.carrusel-main {
+
+  .slide-caption {
+
+    background-color: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .02));
+    bottom: 0;
+    color: white;
+    max-width: 100%;
+    min-height: 80px;
+    position: absolute;
+    width: 100%;
+    z-index: 99999;
+
+    h2 {
+
+      font-size: ceil($font-size-h3 * .75);
+      padding: 0 1em;
+      text-shadow: 2px 2px 1px rgba(0, 0, 0, .5);
+
+      @media (max-width: $container-desktop){
+
+        font-size: ceil($font-size-h3 * .6);
+      }
+    }
+  }
+}

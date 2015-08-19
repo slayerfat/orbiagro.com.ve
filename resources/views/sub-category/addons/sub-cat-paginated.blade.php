@@ -19,10 +19,12 @@
           </div>
           <div class="col-xs-4">
             <a href="{!! action('SubCategoriesController@show', $cat->slug) !!}">
-              <img
-              src="{!! asset($cat->image->path) !!}"
-              alt="{{$cat->image->alt}}"
-              class="img-responsive"/>
+              @if($cat->image)
+                <img
+                src="{!! asset($cat->image->medium) !!}"
+                alt="{{$cat->image->alt}}"
+                class="img-responsive"/>
+              @endif
             </a>
           </div>
         </div>

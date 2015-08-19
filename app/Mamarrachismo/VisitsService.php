@@ -41,7 +41,7 @@ class VisitsService {
         return $this->setNewVisitCookie($model);
 
       default:
-        throw new Exception("Error, es necesario especificar modelo valido.", 3);
+        throw new Exception("Error, es necesario especificar modelo valido.", 2);
 
     }
   }
@@ -155,11 +155,11 @@ class VisitsService {
 
     if(!isset($array)) return null;
 
-    $name = $this->findReflectionClassName($model);
+    $name = class_basename($model);
 
     if (!$name)
     {
-      throw new Exception("No se puede guardar visita sin un modelo asociado", 4);
+      throw new Exception("No se puede guardar visita sin un modelo asociado", 3);
     }
 
     $date = Cookie::get("{$name}VisitedAt");
@@ -183,19 +183,34 @@ class VisitsService {
    */
   private function createVisitModel($array, $name, $model)
   {
+    if (gettype($model) !== 'object' && gettype($model) !== 'string')
+    {
+      throw new Exception('Error: el modelo especificado no es del tipo adecuado', 1);
+    }
+
     // si la visita no existe en la base de datos se crea, sino se actualiza
     foreach($array as $id => $total) :
 
-      if(!$model = $model::where('slug', $id)->first())
-        $model = $model::findOrFail($id);
+      // se busca el modelo
+      if(!$result = $model::where('slug', $id)->first())
+      {
+        $result = $model::find($id);
+      }
 
-      if(Auth::user()->visits()->where('visitable_id', $model->id)->get()->isEmpty()) :
+      // si no hay resultado se continua iterando
+      if (!$result)
+      {
+        continue;
+      }
+
+      // se determina si hay o no que crear una nueva visita
+      if(Auth::user()->visits()->where('visitable_id', $result->id)->get()->isEmpty()) :
         $visit = new Visit;
         $visit->total = $total;
         $visit->user_id = Auth::user()->id;
-        $model->visits()->save($visit);
+        $result->visits()->save($visit);
       else:
-        $visit = Auth::user()->visits()->where('visitable_id', $model->id)->first();
+        $visit = Auth::user()->visits()->where('visitable_id', $result->id)->first();
         $visit->total += $total;
         $visit->save();
       endif;
@@ -217,7 +232,7 @@ class VisitsService {
   {
     $date = Carbon::now();
 
-    $name = $this->findReflectionClassName($model);
+    $name = class_basename($model);
 
     return Cookie::queue("{$name}VisitedAt", $date);
   }
@@ -232,7 +247,7 @@ class VisitsService {
    */
   private function setNewVisitCookie($model)
   {
-    $name = $this->findReflectionClassName($model);
+    $name = class_basename($model);
 
     $total = Cookie::get("{$name}_{$model->slug}");
     $total = ($total) ? ($total + 1) : 1;
@@ -253,7 +268,7 @@ class VisitsService {
    */
   private function checkAndStoreVisits($model)
   {
-    $key = $this->findReflectionClassName($model);
+    $key = class_basename($model);
 
     // se procesan las cookies del usuario
     $array = Transformer::getArrayByKeyValue("/({$key}\_)+/", Cookie::get());
@@ -310,17 +325,5 @@ class VisitsService {
     }
 
     return $model->find($this->bag);
-  }
-
-  /**
-   * genera el nombre de la clase sin el namespace:
-   * Algun\Namespace\Clase => Clase
-   *
-   * @param mixed $obj
-   * @return string
-   */
-  public function findReflectionClassName($obj)
-  {
-    return (new \ReflectionClass($obj))->getShortName();
   }
 }

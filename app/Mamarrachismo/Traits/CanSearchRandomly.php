@@ -4,13 +4,10 @@ trait CanSearchRandomly
 {
   public function scopeRandom($query)
   {
-    if (env('APP_ENV') == 'ntesting')
-    {
-      $query->orderByRaw('RANDOM()');
-    }
-    else
-    {
-      $query->orderByRaw('RAND()');
-    }
+    // por ahora ignorado, pendiente de ver si hay o no test por BD.
+    // if (env('APP_ENV') == 'ntesting')
+      // $query->orderByRaw('RANDOM()');
+
+    $query->orderByRaw('RAND()');
   }
 }
