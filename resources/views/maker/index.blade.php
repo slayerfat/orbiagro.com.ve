@@ -25,7 +25,10 @@
           >
           <thead>
             <th data-field="resource" data-sortable="true" data-switchable="true">
-              Nombre
+              Slug
+            </th>
+            <th data-field="name" data-sortable="true" data-switchable="true">
+              Name
             </th>
             <th data-field="domain" data-sortable="true" data-switchable="true">
               Dominio
@@ -41,6 +44,9 @@
           <tbody>
             @foreach ($makers as $maker)
               <tr>
+                <td>
+                  {{ $maker->slug }}
+                </td>
                 <td>
                   {{ $maker->name }}
                 </td>

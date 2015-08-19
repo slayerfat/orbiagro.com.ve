@@ -12,7 +12,7 @@ use App\Category;
 use App\SubCategory;
 
 use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
@@ -29,8 +29,14 @@ class SubCategoriesController extends Controller {
    */
   public function __construct(SubCategory $subCat)
   {
-    $this->middleware('auth', ['except' => ['index', 'show']]);
-    $this->middleware('user.admin', ['except' => ['index', 'show']]);
+    $this->middleware('auth',
+      ['except' => ['index', 'show', 'indexByCategory']
+    ]);
+
+    $this->middleware('user.admin',
+      ['except' => ['index', 'show', 'indexByCategory']
+    ]);
+
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->subCat = $subCat;
@@ -71,8 +77,8 @@ class SubCategoriesController extends Controller {
    */
   public function indexByCategory($categoryId)
   {
-    if(!$subCats = Category::where('slug', $categoryId)->first()->sub_categories)
-      $subCats = Category::findOrFail($categoryId)->sub_categories;
+    if(!$subCats = Category::where('slug', $categoryId)->first()->subCategories)
+      $subCats = Category::findOrFail($categoryId)->subCategories;
     $productsCollection = collect();
 
     foreach ($subCats as $cat) {
@@ -115,7 +121,7 @@ class SubCategoriesController extends Controller {
 
     $this->subCat->fill($request->all());
 
-    $cat->sub_categories()->save($this->subCat);
+    $cat->subCategories()->save($this->subCat);
 
     $upload->createImage($request->file('image'), $this->subCat);
 
@@ -134,11 +140,11 @@ class SubCategoriesController extends Controller {
     if(!$subCat = SubCategory::where('slug', $id)->first())
       $subCat = SubCategory::findOrFail($id);
 
-    $subCats = $subCat->category->sub_categories()->get();
+    $subCats = $subCat->category->subCategories()->get();
 
     $products = Product::where('sub_category_id', $subCat->id)->paginate(20);
 
-    $visits->setNewVisit('subCat', $id);
+    $visits->setNewVisit($subCat);
 
     $this->seo()->setTitle("{$subCat->description} en orbiagro.com.ve");
     $this->seo()->setDescription("{$subCat->description} en {$subCat->category->description} dentro de orbiagro.com.ve");
@@ -179,11 +185,13 @@ class SubCategoriesController extends Controller {
     $this->subCat->update($request->all());
     flash()->success('El Rubro ha sido actualizado correctamente.');
 
-    if ($request->hasFile('image')) :
-      if (!$upload->updateImage($request->file('image'), $this->subCat, $this->subCat->image)) :
+    if ($request->hasFile('image'))
+    {
+      if (!$upload->updateImage($request->file('image'), $this->subCat->image))
+      {
         flash()->warning('El Rubro ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-      endif;
-    endif;
+      }
+    }
 
     return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
   }

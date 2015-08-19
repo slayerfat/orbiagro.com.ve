@@ -8,7 +8,7 @@
       @foreach($promotions as $promo)
         <div class="media col-md-4">
           <a class="pull-left" href="#">
-            <img class="media-object" src="{{ $promo->images->first()->path }}" alt="{{ $promo->slug }}" style="max-height:150px;">
+            <img class="media-object" src="{{ $promo->images->first()->small }}" alt="{{ $promo->slug }}" style="max-height:150px;">
           </a>
           <div class="media-body">
             <h4 class="media-heading">{{$promo->title}}</h4>

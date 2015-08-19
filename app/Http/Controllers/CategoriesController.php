@@ -12,7 +12,7 @@ use App\Category;
 use App\SubCategory;
 
 use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
@@ -43,11 +43,11 @@ class CategoriesController extends Controller {
    */
   public function index()
   {
-    $cats  = $this->cat->all()->load('sub_categories');
+    $cats  = $this->cat->all()->load('subCategories');
     $productsCollection = collect();
 
     foreach ($cats as $cat) :
-      foreach ($cat->sub_categories as $subCat) :
+      foreach ($cat->subCategories as $subCat) :
         $productsCollection->push($subCat->products()->random()->take(6)->get());
       endforeach;
     endforeach;
@@ -102,7 +102,7 @@ class CategoriesController extends Controller {
     if(!$cat = Category::where('slug', $id)->first())
       $cat = Category::findOrFail($id);
 
-    $subCats = $cat->sub_categories;
+    $subCats = $cat->subCategories;
 
     $this->seo()->setTitle("{$cat->description} en orbiagro.com.ve");
     $this->seo()->setDescription("{$cat->description} existentes es orbiagro.com.ve");
@@ -141,7 +141,7 @@ class CategoriesController extends Controller {
     flash()->success('La Categoria ha sido actualizada correctamente.');
 
     if ($request->hasFile('image')) :
-      if (!$upload->updateImage($request->file('image'), $this->cat, $this->cat->image)) :
+      if (!$upload->updateImage($request->file('image'), $this->cat->image)) :
         flash()->warning('La Categoria ha sido actualizada, pero la imagen asociada no pudo ser actualizada.');
       endif;
     endif;

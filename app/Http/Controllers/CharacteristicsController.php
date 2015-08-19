@@ -24,9 +24,11 @@ class CharacteristicsController extends Controller {
    */
   public function __construct(Characteristic $characteristic, Guard $auth)
   {
-    $this->middleware('auth');
     $this->user   = $auth->user();
-    $this->userId = $auth->user()->id;
+
+    // artisan route:list fail
+    $this->userId = $auth->user() ? $auth->user()->id : null;
+
     $this->modelValidator = new ModelValidation($this->userId, $this->user);
     $this->characteristic = $characteristic;
   }

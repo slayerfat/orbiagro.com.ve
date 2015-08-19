@@ -31,13 +31,13 @@ class CheckDollar {
 
   /**
    * El objeto storage para manipular algun archivo
-   * @var stdClass object
+   * @var \Illuminate\Contracts\Filesystem\Factory
    */
   private $storage;
 
   /**
    * El objeto Carbon con el timestamp
-   * @var stdClass object
+   * @var \Carbon\Carbon
    */
   private $time;
 
@@ -60,11 +60,11 @@ class CheckDollar {
 
     if($this->fileExists())
     {
-      return $this->parseDollarTodayJson();
+      $this->parseDollarTodayJson();
     }
     elseif($this->makeFile())
     {
-      return self::__construct();
+      self::__construct();
     }
 
     return;
@@ -159,6 +159,6 @@ class CheckDollar {
     $this->data = $data;
     $data = json_encode((array)$data);
 
-    return $storage::put('dollar.json', $data);;
+    return $storage::put('dollar.json', $data);
   }
 }

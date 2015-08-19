@@ -20,8 +20,8 @@
           <div class="col-sm-2">
             <div class="thumbnail">
               <img
-                src="{!! asset($product->images->first()->path) !!}"
-                alt="{{ $product->images->first()->alt }}"
+                src="{!! asset($product->image->medium) !!}"
+                alt="{{ $product->image->alt }}"
                 class="img-responsive"/>
               <div class="caption">
                 <h4>

@@ -26,7 +26,6 @@ class NutritionalsController extends Controller {
    */
   public function __construct(Nutritional $nutritional)
   {
-    $this->middleware('auth');
     $this->user   = Auth::user();
     $this->userId = Auth::id();
     $this->modelValidator = new ModelValidation($this->userId, $this->user);

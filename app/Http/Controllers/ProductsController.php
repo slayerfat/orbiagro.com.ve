@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Upload;
+use App\Mamarrachismo\Upload\Image as Upload;
 
 use App\Product;
 use App\Category;
@@ -31,8 +31,18 @@ class ProductsController extends Controller {
    */
   public function __construct()
   {
-    $this->middleware('auth', ['except' => ['index', 'show']]);
-    $this->middleware('user.unverified', ['except' => ['index', 'show']]);
+    $this->middleware('auth', ['except' => [
+      'index',
+      'show',
+      'indexByCategory',
+      'indexBySubCategory'
+    ]]);
+    $this->middleware('user.unverified', ['except' => [
+      'index',
+      'show',
+      'indexByCategory',
+      'indexBySubCategory'
+    ]]);
     $this->user   = Auth::user();
   }
 
@@ -47,7 +57,7 @@ class ProductsController extends Controller {
     $cats     = Category::all();
     $subCats  = SubCategory::all();
 
-    $visitedProducts = $visits->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedResources(new Product);
 
     $this->seo()->setTitle('Productos en orbiagro.com.ve');
     $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
@@ -71,9 +81,9 @@ class ProductsController extends Controller {
     if(!$products = Category::where('slug', $categoryId)->first()->products()->paginate(20))
       $products = Category::findOrFail($categoryId)->products()->paginate(20);
     $cats     = Category::all();
-    $subCats  = Category::where('slug', $categoryId)->first()->sub_categories;
+    $subCats  = Category::where('slug', $categoryId)->first()->subCategories;
 
-    $visitedProducts = $visits->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedResources(new Product);
 
     $this->seo()->setTitle("Productos de {$subCats->first()->category->description} en orbiagro.com.ve");
     $this->seo()->setDescription("Productos y Articulos de {$subCats->first()->category->description} en existencia en orbiagro.com.ve");
@@ -98,7 +108,7 @@ class ProductsController extends Controller {
     $cats     = Category::all();
     $subCats  = SubCategory::all();
 
-    $visitedProducts = $visits->getVisitedProducts();
+    $visitedProducts = $visits->getVisitedResources(new Product);
 
     $this->seo()->setTitle("Productos de {$products->first()->subCategory->description} en orbiagro.com.ve");
     $this->seo()->setDescription("Productos y Articulos de {$products->first()->subCategory->description} en existencia en orbiagro.com.ve");
@@ -121,7 +131,7 @@ class ProductsController extends Controller {
       return redirect()->back();
     endif;
     $makers    = Maker::lists('name', 'id');
-    $catModels = Category::with('sub_categories')->get();
+    $catModels = Category::with('subCategories')->get();
 
     $cats = $this->toAsocArray($catModels);
 
@@ -165,10 +175,8 @@ class ProductsController extends Controller {
     if(!$product = Product::with('user')->where('slug', $id)->first())
       $product = Product::with('user')->findOrFail($id);
 
-    $visits->setNewVisit('product', $product->id);
-    $visitedProducts = $visits->getVisitedProducts();
-    $popularSubCats  = $visits->getPopular('subCategory');
-    $visitedSubCats  = $visits->getVisitedSubCats();
+    $visits->setNewVisit($product);
+    $visitedProducts = $visits->getVisitedResources($product);
 
     if($this->user) :
       if($this->user->isOwnerOrAdmin($product->user_id)) :
@@ -206,7 +214,7 @@ class ProductsController extends Controller {
 
     $makers = Maker::lists('name', 'id');
 
-    $catModels = Category::with('sub_categories')->get();
+    $catModels = Category::with('subCategories')->get();
 
     $cats = $this->toAsocArray($catModels);
 
@@ -329,7 +337,7 @@ class ProductsController extends Controller {
     if(!$models) return null;
 
     foreach($models as $cat) :
-      foreach($cat->sub_categories as $subCat) :
+      foreach($cat->subCategories as $subCat) :
         $cats[$cat->description][$subCat->id] = $subCat->description;
       endforeach;
     endforeach;

@@ -36,13 +36,13 @@ class Provider extends Model {
   public function setNameAttribute($value)
   {
     $this->attributes['name'] = ModelValidation::byLenght($value);
-    if($this->attributes['name'])
+    if($this->attributes['name'] !== null)
       $this->attributes['slug'] = str_slug($this->attributes['name']);
   }
 
   public function setSlugAttribute($value)
   {
-    if (ModelValidation::byLenght($value)) :
+    if (ModelValidation::byLenght($value) !== null) :
       $this->attributes['slug'] = str_slug($value);
     else:
       $this->attributes['slug'] = null;

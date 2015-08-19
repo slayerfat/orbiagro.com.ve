@@ -9,10 +9,11 @@ use App\Mamarrachismo\CheckDollar;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
+use App\Mamarrachismo\Traits\HasShortTitle;
 
 class Product extends Model {
 
-  use SoftDeletes, InternalDBManagement, CanSearchRandomly;
+  use SoftDeletes, InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
   protected $fillable = [
     'user_id',
@@ -51,11 +52,12 @@ class Product extends Model {
 
   public function setSlugAttribute($value)
   {
-    if (ModelValidation::byLenght($value)) :
-      $this->attributes['slug'] = str_slug($value);
-    else:
-      $this->attributes['slug'] = null;
-    endif;
+    if (ModelValidation::byLenght($value) !== null)
+    {
+      return $this->attributes['slug'] = str_slug($value);
+    }
+
+    return $this->attributes['slug'] = null;
   }
 
   public function setQuantityAttribute($value)
@@ -207,6 +209,11 @@ class Product extends Model {
   public function images()
   {
     return $this->morphMany('App\Image', 'imageable');
+  }
+
+  public function image()
+  {
+    return $this->morphOne('App\Image', 'imageable');
   }
 
   public function visits()

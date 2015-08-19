@@ -5,10 +5,11 @@ use App\Mamarrachismo\ModelValidation;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
+use App\Mamarrachismo\Traits\HasShortTitle;
 
 class SubCategory extends Model {
 
-  use InternalDBManagement, CanSearchRandomly;
+  use InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
   protected $fillable = ['category_id', 'description', 'info'];
 
@@ -29,11 +30,12 @@ class SubCategory extends Model {
 
   public function setSlugAttribute($value)
   {
-    if (ModelValidation::byLenght($value, 3)) :
-      $this->attributes['slug'] = str_slug($value);
-    else:
-      $this->attributes['slug'] = null;
-    endif;
+    if (ModelValidation::byLenght($value, 3) !== null)
+    {
+      return $this->attributes['slug'] = str_slug($value);
+    }
+
+    return $this->attributes['slug'] = null;
   }
 
   // --------------------------------------------------------------------------

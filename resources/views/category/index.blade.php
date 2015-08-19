@@ -2,8 +2,8 @@
 
 @section('content')
   @include('category.addons.breadcrumbs-index')
-  @include('sub-category.addons.subcat-gallerie', ['title' => "Rubro Destacado"])
   @include('category.addons.cat-paginated')
+  @include('sub-category.addons.subcat-gallerie', ['title' => "Rubro Destacado"])
   @include('visit.addons.relatedProducts')
   @include('sub-category.addons.visited')
   @include('sub-category.addons.popular', ['title' => 'Rubros Populares'])

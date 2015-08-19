@@ -296,9 +296,20 @@ class ProductTest extends TestCase {
    */
   public function testIncorrectPriceValueShouldBeNull($data)
   {
-    $this->markTestIncomplete('Faltan Pruebas de Transformer');
-
     $this->tester->price = $data;
     $this->assertNull($this->tester->price);
+  }
+
+  public function testReadableQuantityMethodAttribute()
+  {
+    $this->markTestIncomplete('No implementado');
+    $this->tester->quantity = 1;
+    $this->assertEquals('1 Unidad.', $this->tester->readableQuantity());
+    $this->tester->quantity = 2;
+    $this->assertEquals('2 Unidades.', $this->tester->readableQuantity());
+    $this->tester->quantity = 0;
+    $this->assertEquals('0 Unidades.', $this->tester->readableQuantity());
+    $this->tester->quantity = -1;
+    $this->assertEquals('0 Unidades.', $this->tester->readableQuantity());
   }
 }

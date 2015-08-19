@@ -46,8 +46,18 @@
             <div class="slider slider-for">
               @foreach ($product->images as $image)
                 <div>
+                  @if(Auth::user() and Auth::user()->isOwnerOrAdmin($product->user_id))
+                    <span>
+                      <a href="{{ action('ImagesController@edit', $image->id) }}">
+                        <button
+                          type="button"
+                          name="image-edit"
+                          class="btn btn-default">Editar Imagen</button>
+                      </a>
+                    </span>
+                  @endif
                   <img
-                    src="{!! asset($image->path) !!}"
+                    src="{!! asset($image->large) !!}"
                     alt="{{ $image->alt }}"
                     class="img-responsive"/>
                 </div>
@@ -57,7 +67,7 @@
               @foreach ($product->images as $image)
                 <div>
                   <img
-                    src="{!! asset($image->path) !!}"
+                    src="{!! asset($image->small) !!}"
                     alt="{{ $image->alt }}"
                     class="img-responsive"/>
                 </div>
@@ -145,12 +155,15 @@
       centerMode: true,
       focusOnSelect: true
     });
+    // $('.slick-active').click(function(){
+    //   $(this).append('asdasd');
+    // });
   </script>
   {{-- galeria de productos visitados relacionados. --}}
   <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
   {{-- CKEDITOR --}}
-  <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
-  <script src="{!! asset('js/editor/products.js') !!}"></script>
+  {{-- <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
+  <script src="{!! asset('js/editor/products.js') !!}"></script> --}}
   <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 
   @yield('productFeature-js')
