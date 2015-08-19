@@ -45,6 +45,19 @@
                 width="384"
                 style="margin:auto;"
                 class="img-responsive" />
+
+              @if($isUserValid)
+                <div class="col-xs-2">
+                  <span>
+                    <a href="{{ action('ImagesController@edit', $feature->image->id) }}">
+                      <button
+                        type="button"
+                        name="image-edit"
+                        class="btn btn-default">Editar Imagen</button>
+                    </a>
+                  </span>
+                </div>
+              @endif
             @endif
 
             @if($feature->file)

@@ -8,9 +8,9 @@
     @include('sub-category.addons.breadcrumbs-index')
   @endif
 
-  @include('sub-category.addons.subcat-gallerie', ['title' => "Rubro Destacado"])
   @include('sub-category.addons.sub-cat-paginated')
   @include('visit.addons.relatedProducts')
+  @include('sub-category.addons.subcat-gallerie', ['title' => "Rubro Destacado"])
   @include('sub-category.addons.visited')
   @include('sub-category.addons.popular', ['title' => 'Rubros Populares'])
 @stop

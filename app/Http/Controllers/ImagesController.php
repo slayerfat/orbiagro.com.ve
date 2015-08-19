@@ -51,7 +51,7 @@ class ImagesController extends Controller
 
     $image = Image::with('imageable')->findOrFail($id);
 
-    $controller = $this->getControllerNameFromModel($image->imageable);
+    $data = $this->getControllerNameFromModel($image->imageable);
 
     flash()->success('Imagen Actualizada exitosamente.');
 
@@ -60,7 +60,7 @@ class ImagesController extends Controller
       // se iteran las imagenes y se guardan los modelos
       $upload->updateImage($request->file('image'), $image);
 
-      return redirect()->action("{$controller}@show", $image->imageable->slug);
+      return redirect()->action($data['controller'], $data['id']);
     }
 
     // http://image.intervention.io/api/crop
@@ -73,7 +73,7 @@ class ImagesController extends Controller
       $request->input('dataY')
     );
 
-    return redirect()->action("{$controller}@show", $image->imageable->slug);
+    return redirect()->action($data['controller'], $data['id']);
   }
 
   /**
@@ -92,31 +92,53 @@ class ImagesController extends Controller
     return redirect()->action('ProductsController@show', $product->id);
   }
 
+  /**
+   * Utilizado para generar el nombre del controlador y
+   * el identificador necesario para encontrar el recurso.
+   *
+   * @param \Illuminate\Database\Eloquent\Model $model el modelo a manipular.
+   *
+   * @return array
+   */
   protected function getControllerNameFromModel($model)
   {
+    $array = ['controller' => '', 'id' => null];
+
     switch (get_class($model)) :
 
       case 'App\Product':
-        return 'ProductsController';
+        $array['controller'] = 'ProductsController@show';
+        break;
 
       case 'App\Feature':
-        return 'FeaturesController';
+        $array['controller'] = 'ProductsController@show';
+
+        $array['id'] = $model->product->id;
+        break;
 
       case 'App\Category':
-        return 'CategoriesController';
+        $array['controller'] = 'CategoriesController@show';
+        break;
 
       case 'App\SubCategory':
-        return 'SubCategoriesController';
+        $array['controller'] = 'SubCategoriesController@show';
+        break;
 
       case 'App\Maker':
-        return 'MakersController';
+        $array['controller'] = 'MakersController@show';
+        break;
 
       case 'App\Promotion':
-        return 'PromotionsController';
+        $array['controller'] = 'PromotionsController@show';
+        break;
 
       default:
-        throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".gettype($model), 2);
+        throw new \Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".get_class($model), 2);
 
     endswitch;
+
+    $array['id'] = $array['id'] ? $array['id'] : $model->slug;
+
+    return $array;
   }
 }
