@@ -172,8 +172,8 @@ class ProductsController extends Controller {
    */
   public function show($id, VisitsService $visits)
   {
-    if(!$product = Product::with('user')->where('slug', $id)->first())
-      $product = Product::with('user')->findOrFail($id);
+    if(!$product = Product::with('user', 'subCategory')->where('slug', $id)->first())
+      $product = Product::with('user', 'subCategory')->findOrFail($id);
 
     $visits->setNewVisit($product);
     $visitedProducts = $visits->getVisitedResources($product);

@@ -37,8 +37,14 @@ class VisitsService {
     switch (get_class($model))
     {
       case 'App\SubCategory':
-      case 'App\Product':
         return $this->setNewVisitCookie($model);
+
+      case 'App\Product':
+        // para el caso del producto, se debe guardar
+        // tanto el mismo como su rubro para obtener las visitas y populares
+        $this->setNewVisitCookie($model);
+
+        return $this->setNewVisitCookie($model->subCategory);
 
       default:
         throw new Exception("Error, es necesario especificar modelo valido.", 2);
