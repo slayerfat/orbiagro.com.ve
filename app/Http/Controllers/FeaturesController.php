@@ -82,10 +82,6 @@ class FeaturesController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        if (!$this->user->isOwnerOrAdmin($product->user->id)) {
-            return $this->redirectToRoute('productos.show', $product->slug);
-        }
-
         // para los archivos del feature
         $uploadImage->userId = $this->userId;
         $uploadFile->userId  = $this->userId;
@@ -160,10 +156,6 @@ class FeaturesController extends Controller
         // para los archivos del feature
         $uploadImage->userId = $this->userId;
         $uploadFile->userId  = $this->userId;
-
-        if (!$this->user->isOwnerOrAdmin($this->feature->product->user->id)) {
-            return $this->redirectToRoute('productos.show', $this->feature->product->slug);
-        }
 
         $this->feature->update($request->all());
 

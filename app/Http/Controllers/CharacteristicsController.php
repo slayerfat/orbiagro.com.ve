@@ -12,29 +12,22 @@ use App\Mamarrachismo\ModelValidation;
 
 class CharacteristicsController extends Controller
 {
-
-    private $user;
-
-    private $userId;
-
     private $characteristic;
 
     /**
     * Create a new controller instance.
     *
     * @method __construct
-    * @param  Feature     $feature
+    * @param  Characteristic     $characteristic
     *
     * @return void
     */
     public function __construct(Characteristic $characteristic, Guard $auth)
     {
-        $this->user   = $auth->user();
+        $this->middleware('auth');
 
-        // artisan route:list fail
-        $this->userId = $auth->user() ? $auth->user()->id : null;
+        $this->user = $auth->user();
 
-        $this->modelValidator = new ModelValidation($this->userId, $this->user);
         $this->characteristic = $characteristic;
     }
 
@@ -47,14 +40,16 @@ class CharacteristicsController extends Controller
     {
         $product = Product::findOrFail($id)->load('mechanical');
 
-        if ($this->modelValidator->notOwner($product->user->id)) {
-            flash()->error('Ud. no tiene permisos para esta accion.');
-            return redirect()->action('ProductsController@show', $product->slug);
+        if (!$this->user->isOwnerOrAdmin($product->user->id)) {
+            return $this->redirectToRoute('productos.show', $product->slug);
         }
 
         if ($product->characteristics) {
-            flash()->error('Este Producto ya posee caracteristicas, por favor actualice las existentes.');
-            return redirect()->action('ProductsController@show', $product->slug);
+            return $this->redirectToRoute(
+                'productos.show',
+                $product->slug,
+                'Este Producto ya posee caracteristicas, por favor actualice las existentes.'
+            );
         }
 
         return view('characteristic.create')->with([
@@ -72,15 +67,13 @@ class CharacteristicsController extends Controller
     {
         $product = Product::findOrFail($id)->load('mechanical');
 
-        if ($this->modelValidator->notOwner($product->user->id)) {
-            flash()->error('Ud. no tiene permisos para esta accion.');
-            return redirect()->action('ProductsController@show', $product->slug);
+        if ($product->characteristics) {
+            return $this->redirectToRoute(
+                'productos.show',
+                $product->slug,
+                'Este Producto ya posee caracteristicas, por favor actualice las existentes.'
+            );
         }
-
-        if ($product->characteristic) :
-            flash()->error('Este Producto ya posee caracteristicas, por favor actualice las existentes.');
-            return redirect()->action('ProductsController@show', $product->slug);
-        endif;
 
         $this->characteristic = new Characteristic($request->all());
         $product->characteristics()->save($this->characteristic);
@@ -99,9 +92,8 @@ class CharacteristicsController extends Controller
     {
         $this->characteristic = Characteristic::findOrFail($id)->load('product');
 
-        if ($this->modelValidator->notOwner($this->characteristic->product->user->id)) {
-            flash()->error('Ud. no tiene permisos para esta accion.');
-            return redirect()->action('ProductsController@show', $this->characteristic->product->slug);
+        if (!$this->user->isOwnerOrAdmin($product->user->id)) {
+            return $this->redirectToRoute('productos.show', $product->slug);
         }
 
         return view('characteristic.edit')->with(['characteristic' => $this->characteristic]);
@@ -116,11 +108,6 @@ class CharacteristicsController extends Controller
     public function update($id, CharacteristicRequest $request)
     {
         $this->characteristic = Characteristic::findOrFail($id)->load('product');
-
-        if ($this->modelValidator->notOwner($this->characteristic->product->user->id)) {
-            flash()->error('Ud. no tiene permisos para esta accion.');
-            return redirect()->action('ProductsController@show', $this->characteristic->product->slug);
-        }
 
         $this->characteristic->update($request->all());
 
