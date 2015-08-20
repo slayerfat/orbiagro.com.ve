@@ -12,6 +12,9 @@
   @endif
 
   @include('visit.addons.relatedProducts')
+
+  @include('partials.ads.full-12')
+
   @include('sub-category.addons.visited')
   @include('sub-category.addons.popular', ['title' => 'Visite los Rubros Populares'])
 @stop
