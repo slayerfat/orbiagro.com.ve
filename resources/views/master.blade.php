@@ -20,6 +20,7 @@
   <![endif]-->
 </head>
 <body>
+  @include('partials.header')
   @include('partials.navbar')
 
   <div class="container flashes">

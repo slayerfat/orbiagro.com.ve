@@ -16,7 +16,7 @@ class PromoTypesTableSeeder extends Seeder {
     $this->command->info("*** Empezando creacion de PromoType! ***");
 
     $types = [
-      'Producto sin imagen',
+      'otro',
       '1:1 300x300',
       '4:1 1200x300',
       '4:3 640x480',
@@ -34,7 +34,7 @@ class PromoTypesTableSeeder extends Seeder {
     if(!$user) $user = User::where('name', env('APP_USER'))->first();
 
     foreach($types as $type):
-      
+
       $type = App\PromoType::create([
         'description' => $type,
         'created_by'  => $user->id,

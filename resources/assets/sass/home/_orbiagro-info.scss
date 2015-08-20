@@ -1,0 +1,13 @@
+.fa-real-pulse {
+
+  animation: pulsate 4s ease-out;
+  animation-iteration-count: infinite;
+  border-radius: 30px;
+}
+
+@keyframes pulsate {
+
+  90% {opacity: 1;}
+  95% {opacity: 0;}
+  100% {opacity: 1;}
+}
