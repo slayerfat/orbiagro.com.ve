@@ -30,6 +30,11 @@ class ViewServiceProvider extends ServiceProvider {
       'partials.carrusel-main',
       'App\Http\Composers\Carrusel@composeHomeCarruselImages'
     );
+
+    view()->composer(
+      'partials.orbiagro-info',
+      'App\Http\Composers\OrbiagroInfo@composeInfo'
+    );
   }
 
   /**
