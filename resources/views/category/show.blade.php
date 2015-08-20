@@ -33,6 +33,8 @@
   @include('sub-category.addons.sub-cat-paginated')
   @include('visit.addons.relatedProducts')
   @include('sub-category.addons.visited')
+  {{-- ads --}}
+  @include('partials.ads.full-12')
   @include('sub-category.addons.popular', ['title' => 'Rubros Populares'])
 
 @stop

@@ -120,6 +120,9 @@
       <div class="col-sm-6">
         @include('product.addons.nutritional', $product)
       </div>
+
+      {{-- ads --}}
+      @include('partials.ads.no-parent', ['class' => 'col-sm-6'])
     </div>
     <div class="row">
       <div class="col-sm-12" id="features">
@@ -131,6 +134,9 @@
   @include('product.addons.direction', $product)
 
   @include('product.addons.providers', $product)
+
+  {{-- ads --}}
+  @include('partials.ads.full-12')
 
   @include('visit.addons.relatedProducts')
 

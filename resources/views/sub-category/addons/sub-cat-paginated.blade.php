@@ -5,7 +5,9 @@
         <h1>{{$title}}</h1>
       </div>
     @endif
+    <?php $i = 0 ?>
     @foreach($subCats as $cat)
+      <?php $i++ ?>
       <div class="col-sm-12 well">
         <div class="row">
           <div class="col-xs-8">
@@ -38,6 +40,11 @@
           ])
         </div>
       </div>
+      @if($i == 3)
+        {{-- ads --}}
+        @include('partials.ads.no-parent', ['class' => 'col-xs-12'])
+        <?php $i = 0 ?>
+      @endif
     @endforeach
   </div>
 </div>
