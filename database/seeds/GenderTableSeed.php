@@ -1,37 +1,30 @@
 <?php
 
-use Illuminate\Database\Seeder;
+class GenderTableSeeder extends BaseSeeder
+{
 
-use App\User;
+    /**
+    * Run the database seeds.
+    *
+    * @return void
+    */
+    public function run()
+    {
+        $this->command->info("*** Empezando creacion de Gender! ***");
 
-class GenderTableSeeder extends Seeder {
+        $types = [
+            'Masculino',
+            'Femenino'
+        ];
 
-  /**
-   * Run the database seeds.
-   *
-   * @return void
-   */
-  public function run()
-  {
-    $this->command->info("*** Empezando creacion de Gender! ***");
+        foreach ($types as $gender) {
+            App\Gender::create([
+                'description' => $gender,
+                'created_by'  => $this->user->id,
+                'updated_by'  => $this->user->id,
+            ]);
+        }
 
-    $types = [
-      'Masculino',
-      'Femenino'
-    ];
-
-    $user = User::where('name', 'tester')->first();
-
-    if(!$user) $user = User::where('name', env('APP_USER'))->first();
-
-    foreach($types as $gender):
-      App\Gender::create([
-        'description' => $gender,
-        'created_by'  => $user->id,
-        'updated_by'  => $user->id,
-      ]);
-    endforeach;
-    $this->command->info('Generos creados.');
-  }
-
+        $this->command->info('Generos creados.');
+    }
 }

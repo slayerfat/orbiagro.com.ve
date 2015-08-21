@@ -1,66 +1,62 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\User;
 use App\Image;
 use App\File;
 use App\Product;
 
-class ImagesTableSeeder extends Seeder {
+class ImagesTableSeeder extends BaseSeeder
+{
 
-  /**
-   * Run the database seeds.
-   *
-   * @return void
-   */
-  public function run()
-  {
-    $this->command->info("*** Empezando creacion de Images! ***");
+    /**
+    * Run the database seeds.
+    *
+    * @return void
+    */
+    public function run()
+    {
+        $this->command->info("*** Empezando creacion de Images! ***");
 
-    $user  = User::where('name', 'tester')->first();
+        $products = Product::all();
 
-    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+        // se elimina el directorio de todos los archivos
+        Storage::disk('public')->deleteDirectory('products');
+        Storage::disk('public')->makeDirectory('products');
 
-    $products = Product::all();
+        foreach ($products as $product) {
+            $this->command->info("Producto {$product->slug}");
+            // el nombre del archivo
+            $name = date('Ymdhmmss-').str_random(20);
+            // se copia el archivo
+            Storage::disk('public')->copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
+            $this->command->info("Creado products/{$product->id}/{$name}.gif");
 
-    // se elimina el directorio de todos los archivos
-    Storage::disk('public')->deleteDirectory('products');
-    Storage::disk('public')->makeDirectory('products');
+            // el modelo
+            $image             = new Image;
+            $image->path       = "products/{$product->id}/{$name}.gif";
+            $image->original   = $image->path;
+            $image->mime       = 'image/gif';
+            $image->alt        = $product->title;
+            $image->created_by = $this->user->id;
+            $image->updated_by = $this->user->id;
 
-    foreach($products as $product):
-      $this->command->info("Producto {$product->slug}");
-      // el nombre del archivo
-      $name = date('Ymdhmmss-').str_random(20);
-      // se copia el archivo
-      Storage::disk('public')->copy('1500x1500.gif', "products/{$product->id}/{$name}.gif");
-      $this->command->info("Creado products/{$product->id}/{$name}.gif");
+            $product->images()->save($image);
 
-      // el modelo
-      $image             = new Image;
-      $image->path       = "products/{$product->id}/{$name}.gif";
-      $image->original   = $image->path;
-      $image->mime       = 'image/gif';
-      $image->alt        = $product->title;
-      $image->created_by = $user->id;
-      $image->updated_by = $user->id;
+            // el archivo asociado
+            $name = date('Ymdhmmss-').str_random(20);
+            Storage::disk('public')->copy('file.pdf', "products/{$product->id}/{$name}.pdf");
+            $this->command->info("Creado products/{$product->id}/{$name}.pdf");
 
-      $product->images()->save($image);
+            // el modelo
+            $file             = new File;
+            $file->path       = "products/{$product->id}/{$name}.pdf";
+            $file->mime       = "application/pdf";
+            $file->created_by = $this->user->id;
+            $file->updated_by = $this->user->id;
 
-      // el archivo asociado
-      $name = date('Ymdhmmss-').str_random(20);
-      Storage::disk('public')->copy('file.pdf', "products/{$product->id}/{$name}.pdf");
-      $this->command->info("Creado products/{$product->id}/{$name}.pdf");
+            $product->files()->save($file);
+        }
 
-      // el modelo
-      $file             = new File;
-      $file->path       = "products/{$product->id}/{$name}.pdf";
-      $file->mime       = "application/pdf";
-      $file->created_by = $user->id;
-      $file->updated_by = $user->id;
-
-      $product->files()->save($file);
-    endforeach;
-    $this->command->info('Creacion de images y archivos de producto completado.');
-  }
-
+        $this->command->info('Creacion de images y archivos de producto completado.');
+    }
 }
