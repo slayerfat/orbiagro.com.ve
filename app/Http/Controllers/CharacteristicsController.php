@@ -92,8 +92,8 @@ class CharacteristicsController extends Controller
     {
         $this->characteristic = Characteristic::findOrFail($id)->load('product');
 
-        if (!$this->user->isOwnerOrAdmin($product->user->id)) {
-            return $this->redirectToRoute('productos.show', $product->slug);
+        if (!$this->user->isOwnerOrAdmin($this->characteristic->product->user_id)) {
+            return $this->redirectToRoute('productos.show', $this->characteristic->product->slug);
         }
 
         return view('characteristic.edit')->with(['characteristic' => $this->characteristic]);

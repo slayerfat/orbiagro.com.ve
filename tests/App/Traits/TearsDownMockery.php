@@ -4,13 +4,13 @@ use \Mockery;
 
 trait TearsDownMockery
 {
-  public function tearDown()
-  {
-    Mockery::close();
+    public function tearDown()
+    {
+        Mockery::close();
 
-    unset($this->tester);
-    unset($this->mock);
+        unset($this->tester);
+        unset($this->mock);
 
-    parent::tearDown();
-  }
+        parent::tearDown();
+    }
 }
