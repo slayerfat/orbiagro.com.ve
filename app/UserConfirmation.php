@@ -2,37 +2,37 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserConfirmation extends Model {
+class UserConfirmation extends Model
+{
 
-  /**
-   * La tabla no posee timestamps
-   *
-   * @var boolean
-   */
-  public $timestamps = false;
+    /**
+    * La tabla no posee timestamps
+    *
+    * @var boolean
+    */
+    public $timestamps = false;
 
-  protected $fillable = [
-    'data'
-  ];
+    protected $fillable = [
+        'data'
+    ];
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setDataAttribute($valor)
-  {
-    $this->attributes['data'] = str_random(32);
-  }
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setDataAttribute()
+    {
+        $this->attributes['data'] = str_random(32);
+    }
 
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
 
-  // --------------------------------------------------------------------------
-  // Belongs to
-  // --------------------------------------------------------------------------
-  public function user()
-  {
-    return $this->belongsTo('App\User');
-  }
-
+    // --------------------------------------------------------------------------
+    // Belongs to
+    // --------------------------------------------------------------------------
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

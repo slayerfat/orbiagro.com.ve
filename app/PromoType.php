@@ -4,20 +4,20 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
 
-class PromoType extends Model {
+class PromoType extends Model
+{
 
-  use InternalDBManagement;
+    use InternalDBManagement;
 
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
 
-  // --------------------------------------------------------------------------
-  // HasMany
-  // --------------------------------------------------------------------------
-  public function promotions()
-  {
-    return $this->hasMany('App\Promotion');
-  }
-
+    // --------------------------------------------------------------------------
+    // HasMany
+    // --------------------------------------------------------------------------
+    public function promotions()
+    {
+        return $this->hasMany('App\Promotion');
+    }
 }

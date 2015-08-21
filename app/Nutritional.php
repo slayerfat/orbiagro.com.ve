@@ -4,35 +4,36 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
 
-class Nutritional extends Model {
+class Nutritional extends Model
+{
 
-  use InternalDBManagement;
+    use InternalDBManagement;
 
-  protected $fillable = ['due'];
+    protected $fillable = ['due'];
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setDueAttribute($value)
-  {
-    $date = \DateTime::createFromFormat('Y-m-d', $value);
-    if($date):
-      $this->attributes['due'] = $value;
-    else:
-      $this->attributes['due'] = null;
-    endif;
-  }
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setDueAttribute($value)
+    {
+        $date = \DateTime::createFromFormat('Y-m-d', $value);
 
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
+        if ($date) {
+            return $this->attributes['due'] = $value;
+        }
 
-  // --------------------------------------------------------------------------
-  // Belongs To
-  // --------------------------------------------------------------------------
-  public function product()
-  {
-    return $this->belongsTo('App\Product');
-  }
+        return $this->attributes['due'] = null;
+    }
 
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+    // Belongs To
+    // --------------------------------------------------------------------------
+    public function product()
+    {
+        return $this->belongsTo('App\Product');
+    }
 }

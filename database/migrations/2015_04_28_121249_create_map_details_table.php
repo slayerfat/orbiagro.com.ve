@@ -3,42 +3,41 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMapDetailsTable extends Migration {
+class CreateMapDetailsTable extends Migration
+{
 
-  /**
-   * Run the migrations.
-   *
-   * @return void
-   */
-  public function up()
-  {
-    Schema::create('map_details', function(Blueprint $table)
+    /**
+    * Run the migrations.
+    *
+    * @return void
+    */
+    public function up()
     {
-      $table->increments('id');
-      $table->integer('direction_id')->unsigned();
-      $table->foreign('direction_id')
-            ->references('id')
-            ->on('directions')
-            ->onDelete('cascade');
-      $table->double('latitude', 17, 15);
-      $table->double('longitude', 18, 15);
-      $table->tinyInteger('zoom')->unisgned();
-      $table->integer('created_by')->unsigned();
-      $table->foreign('created_by')->references('id')->on('users');
-      $table->integer('updated_by')->unsigned();
-      $table->foreign('updated_by')->references('id')->on('users');
-      $table->timestamps();
-    });
-  }
+        Schema::create('map_details', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('direction_id')->unsigned();
+            $table->foreign('direction_id')
+                ->references('id')
+                ->on('directions')
+                ->onDelete('cascade');
+            $table->double('latitude', 17, 15);
+            $table->double('longitude', 18, 15);
+            $table->tinyInteger('zoom')->unisgned();
+            $table->integer('created_by')->unsigned();
+            $table->foreign('created_by')->references('id')->on('users');
+            $table->integer('updated_by')->unsigned();
+            $table->foreign('updated_by')->references('id')->on('users');
+            $table->timestamps();
+        });
+    }
 
-  /**
-   * Reverse the migrations.
-   *
-   * @return void
-   */
-  public function down()
-  {
-    Schema::drop('map_details');
-  }
-
+    /**
+    * Reverse the migrations.
+    *
+    * @return void
+    */
+    public function down()
+    {
+        Schema::drop('map_details');
+    }
 }

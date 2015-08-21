@@ -7,82 +7,86 @@ use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
 use App\Mamarrachismo\Traits\HasShortTitle;
 
-class Category extends Model {
+class Category extends Model
+{
 
-  use InternalDBManagement, CanSearchRandomly, HasShortTitle;
+    use InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
-  protected $fillable = ['description', 'slug', 'info'];
+    protected $fillable = ['description', 'slug', 'info'];
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setDescriptionAttribute($value)
-  {
-    $this->attributes['description'] = ModelValidation::byLenght($value);
-    if($this->attributes['description'])
-      $this->attributes['slug'] = str_slug($this->attributes['description']);
-  }
-
-  public function setSlugAttribute($value)
-  {
-    if (ModelValidation::byLenght($value) !== null)
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setDescriptionAttribute($value)
     {
-      return $this->attributes['slug'] = str_slug($value);
+        $this->attributes['description'] = ModelValidation::byLenght($value);
+
+        if ($this->attributes['description']) {
+            $this->attributes['slug'] = str_slug($this->attributes['description']);
+        }
     }
 
-    return $this->attributes['slug'] = null;
-  }
+    public function setSlugAttribute($value)
+    {
+        if (ModelValidation::byLenght($value) !== null) {
+            return $this->attributes['slug'] = str_slug($value);
+        }
 
-  public function setInfoAttribute($value)
-  {
-    $this->attributes['info'] = ModelValidation::byLenght($value);
-  }
+        return $this->attributes['slug'] = null;
+    }
 
-  // --------------------------------------------------------------------------
-  // Accessors
-  // --------------------------------------------------------------------------
-  public function getDescriptionAttribute($value)
-  {
-    if($value) return ucfirst($value);
-    return null;
-  }
+    public function setInfoAttribute($value)
+    {
+        $this->attributes['info'] = ModelValidation::byLenght($value);
+    }
 
-  public function getInfoAttribute($value)
-  {
-    if($value) :
-      if (substr($value, -1) !== '.')
-      {
-        $value .= '.';
-      }
-      return ucfirst($value);
-    endif;
+    // --------------------------------------------------------------------------
+    // Accessors
+    // --------------------------------------------------------------------------
+    public function getDescriptionAttribute($value)
+    {
+        if ($value) {
+            return ucfirst($value);
+        }
 
-    return null;
-  }
+        return null;
+    }
 
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
+    public function getInfoAttribute($value)
+    {
+        if ($value) {
+            if (substr($value, -1) !== '.') {
+                $value .= '.';
+            }
 
-  // --------------------------------------------------------------------------
-  // Has Many
-  // --------------------------------------------------------------------------
-  public function subCategories()
-  {
-    return $this->hasMany('App\SubCategory');
-  }
+            return ucfirst($value);
+        }
 
-  // --------------------------------------------------------------------------
-  // Polymorphic
-  // --------------------------------------------------------------------------
-  public function image()
-  {
-    return $this->morphOne('App\Image', 'imageable');
-  }
+        return null;
+    }
 
-  public function products()
-  {
-    return $this->hasManyThrough('App\product', 'App\SubCategory');
-  }
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
 
+    // --------------------------------------------------------------------------
+    // Has Many
+    // --------------------------------------------------------------------------
+    public function subCategories()
+    {
+        return $this->hasMany('App\SubCategory');
+    }
+
+    // --------------------------------------------------------------------------
+    // Polymorphic
+    // --------------------------------------------------------------------------
+    public function image()
+    {
+        return $this->morphOne('App\Image', 'imageable');
+    }
+
+    public function products()
+    {
+        return $this->hasManyThrough('App\product', 'App\SubCategory');
+    }
 }

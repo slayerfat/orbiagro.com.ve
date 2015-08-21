@@ -5,54 +5,57 @@ use Storage;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
 
-class File extends Model {
+class File extends Model
+{
 
-  use InternalDBManagement;
+    use InternalDBManagement;
 
-  protected $fillable = ['path', 'mime'];
+    protected $fillable = ['path', 'mime'];
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setPathAttribute($value)
-  {
-    if($this->file_exists($value)):
-      $this->attributes['path'] = $value;
-    else:
-      $this->attributes['path'] = null;
-    endif;
-  }
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setPathAttribute($value)
+    {
+        if ($this->file_exists($value)) {
+            return $this->attributes['path'] = $value;
+        }
 
-  // --------------------------------------------------------------------------
-  // Accessors
-  // --------------------------------------------------------------------------
-  public function getPathAttribute($value)
-  {
-    if($value) return $value;
-    return null;
-  }
+        return $this->attributes['path'] = null;
+    }
 
-  /**
-   * Relacion polimorfica
-   * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-   */
-  public function filable()
-  {
-    return $this->morphTo();
-  }
+    // --------------------------------------------------------------------------
+    // Accessors
+    // --------------------------------------------------------------------------
+    public function getPathAttribute($value)
+    {
+        if ($value) {
+            return $value;
+        }
 
-  // --------------------------------------------------------------------------
-  // Private Methods
-  // --------------------------------------------------------------------------
-  private function file_exists($path)
-  {
-    if(Storage::disk('public')->exists($path)):
-      return true;
-    elseif(Storage::disk('test')->exists($path)):
-      return true;
-    else:
-      return false;
-    endif;
-  }
+        return null;
+    }
 
+    /**
+    * Relacion polimorfica
+    * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+    */
+    public function filable()
+    {
+        return $this->morphTo();
+    }
+
+    // --------------------------------------------------------------------------
+    // Private Methods
+    // --------------------------------------------------------------------------
+    private function file_exists($path)
+    {
+        if (Storage::disk('public')->exists($path)) {
+            return true;
+        } elseif (Storage::disk('test')->exists($path)) {
+            return true;
+        }
+
+        return false;
+    }
 }

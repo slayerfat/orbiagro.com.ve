@@ -6,62 +6,66 @@ use App\Mamarrachismo\ModelValidation;
 use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
 
-class Maker extends Model {
+class Maker extends Model
+{
 
-  use InternalDBManagement, CanSearchRandomly;
+    use InternalDBManagement, CanSearchRandomly;
 
-  protected $fillable = ['name', 'domain', 'url'];
+    protected $fillable = ['name', 'domain', 'url'];
 
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setNameAttribute($value)
-  {
-    $this->attributes['name'] = ModelValidation::byLenght($value, 3);
-    $this->attributes['slug']  = str_slug($this->attributes['name']);
-  }
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ModelValidation::byLenght($value, 3);
+        $this->attributes['slug']  = str_slug($this->attributes['name']);
+    }
 
-  public function setSlugAttribute($value)
-  {
-    $slug = ModelValidation::byLenght($value, 3);
-    if($slug !== null):
-      $this->attributes['slug'] = str_slug($slug);
-    else:
-      $this->attributes['slug'] = null;
-    endif;
-  }
+    public function setSlugAttribute($value)
+    {
+        $slug = ModelValidation::byLenght($value, 3);
 
-  // --------------------------------------------------------------------------
-  // Accessors
-  // --------------------------------------------------------------------------
-  public function getNameAttribute($value)
-  {
-    if($value) return ucfirst($value);
-    return null;
-  }
+        if ($slug !== null) {
+            return $this->attributes['slug'] = str_slug($slug);
+        }
 
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
-  // --------------------------------------------------------------------------
-  // Has Many
-  // --------------------------------------------------------------------------
-  public function products()
-  {
-    return $this->hasMany('App\Product');
-  }
+        return $this->attributes['slug'] = null;
+    }
 
-  // --------------------------------------------------------------------------
-  // Belongs to Many
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Accessors
+    // --------------------------------------------------------------------------
+    public function getNameAttribute($value)
+    {
+        if ($value) {
+            return ucfirst($value);
+        }
 
-  // --------------------------------------------------------------------------
-  // Polymorphic
-  // --------------------------------------------------------------------------
-   public function image()
-  {
-    return $this->morphOne('App\Image', 'imageable');
-  }
+        return null;
+    }
 
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Has Many
+    // --------------------------------------------------------------------------
+    public function products()
+    {
+        return $this->hasMany('App\Product');
+    }
+
+    // --------------------------------------------------------------------------
+    // Belongs to Many
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+    // Polymorphic
+    // --------------------------------------------------------------------------
+    public function image()
+    {
+        return $this->morphOne('App\Image', 'imageable');
+    }
 }
