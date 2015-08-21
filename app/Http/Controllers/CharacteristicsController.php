@@ -12,7 +12,7 @@ use App\Mamarrachismo\ModelValidation;
 
 class CharacteristicsController extends Controller
 {
-    private $characteristic;
+    protected $characteristic;
 
     /**
     * Create a new controller instance.

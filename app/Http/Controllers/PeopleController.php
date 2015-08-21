@@ -14,7 +14,7 @@ use App\Nationality;
 class PeopleController extends Controller
 {
 
-    public $person;
+    protected $person;
 
     /**
     * Create a new controller instance.

@@ -15,9 +15,9 @@ use App\Mamarrachismo\ModelValidation;
 class MechanicalInfoController extends Controller
 {
 
-    private $user;
+    protected $user;
 
-    private $mech;
+    protected $mech;
 
     /**
     * Create a new controller instance.

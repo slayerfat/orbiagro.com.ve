@@ -23,7 +23,7 @@ class ProductsController extends Controller
 
     use SEOToolsTrait;
 
-    public $user;
+    protected $user;
 
     /**
     * Create a new controller instance.

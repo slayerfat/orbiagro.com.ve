@@ -16,11 +16,11 @@ use App\Mamarrachismo\Upload\Image as UploadImage;
 class FeaturesController extends Controller
 {
 
-    private $user;
+    protected $user;
 
-    private $userId;
+    protected $userId;
 
-    private $feature;
+    protected $feature;
 
     /**
     * Create a new controller instance.

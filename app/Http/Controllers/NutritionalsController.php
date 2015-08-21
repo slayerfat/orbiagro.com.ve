@@ -15,9 +15,9 @@ use App\Mamarrachismo\ModelValidation;
 class NutritionalsController extends Controller
 {
 
-    private $user;
+    protected $user;
 
-    private $nutritional;
+    protected $nutritional;
 
     /**
     * Create a new controller instance.

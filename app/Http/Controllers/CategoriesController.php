@@ -21,11 +21,11 @@ class CategoriesController extends Controller
 
     use SEOToolsTrait;
 
-    public $user;
+    protected $user;
 
-    public $userId;
+    protected $userId;
 
-    public $cat;
+    protected $cat;
 
     /**
     * Create a new controller instance.
