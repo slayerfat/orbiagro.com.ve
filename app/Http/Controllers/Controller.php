@@ -9,7 +9,7 @@ abstract class Controller extends BaseController
 
     use DispatchesCommands, ValidatesRequests;
 
-    protected function redirectToRoute($route, $id, $message = null, $method = 'error')
+    protected function redirectToRoute($route, $id = null, $message = null, $method = 'error')
     {
         $message = $message ? $message :'Ud. no tiene permisos para esta accion.';
 
