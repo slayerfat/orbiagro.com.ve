@@ -20,7 +20,7 @@ class PromotionTableSeeder extends Seeder {
     $product = App\Product::first();
 
     factory(App\Promotion::class, 3)->create()->each(function($promo) use($product){
-      $this->upload->createImage(null, $promo);
+      $this->upload->createImage($promo);
       $product->promotions()->attach($promo);
     });
   }

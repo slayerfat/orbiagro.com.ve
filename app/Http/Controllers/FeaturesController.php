@@ -104,14 +104,14 @@ class FeaturesController extends Controller
 
         // para guardar la imagen y modelo
         try {
-            $uploadImage->createImage($request->file('image'), $this->feature);
+            $uploadImage->createImage($this->feature, $request->file('image'));
         } catch (\Exception $e) {
             flash()->warning('Distintivo creado, pero la imagen asociada no pudo ser creada.');
         }
 
         if ($request->file('file')) {
             try {
-                $uploadFile->createFile($request->file('file'), $this->feature);
+                $uploadFile->createFile($this->feature, $request->file('file'));
             } catch (\Exception $e) {
                 flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado.');
             }

@@ -72,7 +72,7 @@ class MakersController extends Controller
         // para los archivos
         $upload->userId = $this->userId;
 
-        $upload->createImage($request->file('image'), $this->maker);
+        $upload->createImage($this->maker, $request->file('image'));
 
         flash()->success('Fabricante creado exitosamente.');
         return redirect()->action('MakersController@show', $this->maker->slug);

@@ -27,7 +27,7 @@ class Image extends Upload
         $this->path = $this->generatePathFromModel($model);
 
         if (!$array) {
-            $collection = $collection->push($this->createDefaultImage($this->path, $model));
+            $collection = $collection->push($this->createDefaultImage($model, $this->path));
 
             return $collection;
         }
@@ -41,7 +41,7 @@ class Image extends Upload
                 // se crea la imagen por defecto
                 if (sizeOf($array) <= 1) {
                     // si las imagenes no son validas crea una imagen por defecto
-                    $collection = $collection->push($this->createDefaultImage($this->path, $model));
+                    $collection = $collection->push($this->createDefaultImage($model, $this->path));
 
                     return $collection;
                 }
@@ -73,7 +73,7 @@ class Image extends Upload
     */
     public function createImage($model, UploadedFile $file = null)
     {
-        $result = $this->createImages([$file], $model);
+        $result = $this->createImages($model, [$file]);
 
         if ($result->isEmpty()) {
             return $result;
@@ -137,7 +137,7 @@ class Image extends Upload
 
         // si no hay algun modelo relacionado, se crea uno de cero.
         if ($imageModel == null) {
-            return $this->createImage($file, $parentModel);
+            return $this->createImage($parentModel, $file);
         }
 
         $this->path = $this->generatePathFromModel($parentModel);
@@ -156,7 +156,7 @@ class Image extends Upload
 
         // se crea la imagen en el HD y se actualiza el modelo.
         if (!$result = $this->makeImageFile($file, $this->path, $options)) {
-            return $this->createDefaultImage($this->path, $parentModel);
+            return $this->createDefaultImage($parentModel, $this->path);
         }
 
         return $imageModel->update($result);

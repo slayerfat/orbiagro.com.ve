@@ -42,7 +42,7 @@ class CategoryTableSeeder extends Seeder {
         'created_by'  => $user->id,
         'updated_by'  => $user->id,
       ]);
-      $this->upload->createImage(null, $category);
+      $this->upload->createImage($category);
     endforeach;
     $this->command->info('El Elegido creo las categorias.');
   }

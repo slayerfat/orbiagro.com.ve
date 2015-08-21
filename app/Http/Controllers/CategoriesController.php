@@ -91,7 +91,7 @@ class CategoriesController extends Controller
         $this->cat->fill($request->all());
         $this->cat->save();
 
-        $upload->createImage($request->file('image'), $this->cat);
+        $upload->createImage($this->cat, $request->file('image'));
 
         flash()->success('Categoria creada exitosamente.');
         return redirect()->action('CategoriesController@index');

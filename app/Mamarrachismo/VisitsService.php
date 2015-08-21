@@ -160,16 +160,16 @@ class VisitsService
     */
     private function storeResourceVisits($model, $array)
     {
-        $date = Cookie::get("{$name}VisitedAt");
-
-        if (!Auth::user() || !isset($array) || !$date) {
-            return null;
-        }
-
         $name = class_basename($model);
 
         if (!$name) {
             throw new Exception("No se puede guardar visita sin un modelo asociado", 3);
+        }
+
+        $date = Cookie::get("{$name}VisitedAt");
+
+        if (!Auth::user() || !isset($array) || !$date) {
+            return null;
         }
 
         if ($date->diffInMinutes() < 5) {

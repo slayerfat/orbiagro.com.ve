@@ -53,7 +53,7 @@ class File extends Upload
     public function updateFile(UploadedFile $file = null, $parentModel = null, Model $fileModel = null)
     {
         if ($fileModel == null) {
-            return $this->createFile($file, $parentModel);
+            return $this->createFile($parentModel, $file);
         }
 
         $this->path = $this->generatePathFromModel($parentModel);

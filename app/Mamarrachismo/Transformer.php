@@ -91,7 +91,7 @@ class Transformer
     */
     public function parseReadableToNumber()
     {
-        if (!$this->doRegex($this->number, $this->numberComaRegex)) {
+        if (!$this->doRegex($this->numberComaRegex, $this->number)) {
             return null;
         }
 
@@ -115,7 +115,7 @@ class Transformer
     */
     public function parseNumberToReadable()
     {
-        if (!$this->doRegex($this->number, $this->numberDotRegex)) {
+        if (!$this->doRegex($this->numberDotRegex, $this->number)) {
             return null;
         }
 

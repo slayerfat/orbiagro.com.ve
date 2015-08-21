@@ -23,7 +23,7 @@ class MakerTableSeeder extends Seeder {
     Storage::disk('public')->makeDirectory('makers');
 
     factory(App\Maker::class, 2)->create()->each(function($model) use($upload){
-      $upload->createImage(null, $model);
+      $upload->createImage($model);
     });
   }
 

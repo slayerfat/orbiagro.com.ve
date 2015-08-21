@@ -20,7 +20,7 @@ class FeatureTableSeeder extends Seeder {
 
     App\Product::all()->each(function($product){
       $f = $product->features()->save(factory(App\Feature::class)->make());
-      $this->upload->createImage(null, $f);
+      $this->upload->createImage($f);
     });
 
     $this->command->info('Creacion de features completado.');

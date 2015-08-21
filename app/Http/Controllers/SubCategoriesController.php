@@ -112,7 +112,7 @@ class SubCategoriesController extends Controller
 
         $cat->subCategories()->save($this->subCat);
 
-        $upload->createImage($request->file('image'), $this->subCat);
+        $upload->createImage($this->subCat, $request->file('image'));
 
         flash()->success('Rubro creado exitosamente.');
         return redirect()->action('SubCategoriesController@index');

@@ -57,7 +57,7 @@ class SubCategoryTableSeeder extends Seeder {
             'updated_by'  => $user->id,
           ]);
 
-          $this->upload->createImage(null, $subCat);
+          $this->upload->createImage($subCat);
         endforeach;
     endforeach;
     $this->command->info('El Elegido creo las sub-categorias.');

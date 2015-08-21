@@ -26,9 +26,11 @@ trait InternalDBManagement
      * automaticamente añadir los atributos adicionales
      * created_by y updated_by a la entidad.
      *
+     * @param array $options la declaracion de este metodo debe ser compatible con eloquent. NO QUITAR.
+     *
      * @method save
      */
-    public function save()
+    public function save(array $options = [])
     {
         // si la aplicacion esta por consola (artisan u otro)
         // simplemente se guarda de forma normal.

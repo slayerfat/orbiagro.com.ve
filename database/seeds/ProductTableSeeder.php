@@ -40,13 +40,13 @@ class ProductTableSeeder extends Seeder {
         // se guarda la imagen del producto
         // por estar nulo el primer argumento, saldra una
         // imagen por defecto, -sin imagen-
-        $this->upload->createImage(null, $product);
+        $this->upload->createImage($product);
 
         // como los features tienen una imagen asociada
         // se guarda la instancia como variable $f
         // y se guarda una imagen.
         $f = $product->features()->save(factory(App\Feature::class)->make());
-        $this->upload->createImage(null, $f);
+        $this->upload->createImage($f);
 
         // estos son el resto de las entidades relacionadas con producto.
         $product->characteristics()->save(factory(App\Characteristic::class)->make());
