@@ -2,10 +2,9 @@
 
 use Illuminate\Database\Seeder;
 
-use App\User;
 use App\Person;
 
-class PeopleTableSeeder extends Seeder {
+class PeopleTableSeeder extends BaseSeeder {
 
   /**
    * Run the database seeds.
@@ -16,10 +15,8 @@ class PeopleTableSeeder extends Seeder {
   {
     $this->command->info("*** Empezando creacion People para APP_USER ***");
 
-    $user = User::where('name', env('APP_USER'))->firstOrFail();
-
     $person = Person::create([
-      'user_id'        => $user->id,
+      'user_id'        => $this->user->id,
       'gender_id'      => 1,
       'nationality_id' => 1,
       'first_name'     => 'Keanu',
@@ -29,16 +26,16 @@ class PeopleTableSeeder extends Seeder {
       'birth_date'     => '1968-09-06',
       'created_at'     => Carbon\Carbon::now(),
       'updated_at'     => Carbon\Carbon::now(),
-      'created_by'     => $user->id,
-      'updated_by'     => $user->id,
+      'created_by'     => $this->user->id,
+      'updated_by'     => $this->user->id,
     ]);
 
     $direction = new App\Direction;
 
     $direction->parish_id  = 1;
     $direction->details    = 'Av. Tal, Calle tal.';
-    $direction->created_by = $user->id;
-    $direction->updated_by = $user->id;
+    $direction->created_by = $this->user->id;
+    $direction->updated_by = $this->user->id;
 
     $person->direction()->save($direction);
 

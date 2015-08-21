@@ -3,38 +3,33 @@
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\Bank;
-use App\User;
 
-class BankTableSeeder extends Seeder {
+class BankTableSeeder extends BaseSeeder
+{
 
-  public function run()
-  {
-    $this->command->info("*** Empezando creacion de Bank! ***");
+    public function run()
+    {
+        $this->command->info("*** Empezando creacion de Bank! ***");
 
-    $user = User::where('name', 'tester')->first();
+        $faker = Faker::create('es_ES');
 
-    if(!$user) $user = User::where('name', env('APP_USER'))->first();
+        $bank = Bank::create([
+            'description' => 'Sin Banco Asociado',
+            'created_by'  => $this->user->id,
+            'updated_by'  => $this->user->id,
+        ]);
 
-    $faker = Faker::create('es_ES');
+        $this->command->info("{$bank->description} creado.");
 
-    $bank = Bank::create([
-      'description' => 'Sin Banco Asociado',
-      'created_by'  => $user->id,
-      'updated_by'  => $user->id,
-    ]);
+        foreach (range(1, 2) as $index) {
+            $bank = Bank::create([
+                'description' => 'Banco '.$faker->company(),
+                'created_by'  => $this->user->id,
+                'updated_by'  => $this->user->id,
+            ]);
+            $this->command->info("{$bank->description} creado.");
+        }
 
-    $this->command->info("{$bank->description} creado.");
-
-    foreach(range(1, 2) as $index):
-      $bank = Bank::create([
-        'description' => 'Banco '.$faker->company(),
-        'created_by'  => $user->id,
-        'updated_by'  => $user->id,
-      ]);
-      $this->command->info("{$bank->description} creado.");
-    endforeach;
-
-    $this->command->info('Creacion de bancos completo.');
-  }
-
+        $this->command->info('Creacion de bancos completo.');
+    }
 }

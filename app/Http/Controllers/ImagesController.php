@@ -15,130 +15,128 @@ use App\Image;
 class ImagesController extends Controller
 {
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-    $this->middleware('user.admin');
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    $image = Image::findOrFail($id);
-
-    return view('images.edit', compact('image'));
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  Request  $request
-   * @param  int  $id
-   * @return Response
-   */
-  public function update(Request $request, $id, Upload $upload)
-  {
-    $upload->userId = Auth::id();
-
-    $image = Image::with('imageable')->findOrFail($id);
-
-    $data = $this->getControllerNameFromModel($image->imageable);
-
-    flash()->success('Imagen Actualizada exitosamente.');
-
-    if ($request->file('image'))
+    /**
+    * Create a new controller instance.
+    *
+    * @return void
+    */
+    public function __construct()
     {
-      // se iteran las imagenes y se guardan los modelos
-      $upload->updateImage($request->file('image'), $image);
-
-      return redirect()->action($data['controller'], $data['id']);
+        $this->middleware('user.admin');
     }
 
-    // http://image.intervention.io/api/crop
-    // se ajusta segun estos valores:
-    $upload->cropImage(
-      $image,
-      $request->input('dataWidth'),
-      $request->input('dataHeight'),
-      $request->input('dataX'),
-      $request->input('dataY')
-    );
+    /**
+    * Show the form for editing the specified resource.
+    *
+    * @param  int  $id
+    * @return Response
+    */
+    public function edit($id)
+    {
+        $image = Image::findOrFail($id);
 
-    return redirect()->action($data['controller'], $data['id']);
-  }
+        return view('images.edit', compact('image'));
+    }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    $image = Image::with('imageable')->findOrFail($id);
+    /**
+    * Update the specified resource in storage.
+    *
+    * @param  Request  $request
+    * @param  int  $id
+    * @return Response
+    */
+    public function update(Request $request, $id, Upload $upload)
+    {
+        $upload->userId = Auth::id();
 
-    $product = $image->imageable;
+        $image = Image::with('imageable')->findOrFail($id);
 
-    flash()->success('Imagen Eliminada exitosamente.');
-    return redirect()->action('ProductsController@show', $product->id);
-  }
+        $data = $this->getControllerNameFromModel($image->imageable);
 
-  /**
-   * Utilizado para generar el nombre del controlador y
-   * el identificador necesario para encontrar el recurso.
-   *
-   * @param \Illuminate\Database\Eloquent\Model $model el modelo a manipular.
-   *
-   * @return array
-   */
-  protected function getControllerNameFromModel($model)
-  {
-    $array = ['controller' => '', 'id' => null];
+        flash()->success('Imagen Actualizada exitosamente.');
 
-    switch (get_class($model)) :
+        if ($request->file('image')) {
+            // se iteran las imagenes y se guardan los modelos
+            $upload->updateImage($request->file('image'), $image);
 
-      case 'App\Product':
-        $array['controller'] = 'ProductsController@show';
-        break;
+            return redirect()->action($data['controller'], $data['id']);
+        }
 
-      case 'App\Feature':
-        $array['controller'] = 'ProductsController@show';
+        // http://image.intervention.io/api/crop
+        // se ajusta segun estos valores:
+        $upload->cropImage(
+            $image,
+            $request->input('dataWidth'),
+            $request->input('dataHeight'),
+            $request->input('dataX'),
+            $request->input('dataY')
+        );
 
-        $array['id'] = $model->product->id;
-        break;
+        return redirect()->action($data['controller'], $data['id']);
+    }
 
-      case 'App\Category':
-        $array['controller'] = 'CategoriesController@show';
-        break;
+    /**
+    * Remove the specified resource from storage.
+    *
+    * @param  int  $id
+    * @return Response
+    */
+    public function destroy($id)
+    {
+        $image = Image::with('imageable')->findOrFail($id);
 
-      case 'App\SubCategory':
-        $array['controller'] = 'SubCategoriesController@show';
-        break;
+        $product = $image->imageable;
 
-      case 'App\Maker':
-        $array['controller'] = 'MakersController@show';
-        break;
+        flash()->success('Imagen Eliminada exitosamente.');
+        return redirect()->action('ProductsController@show', $product->id);
+    }
 
-      case 'App\Promotion':
-        $array['controller'] = 'PromotionsController@show';
-        break;
+    /**
+    * Utilizado para generar el nombre del controlador y
+    * el identificador necesario para encontrar el recurso.
+    *
+    * @param \Illuminate\Database\Eloquent\Model $model el modelo a manipular.
+    *
+    * @return array
+    */
+    protected function getControllerNameFromModel($model)
+    {
+        $array = ['controller' => '', 'id' => null];
 
-      default:
-        throw new \Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".get_class($model), 2);
+        switch (get_class($model)) {
+            case 'App\Product':
+                $array['controller'] = 'ProductsController@show';
+                break;
 
-    endswitch;
+            case 'App\Feature':
+                $array['controller'] = 'ProductsController@show';
 
-    $array['id'] = $array['id'] ? $array['id'] : $model->slug;
+                $array['id'] = $model->product->id;
+                break;
 
-    return $array;
-  }
+            case 'App\Category':
+                $array['controller'] = 'CategoriesController@show';
+                break;
+
+            case 'App\SubCategory':
+                $array['controller'] = 'SubCategoriesController@show';
+                break;
+
+            case 'App\Maker':
+                $array['controller'] = 'MakersController@show';
+                break;
+
+            case 'App\Promotion':
+                $array['controller'] = 'PromotionsController@show';
+                break;
+
+            default:
+                throw new \Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".get_class($model), 2);
+
+        }
+
+        $array['id'] = $array['id'] ? $array['id'] : $model->slug;
+
+        return $array;
+    }
 }

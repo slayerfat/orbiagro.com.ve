@@ -4,27 +4,28 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
 
-class Town extends Model {
+class Town extends Model
+{
 
-  use InternalDBManagement;
+    use InternalDBManagement;
 
-  /**
-   * The attributes excluded from the model's JSON form.
-   *
-   * @var array
-   */
-  protected $hidden = ['created_at', 'updated_at'];
+    /**
+    * The attributes excluded from the model's JSON form.
+    *
+    * @var array
+    */
+    protected $hidden = ['created_at', 'updated_at'];
 
-  /**
-   * Relaciones
-   */
-  public function state()
-  {
-    return $this->belongsTo('App\State');
-  }
+    /**
+    * Relaciones
+    */
+    public function state()
+    {
+        return $this->belongsTo('App\State');
+    }
 
-  public function parishes()
-  {
-    return $this->hasMany('App\Parish');
-  }
+    public function parishes()
+    {
+        return $this->hasMany('App\Parish');
+    }
 }

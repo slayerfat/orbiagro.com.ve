@@ -5,53 +5,56 @@ use App\Mamarrachismo\ModelValidation;
 
 use App\Mamarrachismo\Traits\InternalDBManagement;
 
-class Feature extends Model {
+class Feature extends Model
+{
 
-  use InternalDBManagement;
+    use InternalDBManagement;
 
-  protected $fillable = ['title', 'description'];
+    protected $fillable = ['title', 'description'];
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setTitleAttribute($value)
-  {
-    $this->attributes['title'] = ModelValidation::byLenght($value);
-  }
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = ModelValidation::byLenght($value);
+    }
 
-  public function setDescriptionAttribute($value)
-  {
-    $this->attributes['description'] = ModelValidation::byLenght($value);
-  }
+    public function setDescriptionAttribute($value)
+    {
+        $this->attributes['description'] = ModelValidation::byLenght($value);
+    }
 
-  // --------------------------------------------------------------------------
-  // Accessors
-  // --------------------------------------------------------------------------
-  public function getTitleAttribute($value)
-  {
-    if($value) return ucfirst($value);
-    return null;
-  }
+    // --------------------------------------------------------------------------
+    // Accessors
+    // --------------------------------------------------------------------------
+    public function getTitleAttribute($value)
+    {
+        if ($value) {
+            return ucfirst($value);
+        }
 
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
-  public function product()
-  {
-    return $this->belongsTo('App\Product');
-  }
+        return null;
+    }
 
-  // --------------------------------------------------------------------------
-  // Polimorfica
-  // --------------------------------------------------------------------------
-  public function file()
-  {
-    return $this->morphOne('App\File', 'fileable');
-  }
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
+    public function product()
+    {
+        return $this->belongsTo('App\Product');
+    }
 
-  public function image()
-  {
-    return $this->morphOne('App\Image', 'imageable');
-  }
+    // --------------------------------------------------------------------------
+    // Polimorfica
+    // --------------------------------------------------------------------------
+    public function file()
+    {
+        return $this->morphOne('App\File', 'fileable');
+    }
 
+    public function image()
+    {
+        return $this->morphOne('App\Image', 'imageable');
+    }
 }

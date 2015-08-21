@@ -12,115 +12,112 @@ use App\Nutritional;
 
 use App\Mamarrachismo\ModelValidation;
 
-class NutritionalsController extends Controller {
+class NutritionalsController extends Controller
+{
 
-  private $user, $userId, $nutritional;
+    protected $user;
 
-  /**
-   * Create a new controller instance.
-   *
-   * @method __construct
-   * @param  Feature     $feature
-   *
-   * @return void
-   */
-  public function __construct(Nutritional $nutritional)
-  {
-    $this->user   = Auth::user();
-    $this->userId = Auth::id();
-    $this->modelValidator = new ModelValidation($this->userId, $this->user);
-    $this->nutritional = $nutritional;
-  }
+    protected $nutritional;
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create($id)
-  {
-    $product = Product::findOrFail($id)->load('nutritional');
+    /**
+    * Create a new controller instance.
+    *
+    * @method __construct
+    * @param  Feature     $feature
+    *
+    * @return void
+    */
+    public function __construct(Nutritional $nutritional)
+    {
+        $this->user   = Auth::user();
 
-    if($this->modelValidator->notOwner($product->user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $product->slug);
-    endif;
-
-    if ($product->nutritional) {
-      flash()->error('Este Producto ya posee Valores Nutricionales, por favor actualice las existentes.');
-      return redirect()->action('ProductsController@show', $product->slug);
+        $this->nutritional = $nutritional;
     }
 
-    return view('nutritional.create')->with([
-      'product' => $product,
-      'nutritional'    => $this->nutritional
-    ]);
-  }
+    /**
+    * Show the form for creating a new resource.
+    *
+    * @return Response
+    */
+    public function create($id)
+    {
+        $product = Product::findOrFail($id)->load('nutritional');
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store($id, NutritionalRequest $request)
-  {
-    $product = Product::findOrFail($id)->load('nutritional');
+        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
+            return $this->redirectToRoute('productos.show', $product->slug);
+        }
 
-    if($this->modelValidator->notOwner($product->user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $product->slug);
-    endif;
+        if ($product->nutritional) {
+            return $this->redirectToRoute(
+                'productos.show',
+                $product->slug,
+                'Este Producto ya posee Valores Nutricionales.'
+            );
+        }
 
-    if ($product->nutritional) :
-      flash()->error('Este Producto ya posee Valores Nutricionales, por favor actualice las existentes.');
-      return redirect()->action('ProductsController@show', $product->slug);
-    endif;
+        return view('nutritional.create')->with([
+            'product'     => $product,
+            'nutritional' => $this->nutritional
+        ]);
+    }
 
-    $this->nutritional = new Nutritional($request->all());
+    /**
+    * Store a newly created resource in storage.
+    *
+    * @return Response
+    */
+    public function store($id, NutritionalRequest $request)
+    {
+        $product = Product::findOrFail($id)->load('nutritional');
 
-    $product->nutritional()->save($this->nutritional);
+        if ($product->nutritional) {
+            return $this->redirectToRoute(
+                'productos.show',
+                $product->slug,
+                'Este Producto ya posee Valores Nutricionales.'
+            );
+        }
 
-    flash('Valores Nutricionales del producto creados exitosamente.');
-    return redirect()->action('ProductsController@show', $product->slug);
-  }
+        $this->nutritional = new Nutritional($request->all());
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    $this->nutritional = Nutritional::findOrFail($id)->load('product');
+        $product->nutritional()->save($this->nutritional);
 
-    if($this->modelValidator->notOwner($this->nutritional->product->user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
-    endif;
+        flash('Valores Nutricionales del producto creados exitosamente.');
 
-    return view('nutritional.edit')->with(['nutritional' => $this->nutritional]);
-  }
+        return redirect()->action('ProductsController@show', $product->slug);
+    }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id, NutritionalRequest $request)
-  {
-    $this->nutritional = Nutritional::findOrFail($id)->load('product');
+    /**
+    * Show the form for editing the specified resource.
+    *
+    * @param  int  $id
+    * @return Response
+    */
+    public function edit($id)
+    {
+        $this->nutritional = Nutritional::findOrFail($id)->load('product');
 
-    if($this->modelValidator->notOwner($this->nutritional->product->user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
-    endif;
+        if (!$this->user->isOwnerOrAdmin($this->nutritional->product->user_id)) {
+            return $this->redirectToRoute('productos.show', $this->nutritional->product->slug);
+        }
 
-    $this->nutritional->update($request->all());
+        return view('nutritional.edit')->with(['nutritional' => $this->nutritional]);
+    }
 
-    flash('Valores Nutricionales del Producto Actualizados exitosamente.');
-    return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
-  }
+    /**
+    * Update the specified resource in storage.
+    *
+    * @param  int  $id
+    * @return Response
+    */
+    public function update($id, NutritionalRequest $request)
+    {
+        $this->nutritional = Nutritional::findOrFail($id)->load('product');
 
+        $this->nutritional->update($request->all());
+
+        flash('Valores Nutricionales del Producto Actualizados exitosamente.');
+
+        return redirect()->action('ProductsController@show', $this->nutritional->product->slug);
+    }
 }

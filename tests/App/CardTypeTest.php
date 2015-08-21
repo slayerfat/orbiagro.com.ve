@@ -5,30 +5,31 @@ use Tests\App\Traits\TearsDownMockery;
 use App\CardType;
 use Tests\TestCase;
 
-class CardTypeTest extends TestCase {
+class CardTypeTest extends TestCase
+{
 
-  use TearsDownMockery;
+    use TearsDownMockery;
 
-  /**
-   * https://phpunit.de/manual/current/en/fixtures.html
-   * @method setUp
-   */
-  public function setUp()
-  {
-    parent::setUp();
+    /**
+    * https://phpunit.de/manual/current/en/fixtures.html
+    * @method setUp
+    */
+    public function setUp()
+    {
+        parent::setUp();
 
-    $this->tester = new CardType;
-    $this->mock = Mockery::mock('App\CardType')->makePartial();
-  }
+        $this->tester = new CardType;
+        $this->mock = Mockery::mock('App\CardType')->makePartial();
+    }
 
-  public function testBillingsRelationship()
-  {
-    $this->mock
-      ->shouldReceive('hasMany')
-      ->once()
-      ->with('App\Billing')
-      ->andReturn('mocked');
+    public function testBillingsRelationship()
+    {
+        $this->mock
+            ->shouldReceive('hasMany')
+            ->once()
+            ->with('App\Billing')
+            ->andReturn('mocked');
 
-    $this->assertEquals('mocked', $this->mock->billings());
-  }
+        $this->assertEquals('mocked', $this->mock->billings());
+    }
 }

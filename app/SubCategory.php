@@ -7,98 +7,102 @@ use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
 use App\Mamarrachismo\Traits\HasShortTitle;
 
-class SubCategory extends Model {
+class SubCategory extends Model
+{
 
-  use InternalDBManagement, CanSearchRandomly, HasShortTitle;
+    use InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
-  protected $fillable = ['category_id', 'description', 'info'];
+    protected $fillable = ['category_id', 'description', 'info'];
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setDescriptionAttribute($value)
-  {
-    $this->attributes['description'] = ModelValidation::byLenght($value, 3);
-    if($this->attributes['description'])
-      $this->attributes['slug'] = str_slug($this->attributes['description']);
-  }
-
-  public function setInfoAttribute($value)
-  {
-    $this->attributes['info'] = ModelValidation::byLenght($value);
-  }
-
-  public function setSlugAttribute($value)
-  {
-    if (ModelValidation::byLenght($value, 3) !== null)
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setDescriptionAttribute($value)
     {
-      return $this->attributes['slug'] = str_slug($value);
+        $this->attributes['description'] = ModelValidation::byLenght($value, 3);
+
+        if ($this->attributes['description']) {
+            $this->attributes['slug'] = str_slug($this->attributes['description']);
+        }
     }
 
-    return $this->attributes['slug'] = null;
-  }
+    public function setInfoAttribute($value)
+    {
+        $this->attributes['info'] = ModelValidation::byLenght($value);
+    }
 
-  // --------------------------------------------------------------------------
-  // Accessors
-  // --------------------------------------------------------------------------
-  public function getDescriptionAttribute($value)
-  {
-    if($value) return ucfirst($value);
-    return null;
-  }
+    public function setSlugAttribute($value)
+    {
+        if (ModelValidation::byLenght($value, 3) !== null) {
+            return $this->attributes['slug'] = str_slug($value);
+        }
 
-  public function getInfoAttribute($value)
-  {
-    if($value) :
-      if (substr($value, -1) !== '.')
-      {
-        $value .= '.';
-      }
-      return ucfirst($value);
-    endif;
+        return $this->attributes['slug'] = null;
+    }
 
-    return null;
-  }
+    // --------------------------------------------------------------------------
+    // Accessors
+    // --------------------------------------------------------------------------
+    public function getDescriptionAttribute($value)
+    {
+        if ($value) {
+            return ucfirst($value);
+        }
 
-  // --------------------------------------------------------------------------
-  // Scopes
-  // --------------------------------------------------------------------------
+        return null;
+    }
 
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
+    public function getInfoAttribute($value)
+    {
+        if ($value) {
+            if (substr($value, -1) !== '.') {
+                $value .= '.';
+            }
 
-  // --------------------------------------------------------------------------
-  // Belongs To
-  // --------------------------------------------------------------------------
-  public function category()
-  {
-    return $this->belongsTo('App\Category');
-  }
+            return ucfirst($value);
+        }
 
-  // --------------------------------------------------------------------------
-  // Has Many
-  // --------------------------------------------------------------------------
-  public function products()
-  {
-   return $this->hasMany('App\Product');
-  }
+        return null;
+    }
 
-  // --------------------------------------------------------------------------
-  // Belongs To Many
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Scopes
+    // --------------------------------------------------------------------------
 
-  // --------------------------------------------------------------------------
-  // Polymorphic
-  // --------------------------------------------------------------------------
-  public function image()
-  {
-    return $this->morphOne('App\Image', 'imageable');
-  }
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
 
-  public function visits()
-  {
-    return $this->morphMany('App\Visit', 'visitable');
-  }
+    // --------------------------------------------------------------------------
+    // Belongs To
+    // --------------------------------------------------------------------------
+    public function category()
+    {
+        return $this->belongsTo('App\Category');
+    }
 
+    // --------------------------------------------------------------------------
+    // Has Many
+    // --------------------------------------------------------------------------
+    public function products()
+    {
+        return $this->hasMany('App\Product');
+    }
+
+    // --------------------------------------------------------------------------
+    // Belongs To Many
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+    // Polymorphic
+    // --------------------------------------------------------------------------
+    public function image()
+    {
+        return $this->morphOne('App\Image', 'imageable');
+    }
+
+    public function visits()
+    {
+        return $this->morphMany('App\Visit', 'visitable');
+    }
 }

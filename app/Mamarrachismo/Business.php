@@ -1,55 +1,93 @@
 <?php namespace App\Mamarrachismo;
 
-class Business {
+class Business
+{
 
-  public $statements;
+    /**
+     * una coleccion de arrays que poseen el texto y
+     * caracteristicas asociadas a la declaracion.
+     *
+     * @var \Collection
+     */
+    public $statements;
 
-  public $slogans;
+    /**
+     * una declaracion previamente generada.
+     *
+     * @var string
+     */
+    public $statement = '';
 
-  public function __construct()
-  {
-    $this->generateStatements();
-    $this->generateSlogans();
-  }
+    /**
+     * una coleccion de texto con slogans.
+     *
+     * @var \Collection
+     */
+    public $slogans;
 
-  private function generateStatements()
-  {
-    $this->statements = collect([
-      [
-        'text'  => 'Pagina web destacada en compra y venta de productos industriales, pensado en particulares y empresas interesadas.',
-        'class' => 'fa fa-refresh fa-300px fa-spin',
-      ],
-      [
-        'text'  => 'Promueve el comercio y mercadeo en Venezuela y toda la Region Andina.',
-        'class' => 'fa fa-btc fa-300px fa-real-pulse',
-      ],
-      [
-        'text'  => 'Facilita la compra y venta de productos alimenticios, forestales, maquinaria, implementos agricolas y metalmecanicos.',
-        'class' => 'fa fa-300px fa-spin fa-cog',
-      ],
-      [
-        'text'  => 'Buscamos establecer lazos comerciales y de mercadeo que generen intercambios lucrativos relacionados con la producción agro-industrial.',
-        'class' => 'fa fa-300px fa-line-chart',
-      ],
-    ]);
+    /**
+     * un slogan previamente generado.
+     *
+     * @var string
+     */
+    public $slogan = '';
 
-    $array = $this->statements->random();
+    public function __construct()
+    {
+        $this->generateStatements();
+        $this->generateSlogans();
+    }
 
-    $this->statement = $array['text'];
-    $this->cssClass  = $array['class'];
+    /**
+     * genera la coleccion de declaraciones y las
+     * asocia a atributos pertinentes del objeto.
+     *
+     * @return void
+     */
+    private function generateStatements()
+    {
+        $this->statements = collect([
+            [
+                'text'  => 'Pagina web destacada en compra y venta de productos industriales, pensado en particulares y empresas interesadas.',
+                'class' => 'fa fa-refresh fa-300px fa-spin',
+            ],
+            [
+                'text'  => 'Promueve el comercio y mercadeo en Venezuela y toda la Region Andina.',
+                'class' => 'fa fa-btc fa-300px fa-real-pulse',
+            ],
+            [
+                'text'  => 'Facilita la compra y venta de productos alimenticios, forestales, maquinaria, implementos agricolas y metalmecanicos.',
+                'class' => 'fa fa-300px fa-spin fa-cog',
+            ],
+            [
+                'text'  => 'Buscamos establecer lazos comerciales y de mercadeo que generen intercambios lucrativos relacionados con la producción agro-industrial.',
+                'class' => 'fa fa-300px fa-line-chart',
+            ],
+        ]);
 
-    return;
-  }
+        $array = $this->statements->random();
 
-  private function generateSlogans()
-  {
-    $this->slogans = collect([
-      'Crece mas quien mejor preste servicio.',
-      'Promoviendo el comercio y mercadeo.',
-    ]);
+        $this->statement = $array['text'];
+        $this->cssClass  = $array['class'];
 
-    $this->slogan = $this->slogans->random();
+        return;
+    }
 
-    return;
-  }
+    /**
+     * genera la coleccion de declaraciones y las
+     * asocia a atributos pertinentes del objeto.
+     *
+     * @return void
+     */
+    private function generateSlogans()
+    {
+        $this->slogans = collect([
+            'Crece mas quien mejor preste servicio.',
+            'Promoviendo el comercio y mercadeo.',
+        ]);
+
+        $this->slogan = $this->slogans->random();
+
+        return;
+    }
 }

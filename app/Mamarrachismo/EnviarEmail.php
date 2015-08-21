@@ -7,94 +7,101 @@ use App\User;
 /**
  * https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php
  */
-class EnviarEmail {
+class EnviarEmail
+{
 
-  /**
-   * la bolsa de correos a ser enviados.
-   * @var array
-   */
-  protected $emails = [];
+    /**
+    * la bolsa de correos a ser enviados.
+    * @var array
+    */
+    protected $emails = [];
 
-  // --------------------------------------------------------------------------
-  // Funciones Publicas
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Funciones Publicas
+    // --------------------------------------------------------------------------
 
-  public function getAdministratorsEmail()
-  {
-    // se buscan los administradores
-    $models = User::admins()->get();
-    $this->iterateModels($models);
+    public function getAdministratorsEmail()
+    {
+        // se buscan los administradores
+        $models = User::admins()->get();
+        $this->iterateModels($models);
 
-    return $this->emails;
-  }
+        return $this->emails;
+    }
 
-  public function getAllUsersEmail()
-  {
-    // se buscan los administradores
-    $models = User::admins()->get();
-    $this->iterateModels($models);
+    public function getAllUsersEmail()
+    {
+        // se buscan los administradores
+        $models = User::admins()->get();
 
-    return $this->emails;
-  }
+        $this->iterateModels($models);
 
-  // --------------------------------------------------------------------------
-  // Funciones Privadas
-  // --------------------------------------------------------------------------
-  private function iterateModels($models)
-  {
-    // logica simplificada por ahora.
-    // ver: https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php#L27
-    foreach ($models as $model) :
-      if ($model->email){ $this->emails[] = $model->email; }
-    endforeach;
+        return $this->emails;
+    }
 
-    return $this->emails;
-  }
+    // --------------------------------------------------------------------------
+    // Funciones Privadas
+    // --------------------------------------------------------------------------
+    private function iterateModels($models)
+    {
+        // logica simplificada por ahora.
+        // ver: https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php#L27
+        foreach ($models as $model) {
+            if ($model->email) {
+                $this->emails[] = $model->email;
+            }
+        }
 
-  // --------------------------------------------------------------------------
-  // Funciones Estaticas
-  // --------------------------------------------------------------------------
+        return $this->emails;
+    }
 
-  /**
-   * version simplificada
-   *
-   * @return array
-   */
-  public static function getAdminsEmail()
-  {
-    $obj = new self;
+    // --------------------------------------------------------------------------
+    // Funciones Estaticas
+    // --------------------------------------------------------------------------
 
-    return $obj->getAdministratorsEmail();
-  }
+    /**
+    * version simplificada
+    *
+    * @return array
+    */
+    public static function getAdminsEmail()
+    {
+        $obj = new self;
 
-  /**
-   * version simplificada
-   *
-   * @return array
-   */
-  public static function getUsersEmail()
-  {
-    $obj = new self;
+        return $obj->getAdministratorsEmail();
+    }
 
-    return $obj->getAdministratorsEmail();
-  }
-  /**
-   * Se envia los correos deseados. TEP.
-   *
-   * @todo ajustarlo a este app.
-   *
-   * @param  array    $data  el array con los datos relacionados
-   * @return boolean
-   */
-  public static function enviarEmail($data, $emails)
-  {
-    // por si acaso...
-    if (!isset($data) && !isset($emails)) return null;
+    /**
+    * version simplificada
+    *
+    * @return array
+    */
+    public static function getUsersEmail()
+    {
+        $obj = new self;
 
-    Mail::send($data['vista'], $data, function($message) use ($emails, $data){
-      $message->to($emails)->subject($data['subject']);
-    });
+        return $obj->getAdministratorsEmail();
+    }
 
-    return true;
-  }
+    /**
+    * Se envia los correos deseados. TEP.
+    *
+    * @todo ajustarlo a este app.
+    *
+    * @param  array    $data  el array con los datos relacionados
+    * @return boolean
+    */
+    public static function enviarEmail($data, $emails)
+    {
+        // por si acaso...
+        if (!isset($data) && !isset($emails)) {
+            return null;
+        }
+
+        Mail::send($data['vista'], $data, function ($message) use ($emails, $data) {
+            $message->to($emails)->subject($data['subject']);
+        });
+
+        return true;
+    }
 }

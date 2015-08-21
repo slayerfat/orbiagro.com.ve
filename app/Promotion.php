@@ -9,182 +9,190 @@ use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
 use App\Mamarrachismo\Traits\HasShortTitle;
 
-class Promotion extends Model {
+class Promotion extends Model
+{
 
-  use InternalDBManagement, CanSearchRandomly, HasShortTitle;
+    use InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
-  protected $fillable = [
-    'title',
-    'slug',
-    'percentage',
-    'static',
-    'begins',
-    'ends',
-  ];
+    protected $fillable = [
+        'title',
+        'slug',
+        'percentage',
+        'static',
+        'begins',
+        'ends',
+    ];
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setTitleAttribute($value)
-  {
-    $this->attributes['title'] = ModelValidation::byLenght($value);
-    if($this->attributes['title'])
-      $this->attributes['slug'] = str_slug($this->attributes['title']);
-  }
-
-  public function setSlugAttribute($value)
-  {
-    if (ModelValidation::byLenght($value) !== null)
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setTitleAttribute($value)
     {
-      return $this->attributes['slug'] = str_slug($value);
+        $this->attributes['title'] = ModelValidation::byLenght($value);
+
+        if ($this->attributes['title']) {
+            $this->attributes['slug'] = str_slug($this->attributes['title']);
+        }
     }
 
-    return $this->attributes['slug'] = null;
-  }
-
-  public function setBeginsAttribute($value)
-  {
-    $date = \DateTime::createFromFormat('Y-m-d', $value);
-
-    if($date)
+    public function setSlugAttribute($value)
     {
-      return $this->attributes['begins'] = $value;
+        if (ModelValidation::byLenght($value) !== null) {
+            return $this->attributes['slug'] = str_slug($value);
+        }
+
+        return $this->attributes['slug'] = null;
     }
 
-    return $this->attributes['begins'] = null;
-  }
-
-  public function setEndsAttribute($value)
-  {
-    $date = \DateTime::createFromFormat('Y-m-d', $value);
-    if($date)
+    public function setBeginsAttribute($value)
     {
-      return $this->attributes['ends'] = $value;
+        $date = \DateTime::createFromFormat('Y-m-d', $value);
+
+        if ($date) {
+            return $this->attributes['begins'] = $value;
+        }
+
+        return $this->attributes['begins'] = null;
     }
 
-    return $this->attributes['ends'] = null;
-  }
-
-  public function setStaticAttribute($value)
-  {
-    if($value > 0 && is_numeric($value))
+    public function setEndsAttribute($value)
     {
-      return $this->attributes['static'] = $value;
+        $date = \DateTime::createFromFormat('Y-m-d', $value);
+
+        if ($date) {
+            return $this->attributes['ends'] = $value;
+        }
+
+        return $this->attributes['ends'] = null;
     }
 
-    return $this->attributes['static'] = null;
-  }
-
-  public function setPercentageAttribute($value)
-  {
-    if($value > 0 && is_numeric($value))
+    public function setStaticAttribute($value)
     {
-      if ($this->isFloat($value))
-      {
-        return $this->attributes['percentage'] = $value * 100;
-      }
+        if ($value > 0 && is_numeric($value)) {
+            return $this->attributes['static'] = $value;
+        }
 
-      return $this->attributes['percentage'] = $value;
+        return $this->attributes['static'] = null;
     }
 
-    return $this->attributes['percentage'] = null;
-  }
-
-
-  // --------------------------------------------------------------------------
-  // Accessors
-  // --------------------------------------------------------------------------
-  public function getTitleAttribute($value)
-  {
-    if($value) return ucfirst($value);
-    return null;
-  }
-
-  // --------------------------------------------------------------------------
-  // Scopes
-  // --------------------------------------------------------------------------
-
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
-
-  // --------------------------------------------------------------------------
-  // Belongs to Many
-  // --------------------------------------------------------------------------
-  public function products()
-  {
-    return $this->belongsToMany('App\Product');
-  }
-
-  // --------------------------------------------------------------------------
-  // Belongs To
-  // --------------------------------------------------------------------------
-  public function type()
-  {
-    return $this->belongsTo('App\PromoType', 'promo_type_id', 'id');
-  }
-
-  // --------------------------------------------------------------------------
-  // Polimorfica
-  // --------------------------------------------------------------------------
-  public function images()
-  {
-    return $this->morphMany('App\Image', 'imageable');
-  }
-
-  // --------------------------------------------------------------------------
-  // Funciones publicas
-  // --------------------------------------------------------------------------
-
-  /**
-   * Devuelve el descuento estatico concadenado con Bs.
-   */
-  public function readableStatic($otherNumber = null)
-  {
-    if ($otherNumber)
+    public function setPercentageAttribute($value)
     {
-      return Transformer::toReadable($otherNumber);
+        if ($value > 0 && is_numeric($value)) {
+            if ($this->isFloat($value)) {
+                return $this->attributes['percentage'] = $value * 100;
+            }
+
+            return $this->attributes['percentage'] = $value;
+        }
+
+        return $this->attributes['percentage'] = null;
     }
 
-    if (!isset($this->attributes['static']))
+
+    // --------------------------------------------------------------------------
+    // Accessors
+    // --------------------------------------------------------------------------
+    public function getTitleAttribute($value)
     {
-      return null;
+        if ($value) {
+            return ucfirst($value);
+        }
+
+        return null;
     }
 
-    $price = Transformer::toReadable($this->attributes['static']);
+    // --------------------------------------------------------------------------
+    // Scopes
+    // --------------------------------------------------------------------------
 
-    return "Bs. {$price}";
-  }
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
 
-  /**
-   * Devuelve el descuento en porcentaje concadenado con %.
-   */
-  public function readablePercentage()
-  {
-    if(isset($this->attributes['percentage'])) return "{$this->attributes['percentage']}%";
-    return null;
-  }
+    // --------------------------------------------------------------------------
+    // Belongs to Many
+    // --------------------------------------------------------------------------
+    public function products()
+    {
+        return $this->belongsToMany('App\Product');
+    }
 
-  /**
-   * Devuelve el descuento en numero ej: 100 => 1, 10 => 0.1.
-   */
-  public function decimalPercentage()
-  {
-    if(isset($this->attributes['percentage'])) return $this->attributes['percentage'] / 100;
-    return null;
-  }
+    // --------------------------------------------------------------------------
+    // Belongs To
+    // --------------------------------------------------------------------------
+    public function type()
+    {
+        return $this->belongsTo('App\PromoType', 'promo_type_id', 'id');
+    }
 
-  // --------------------------------------------------------------------------
-  // Funciones protegidas
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Polimorfica
+    // --------------------------------------------------------------------------
+    public function images()
+    {
+        return $this->morphMany('App\Image', 'imageable');
+    }
 
-  /**
-   * chequea si el valor es punto flotante o no.
-   * @param mixed $value
-   */
-  protected function isFloat($value)
-  {
-    if(is_float($value)) return $value;
-    return false;
-  }
+    // --------------------------------------------------------------------------
+    // Funciones publicas
+    // --------------------------------------------------------------------------
+
+    /**
+    * Devuelve el descuento estatico concadenado con Bs.
+    */
+    public function readableStatic($otherNumber = null)
+    {
+        if ($otherNumber) {
+            return Transformer::toReadable($otherNumber);
+        }
+
+        if (!isset($this->attributes['static'])) {
+            return null;
+        }
+
+        $price = Transformer::toReadable($this->attributes['static']);
+
+        return "Bs. {$price}";
+    }
+
+    /**
+    * Devuelve el descuento en porcentaje concadenado con %.
+    */
+    public function readablePercentage()
+    {
+        if (isset($this->attributes['percentage'])) {
+            return "{$this->attributes['percentage']}%";
+        }
+
+        return null;
+    }
+
+    /**
+    * Devuelve el descuento en numero ej: 100 => 1, 10 => 0.1.
+    */
+    public function decimalPercentage()
+    {
+        if (isset($this->attributes['percentage'])) {
+            return $this->attributes['percentage'] / 100;
+        }
+
+        return null;
+    }
+
+    // --------------------------------------------------------------------------
+    // Funciones protegidas
+    // --------------------------------------------------------------------------
+
+    /**
+    * chequea si el valor es punto flotante o no.
+    * @param mixed $value
+    */
+    protected function isFloat($value)
+    {
+        if (is_float($value)) {
+            return $value;
+        }
+
+        return false;
+    }
 }

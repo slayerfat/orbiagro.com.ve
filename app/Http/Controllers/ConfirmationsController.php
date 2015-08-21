@@ -9,70 +9,77 @@ use App\Profile;
 use App\UserConfirmation;
 use Illuminate\Http\Request;
 
-class ConfirmationsController extends Controller {
+class ConfirmationsController extends Controller
+{
 
-  public function confirm($confirmation)
-  {
-    if ( !$confirmation ) :
-      return redirect('/');
-    endif;
+    public function confirm($confirmation)
+    {
+        if (!$confirmation) {
+            return redirect('/');
+        }
 
-    $confirmModel = UserConfirmation::where('data', $confirmation)->get();
-    if ( !$confirmModel ) :
-      return redirect('/');
-    endif;
+        $confirmModel = UserConfirmation::where('data', $confirmation)->get();
 
-    if ( $confirmModel->count() !== 1 ) :
-      foreach($confirmModel as $confirm):
-        $confirm->delete();
-      endforeach;
-      return redirect('/');
-    else:
-      $confirmModel = $confirmModel->first();
-    endif;
+        if (!$confirmation) {
+            return redirect('/');
+        }
 
-    $user = User::findOrFail($confirmModel->user_id);
-    if (!$user->confirmation) :
-      $confirmModel->delete();
-      return redirect('/');
-    endif;
+        if ($confirmModel->count() !== 1) {
+            foreach($confirmModel as $confirm) {
+                $confirm->delete();
+            }
 
-    $profile = Profile::where('description', 'Usuario')->first();
-    $user->profile_id = $profile->id;
-    $user->save();
-    $user->confirmation()->delete();
+            return redirect('/');
 
-    Auth::logout();
-    flash()->success('Ud. ha sido correctamente verificado, por favor ingrese en el sistema.');
-    return redirect('auth/login');
-  }
+        } elseif ($confirmModel->count() === 1) {
+            $confirmModel = $confirmModel->first();
+        }
 
-  public function generateConfirm()
-  {
-    $user = Auth::user();
-    if (!$user->confirmation):
-      return redirect('/');
-    endif;
+        $user = User::findOrFail($confirmModel->user_id);
 
-    $confirmation = new UserConfirmation(['data' => true]);
-    $user->confirmation()->update(['data' => $confirmation->data]);
+        if (!$user->confirmation) {
+            $confirmModel->delete();
 
-    // por alguna razon la confirmacion no se actualiza en el modelo
-    // asi que tengo que traermelo otra vez
-    $user = User::find(Auth::user()->id);
+            return redirect('/');
+        }
 
-    // datos usados para enviar el email
-    $data = [
-      'vista'   => ['emails.confirmation', 'emails.confirmationPlain'],
-      'subject' => 'Confirmacion de cuenta en Orbiagro',
-      'user' => $user,
-    ];
+        $profile = Profile::where('description', 'Usuario')->first();
+        $user->profile_id = $profile->id;
+        $user->save();
+        $user->confirmation()->delete();
 
-    // array de destinatarios
-    $emails = (array)$user->email;
-    Email::enviarEmail($data, $emails);
+        Auth::logout();
+        flash()->success('Ud. ha sido correctamente verificado, por favor ingrese en el sistema.');
+        return redirect('auth/login');
+    }
 
-    flash()->info('Nueva confirmación generada, por favor revise su correo electronico.');
-    return redirect('/');
-  }
+    public function generateConfirm()
+    {
+        $user = Auth::user();
+
+        if (!$user->confirmation) {
+            return redirect('/');
+        }
+
+        $confirmation = new UserConfirmation(['data' => true]);
+        $user->confirmation()->update(['data' => $confirmation->data]);
+
+        // por alguna razon la confirmacion no se actualiza en el modelo
+        // asi que tengo que traermelo otra vez
+        $user = User::find(Auth::user()->id);
+
+        // datos usados para enviar el email
+        $data = [
+            'vista'   => ['emails.confirmation', 'emails.confirmationPlain'],
+            'subject' => 'Confirmacion de cuenta en Orbiagro',
+            'user'    => $user,
+        ];
+
+        // array de destinatarios
+        $emails = (array)$user->email;
+        Email::enviarEmail($data, $emails);
+
+        flash()->info('Nueva confirmación generada, por favor revise su correo electronico.');
+        return redirect('/');
+    }
 }

@@ -7,71 +7,76 @@ use App\Mamarrachismo\ModelValidation;
 use App\Mamarrachismo\Traits\InternalDBManagement;
 use App\Mamarrachismo\Traits\CanSearchRandomly;
 
-class Provider extends Model {
+class Provider extends Model
+{
 
-  use InternalDBManagement, CanSearchRandomly;
+    use InternalDBManagement, CanSearchRandomly;
 
-  protected $fillable = [
-    'name',
-    'slug',
-    'url',
-    'contact_name',
-    'contact_title',
-    'contact_email',
-    'contact_phone_1',
-    'contact_phone_2',
-    'contact_phone_3',
-    'contact_phone_4',
-    'email',
-    'phone_1',
-    'phone_2',
-    'phone_3',
-    'phone_4',
-    'trust'
-  ];
+    protected $fillable = [
+        'name',
+        'slug',
+        'url',
+        'contact_name',
+        'contact_title',
+        'contact_email',
+        'contact_phone_1',
+        'contact_phone_2',
+        'contact_phone_3',
+        'contact_phone_4',
+        'email',
+        'phone_1',
+        'phone_2',
+        'phone_3',
+        'phone_4',
+        'trust'
+    ];
 
-  // --------------------------------------------------------------------------
-  // Mutators
-  // --------------------------------------------------------------------------
-  public function setNameAttribute($value)
-  {
-    $this->attributes['name'] = ModelValidation::byLenght($value);
-    if($this->attributes['name'] !== null)
-      $this->attributes['slug'] = str_slug($this->attributes['name']);
-  }
+    // --------------------------------------------------------------------------
+    // Mutators
+    // --------------------------------------------------------------------------
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ModelValidation::byLenght($value);
 
-  public function setSlugAttribute($value)
-  {
-    if (ModelValidation::byLenght($value) !== null) :
-      $this->attributes['slug'] = str_slug($value);
-    else:
-      $this->attributes['slug'] = null;
-    endif;
-  }
+        if ($this->attributes['name'] !== null) {
+            $this->attributes['slug'] = str_slug($this->attributes['name']);
+        }
+    }
 
-  // --------------------------------------------------------------------------
-  // Accessors
-  // --------------------------------------------------------------------------
-  public function getNameAttribute($value)
-  {
-    if($value) return ucfirst($value);
-    return null;
-  }
+    public function setSlugAttribute($value)
+    {
+        if (ModelValidation::byLenght($value) !== null) {
+            return $this->attributes['slug'] = str_slug($value);
+        }
 
-  // --------------------------------------------------------------------------
-  // Scopes
-  // --------------------------------------------------------------------------
+        return $this->attributes['slug'] = null;
+    }
 
-  // --------------------------------------------------------------------------
-  // Relaciones
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Accessors
+    // --------------------------------------------------------------------------
+    public function getNameAttribute($value)
+    {
+        if ($value) {
+            return ucfirst($value);
+        }
 
-  // --------------------------------------------------------------------------
-  // Belongs To Many
-  // --------------------------------------------------------------------------
-  public function products()
-  {
-   return $this->belongsToMany('App\Product')->withPivot('sku');
-  }
+        return null;
+    }
 
+    // --------------------------------------------------------------------------
+    // Scopes
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+    // Belongs To Many
+    // --------------------------------------------------------------------------
+    public function products()
+    {
+        return $this->belongsToMany('App\Product')->withPivot('sku');
+    }
 }

@@ -99,8 +99,8 @@
     </div>
   </div>
 
-  <?php $sub_category = $product->subCategory ?>
-  @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => 'Productos Relacionados'])
+  <?php $subCategory = $product->subCategory ?>
+  @include('sub-category.addons.relatedProducts', [$subCategory, 'title' => 'Productos Relacionados'])
 
   <div class="container">
     <div class="row">

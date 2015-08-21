@@ -5,22 +5,22 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use Tests\TestCase;
 
-class ExampleTest extends TestCase {
+class ExampleTest extends TestCase
+{
 
-  use DatabaseTransactions;
+    use DatabaseTransactions;
 
-  /**
-   * A basic functional test example.
-   *
-   * @return void
-   */
-  public function testBasicExample()
-  {
-    $this->markTestIncomplete();
+    /**
+    * A basic functional test example.
+    *
+    * @return void
+    */
+    public function testBasicExample()
+    {
+        $this->markTestIncomplete();
 
-    $this->visit('/welcome')
-          ->see('orbiagro')
-          ->dontSee('Laravel 5');
-  }
-
+        $this->visit('/welcome')
+            ->see('orbiagro')
+            ->dontSee('Laravel 5');
+    }
 }
