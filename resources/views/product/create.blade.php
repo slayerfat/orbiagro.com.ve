@@ -39,7 +39,10 @@
   <script src="{!! asset('js/maps/productMap.js') !!}"></script>
   {{-- CKEDITOR --}}
   <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
-  <script src="{!! asset('js/editor/products.js') !!}"></script>
+  <script src="{!! asset('js/editor/ckEditor.js') !!}"></script>
+  <script type="text/javascript">
+    startEditor('product-description', 'replace');
+  </script>
   {{-- image upload / crop --}}
   <script src="{!! asset('js/vendor/cropper.min.js') !!}"></script>
 @stop

@@ -99,15 +99,7 @@
     </div>
   </div>
 
-  @if ($product->heroDetails)
-    <div class="container">
-        <span>
-            {!! $product->heroDetails !!}
-        </span>
-    </div>
-  @else
-    @include('product.addons.create-details')
-  @endif
+  @include('product.addons.create-details')
 
   <?php $subCategory = $product->subCategory ?>
   @include('sub-category.addons.relatedProducts', [$subCategory, 'title' => 'Productos Relacionados'])
@@ -132,7 +124,7 @@
       </div>
 
       {{-- ads --}}
-      {{-- @include('partials.ads.no-parent', ['class' => 'col-sm-6']) --}}
+      @include('partials.ads.no-parent', ['class' => 'col-sm-6'])
     </div>
     <div class="row">
       <div class="col-sm-12" id="features">
@@ -141,12 +133,12 @@
     </div>
   </div>
 
-  {{-- @include('product.addons.direction', $product) --}}
+  @include('product.addons.direction', $product)
 
   @include('product.addons.providers', $product)
 
   {{-- ads --}}
-  {{-- @include('partials.ads.full-12') --}}
+  @include('partials.ads.full-12')
 
   @include('visit.addons.relatedProducts')
 
@@ -171,15 +163,10 @@
       centerMode: true,
       focusOnSelect: true
     });
-    // $('.slick-active').click(function(){
-    //   $(this).append('asdasd');
-    // });
   </script>
   {{-- galeria de productos visitados relacionados. --}}
   <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
   {{-- CKEDITOR --}}
-  {{-- <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
-  <script src="{!! asset('js/editor/products.js') !!}"></script> --}}
   <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 
   @yield('productFeature-js')

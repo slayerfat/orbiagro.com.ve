@@ -1,102 +1,139 @@
-@if(!$product->details && !Auth::guest() && Auth::user()->isOwnerOrAdmin(Auth::id()))
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@if($isUserValid)
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <div class="container">
-        <div class="col-xs-12">
-            <textarea class="hidden" id="product-hero-details"></textarea>
-        </div>
-
-        <div class="col-xs-4 col-xs-offset-4">
-            <a
-                href="#"
-                class="btn btn-primary btn-block"
-                id="product-hero-details-button">Crear Detalles</a>
-
-            <a
-                href="#"
-                class="btn btn-default btn-block hidden"
-                id="send-hero-details-button">Guardar Detalles</a>
-        </div>
+  <div class="container">
+    <div class="col-xs-12">
+      <div id="product-hero-details">{!! $product->heroDetails !!}</div>
     </div>
+
+    <div class="col-xs-4 col-xs-offset-4">
+      <a
+        href="#"
+        class="btn btn-primary btn-block"
+        id="product-hero-details-button">
+          {{ $product->heroDetails ? 'Actualizar' : 'Crear' }} Detalles
+      </a>
+
+      <a
+        href="#"
+        class="btn btn-default btn-block hidden"
+        id="send-hero-details-button">Guardar Detalles</a>
+    </div>
+    <div class="product-hero-details-message alert" style="display:none;">
+      <p></p>
+    </div>
+  </div>
 @endif
 
 @section('product-hero-details-js')
 <script type="text/javascript" src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
 <script type="text/javascript">
-    $(function(){
+  $(function(){
 
-        var productDetailsJs  = '{!! asset('js/editor/product-hero-details.js') !!}';
+    var ckEditor  = '{!! asset('js/editor/ckEditor.js') !!}';
 
-        var productDetailsUrl = '{!! route('productos.details', $product->id) !!}';
+    var productDetailsUrl = '{!! route('productos.details', $product->id) !!}';
 
-        // http://laravel.com/docs/master/routing#csrf-x-csrf-token
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+    var toggleMessage = function(){
+      return $('.product-hero-details-message').fadeToggle(1000, function(){
+        $(this)
+          .children().empty();
+      });
+    }
 
-        $('#product-hero-details-button').click(function(e){
+    var createMessage = function(msg, classes){
+      $('.product-hero-details-message')
+        .removeClass('alert alert-danger alert-success')
+        .addClass(classes)
+        .show()
+        .children()
+        .html(msg);
 
-            e.preventDefault();
+      setTimeout(toggleMessage, 10000);
+    }
 
-            var element = $(this);
-
-            $.ajax({
-                url: productDetailsJs,
-                type: 'post',
-                dataType: 'script'
-            })
-            .done(function() {
-                console.log("product-hero-details.js success");
-
-                $('#product-hero-details').empty();
-
-                element.addClass('hidden');
-
-                $('#product-hero-details, #send-hero-details-button').removeClass('hidden');
-
-                $('html, body').animate({
-                    scrollTop: $("#product-hero-details").offset().top
-                }, 2000);
-            })
-            .fail(function(e) {
-                console.log("product-hero-details.js error");
-                console.log(e);
-            });
-        });
-
-        $('#send-hero-details-button').click(function(e){
-
-            e.preventDefault();
-
-            // actualiza el elemento asociado al editor
-            // para poder ser enviado al controlador.
-            for ( instance in CKEDITOR.instances ) {
-                CKEDITOR.instances[instance].updateElement();
-            }
-
-            $.ajax({
-                url: productDetailsUrl,
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    name: "John",
-                    location: "Boston",
-                    heroDetails: $('#product-hero-details').val(),
-                }
-            })
-            .done(function(data) {
-                console.log("send-hero-details-button success");
-
-                if (data.status === true) {
-                    console.log(data.status); // stuff
-                }
-            })
-            .fail(function() {
-                console.log("send-hero-details-button error");
-            });
-        });
+    // http://laravel.com/docs/master/routing#csrf-x-csrf-token
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
     });
+
+    $('#product-hero-details-button').click(function(e){
+      e.preventDefault();
+
+      var element = $(this);
+
+      $.ajax({
+        url: ckEditor,
+        type: 'post',
+        dataType: 'script'
+      }).done(function() {
+        $('#product-hero-details').prop("contenteditable", true);
+
+        startEditor('product-hero-details', 'inline');
+
+        element.addClass('hidden');
+
+        $('#send-hero-details-button').removeClass('hidden');
+      }).fail(function(e) {
+        createMessage(
+          'Los archivos necesarios no pudieron ser cargados.',
+          'alert alert-warning'
+        );
+      });
+    });
+
+    $('#send-hero-details-button').click(function(e){
+
+      // var details = $('#product-hero-details').val();
+      // var details = CKEDITOR.inline().getData();
+      var details;
+
+      e.preventDefault();
+
+      // actualiza el elemento asociado al editor
+      // para poder ser enviado al controlador.
+      for ( instance in CKEDITOR.instances ) {
+        details = CKEDITOR.instances[instance].getData();
+      }
+
+      if (!details) {
+        return createMessage(
+          'Error, los cambios no pueden ser procesados.',
+          'alert alert-warning'
+        );
+      }
+
+      $.ajax({
+        url: productDetailsUrl,
+        type: 'post',
+        dataType: 'json',
+        data: {
+          heroDetails: details
+        }
+      }).done(function(data) {
+        if (data.status === true) {
+          createMessage(
+            'Los detalles fueron guardados.',
+            'alert alert-success'
+          );
+        }
+      }).fail(function(data) {
+        if (data.responseJSON === undefined) {
+          return createMessage(
+            'Error Desconocido en el servidor.',
+            'alert alert-warning'
+          );
+        }
+        if (data.responseJSON['heroDetails'] !== undefined) {
+          createMessage(
+            data.responseJSON['heroDetails'],
+            'alert alert-danger'
+          );
+        }
+      });
+    });
+  });
 </script>
 @stop
