@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info("*** Empezando Migracion! ***");
 
+        $this->truncateDb();
+
         // tablas secundarias
         $this->call(GenderTableSeeder::class);
         $this->call(NationalityTableSeeder::class);
@@ -51,5 +53,34 @@ class DatabaseSeeder extends Seeder
 
         // Telling Eloquent to not allow mass assignment.
         Model::reguard();
+    }
+
+    protected function truncateDb()
+    {
+        $this->command->info("--- truncating! ---");
+
+        // Truncate all tables, except migrations
+        $tables = \DB::select('SHOW TABLES');
+
+        $tablesInDb = "Tables_in_" . \Config::get('database.connections.mysql.database');
+
+        \DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
+
+        foreach ($tables as $table) {
+            switch ($table->$tablesInDb) {
+                case 'migrations':
+                case 'profiles':
+                case 'users':
+                    break;
+
+                default:
+                    \DB::table($table->Tables_in_orbiagro)->truncate();
+                    break;
+            }
+        }
+
+        \DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
+
+        $this->command->info("--- truncate completado ---");
     }
 }

@@ -66,6 +66,12 @@ Route::delete(
 
 Route::resource('productos', 'ProductsController', $espanol);
 
+// product details
+Route::post(
+    'productos/details/{productos}',
+    ['uses' => 'ProductsController@heroDetails', 'as' => 'productos.details']
+);
+
 // encontrar un listado de productos segun su categoria:
 Route::get(
     'categorias/{categorias}/productos',

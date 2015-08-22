@@ -99,6 +99,8 @@
     </div>
   </div>
 
+  @include('product.addons.create-details')
+
   <?php $subCategory = $product->subCategory ?>
   @include('sub-category.addons.relatedProducts', [$subCategory, 'title' => 'Productos Relacionados'])
 
@@ -161,17 +163,13 @@
       centerMode: true,
       focusOnSelect: true
     });
-    // $('.slick-active').click(function(){
-    //   $(this).append('asdasd');
-    // });
   </script>
   {{-- galeria de productos visitados relacionados. --}}
   <script type="text/javascript" src="{!! asset('js/galleries/relatedVisits.js') !!}"></script>
   {{-- CKEDITOR --}}
-  {{-- <script src="{!! asset('js/vendor/ckeditor/ckeditor.js') !!}"></script>
-  <script src="{!! asset('js/editor/products.js') !!}"></script> --}}
   <script src="{!! asset('js/show/deleteResourceConfirm.js') !!}"></script>
 
   @yield('productFeature-js')
   @yield('productProvider-js')
+  @yield('product-hero-details-js')
 @stop

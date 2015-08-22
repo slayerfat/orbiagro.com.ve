@@ -139,6 +139,7 @@ $factory->define(App\Product::class, function ($faker) {
         'sub_category_id' => $subCat->id,
         'title'           => $faker->sentence(5),
         'description'     => $faker->text(),
+        'heroDetails'     => $faker->text(),
         'price'           => $faker->randomFloat(2, 100, 9999999999),
         'quantity'        => $faker->randomDigitNotNull(),
         'created_by'      => 1,
