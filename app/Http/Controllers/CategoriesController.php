@@ -1,17 +1,10 @@
 <?php namespace App\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
-use App\Http\Requests\CategoryRequest;
+use Illuminate\Contracts\Auth\Guard;
+
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
-
-use App\Product;
 use App\Category;
-use App\SubCategory;
-
-use App\Mamarrachismo\VisitsService;
+use App\Http\Requests\CategoryRequest;
 use App\Mamarrachismo\Upload\Image as Upload;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -21,56 +14,67 @@ class CategoriesController extends Controller
 
     use SEOToolsTrait;
 
+    /**
+     * @var \App\User
+     */
     protected $user;
 
-    protected $userId;
-
+    /**
+     * La instancia de la categoria.
+     *
+     * @var App\Category
+     */
     protected $cat;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
-    public function __construct(Category $cat)
+     * Create a new controller instance.
+     * @param Category $cat
+     * @param Guard    $auth
+     *
+     * @return void
+     */
+    public function __construct(Category $cat, Guard $auth)
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
+
         $this->middleware('user.admin', ['except' => ['index', 'show']]);
-        $this->user   = Auth::user();
-        $this->userId = Auth::id();
-        $this->cat = $cat;
+
+        $this->user = $auth->user();
+
+        $this->cat  = $cat;
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         $cats  = $this->cat->all()->load('subCategories');
+
         $productsCollection = collect();
 
         foreach ($cats as $cat) {
             foreach ($cat->subCategories as $subCat) {
-                $productsCollection
-                    ->push($subCat->products()->random()->take(6)->get());
+                $productsCollection->push(
+                    $subCat->products()->random()->take(6)->get()
+                );
             }
         }
 
         $this->seo()->setTitle('Categorias en orbiagro.com.ve');
         $this->seo()->setDescription('Categorias existentes es orbiagro.com.ve');
-        // $this->seo()->setKeywords(); taxonomias
         $this->seo()->opengraph()->setUrl(action('CategoriesController@index'));
 
         return view('category.index', compact('cats', 'productsCollection'));
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
     public function create()
     {
         return view('category.create')->with([
@@ -79,16 +83,26 @@ class CategoriesController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  CategoryRequest $request
+     * @param  Upload          $upload
+     *
+     * @return Response
+     */
     public function store(CategoryRequest $request, Upload $upload)
     {
         // para los archivos del rubro
         $upload->userId = $this->userId;
 
         $this->cat->fill($request->all());
+
         $this->cat->save();
 
         $upload->createImage($this->cat, $request->file('image'));
@@ -109,12 +123,10 @@ class CategoriesController extends Controller
             $cat = Category::findOrFail($id);
         }
 
-
         $subCats = $cat->subCategories;
 
         $this->seo()->setTitle("{$cat->description} en orbiagro.com.ve");
         $this->seo()->setDescription("{$cat->description} existentes es orbiagro.com.ve");
-        // $this->seo()->setKeywords(); taxonomias
         $this->seo()->opengraph()->setUrl(action('CategoriesController@show', $id));
 
         return view('category.show', compact('cat', 'subCats'));
@@ -136,16 +148,19 @@ class CategoriesController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  int          $id
+     * @param  CategoryRequest $request
+     * @param  Upload          $upload
+     * @return Response
+     */
     public function update($id, CategoryRequest $request, Upload $upload)
     {
         $this->cat = category::findOrFail($id)->load('image');
 
         $this->cat->update($request->all());
+
         flash()->success('La Categoria ha sido actualizada correctamente.');
 
         if ($request->hasFile('image')) {

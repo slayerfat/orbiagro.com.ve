@@ -2,26 +2,29 @@
 
 use Illuminate\Contracts\Auth\Guard;
 
-use App\Http\Requests\CharacteristicRequest;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\CharacteristicRequest;
 use App\Product;
 use App\Characteristic;
 
-use App\Mamarrachismo\ModelValidation;
-
 class CharacteristicsController extends Controller
 {
+    /**
+     * el modelo eloquent a modificar.
+     *
+     * @var Characteristic
+     */
     protected $characteristic;
 
     /**
-    * Create a new controller instance.
-    *
-    * @method __construct
-    * @param  Characteristic     $characteristic
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @method __construct
+     * @param  Characteristic     $characteristic
+     * @param  Guard              $auth
+     *
+     * @return void
+     */
     public function __construct(Characteristic $characteristic, Guard $auth)
     {
         $this->middleware('auth');
@@ -32,10 +35,11 @@ class CharacteristicsController extends Controller
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function create($id)
     {
         $product = Product::findOrFail($id)->load('mechanical');
@@ -59,10 +63,12 @@ class CharacteristicsController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @param  int                   $id
+     * @param  CharacteristicRequest $request
+     * @return Response
+     */
     public function store($id, CharacteristicRequest $request)
     {
         $product = Product::findOrFail($id)->load('mechanical');
@@ -76,6 +82,7 @@ class CharacteristicsController extends Controller
         }
 
         $this->characteristic = new Characteristic($request->all());
+
         $product->characteristics()->save($this->characteristic);
 
         flash('Caracteristicas del producto creadas exitosamente.');
@@ -100,11 +107,12 @@ class CharacteristicsController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  int                $id
+     * @param  CharacteristicRequest $request
+     * @return Response
+     */
     public function update($id, CharacteristicRequest $request)
     {
         $this->characteristic = Characteristic::findOrFail($id)->load('product');
