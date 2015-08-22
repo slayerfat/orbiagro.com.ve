@@ -1,7 +1,6 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
-use App\Http\Requests;
 use App\Http\Requests\ProductRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -351,6 +350,31 @@ class ProductsController extends Controller
 
         flash()->success('El Producto ha sido restaurado exitosamente.');
         return redirect()->action('ProductsController@show', $product->slug);
+    }
+
+    /**
+    * Restores the specified resource.
+    *
+    * @param  int  $id
+    * @return Response
+    */
+    public function heroDetails($id, Request $request)
+    {
+        $this->validate($request, [
+           'heroDetails' => 'required|string',
+        ]);
+
+        $product = Product::findOrFail($id);
+
+        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
+            return abort(403);
+        }
+
+        $product->heroDetails = $request->heroDetails;
+
+        $product->save();
+
+        return ['status' => true];
     }
 
     /**

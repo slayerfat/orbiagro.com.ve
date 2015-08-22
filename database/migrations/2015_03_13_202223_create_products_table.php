@@ -23,6 +23,7 @@ class CreateProductsTable extends Migration
             $table->foreign('sub_category_id')->references('id')->on('sub_categories');
             $table->string('title');
             $table->text('description');
+            $table->text('heroDetails')->nullable();
             $table->double('price', 12, 2)->unsigned();
             $table->integer('quantity')->unsigned();
             $table->string('slug');
