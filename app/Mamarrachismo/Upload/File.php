@@ -4,31 +4,36 @@ use Exception;
 use Validator;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\Upload\Upload;
-use App\File as Model;
+use App\File as FileModel;
 
 class File extends Upload
 {
 
     /**
-    * crea la imagen relacionada con algun modelo.
+    * Crea el archivo relacionado con algun modelo.
     *
-    * @param object        $model El modelo relacionado para ser asociado.
-    * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
+    * @param Model        $model El modelo relacionado para ser asociado.
+    * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
     *
     * @return boolean
     */
-    public function create($model, UploadedFile $file = null)
+    public function create(Model $model, UploadedFile $file = null)
     {
-        $this->path = $this->generatePathFromModel($model);
+        if ($file === null) {
+            return false;
+        }
 
         // el validador
         $validator = Validator::make(['file' => $file], $this->fileRules);
-        if (!$file || $validator->fails()) {
+
+        if ($validator->fails()) {
             $this->errors = $validator->errors()->all();
             throw new Exception("Error, archivo no valido", 3);
         }
+
+        $this->path = $this->generatePathFromModel($model);
 
         // se crea el archivo en el HD.
         if (!$result = $this->makeFile($file, $this->path)) {
@@ -42,26 +47,29 @@ class File extends Upload
     }
 
     /**
-    * actualiza el archivo relacionado con algun modelo.
-    *
-    * @param UploadedFile  $file         Objeto UploadedFiles con la imagen.
-    * @param App\File      $fileModel    El modelo del archivo.
-    * @param array         $options      las opcions relacionadas con Intervention.
-    *
-    * @return boolean
-    */
-    public function update(UploadedFile $file = null, Model $fileModel = null, array $options = null)
+     * Actualiza el archivo relacionado con algun modelo.
+     *
+     * @param  Model        $model   Eloquen Model del padre asociado.
+     * @param  UploadedFile $file    El modelo del archivo.
+     * @param  array        $options Las opcions relacionadas, no implementado.
+     *
+     * @internal $options no implementadas.
+     *
+     * @return boolean
+     */
+    public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
-        $parentModel = $fileModel->fileable;
-
-        if ($fileModel == null) {
-            return $this->createFile($parentModel, $file);
+        if ($model->file == null) {
+            return $this->create($model, $file);
         }
 
-        $this->path = $this->generatePathFromModel($parentModel);
+        $fileModel = $model->file;
+
+        $this->path = $this->generatePathFromModel($model);
 
         // el validador
         $validator = Validator::make(['file' => $file], $this->fileRules);
+
         if (!$file || $validator->fails()) {
             $this->errors = $validator;
             throw new Exception("Error, archivo no valido", 3);
@@ -73,9 +81,11 @@ class File extends Upload
         }
 
         // se crea la imagen en el HD y se actualiza el modelo.
-        if ($result = $this->makeFile($file, $this->path)) {
+        if ($result = $this->makeFile($file, $this->path, $options = null)) {
             return $fileModel->update($result);
         }
+
+        return false;
     }
 
     // --------------------------------------------------------------------------
@@ -86,13 +96,13 @@ class File extends Upload
     * crea el modelo nuevo de alguna imagen relacionada con algun producto.
     *
     * @param array  $array el array que contiene los datos para la imagen.
-    * @param Object $model el modelo a asociar.
+    * @param Model  $model el modelo a asociar.
     *
     * @return boolean
     */
     private function createFileModel(array $array, $model)
     {
-        $file = new Model($array);
+        $file = new FileModel($array);
 
         switch (get_class($model)) {
             case 'App\Product':

@@ -4,6 +4,7 @@ use Illuminate\Contracts\Auth\Guard;
 
 use App\Http\Requests\FeatureRequest;
 use App\Http\Controllers\Controller;
+use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use App\Mamarrachismo\Upload\File as UploadFile;
 use App\Mamarrachismo\Upload\Image as UploadImage;
 use App\Product;
@@ -11,6 +12,8 @@ use App\Feature;
 
 class FeaturesController extends Controller
 {
+
+    use CanSaveUploads;
 
     /**
      * @var \App\User
@@ -73,18 +76,12 @@ class FeaturesController extends Controller
      * @method store
      * @param  int            $id
      * @param  FeatureRequest $request
-     * @param  UploadImage    $uploadImage clase para subir imagenes.
-     * @param  UploadFile     $uploadFile  clase para subir archivos.
      *
      * @return Response
      */
-    public function store($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
+    public function store($id, FeatureRequest $request)
     {
         $product = Product::findOrFail($id);
-
-        // para los archivos del feature
-        $uploadImage->userId = $this->user->id;
-        $uploadFile->userId  = $this->user->id;
 
         // el producto puede tener como maximo 5 features
         if ($product->features->count() >= 5) {
@@ -100,18 +97,15 @@ class FeaturesController extends Controller
 
         $product->features()->save($this->feature);
 
+        /**
+         * @see MakersController::create()
+         */
         flash('Distintivo creado correctamente.');
 
-        // para guardar la imagen y modelo
-        try {
-            $uploadImage->createImage($this->feature, $request->file('image'));
+        $this->createFile($request, $this->feature);
 
-            if ($request->file('file')) {
-                $uploadFile->createFile($this->feature, $request->file('file'));
-            }
-        } catch (\Exception $e) {
-            flash()->warning('Distintivo creado, pero algunos archivos no fueron guardados.');
-        }
+        $this->createImage($request, $this->feature);
+
 
         return redirect()->route('productos.show', $product->slug);
     }
@@ -138,41 +132,24 @@ class FeaturesController extends Controller
      *
      * @param  int            $id
      * @param  FeatureRequest $request
-     * @param  UploadImage    $uploadImage clase para subir imagenes.
-     * @param  UploadFile     $uploadFile  clase para subir archivos.
      *
      * @return Response
      */
-    public function update($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
+    public function update($id, FeatureRequest $request)
     {
         // se carga el producto para el redirect (id)
         $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
 
-        // para los archivos del feature
-        $uploadImage->userId = $this->user->id;
-        $uploadFile->userId  = $this->user->id;
-
         $this->feature->update($request->all());
 
+        /**
+         * @see MakersController::create()
+         */
         flash('El Distintivo ha sido actualizado correctamente.');
 
-        // TODO: mejorar?
-        // para guardar la imagen y modelo
-        if ($request->hasFile('image')) {
-            try {
-                $uploadImage->updateImage($request->file('image'), $this->feature->image);
-            } catch (\Exception $e) {
-                flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-            }
-        }
+        $this->updateFile($request, $this->feature);
 
-        if ($request->hasFile('file')) {
-            try {
-                $uploadFile->updateFile($request->file('file'), $this->feature, $this->feature->file);
-            } catch (\Exception $e) {
-                flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado.');
-            }
-        }
+        $this->updateImage($request, $this->feature);
 
         return redirect()->route('productos.show', $this->feature->product->slug);
     }

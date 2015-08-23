@@ -44,6 +44,14 @@ abstract class Upload
     */
     protected $fileRules = ['file' => 'mimes:pdf|max:10000'];
 
+    /**
+     * Para Utilizar esta clase es casi siempre necesario el uso del ID
+     * de algun usuario (para asociarlo al created_by o updated_by).
+     *
+     * @param int $userID
+     *
+     * @return void
+     */
     public function __construct($userID = null)
     {
         if ($userID !== null) {
