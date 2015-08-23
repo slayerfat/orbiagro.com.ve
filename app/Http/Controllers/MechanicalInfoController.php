@@ -1,49 +1,48 @@
 <?php namespace App\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
+use Illuminate\Contracts\Auth\Guard;
+
 use App\Http\Requests\MechanicalInfoRequest;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
-
 use App\Product;
 use App\MechanicalInfo;
-
-use App\Mamarrachismo\ModelValidation;
 
 class MechanicalInfoController extends Controller
 {
 
-    protected $user;
-
+    /**
+     * @var App\MechanicalInfo
+     */
     protected $mech;
 
     /**
-    * Create a new controller instance.
-    *
-    * @method __construct
-    * @param  Feature     $feature
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @method __construct
+     * @param  MechanicalInfo $mech
+     *
+     * @return void
+     */
     public function __construct(MechanicalInfo $mech)
     {
-        $this->user   = Auth::user();
+        $this->middleware('auth');
 
         $this->mech = $mech;
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
-    public function create($id)
+     * Show the form for creating a new resource.
+     *
+     * @param  int      $id
+     * @param  Guard    $auth
+     *
+     * @return Response
+     */
+    public function create($id, Guard $auth)
     {
         $product = Product::findOrFail($id)->load('mechanical');
 
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
+        if (!$auth->user()->isOwnerOrAdmin($product->user_id)) {
             return $this->redirectToRoute('productos.show', $product->slug);
         }
 
@@ -62,10 +61,13 @@ class MechanicalInfoController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @param  int                   $id
+     * @param  MechanicalInfoRequest $request
+     *
+     * @return Response
+     */
     public function store($id, MechanicalInfoRequest $request)
     {
         $product = Product::findOrFail($id)->load('mechanical');
@@ -88,16 +90,18 @@ class MechanicalInfoController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
-    public function edit($id)
+     * Show the form for editing the specified resource.
+     *
+     * @param  int      $id
+     * @param  Guard    $auth
+     *
+     * @return Response
+     */
+    public function edit($id, Guard $auth)
     {
         $this->mech = MechanicalInfo::findOrFail($id)->load('product');
 
-        if (!$this->user->isOwnerOrAdmin($this->mech->product->user_id)) {
+        if (!$auth->user()->isOwnerOrAdmin($this->mech->product->user_id)) {
             return $this->redirectToRoute('productos.show', $this->mech->product->slug);
         }
 
@@ -107,7 +111,9 @@ class MechanicalInfoController extends Controller
     /**
     * Update the specified resource in storage.
     *
-    * @param  int  $id
+    * @param  int                   $id
+    * @param  MechanicalInfoRequest $request
+    *
     * @return Response
     */
     public function update($id, MechanicalInfoRequest $request)

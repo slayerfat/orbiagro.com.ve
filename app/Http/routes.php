@@ -81,7 +81,10 @@ Route::get(
 // encontrar un listado de productos segun su rubro:
 Route::get(
     'rubros/{rubros}/productos',
-    ['uses' => 'ProductsController@indexBySubCategory', 'as' => 'productos.subcategory.index']
+    [
+        'uses' => 'ProductsController@indexBySubCategory',
+        'as'   => 'productos.subcategory.index'
+    ]
 );
 
 // modelos asociados a producto
@@ -95,7 +98,15 @@ Route::group(['prefix' => 'productos', 'middleware' => 'auth'], function () {
     Route::delete('/distintivos/{features}', 'FeaturesController@destroy');
 
     // mechanical info
-    Route::get('/{productos}/info-mecanica/crear', 'MechanicalInfoController@create');
+    // Route::get('/{productos}/info-mecanica/crear', 'MechanicalInfoController@create');
+    Route::get(
+        '/{productos}/info-mecanica/crear',
+        [
+            'uses' => 'RelatedProductModelsController@createMechInfo',
+            'as'   => 'productos.mechanical.create'
+        ]
+    );
+
     Route::post('/{productos}/info-mecanica', 'MechanicalInfoController@store');
     Route::get('/info-mecanica/{mechanicals}/editar', 'MechanicalInfoController@edit');
     Route::put('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
@@ -103,7 +114,15 @@ Route::group(['prefix' => 'productos', 'middleware' => 'auth'], function () {
     Route::delete('/info-mecanica/{mechanicals}', 'MechanicalInfoController@destroy');
 
     // characteristics
-    Route::get('/{productos}/caracteristicas/crear', 'CharacteristicsController@create');
+    // Route::get('/{productos}/caracteristicas/crear', 'CharacteristicsController@create');
+    Route::get(
+        '/{productos}/caracteristicas/crear',
+        [
+            'uses' => 'RelatedProductModelsController@createCharacteristic',
+            'as'   => 'productos.characteristic.create'
+        ]
+    );
+    
     Route::post('/{productos}/caracteristicas', 'CharacteristicsController@store');
     Route::get('/caracteristicas/{mechanicals}/editar', 'CharacteristicsController@edit');
     Route::put('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
@@ -111,7 +130,15 @@ Route::group(['prefix' => 'productos', 'middleware' => 'auth'], function () {
     Route::delete('/caracteristicas/{mechanicals}', 'CharacteristicsController@destroy');
 
     // nutritional
-    Route::get('/{productos}/valores-nutricionales/crear', 'NutritionalsController@create');
+    // Route::get('/{productos}/valores-nutricionales/crear', 'NutritionalsController@create');
+
+    Route::get(
+        '/{productos}/valores-nutricionales/crear',
+        [
+            'uses' => 'RelatedProductModelsController@createNutritional',
+            'as'   => 'productos.nutritional.create'
+        ]
+    );
     Route::post('/{productos}/valores-nutricionales', 'NutritionalsController@store');
     Route::get('/valores-nutricionales/{mechanicals}/editar', 'NutritionalsController@edit');
     Route::put('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
