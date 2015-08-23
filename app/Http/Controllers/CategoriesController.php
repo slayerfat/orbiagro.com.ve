@@ -1,23 +1,15 @@
 <?php namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
-
 use App\Http\Controllers\Controller;
 use App\Category;
 use App\Http\Requests\CategoryRequest;
-use App\Mamarrachismo\Upload\Image as Upload;
-
+use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class CategoriesController extends Controller
 {
 
-    use SEOToolsTrait;
-
-    /**
-     * @var \App\User
-     */
-    protected $user;
+    use SEOToolsTrait, CanSaveUploads;
 
     /**
      * La instancia de la categoria.
@@ -33,13 +25,11 @@ class CategoriesController extends Controller
      *
      * @return void
      */
-    public function __construct(Category $cat, Guard $auth)
+    public function __construct(Category $cat)
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
 
         $this->middleware('user.admin', ['except' => ['index', 'show']]);
-
-        $this->user = $auth->user();
 
         $this->cat  = $cat;
     }
@@ -85,29 +75,23 @@ class CategoriesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return Response
-     */
-
-    /**
-     * Store a newly created resource in storage.
-     *
      * @param  CategoryRequest $request
-     * @param  Upload          $upload
      *
      * @return Response
      */
-    public function store(CategoryRequest $request, Upload $upload)
+    public function store(CategoryRequest $request)
     {
-        // para los archivos del rubro
-        $upload->userId = $this->userId;
-
         $this->cat->fill($request->all());
 
         $this->cat->save();
 
-        $upload->createImage($this->cat, $request->file('image'));
-
+        /**
+         * @see MakersController::store()
+         */
         flash()->success('Categoria creada exitosamente.');
+
+        $this->createImage($request, $this->cat);
+
         return redirect()->action('CategoriesController@index');
     }
 
@@ -150,24 +134,23 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int          $id
+     * @param  int             $id
      * @param  CategoryRequest $request
-     * @param  Upload          $upload
+     *
      * @return Response
      */
-    public function update($id, CategoryRequest $request, Upload $upload)
+    public function update($id, CategoryRequest $request)
     {
         $this->cat = category::findOrFail($id)->load('image');
 
         $this->cat->update($request->all());
 
+        /**
+         * @see MakersController::store()
+         */
         flash()->success('La Categoria ha sido actualizada correctamente.');
 
-        if ($request->hasFile('image')) {
-            if (!$upload->updateImage($request->file('image'), $this->cat->image)) {
-                flash()->warning('La imagen asociada no pudo ser actualizada.');
-            }
-        }
+        $this->updateImage($request, $this->cat);
 
         return redirect()->action('CategoriesController@show', $this->cat->slug);
     }
@@ -187,7 +170,8 @@ class CategoriesController extends Controller
 
         } catch (\Exception $e) {
             if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000) {
-                flash()->error('Para poder eliminar esta Categoria, no deben haber productos asociados.');
+                flash()->error('No deben haber Productos asociados.');
+
                 return redirect()->action('CategoriesController@show', $this->cat->slug);
             }
 

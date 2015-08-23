@@ -1,14 +1,13 @@
-<?php
-
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use Auth;
+use App\Image;
 use Intervention;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\Upload\Image as Upload;
-use App\Image;
 
 class ImagesController extends Controller
 {
@@ -37,23 +36,15 @@ class ImagesController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  Request  $request
-    * @param  int      $id
-    * @return Response
-    */
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  Request $request
      * @param  int     $id
+     * @param  Request $request
      * @param  Upload  $upload
      *
      * @return Response
      */
-    public function update(Request $request, $id, Upload $upload)
+    public function update($id, Request $request, Upload $upload)
     {
         $upload->userId = Auth::id();
 
@@ -102,11 +93,11 @@ class ImagesController extends Controller
     * Utilizado para generar el nombre del controlador y
     * el identificador necesario para encontrar el recurso.
     *
-    * @param \Illuminate\Database\Eloquent\Model $model el modelo a manipular.
+    * @param  Model $model el modelo a manipular.
     *
     * @return array
     */
-    protected function getControllerNameFromModel($model)
+    protected function getControllerNameFromModel(Model $model)
     {
         $array = ['controller' => '', 'id' => null];
 

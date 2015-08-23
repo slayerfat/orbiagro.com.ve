@@ -1,11 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use Auth;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 use App\Http\Requests\PeopleRequest;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
-
 use App\User;
 use App\Person;
 use App\Gender;
@@ -14,34 +12,38 @@ use App\Nationality;
 class PeopleController extends Controller
 {
 
+    /**
+     * @var Person
+     */
     protected $person;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct(Person $person)
     {
         $this->middleware('auth');
         // $this->middleware('user.admin');
-        //
         $this->person = $person;
-        $this->user = Auth::user();
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
-    public function create($id)
+     * Show the form for creating a new resource.
+     *
+     * @param int   $id
+     * @param Guard $auth
+     *
+     * @return Response
+     */
+    public function create($id, Guard $auth)
     {
         if (!$user = User::where('name', $id)->first()) {
             $user = User::findOrFail($id);
         }
 
-        if (!$this->user->isOwnerOrAdmin($user->id)) {
+        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
             return $this->redirectToRoute('usuarios.show', $$user->name);
         }
 
@@ -58,10 +60,12 @@ class PeopleController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     * @param  int           $id
+     * @param  PeopleRequest $request
+     *
+     * @return Response
+     */
     public function store($id, PeopleRequest $request)
     {
         $user = User::findOrFail($id);
@@ -78,18 +82,19 @@ class PeopleController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
-    public function edit($id)
+     * Show the form for editing the specified resource.
+     *
+     * @param  int      $id
+     * @param  Guard    $auth
+     * @return Response
+     */
+    public function edit($id, Guard $auth)
     {
         if (!$user = User::where('name', $id)->first()) {
             $user = User::findOrFail($id);
         }
 
-        if (!$this->user->isOwnerOrAdmin($user->id)) {
+        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
             return $this->redirectToRoute('usuarios.show', $$user->name);
         }
 
@@ -106,11 +111,12 @@ class PeopleController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     * @param  int           $id
+     * @param  PeopleRequest $request
+     *
+     * @return Response
+     */
     public function update($id, PeopleRequest $request)
     {
         $user = User::with('person')->findOrFail($id);

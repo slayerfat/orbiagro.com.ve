@@ -20,7 +20,7 @@ class Image extends Upload
     *
     * @return \Illuminate\Support\Collection
     */
-    public function createImages($model, array $array = null)
+    public function createImages(Model $model, array $array = null)
     {
         $collection = collect();
 

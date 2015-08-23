@@ -4,9 +4,10 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Http\Requests\Request;
+// el abstracto de ImageUpload y FileUpload
+use App\Mamarrachismo\Upload\Upload;
 use App\Mamarrachismo\Upload\Image as ImageUpload;
 use App\Mamarrachismo\Upload\File as FileUpload;
-use App\Mamarrachismo\Upload\Upload;
 
 trait CanSaveUploads
 {
@@ -24,6 +25,21 @@ trait CanSaveUploads
         $uploader = new ImageUpload($request->user()->id);
 
         $this->createPrototype($model, $uploader, $request->file('image'));
+    }
+
+    /**
+     * Crea varias imagenes de algun modelo relacionado.
+     *
+     * @param  Request $request
+     * @param  Model   $model
+     *
+     * @return void
+     */
+    protected function createImages(Request $request, Model $model)
+    {
+        $uploader = new ImageUpload($request->user()->id);
+
+        $uploader->createImages($model, $request->file('images'));
     }
 
     /**
@@ -102,7 +118,7 @@ trait CanSaveUploads
         if ($file) {
             try {
                 $uploader->update($model, $file);
-            } catch (\FFF $e) {
+            } catch (\Exception $e) {
                 flash()->warning('Algunos Archivos no fueron actualizados.');
             }
         }

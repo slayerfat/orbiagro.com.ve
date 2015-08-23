@@ -5,8 +5,6 @@ use Illuminate\Contracts\Auth\Guard;
 use App\Http\Requests\FeatureRequest;
 use App\Http\Controllers\Controller;
 use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use App\Mamarrachismo\Upload\File as UploadFile;
-use App\Mamarrachismo\Upload\Image as UploadImage;
 use App\Product;
 use App\Feature;
 
