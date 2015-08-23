@@ -4,7 +4,6 @@ use App\Category;
 use App\SubCategory;
 use App\Promotion;
 use App\PromoType;
-use App\Mamarrachismo\VisitsService;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
@@ -24,7 +23,10 @@ class HomeController extends Controller
     }
 
     /**
-    * Show the application dashboard to the user.
+    * Show the application index to the user.
+    *
+    * @todo mejorar logica de seleccion de tipos de promociones,
+    * 		abstraer a una clase o incluirlo dentro de la clase Promotion
     *
     * @return Response
     */
@@ -34,10 +36,9 @@ class HomeController extends Controller
 
         $cats = Category::all();
 
-        // TODO: mejorar logica de seleccion de tipos de promociones
-        // TODO: abstraer a una clase o incluirlo dentro de la clase Promotion
         // selecciona los tipos especificos
         $typesId = PromoType::whereIn('description', ['primavera', 'verano', 'otoño', 'invierno'])->lists('id');
+
         // selecciona las promociones existentes segun el tipo ya seleccionado
         $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
 
@@ -46,6 +47,11 @@ class HomeController extends Controller
         return view('home.index', compact('subCategory', 'promotions', 'cats'));
     }
 
+    /**
+     * Muestra la vista para el usuario no verificado.
+     *
+     * @return Response
+     */
     public function unverified()
     {
         $user  = \Auth::user();

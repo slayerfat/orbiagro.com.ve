@@ -1,50 +1,50 @@
 <?php namespace App\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
+use Illuminate\Contracts\Auth\Guard;
+
 use App\Http\Requests\FeatureRequest;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
-
-use App\Product;
-use App\Feature;
-
 use App\Mamarrachismo\Upload\File as UploadFile;
 use App\Mamarrachismo\Upload\Image as UploadImage;
+use App\Product;
+use App\Feature;
 
 class FeaturesController extends Controller
 {
 
+    /**
+     * @var \App\User
+     */
     protected $user;
 
-    protected $userId;
-
+    /**
+     * @var Feature
+     */
     protected $feature;
 
     /**
-    * Create a new controller instance.
-    *
-    * @method __construct
-    * @param  Feature     $feature
-    *
-    * @return void
-    */
-    public function __construct(Feature $feature)
+     * Create a new controller instance.
+     *
+     * @param Feature $feature
+     * @param Guard   $auth
+     *
+     * @return void
+     */
+    public function __construct(Feature $feature, Guard $auth)
     {
         $this->middleware('auth');
 
-        $this->user   = Auth::user();
-        $this->userId = Auth::id();
+        $this->user = $auth->user();
 
         $this->feature = $feature;
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function create($id)
     {
         $product = Product::findOrFail($id)->load('features', 'user');
@@ -68,23 +68,23 @@ class FeaturesController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @method store
-    * @param  int            $id
-    * @param  FeatureRequest $request
-    * @param  UploadImage    $uploadImage clase para subir imagenes.
-    * @param  UploadFile     $uploadFile  clase para subir archivos.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @method store
+     * @param  int            $id
+     * @param  FeatureRequest $request
+     * @param  UploadImage    $uploadImage clase para subir imagenes.
+     * @param  UploadFile     $uploadFile  clase para subir archivos.
+     *
+     * @return Response
+     */
     public function store($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
     {
         $product = Product::findOrFail($id);
 
         // para los archivos del feature
-        $uploadImage->userId = $this->userId;
-        $uploadFile->userId  = $this->userId;
+        $uploadImage->userId = $this->user->id;
+        $uploadFile->userId  = $this->user->id;
 
         // el producto puede tener como maximo 5 features
         if ($product->features->count() >= 5) {
@@ -121,11 +121,11 @@ class FeaturesController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
@@ -138,15 +138,15 @@ class FeaturesController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int            $id
-    * @param  FeatureRequest $request
-    * @param  UploadImage    $uploadImage clase para subir imagenes.
-    * @param  UploadFile     $uploadFile  clase para subir archivos.
-    *
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  int            $id
+     * @param  FeatureRequest $request
+     * @param  UploadImage    $uploadImage clase para subir imagenes.
+     * @param  UploadFile     $uploadFile  clase para subir archivos.
+     *
+     * @return Response
+     */
     public function update($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
     {
         // se carga el producto para el redirect (id)
@@ -154,8 +154,8 @@ class FeaturesController extends Controller
 
         // para dates
         // para los archivos del feature
-        $uploadImage->userId = $this->userId;
-        $uploadFile->userId  = $this->userId;
+        $uploadImage->userId = $this->user->id;
+        $uploadFile->userId  = $this->user->id;
 
         $this->feature->update($request->all());
 
@@ -183,11 +183,11 @@ class FeaturesController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $this->feature = Feature::findOrFail($id)->load('product', 'product.user');

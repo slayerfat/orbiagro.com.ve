@@ -1,17 +1,17 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\State;
 use App\Town;
 use App\Parish;
-use Illuminate\Http\Request;
 
 class DirectionsController extends Controller
 {
 
     /**
-    * todos los estados
+    * Regresa todos los estados.
+    *
+    * @return \Collection
     */
     public function states()
     {
@@ -19,9 +19,11 @@ class DirectionsController extends Controller
     }
 
     /**
-    * los municipios del estado $id
+    * Regresa los municipios del estado tal ($id).
     *
-    * @param $id el id del municipio tal
+    * @param int $id el id del estado tal
+    *
+    * @return \Collection
     */
     public function towns($id)
     {
@@ -29,9 +31,12 @@ class DirectionsController extends Controller
     }
 
     /**
-    * todos los municipios que tengan el mismo estado del municipio $id
+    * Regresa todos los municipios que tengan
+    * el mismo estado del municipio tal ($id)
     *
-    * @param $id el id del municipio tal
+    * @param int $id el id del municipio tal
+    *
+    * @return \Collection
     */
     public function town($id)
     {
@@ -41,9 +46,11 @@ class DirectionsController extends Controller
     }
 
     /**
-    * las parroquias del municipio $id
+    * Regresa las parroquias del municipio tal ($id)
     *
-    * @param $id el id de la parroquia tal
+    * @param int $id el id de la municipio tal
+    *
+    * @return \Collection
     */
     public function parishes($id)
     {
@@ -51,9 +58,12 @@ class DirectionsController extends Controller
     }
 
     /**
-    * todas las parroquias que tengan el mismo municipio de la parroquia $id
+    * Regresa todas las parroquias que tengan
+    * el mismo municipio de la parroquia tal ($id)
     *
-    * @param $id el id de la parroquia tal
+    * @param int $id el id de la parroquia tal
+    *
+    * @return \Collection
     */
     public function parish($id)
     {

@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use Auth;
 use Intervention;
+
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Mamarrachismo\Upload\Image as Upload;
-
 use App\Image;
 
 class ImagesController extends Controller
@@ -42,9 +40,19 @@ class ImagesController extends Controller
     * Update the specified resource in storage.
     *
     * @param  Request  $request
-    * @param  int  $id
+    * @param  int      $id
     * @return Response
     */
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request $request
+     * @param  int     $id
+     * @param  Upload  $upload
+     *
+     * @return Response
+     */
     public function update(Request $request, $id, Upload $upload)
     {
         $upload->userId = Auth::id();
