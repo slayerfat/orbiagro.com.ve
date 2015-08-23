@@ -4,6 +4,10 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Request;
+use App\Http\Requests\CharacteristicRequest;
+use App\Http\Requests\MechanicalInfoRequest;
+use App\Http\Requests\NutritionalRequest;
 use App\Characteristic;
 use App\MechanicalInfo;
 use App\Nutritional;
@@ -113,6 +117,81 @@ class RelatedProductModelsController extends Controller
         $variables[$results['variableName']] = $model;
 
         return view($results['target'])->with($variables);
+    }
+
+    /**
+     * Show the form for Nutritional.
+     *
+     * @param  int                   $id
+     * @param  Characteristic        $char
+     * @param  CharacteristicRequest $request
+     *
+     * @return Response
+     */
+    public function storeCharacteristic($id, Characteristic $char, CharacteristicRequest $request)
+    {
+        return $this->storePrototype($id, $char, $request);
+    }
+
+    /**
+     * Show the form for Nutritional.
+     *
+     * @param  int                   $id
+     * @param  MechanicalInfo        $mech
+     * @param  MechanicalInfoRequest $request
+     *
+     * @return Response
+     */
+    public function storeMechInfo($id, MechanicalInfo $mech, MechanicalInfoRequest $request)
+    {
+        return $this->storePrototype($id, $mech, $request);
+    }
+
+    /**
+     * Show the form for Nutritional.
+     *
+     * @param  int                $id
+     * @param  Nutritional        $nuts    Instance of DEEZ NUTS...
+     * @param  NutritionalRequest $request
+     *
+     * @return Response
+     */
+    public function storeNutritional($id, Nutritional $nuts, NutritionalRequest $request)
+    {
+        return $this->storePrototype($id, $nuts, $request);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  int      $id
+     * @param  Model    $model
+     * @param  Request  $request
+     *
+     * @return Response
+     */
+    public function storePrototype($id, Model $model, Request $request)
+    {
+        $relation = $this->getRelationName($model);
+
+        $product = Product::findOrFail($id)->load($relation);
+
+        $relation = $this->getChild($model);
+
+        if ($product->$relation) {
+            return $this->redirectToRoute(
+                'productos.show',
+                $product->slug,
+                'Este Producto ya este recurso, por favor actualice.'
+            );
+        }
+
+        $model->fill($request->all());
+
+        $product->$relation()->save($model);
+
+        flash('Recurso asociado creado exitosamente.');
+        return redirect()->action('ProductsController@show', $product->slug);
     }
 
     /**

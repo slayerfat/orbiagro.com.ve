@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($nutritional, [
-              'action' => ['NutritionalsController@store', $product->id],
+              'route' => ['products.nutritionals.store', $product->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('nutritional.forms.body', ['textoBotonSubmit' => 'Añadir Valores Nutricionales'])

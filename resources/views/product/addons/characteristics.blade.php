@@ -52,6 +52,6 @@
 </table>
 @else
   @if($isUserValid)
-    {!! link_to_route('productos.characteristic.create', 'Crear Caracteristicas del Producto', $product->id) !!}
+    {!! link_to_route('products.characteristics.create', 'Crear Caracteristicas del Producto', $product->id) !!}
   @endif
 @endif

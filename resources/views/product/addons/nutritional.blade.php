@@ -20,6 +20,6 @@
 </table>
 @else
   @if($isUserValid)
-    {!! link_to_route('productos.nutritional.create', 'Crear Valores Nutricionales', $product->id) !!}
+    {!! link_to_route('products.nutritionals.create', 'Crear Valores Nutricionales', $product->id) !!}
   @endif
 @endif

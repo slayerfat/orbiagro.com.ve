@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($characteristic, [
-              'action' => ['CharacteristicsController@store', $product->id],
+              'route' => ['products.characteristics.store', $product->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('characteristic.forms.body', ['textoBotonSubmit' => 'Añadir Características'])

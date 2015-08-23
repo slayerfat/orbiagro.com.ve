@@ -76,6 +76,6 @@
 </table>
 @else
   @if($isUserValid)
-    {!! link_to_route('productos.mechanical.create', 'Crear Informacion Mecanica', $product->id) !!}
+    {!! link_to_route('products.mechanicals.create', 'Crear Informacion Mecanica', $product->id) !!}
   @endif
 @endif

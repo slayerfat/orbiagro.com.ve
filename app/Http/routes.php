@@ -103,11 +103,18 @@ Route::group(['prefix' => 'productos', 'middleware' => 'auth'], function () {
         '/{productos}/info-mecanica/crear',
         [
             'uses' => 'RelatedProductModelsController@createMechInfo',
-            'as'   => 'productos.mechanical.create'
+            'as'   => 'products.mechanicals.create'
         ]
     );
 
-    Route::post('/{productos}/info-mecanica', 'MechanicalInfoController@store');
+    Route::post(
+        '/{productos}/info-mecanica',
+        [
+            'uses' => 'RelatedProductModelsController@storeMechInfo',
+            'as'   => 'products.mechanicals.store'
+        ]
+    );
+
     Route::get('/info-mecanica/{mechanicals}/editar', 'MechanicalInfoController@edit');
     Route::put('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
     Route::patch('/info-mecanica/{mechanicals}', 'MechanicalInfoController@update');
@@ -119,11 +126,18 @@ Route::group(['prefix' => 'productos', 'middleware' => 'auth'], function () {
         '/{productos}/caracteristicas/crear',
         [
             'uses' => 'RelatedProductModelsController@createCharacteristic',
-            'as'   => 'productos.characteristic.create'
+            'as'   => 'products.characteristics.create'
         ]
     );
-    
-    Route::post('/{productos}/caracteristicas', 'CharacteristicsController@store');
+
+    Route::post(
+        '/{productos}/caracteristicas',
+        [
+            'uses' => 'RelatedProductModelsController@storeCharacteristic',
+            'as'   => 'products.characteristics.store'
+        ]
+    );
+
     Route::get('/caracteristicas/{mechanicals}/editar', 'CharacteristicsController@edit');
     Route::put('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
     Route::patch('/caracteristicas/{mechanicals}', 'CharacteristicsController@update');
@@ -136,10 +150,18 @@ Route::group(['prefix' => 'productos', 'middleware' => 'auth'], function () {
         '/{productos}/valores-nutricionales/crear',
         [
             'uses' => 'RelatedProductModelsController@createNutritional',
-            'as'   => 'productos.nutritional.create'
+            'as'   => 'products.nutritionals.create'
         ]
     );
-    Route::post('/{productos}/valores-nutricionales', 'NutritionalsController@store');
+
+    Route::post(
+        '/{productos}/valores-nutricionales',
+        [
+            'uses' => 'RelatedProductModelsController@storeNutritional',
+            'as'   => 'products.nutritionals.store'
+        ]
+    );
+
     Route::get('/valores-nutricionales/{mechanicals}/editar', 'NutritionalsController@edit');
     Route::put('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
     Route::patch('/valores-nutricionales/{mechanicals}', 'NutritionalsController@update');
