@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Intervention;
-
 use App\Http\Requests;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mamarrachismo\Upload\Image as Upload;
 use App\Image;
@@ -64,8 +64,7 @@ class ImagesController extends Controller
         flash()->success('Imagen Actualizada exitosamente.');
 
         if ($request->file('image')) {
-            // se iteran las imagenes y se guardan los modelos
-            $upload->updateImage($request->file('image'), $image);
+            $upload->update($image, $request->file('image'));
 
             return redirect()->action($data['controller'], $data['id']);
         }

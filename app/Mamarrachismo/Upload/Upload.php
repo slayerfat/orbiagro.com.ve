@@ -4,8 +4,9 @@ use Exception;
 use Validator;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Database\Eloquent\Model;
 
-class Upload
+abstract class Upload
 {
 
     /**
@@ -49,6 +50,23 @@ class Upload
             $this->userId = $userID;
         }
     }
+
+    /**
+    * @param Model        $model El modelo relacionado para ser asociado.
+    * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
+    *
+    * @return \Illuminate\Support\Collection
+    */
+    abstract public function create(Model $model, UploadedFile $file = null);
+
+    /**
+     * @param Model        $model   El modelo Eloquent.
+     * @param UploadedFile $file    Objeto UploadedFiles con el archivo.
+     * @param array        $options Las opcions relacionadas la operacion.
+     *
+     * @return Model
+     */
+    abstract public function update(Model $model, UploadedFile $file = null, array $options = null);
 
     /**
     * usado para crear en el disco duro el archivo relacionado a un producto.

@@ -42,6 +42,7 @@ class DirectionsController extends Controller
     {
         $town = Town::where('id', $id)->first();
         $number = $town->state_id;
+        
         return Town::where('state_id', $number)->get();
     }
 
@@ -69,6 +70,7 @@ class DirectionsController extends Controller
     {
         $parish = Parish::where('id', $id)->first();
         $number = $parish->town_id;
+
         return Parish::where('town_id', $number)->get();
     }
 }

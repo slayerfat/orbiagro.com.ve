@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Auth\Guard;
+
 use App\Category;
 use App\SubCategory;
 use App\Promotion;
@@ -26,7 +28,7 @@ class HomeController extends Controller
     * Show the application index to the user.
     *
     * @todo mejorar logica de seleccion de tipos de promociones,
-    * 		abstraer a una clase o incluirlo dentro de la clase Promotion
+    *       abstraer a una clase o incluirlo dentro de la clase Promotion
     *
     * @return Response
     */
@@ -37,10 +39,16 @@ class HomeController extends Controller
         $cats = Category::all();
 
         // selecciona los tipos especificos
-        $typesId = PromoType::whereIn('description', ['primavera', 'verano', 'otoño', 'invierno'])->lists('id');
+        $typesId = PromoType::whereIn(
+            'description',
+            ['primavera', 'verano', 'otoño', 'invierno']
+        )->lists('id');
 
         // selecciona las promociones existentes segun el tipo ya seleccionado
-        $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
+        $promotions = Promotion::whereIn('promo_type_id', $typesId)
+            ->random()
+            ->take(3)
+            ->get();
 
         $this->seo()->opengraph()->setUrl(action('HomeController@index'));
 
@@ -50,11 +58,12 @@ class HomeController extends Controller
     /**
      * Muestra la vista para el usuario no verificado.
      *
+     * @param  Guard    $auth
      * @return Response
      */
-    public function unverified()
+    public function unverified(Guard $auth)
     {
-        $user  = \Auth::user();
+        $user  = $auth->user();
 
         return view('auth.verification', compact('user'));
     }

@@ -5,9 +5,9 @@ use Validator;
 use Storage;
 use Intervention;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use Illuminate\Database\Eloquent\Model;
 use App\Mamarrachismo\Upload\Upload;
-use App\Image as Model;
+use App\Image as ImageModel;
 
 class Image extends Upload
 {
@@ -15,8 +15,8 @@ class Image extends Upload
     /**
     * crea la(s) imagen(es) relacionadas con algun modelo.
     *
-    * @param object $model  El modelo a relacionar con la imagen.
-    * @param array  $array  El array con los objetos UploadedFiles.
+    * @param Model $model El modelo a relacionar con la imagen.
+    * @param array $array El array con los objetos UploadedFiles.
     *
     * @return \Illuminate\Support\Collection
     */
@@ -66,12 +66,12 @@ class Image extends Upload
     /**
     * crea la imagen relacionada con algun modelo.
     *
-    * @param object        $model El modelo relacionado para ser asociado.
-    * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
+    * @param Model        $model El modelo relacionado para ser asociado.
+    * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
     *
     * @return \Illuminate\Support\Collection
     */
-    public function createImage($model, UploadedFile $file = null)
+    public function create(Model $model, UploadedFile $file = null)
     {
         $result = $this->createImages($model, [$file]);
 
@@ -125,22 +125,22 @@ class Image extends Upload
     /**
     * actualiza la imagen relacionada con algun modelo.
     *
-    * @param UploadedFile  $file       Objeto UploadedFiles con la imagen.
-    * @param App\Image     $imageModel El modelo de la imagen.
-    * @param array         $options    las opcions relacionadas con Intervention.
+    * @param Model         $model   El modelo de la imagen.
+    * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
+    * @param array         $options las opcions relacionadas con Intervention.
     *
-    * @return \Illuminate\Database\Eloquent\Model
+    * @return Model
     */
-    public function updateImage(UploadedFile $file = null, Model $imageModel = null, array $options = null)
+    public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
-        $parentModel = $imageModel->imageable;
-
         // si no hay algun modelo relacionado, se crea uno de cero.
-        if ($imageModel == null) {
-            return $this->createImage($parentModel, $file);
+        if ($model->image == null) {
+            return $this->create($model, $file);
         }
 
-        $this->path = $this->generatePathFromModel($parentModel);
+        $imageModel = $model->image;
+
+        $this->path = $this->generatePathFromModel($model);
 
         // el validador
         $validator = Validator::make(['image' => $file], $this->imageRules);
@@ -156,7 +156,7 @@ class Image extends Upload
 
         // se crea la imagen en el HD y se actualiza el modelo.
         if (!$result = $this->makeImageFile($file, $this->path, $options)) {
-            return $this->createDefaultImage($parentModel, $this->path);
+            return $this->createDefaultImage($model, $this->path);
         }
 
         return $imageModel->update($result);
@@ -343,7 +343,7 @@ class Image extends Upload
     */
     private function createImageModel(array $array, $model)
     {
-        $image = new Model($array);
+        $image = new ImageModel($array);
 
         // si la aplicacion esta por consola (artisan u otro)
         // se le asigna el created/updated by.

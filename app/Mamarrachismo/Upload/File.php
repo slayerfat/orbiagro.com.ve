@@ -19,7 +19,7 @@ class File extends Upload
     *
     * @return boolean
     */
-    public function createFile($model, UploadedFile $file = null)
+    public function create($model, UploadedFile $file = null)
     {
         $this->path = $this->generatePathFromModel($model);
 
@@ -45,13 +45,15 @@ class File extends Upload
     * actualiza el archivo relacionado con algun modelo.
     *
     * @param UploadedFile  $file         Objeto UploadedFiles con la imagen.
-    * @param object        $parentModel  El modelo a actualizar.
     * @param App\File      $fileModel    El modelo del archivo.
+    * @param array         $options      las opcions relacionadas con Intervention.
     *
     * @return boolean
     */
-    public function updateFile(UploadedFile $file = null, $parentModel = null, Model $fileModel = null)
+    public function update(UploadedFile $file = null, Model $fileModel = null, array $options = null)
     {
+        $parentModel = $fileModel->fileable;
+
         if ($fileModel == null) {
             return $this->createFile($parentModel, $file);
         }

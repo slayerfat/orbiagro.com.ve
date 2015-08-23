@@ -105,16 +105,12 @@ class FeaturesController extends Controller
         // para guardar la imagen y modelo
         try {
             $uploadImage->createImage($this->feature, $request->file('image'));
-        } catch (\Exception $e) {
-            flash()->warning('Distintivo creado, pero la imagen asociada no pudo ser creada.');
-        }
 
-        if ($request->file('file')) {
-            try {
+            if ($request->file('file')) {
                 $uploadFile->createFile($this->feature, $request->file('file'));
-            } catch (\Exception $e) {
-                flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado.');
             }
+        } catch (\Exception $e) {
+            flash()->warning('Distintivo creado, pero algunos archivos no fueron guardados.');
         }
 
         return redirect()->route('productos.show', $product->slug);
@@ -152,7 +148,6 @@ class FeaturesController extends Controller
         // se carga el producto para el redirect (id)
         $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
 
-        // para dates
         // para los archivos del feature
         $uploadImage->userId = $this->user->id;
         $uploadFile->userId  = $this->user->id;

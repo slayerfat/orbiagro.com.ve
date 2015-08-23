@@ -1,10 +1,8 @@
 <?php namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
-
 use App\Http\Requests\MakerRequest;
 use App\Http\Controllers\Controller;
-use App\Mamarrachismo\Upload\Image as Upload;
+use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use App\Maker;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -12,7 +10,7 @@ use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 class MakersController extends Controller
 {
 
-    use SEOToolsTrait;
+    use SEOToolsTrait, CanSaveUploads;
 
     /**
     * Create a new controller instance.
@@ -41,7 +39,6 @@ class MakersController extends Controller
 
         $this->seo()->setTitle('Fabricantes en orbiagro.com.ve');
         $this->seo()->setDescription('Fabricantes existentes es orbiagro.com.ve');
-        // $this->seo()->setKeywords(); taxonomias
         $this->seo()->opengraph()->setUrl(action('MakersController@index'));
 
         return view('maker.index', compact('makers'));
@@ -61,23 +58,24 @@ class MakersController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  MakerRequest $request
-     * @param  Upload       $upload
-     * @param  Guard        $auth
      *
      * @return Response
      */
-    public function store(MakerRequest $request, Upload $upload, Guard $auth)
+    public function store(MakerRequest $request)
     {
         $this->maker->fill($request->all());
 
         $this->maker->save();
 
-        // para los archivos
-        $upload->userId = $auth->user()->id;
-
-        $upload->createImage($this->maker, $request->file('image'));
-
+        /**
+         * se flashea antes de crear la imagen para que los
+         * errores (si ocurren) de la creacion de imagen
+         * no sean descartados por este flash.
+         */
         flash()->success('Fabricante creado exitosamente.');
+
+        $this->createImage($request, $this->maker);
+
         return redirect()->action('MakersController@show', $this->maker->slug);
     }
 
@@ -92,7 +90,6 @@ class MakersController extends Controller
         if (!$this->maker = Maker::with('products')->where('slug', $id)->first()) {
             $this->maker = Maker::with('products')->findOrFail($id);
         }
-
 
         $this->seo()->setTitle("{$this->maker->name} y sus articulos en orbiagro.com.ve");
         $this->seo()->setDescription("{$this->maker->name} y sus productos relacionados en orbiagro.com.ve");
@@ -119,26 +116,21 @@ class MakersController extends Controller
      *
      * @param  int          $id
      * @param  MakerRequest $request
-     * @param  Upload       $upload
-     * @param  Guard        $auth
+     *
      * @return Response
      */
-    public function update($id, MakerRequest $request, Upload $upload, Guard $auth)
+    public function update($id, MakerRequest $request)
     {
         $this->maker = Maker::findOrFail($id)->load('image');
+
         $this->maker->update($request->all());
 
+        /**
+         * @see self::create()
+         */
         flash()->success('Fabricante Actualizado exitosamente.');
 
-        $upload->userId = $auth->user()->id;
-
-        if ($request->hasFile('image')) {
-            try {
-                $upload->updateImage($request->file('image'), $this->maker->image);
-            } catch (\Exception $e) {
-                flash()->warning('La imagen asociada no pudo ser actualizada.');
-            }
-        }
+        $this->updateImage($request, $this->maker);
 
         return redirect()->action('MakersController@show', $this->maker->slug);
     }
