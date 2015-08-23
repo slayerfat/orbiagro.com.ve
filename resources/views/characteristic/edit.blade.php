@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($characteristic, [
               'method' => 'PATCH',
-              'action' => ['CharacteristicsController@update', $characteristic->id],
+              'route' => ['products.characteristics.update', $characteristic->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('characteristic.forms.body', ['textoBotonSubmit' => 'Actualizar Características'])

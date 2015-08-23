@@ -21,7 +21,7 @@ class ProductRequest extends Request
         }
 
         // si ruta no es nula entonces se esta manipulando un recurso
-        $producto = Product::find($this->route('productos'));
+        $producto = Product::findOrFail($this->route('productos'));
         return Auth::user()->isOwnerOrAdmin($producto->user_id);
     }
 

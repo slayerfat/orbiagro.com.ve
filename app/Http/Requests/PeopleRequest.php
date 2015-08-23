@@ -1,6 +1,5 @@
 <?php namespace App\Http\Requests;
 
-use Auth;
 use App\Http\Requests\Request;
 
 class PeopleRequest extends Request
@@ -13,7 +12,7 @@ class PeopleRequest extends Request
     */
     public function authorize()
     {
-        return Auth::user()->isOwnerOrAdmin($this->route('datos-personales'));
+        return $this->auth->user()->isOwnerOrAdmin($this->route('datos-personales'));
     }
 
     /**
@@ -37,7 +36,7 @@ class PeopleRequest extends Request
                     'gender_id'      => 'numeric',
                     'nationality_id' => 'required_with:identity_card|numeric',
                 ];
-                
+
             case 'PUT':
             case 'PATCH':
                 return [

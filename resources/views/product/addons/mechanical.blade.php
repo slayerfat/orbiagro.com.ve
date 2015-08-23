@@ -4,7 +4,7 @@
     @if($isUserValid)
       <tr>
         <td colspan="2">
-          {!! link_to_action('MechanicalInfoController@edit', 'Actualizar Informacion Mecanica', $product->mechanical->id) !!}
+          {!! link_to_route('products.mechanicals.edit', 'Actualizar Informacion Mecanica', $product->mechanical->id) !!}
         </td>
       </tr>
     @endif

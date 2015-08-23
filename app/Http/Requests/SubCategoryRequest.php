@@ -1,6 +1,5 @@
 <?php namespace App\Http\Requests;
 
-use Auth;
 use App\Http\Requests\Request;
 
 class SubCategoryRequest extends Request
@@ -13,7 +12,7 @@ class SubCategoryRequest extends Request
     */
     public function authorize()
     {
-        return Auth::user()->isAdmin();
+        return $this->auth->user()->isAdmin();
     }
 
     /**

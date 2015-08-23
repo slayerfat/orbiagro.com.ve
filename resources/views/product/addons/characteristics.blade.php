@@ -4,7 +4,7 @@
     @if($isUserValid)
       <tr>
         <td colspan="2">
-          {!! link_to_action('CharacteristicsController@edit', 'Actualizar Caracteristicas', $product->characteristics->id) !!}
+          {!! link_to_route('products.characteristics.edit', 'Actualizar Caracteristicas', $product->characteristics->id) !!}
         </td>
       </tr>
     @endif

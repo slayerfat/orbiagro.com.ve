@@ -117,7 +117,7 @@ class FeaturesController extends Controller
             }
         }
 
-        return redirect()->action('productos.show', $product->slug);
+        return redirect()->route('productos.show', $product->slug);
     }
 
     /**
@@ -179,7 +179,7 @@ class FeaturesController extends Controller
             }
         }
 
-        return redirect()->action('productos.show', $this->feature->product->slug);
+        return redirect()->route('productos.show', $this->feature->product->slug);
     }
 
     /**

@@ -1,6 +1,5 @@
 <?php namespace App\Http\Requests;
 
-use Auth;
 use App\Http\Requests\Request;
 
 class UserRequest extends Request
@@ -13,7 +12,7 @@ class UserRequest extends Request
     */
     public function authorize()
     {
-        return Auth::user()->isOwnerOrAdmin($this->route('usuarios'));
+        return $this->auth->user()->isOwnerOrAdmin($this->route('usuarios'));
     }
 
     /**

@@ -1,9 +1,7 @@
 <?php namespace App\Http\Requests;
 
-use Auth;
 use App\Http\Requests\Request;
-
-use App\Product;
+use App\MechanicalInfo;
 
 class MechanicalInfoRequest extends Request
 {
@@ -17,12 +15,13 @@ class MechanicalInfoRequest extends Request
     {
         // si ruta es nula entonces se esta creado un nuevo recurso
         if (!$this->route('mechanicals')) {
-            return Auth::user()->isVerified();
+            return $this->auth->user()->isVerified();
         }
 
         // si ruta no es nula entonces se esta manipulando un recurso
-        $producto = Product::find($this->route('mechanicals'));
-        return Auth::user()->isOwnerOrAdmin($producto->user_id);
+        $mech = MechanicalInfo::findOrFail($this->route('mechanicals'));
+
+        return $this->auth->user()->isOwnerOrAdmin($mech->product->user_id);
     }
 
     /**

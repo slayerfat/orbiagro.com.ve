@@ -1,28 +1,26 @@
 <?php namespace App\Http\Requests;
 
-use Auth;
 use App\Http\Requests\Request;
-
-use App\Product;
+use App\Nutritional;
 
 class NutritionalRequest extends Request
 {
 
     /**
     * Determine if the user is authorized to make this request.
-    *
     * @return bool
     */
     public function authorize()
     {
         // si ruta es nula entonces se esta creado un nuevo recurso
         if (!$this->route('mechanicals')) {
-            return Auth::user()->isVerified();
+            return $this->auth->user()->isVerified();
         }
 
         // si ruta no es nula entonces se esta manipulando un recurso
-        $producto = Product::find($this->route('mechanicals'));
-        return Auth::user()->isOwnerOrAdmin($producto->user_id);
+        $nuts = Nutritional::findOrFail($this->route('mechanicals'));
+
+        return $this->auth->user()->isOwnerOrAdmin($nuts->product->user_id);
     }
 
     /**

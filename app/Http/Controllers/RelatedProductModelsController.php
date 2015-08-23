@@ -3,11 +3,11 @@
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Request;
 use App\Http\Requests\CharacteristicRequest;
 use App\Http\Requests\MechanicalInfoRequest;
 use App\Http\Requests\NutritionalRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Request;
 use App\Characteristic;
 use App\MechanicalInfo;
 use App\Nutritional;
@@ -29,8 +29,6 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * Show the form for MechanicalInfo.
-     *
      * @param  int            $id
      * @param  MechanicalInfo $nuts
      * @param  Guard          $auth
@@ -43,9 +41,7 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * Show the form for Nutritional.
-     *
-     * @param  int      $id
+     * @param  int         $id
      * @param  Nutritional $nuts  an instance of Deez Nuts.
      * @param  Guard       $auth
      *
@@ -57,8 +53,6 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * Show the form for Nutritional.
-     *
      * @param  int            $id
      * @param  Characteristic $char
      * @param  Guard          $auth
@@ -71,8 +65,6 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
      * @param  int      $id
      * @param  Model    $model
      * @param  Guard    $auth
@@ -92,7 +84,7 @@ class RelatedProductModelsController extends Controller
         // para la vista
         $variables = [];
 
-        $relation  = $this->getChild($model);
+        $relation  = $this->getRelatedMethod($model);
 
         $results   = $this->getViewVariables($model);
 
@@ -116,12 +108,10 @@ class RelatedProductModelsController extends Controller
          */
         $variables[$results['variableName']] = $model;
 
-        return view($results['target'])->with($variables);
+        return view($results['target'].'create')->with($variables);
     }
 
     /**
-     * Show the form for Nutritional.
-     *
      * @param  int                   $id
      * @param  Characteristic        $char
      * @param  CharacteristicRequest $request
@@ -134,8 +124,6 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * Show the form for Nutritional.
-     *
      * @param  int                   $id
      * @param  MechanicalInfo        $mech
      * @param  MechanicalInfoRequest $request
@@ -148,8 +136,6 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * Show the form for Nutritional.
-     *
      * @param  int                $id
      * @param  Nutritional        $nuts    Instance of DEEZ NUTS...
      * @param  NutritionalRequest $request
@@ -162,21 +148,19 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @param  int      $id
      * @param  Model    $model
      * @param  Request  $request
      *
      * @return Response
      */
-    public function storePrototype($id, Model $model, Request $request)
+    protected function storePrototype($id, Model $model, Request $request)
     {
         $relation = $this->getRelationName($model);
 
         $product = Product::findOrFail($id)->load($relation);
 
-        $relation = $this->getChild($model);
+        $relation = $this->getRelatedMethod($model);
 
         if ($product->$relation) {
             return $this->redirectToRoute(
@@ -192,6 +176,118 @@ class RelatedProductModelsController extends Controller
 
         flash('Recurso asociado creado exitosamente.');
         return redirect()->action('ProductsController@show', $product->slug);
+    }
+
+    /**
+     * @param  int            $id
+     * @param  Characteristic $char
+     * @param  Guard          $auth
+     *
+     * @return Response
+     */
+    public function editCharacteristic($id, Characteristic $char, Guard $auth)
+    {
+        return $this->editPrototype($id, $char, $auth);
+    }
+
+    /**
+     * @param  int             $id
+     * @param  MechanicalInfo  $mech
+     * @param  Guard           $auth
+     *
+     * @return Response
+     */
+    public function editMechInfo($id, MechanicalInfo $mech, Guard $auth)
+    {
+        return $this->editPrototype($id, $mech, $auth);
+    }
+
+    /**
+     * @param  int         $id
+     * @param  Nutritional $nuts Instance of DEEZ NUTS...
+     * @param  Guard       $auth
+     *
+     * @return Response
+     */
+    public function editNutritional($id, Nutritional $nuts, Guard $auth)
+    {
+        return $this->editPrototype($id, $nuts, $auth);
+    }
+
+
+    /**
+     * @param  int   $id
+     * @param  Model $model
+     * @param  Guard $auth
+     *
+     * @return Response
+     */
+    protected function editPrototype($id, Model $model, Guard $auth)
+    {
+        $model = $model::findOrFail($id)->load('product');
+
+        if (!$auth->user()->isOwnerOrAdmin($model->product->user_id)) {
+            return $this->redirectToRoute('productos.show', $model->product->slug);
+        }
+
+        $results = $this->getViewVariables($model);
+
+        $variables[$results['variableName']] = $model;
+
+        return view($results['target'].'edit')->with($variables);
+    }
+
+    /**
+     * @param  int                   $id
+     * @param  Characteristic        $char
+     * @param  CharacteristicRequest $request
+     *
+     * @return Response
+     */
+    public function updateCharacteristic($id, Characteristic $char, CharacteristicRequest $request)
+    {
+        return $this->updatePrototype($id, $char, $request);
+    }
+
+    /**
+     * @param  int                   $id
+     * @param  MechanicalInfo        $mech
+     * @param  MechanicalInfoRequest $request
+     *
+     * @return Response
+     */
+    public function updateMechInfo($id, MechanicalInfo $mech, MechanicalInfoRequest $request)
+    {
+        return $this->updatePrototype($id, $mech, $request);
+    }
+
+    /**
+     * @param  int                $id
+     * @param  Nutritional        $nuts Instance of DEEZ NUTS...
+     * @param  NutritionalRequest $request
+     *
+     * @return Response
+     */
+    public function updateNutritional($id, Nutritional $nuts, NutritionalRequest $request)
+    {
+        return $this->updatePrototype($id, $nuts, $request);
+    }
+
+    /**
+     * @param  int     $id
+     * @param  Model   $model
+     * @param  Request $request
+     *
+     * @return Response
+     */
+    public function updatePrototype($id, Model $model, Request $request)
+    {
+        $model = $model::findOrFail($id)->load('product');
+
+        $model->update($request->all());
+
+        flash('Recurso Actualizado exitosamente.');
+        return redirect()->action('ProductsController@show', $model->product->slug);
     }
 
     /**
@@ -219,7 +315,7 @@ class RelatedProductModelsController extends Controller
      *
      * @return string
      */
-    protected function getChild(Model $model)
+    protected function getRelatedMethod(Model $model)
     {
         switch (class_basename($model)) {
             case 'MechanicalInfo':
@@ -246,19 +342,19 @@ class RelatedProductModelsController extends Controller
         switch (class_basename($model)) {
             case 'MechanicalInfo':
                 return [
-                    'target'       => 'mechanicalInfo.create',
+                    'target'       => 'mechanicalInfo.',
                     'variableName' => 'mech',
                 ];
 
             case 'Nutritional':
                 return [
-                    'target'       => 'nutritional.create',
+                    'target'       => 'nutritional.',
                     'variableName' => 'nutritional',
                 ];
 
             case 'Characteristic':
                 return [
-                    'target'       => 'characteristic.create',
+                    'target'       => 'characteristic.',
                     'variableName' => 'characteristic',
                 ];
 

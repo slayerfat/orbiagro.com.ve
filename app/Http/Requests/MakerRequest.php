@@ -1,6 +1,5 @@
 <?php namespace App\Http\Requests;
 
-use Auth;
 use App\Http\Requests\Request;
 
 class MakerRequest extends Request
@@ -13,7 +12,7 @@ class MakerRequest extends Request
     */
     public function authorize()
     {
-        return Auth::user()->isAdmin();
+        return $this->auth->user()->isAdmin();
     }
 
     /**
@@ -40,7 +39,7 @@ class MakerRequest extends Request
                     'url'    => 'url|max:255|unique:makers,url,'.(int)$this->route('fabricantes'),
                     'image'  => 'image|mimes:jpeg,jpg,png,gif,svg'
                 ];
-                
+
             default:
                 break;
         }

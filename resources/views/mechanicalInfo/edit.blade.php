@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($mech, [
               'method' => 'PATCH',
-              'action' => ['MechanicalInfoController@update', $mech->id],
+              'route' => ['products.mechanicals.update', $mech->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('mechanicalInfo.forms.body', ['textoBotonSubmit' => 'Actualizar Informacion Mecanica'])

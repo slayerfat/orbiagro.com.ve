@@ -5,7 +5,7 @@
       @if($isUserValid)
         <tr>
           <td colspan="2">
-            {!! link_to_action('NutritionalsController@edit', 'Actualizar Valores Nutricionales', $product->nutritional->id) !!}
+            {!! link_to_route('products.nutritionals.edit', 'Actualizar Valores Nutricionales', $product->nutritional->id) !!}
           </td>
         </tr>
       @endif
