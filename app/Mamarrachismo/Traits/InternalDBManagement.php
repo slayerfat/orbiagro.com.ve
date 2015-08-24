@@ -63,6 +63,7 @@ trait InternalDBManagement
         if (Auth::user()) {
             $this->userId = Auth::user()->id;
         }
+
         if (!isset($this->userId)) {
             throw new \Exception("Para guardar estos datos, se necesita informacion del usuario");
         }

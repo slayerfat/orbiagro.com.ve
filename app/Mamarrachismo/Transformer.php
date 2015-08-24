@@ -33,6 +33,11 @@ class Transformer
      */
     private $matches;
 
+    /**
+     * @param int $number
+     *
+     * @return void
+     */
     public function __construct($number = null)
     {
         $this->number = $number;
@@ -41,16 +46,26 @@ class Transformer
     // --------------------------------------------------------------------------
     // Por Longitud
     // --------------------------------------------------------------------------
+
+    /**
+     * @return number
+     */
     public function fromMillimeter()
     {
         return $this->number /= 10;
     }
 
+    /**
+     * @return number
+     */
     public function toMillimeter()
     {
         return $this->number *= 10;
     }
 
+    /**
+     * @return number
+     */
     public function fromMeter()
     {
         return $this->number *= 100;
@@ -59,21 +74,33 @@ class Transformer
     // --------------------------------------------------------------------------
     // Por Peso
     // --------------------------------------------------------------------------
+    /**
+     * @return number
+     */
     public function fromGram()
     {
         return $this->number /= 1000;
     }
 
+    /**
+     * @return number
+     */
     public function toGram()
     {
         return $this->number *= 1000;
     }
 
+    /**
+     * @return number
+     */
     public function fromTon()
     {
         return $this->number *= 1000;
     }
 
+    /**
+     * @return number
+     */
     public function toTon()
     {
         return $this->number /= 1000;
@@ -179,6 +206,8 @@ class Transformer
      * refactored de self::transform.
      *
      * @param string $value la unidad de medida.
+     *
+     * @return number
      */
     public function make($value)
     {
@@ -278,6 +307,8 @@ class Transformer
      * invoca parseNumberToReadable;
      *
      * @param mixed $value el numero a cambiar.
+     *
+     * @return mixed
      */
     public static function toReadable($value)
     {
@@ -290,6 +321,8 @@ class Transformer
      * invoca parseNumberToReadable;
      *
      * @param mixed $value el numero a cambiar.
+     *
+     * @return mixed
      */
     public static function toNumber($value)
     {
@@ -347,7 +380,7 @@ class Transformer
     }
 
     /**
-     * @return boolean verdadero si hay - en el string.
+     * @return boolean
      */
     private function isMatchesANegativeNumber()
     {

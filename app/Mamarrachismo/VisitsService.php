@@ -1,12 +1,10 @@
 <?php namespace App\Mamarrachismo;
 
-use Exception;
-use Auth;
 use Cookie;
+use Exception;
 use Carbon\Carbon;
-
 use App\Mamarrachismo\Transformer;
-
+use Illuminate\Contracts\Auth\Guard;
 use App\Product;
 use App\SubCategory;
 use App\Visit;
@@ -158,7 +156,7 @@ class VisitsService
      *
      * @return boolean
      */
-    private function storeResourceVisits($model, $array)
+    private function storeResourceVisits($model, $array, Guard $auth)
     {
         $name = class_basename($model);
 
@@ -168,7 +166,7 @@ class VisitsService
 
         $date = Cookie::get("{$name}VisitedAt");
 
-        if (!Auth::user() || !isset($array) || !$date) {
+        if (!$auth->user() || !isset($array) || !$date) {
             return null;
         }
 
@@ -190,7 +188,7 @@ class VisitsService
      *
      * @return void
      */
-    private function createVisitModel($array, $name, $model)
+    private function createVisitModel($array, $name, $model, Guard $auth)
     {
         if (gettype($model) !== 'object' && gettype($model) !== 'string') {
             throw new Exception('Error: el modelo especificado no es del tipo adecuado', 1);
@@ -209,12 +207,12 @@ class VisitsService
             }
 
             // se determina si hay o no que crear una nueva visita
-            if (Auth::user()->visits()->where('visitable_id', $result->id)->get()->isEmpty()) {
+            if ($auth->user()->visits()->where('visitable_id', $result->id)->get()->isEmpty()) {
                 $visit = new Visit;
                 $visit->total = $total;
-                $visit->user_id = Auth::user()->id;
+                $visit->user_id = $auth->user()->id;
                 $result->visits()->save($visit);
-            } elseif ($visit = Auth::user()->visits()->where('visitable_id', $result->id)->first()) {
+            } elseif ($visit = $auth->user()->visits()->where('visitable_id', $result->id)->first()) {
                 $visit->total += $total;
                 $visit->save();
             }
@@ -301,16 +299,16 @@ class VisitsService
      * @param  string               $model El modelo a manipular.
      * @return Collection
      */
-    private function findVisitedResource($model)
+    private function findVisitedResource($model, Guard $auth)
     {
-        if (!Auth::user()) {
+        if (!$auth->user()) {
             return collect();
         }
 
         // se buscan las visitas que tengan
         // el tipo de visitable igual al model solicitado,
         // junto con el visitable (Producto, Rubro, Etc)
-        $visits = Auth::user()
+        $visits = $auth->user()
             ->visits()
             ->where('visitable_type', get_class($model))
             ->with('visitable')

@@ -20,23 +20,26 @@ class EnviarEmail
     // Funciones Publicas
     // --------------------------------------------------------------------------
 
+    /**
+     * @return array
+     */
     public function getAdministratorsEmail()
     {
         // se buscan los administradores
         $models = User::admins()->get();
-        $this->iterateModels($models);
 
-        return $this->emails;
+        return $this->iterateModels($models);
     }
 
+    /**
+     * @return array
+     */
     public function getAllUsersEmail()
     {
         // se buscan los administradores
         $models = User::admins()->get();
 
-        $this->iterateModels($models);
-
-        return $this->emails;
+        return $this->iterateModels($models);
     }
 
     // --------------------------------------------------------------------------
@@ -98,10 +101,8 @@ class EnviarEmail
             return null;
         }
 
-        Mail::send($data['vista'], $data, function ($message) use ($emails, $data) {
+        return Mail::send($data['vista'], $data, function ($message) use ($emails, $data) {
             $message->to($emails)->subject($data['subject']);
         });
-
-        return true;
     }
 }

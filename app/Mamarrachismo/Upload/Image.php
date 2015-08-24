@@ -195,8 +195,8 @@ class Image extends Upload
     /**
      * elimina todas las imagenes del disco duro.
      *
-     * @param App\Image  $imageModel El modelo de la imagen.
-     * @param boolean    $all        para determinar si se elimina del disco duro TODOS los archivos.
+     * @param Image   $imageModel El modelo de la imagen.
+     * @param boolean $all        para determinar si se elimina del disco duro TODOS los archivos.
      *
      * @return void
      */

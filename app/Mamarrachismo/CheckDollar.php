@@ -48,15 +48,21 @@ class CheckDollar
      */
     private $dollarTodayUrl = 'https://s3.amazonaws.com/dolartoday/data.json';
 
-    public function __construct()
+    /**
+     * @param Carbon  $carbon
+     * @param Storage $storage
+     *
+     * @return void
+     */
+    public function __construct(Carbon $carbon, Storage $storage)
     {
-        $this->time = new Carbon;
+        $this->time = $carbon;
 
         if (app()->environment() == 'testing') {
             return;
         }
 
-        $this->storage = new Storage;
+        $this->storage = $storage;
 
         if ($this->fileExists()) {
             $this->parseDollarTodayJson();
@@ -74,6 +80,8 @@ class CheckDollar
 
     /**
      * chequea si el objeto tiene data parseada de algun api.
+     *
+     * @return boolean
      */
     public function isValid()
     {
@@ -88,6 +96,8 @@ class CheckDollar
      * invoca a checkDollar y regresa mamarrachamente dollar
      *
      * @todo MEJORAR ESTE METODO.
+     *
+     * @return stdClass
      */
     public function getDollar()
     {
@@ -119,6 +129,8 @@ class CheckDollar
 
     /**
      * chequea que el data en el objeto exista y devuelve el dolar
+     *
+     * @return boolean
      */
     private function checkDollar()
     {
@@ -132,6 +144,8 @@ class CheckDollar
 
     /**
      * chequea que el archivo como tal exista.
+     *
+     * @return boolean
      */
     private function fileExists()
     {
@@ -151,6 +165,8 @@ class CheckDollar
 
     /**
      * crea el archivo en el sistema y añade el timestamp local.
+     *
+     * @return boolean
      */
     private function makeFile()
     {

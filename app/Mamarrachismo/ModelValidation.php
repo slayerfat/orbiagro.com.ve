@@ -15,10 +15,16 @@ class ModelValidation
     public $userId;
 
     /**
-     * @var \App\User
+     * @var User
      */
     public $user;
 
+    /**
+     * @param int $userId
+     * @param User $user
+     *
+     * @return void
+     */
     public function __construct($userId = null, User $user = null)
     {
         $this->userId = $userId;
@@ -47,7 +53,7 @@ class ModelValidation
      * ej: 02123334422 -> (212)-333-4422
      * @param string $value el telefono a chequear.
      *
-     * @return string o null.
+     * @return string|null.
      */
     public static function parsePhone($value)
     {
@@ -65,7 +71,7 @@ class ModelValidation
      * ej: algo1232224455xzx -> 1232224455
      * @param string $value el telefono a chequear.
      *
-     * @return string o null.
+     * @return string|null.
      */
     public static function parseRawPhone($value)
     {
@@ -82,6 +88,8 @@ class ModelValidation
      * Valida y regresa si es valido el valor.
      * @param string  $value  el valor a chequear.
      * @param integer $lenght el tamaño minimo.
+     *
+     * @return mixed
      */
     public static function byLenght($value, $lenght = 5)
     {
@@ -95,6 +103,8 @@ class ModelValidation
     /**
      * Valida si es numero y regresa si es valido el valor.
      * @param mixed $value
+     *
+     * @return mixed
      */
     public static function byNumeric($value)
     {
@@ -108,6 +118,8 @@ class ModelValidation
     /**
      * Valida si es numero y si es positivo, regresa si es valido el valor.
      * @param mixed $value
+     *
+     * @return mixed
      */
     public static function byNonNegative($value)
     {
