@@ -21,7 +21,7 @@ class NationalityTableSeeder extends BaseSeeder
         ];
 
         foreach ($types as $type) {
-            App\Nationality::create([
+            Orbiagro\Models\Nationality::create([
                 'description' => $type,
                 'created_by'  => $this->user->id,
                 'updated_by'  => $this->user->id,

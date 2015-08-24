@@ -42,7 +42,7 @@ class Feature extends Model
     // --------------------------------------------------------------------------
     public function product()
     {
-        return $this->belongsTo('App\Product');
+        return $this->belongsTo('Orbiagro\Models\Product');
     }
 
     // --------------------------------------------------------------------------
@@ -50,11 +50,11 @@ class Feature extends Model
     // --------------------------------------------------------------------------
     public function file()
     {
-        return $this->morphOne('App\File', 'fileable');
+        return $this->morphOne('Orbiagro\Models\File', 'fileable');
     }
 
     public function image()
     {
-        return $this->morphOne('App\Image', 'imageable');
+        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
     }
 }

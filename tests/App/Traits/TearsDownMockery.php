@@ -1,4 +1,4 @@
-<?php namespace Tests\App\Traits;
+<?php namespace Tests\Orbiagro\Traits;
 
 use \Mockery;
 

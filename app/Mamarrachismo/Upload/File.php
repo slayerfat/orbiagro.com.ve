@@ -105,10 +105,10 @@ class File extends Upload
         $file = new FileModel($array);
 
         switch (get_class($model)) {
-            case 'App\Product':
+            case 'Orbiagro\Models\Product':
                 return $model->files()->save($file);
 
-            case 'App\Feature':
+            case 'Orbiagro\Models\Feature':
                 return $model->file()->save($file);
 
             default:

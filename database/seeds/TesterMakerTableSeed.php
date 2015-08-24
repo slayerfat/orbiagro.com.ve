@@ -20,11 +20,11 @@ class TesterMakerTableSeed extends Seeder
 
         if (!$user) $user = User::where('name', env('APP_USER'))->first();
 
-        $subcat = App\SubCategory::all();
+        $subcat = Orbiagro\Models\SubCategory::all();
         foreach ($subcat as $subcategory) {
             for ($i=0; $i < 1; $i++) {
                 $company = $faker->company();
-                $maker = App\Maker::create([
+                $maker = Orbiagro\Models\Maker::create([
                     'name'   => $company,
                     'slug'   => str_slug($company),
                     'domain' => $faker->domainName(),

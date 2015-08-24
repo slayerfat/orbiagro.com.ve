@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\Product;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class ProductTest extends TestCase
         parent::setUp();
 
         $this->tester = new Product;
-        $this->mock = Mockery::mock('App\Product')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Product')->makePartial();
     }
 
     public function testUserRelationship()
@@ -27,7 +27,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\User')
+            ->with('Orbiagro\Models\User')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->user());
@@ -38,7 +38,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\Maker')
+            ->with('Orbiagro\Models\Maker')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->maker());
@@ -49,7 +49,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\SubCategory')
+            ->with('Orbiagro\Models\SubCategory')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->subCategory());
@@ -60,7 +60,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Feature')
+            ->with('Orbiagro\Models\Feature')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->features());
@@ -71,7 +71,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('hasOne')
             ->once()
-            ->with('App\Characteristic')
+            ->with('Orbiagro\Models\Characteristic')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->characteristics());
@@ -82,7 +82,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('hasOne')
             ->once()
-            ->with('App\Nutritional')
+            ->with('Orbiagro\Models\Nutritional')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->nutritional());
@@ -93,7 +93,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('belongsToMany')
             ->once()
-            ->with('App\User')
+            ->with('Orbiagro\Models\User')
             ->andReturn(Mockery::self());
 
         $this->mock
@@ -115,7 +115,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('belongsToMany')
             ->once()
-            ->with('App\Provider')
+            ->with('Orbiagro\Models\Provider')
             ->andReturn(Mockery::self());
 
         $this->mock
@@ -132,7 +132,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('morphOne')
             ->once()
-            ->with('App\Direction', 'directionable')
+            ->with('Orbiagro\Models\Direction', 'directionable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->direction());
@@ -143,7 +143,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('morphMany')
             ->once()
-            ->with('App\File', 'fileable')
+            ->with('Orbiagro\Models\File', 'fileable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->files());
@@ -154,7 +154,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('morphMany')
             ->once()
-            ->with('App\Image', 'imageable')
+            ->with('Orbiagro\Models\Image', 'imageable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->images());
@@ -165,7 +165,7 @@ class ProductTest extends TestCase
         $this->mock
             ->shouldReceive('morphMany')
             ->once()
-            ->with('App\Visit', 'visitable')
+            ->with('Orbiagro\Models\Visit', 'visitable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->visits());
@@ -213,7 +213,7 @@ class ProductTest extends TestCase
 
     public function testCheckDollarMethod()
     {
-        $dollar = Mockery::mock('App\Mamarrachismo\CheckDollar');
+        $dollar = Mockery::mock('Orbiagro\Mamarrachismo\CheckDollar');
 
         $dollar->shouldReceive('isValid')->andReturn(true);
 
@@ -232,7 +232,7 @@ class ProductTest extends TestCase
 
     public function testCheckPriceDollarMethod()
     {
-        $dollar = Mockery::mock('App\Mamarrachismo\CheckDollar');
+        $dollar = Mockery::mock('Orbiagro\Mamarrachismo\CheckDollar');
 
         $dollar->shouldReceive('isValid')->andReturn(true);
 
@@ -261,7 +261,7 @@ class ProductTest extends TestCase
 
     public function testCorrectFormattedPrice()
     {
-        $dollar = Mockery::mock('App\Mamarrachismo\CheckDollar');
+        $dollar = Mockery::mock('Orbiagro\Mamarrachismo\CheckDollar');
 
         $dollar->shouldReceive('isValid')->andReturn(true);
 

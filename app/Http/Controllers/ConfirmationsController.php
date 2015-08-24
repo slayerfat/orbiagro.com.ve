@@ -4,7 +4,7 @@ use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Auth;
 use Orbiagro\Models\User;
-use Orbiagro\Profile;
+use Orbiagro\Models\Profile;
 use Orbiagro\Models\UserConfirmation;
 
 class ConfirmationsController extends Controller

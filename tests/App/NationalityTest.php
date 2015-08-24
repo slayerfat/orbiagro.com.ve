@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\Nationality;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class NationalityTest extends TestCase
         parent::setUp();
 
         $this->tester = new Nationality;
-        $this->mock = Mockery::mock('App\Nationality')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Nationality')->makePartial();
     }
 
     public function testPeopleRelationship()
@@ -27,7 +27,7 @@ class NationalityTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Person')
+            ->with('Orbiagro\Models\Person')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->people());

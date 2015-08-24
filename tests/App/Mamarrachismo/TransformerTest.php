@@ -1,4 +1,4 @@
-<?php namespace Tests\App\Mamarrachismo;
+<?php namespace Tests\Orbiagro\Mamarrachismo;
 
 use Orbiagro\Mamarrachismo\Transformer;
 use Tests\TestCase;

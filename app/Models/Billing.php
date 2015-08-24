@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
- * App\Billing
+ * Orbiagro\Models\Billing
  *
  * @property integer $id
  * @property integer $user_id
@@ -19,21 +19,21 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read \App\Bank $bank
- * @property-read \App\CardType $cardType
- * @property-read \App\User $user
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereBankId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereCardTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereCardNumber($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereBankAccount($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereExpiration($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereComments($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereCreatedBy($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Billing whereUpdatedBy($value)
+ * @property-read \Orbiagro\Models\Bank $bank
+ * @property-read \Orbiagro\Models\CardType $cardType
+ * @property-read \Orbiagro\Models\User $user
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereBankId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereCardTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereCardNumber($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereBankAccount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereExpiration($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereComments($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereCreatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereUpdatedBy($value)
  */
 class Billing extends Model
 {
@@ -45,32 +45,32 @@ class Billing extends Model
     // --------------------------------------------------------------------------
 
     /**
-     * @property-read \App\Bank $bank
+     * @property-read \Orbiagro\Models\Bank $bank
      *
-     * @return \App\Bank
+     * @return \Orbiagro\Models\Bank
      */
     public function bank()
     {
-        return $this->belongsTo('App\Bank');
+        return $this->belongsTo('Orbiagro\Models\Bank');
     }
 
     /**
-     * @property-read \App\CardType $cardType
+     * @property-read \Orbiagro\Models\CardType $cardType
      *
-     * @return \App\CardType
+     * @return \Orbiagro\Models\CardType
      */
     public function cardType()
     {
-        return $this->belongsTo('App\CardType');
+        return $this->belongsTo('Orbiagro\Models\CardType');
     }
 
     /**
-     * @property-read \App\User $user
+     * @property-read \Orbiagro\Models\User $user
      *
-     * @return \App\User
+     * @return \Orbiagro\Models\User
      */
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Orbiagro\Models\User');
     }
 }

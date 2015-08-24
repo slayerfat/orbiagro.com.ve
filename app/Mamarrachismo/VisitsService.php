@@ -38,10 +38,10 @@ class VisitsService
     public function setNewVisit(Model $model)
     {
         switch (get_class($model)) {
-            case 'App\SubCategory':
+            case 'Orbiagro\Models\SubCategory':
                 return $this->setNewVisitCookie($model);
 
-            case 'App\Product':
+            case 'Orbiagro\Models\Product':
                 // para el caso del producto, se debe guardar
                 // tanto el mismo como su rubro para obtener las visitas y populares
                 $this->setNewVisitCookie($model);
@@ -99,7 +99,7 @@ class VisitsService
     /**
      * usado para determinar cuales son los recursos mas populares (count)
      *
-     * @param Model $model    el modelo, nos interesa la clase (App\Product)
+     * @param Model $model    el modelo, nos interesa la clase (Orbiagro\Models\Product)
      * @param int   $quantity la cantidad a tomar
      *
      * @return Collection

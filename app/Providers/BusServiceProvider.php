@@ -17,8 +17,8 @@ class BusServiceProvider extends ServiceProvider
         $dispatcher->mapUsing(function ($command) {
             return Dispatcher::simpleMapping(
                 $command,
-                'App\Commands',
-                'App\Handlers\Commands'
+                'Orbiagro\Commands',
+                'Orbiagro\Handlers\Commands'
             );
         });
     }

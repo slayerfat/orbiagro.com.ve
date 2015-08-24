@@ -102,29 +102,29 @@ class ImagesController extends Controller
         $array = ['controller' => '', 'id' => null];
 
         switch (get_class($model)) {
-            case 'App\Product':
+            case 'Orbiagro\Models\Product':
                 $array['controller'] = 'ProductsController@show';
                 break;
 
-            case 'App\Feature':
+            case 'Orbiagro\Models\Feature':
                 $array['controller'] = 'ProductsController@show';
 
                 $array['id'] = $model->product->id;
                 break;
 
-            case 'App\Category':
+            case 'Orbiagro\Models\Category':
                 $array['controller'] = 'CategoriesController@show';
                 break;
 
-            case 'App\SubCategory':
+            case 'Orbiagro\Models\SubCategory':
                 $array['controller'] = 'SubCategoriesController@show';
                 break;
 
-            case 'App\Maker':
+            case 'Orbiagro\Models\Maker':
                 $array['controller'] = 'MakersController@show';
                 break;
 
-            case 'App\Promotion':
+            case 'Orbiagro\Models\Promotion':
                 $array['controller'] = 'PromotionsController@show';
                 break;
 

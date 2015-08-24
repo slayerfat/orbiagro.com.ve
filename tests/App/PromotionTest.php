@@ -1,8 +1,8 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
-use Orbiagro\Promotion;
+use Tests\Orbiagro\Traits\TearsDownMockery;
+use Orbiagro\Models\Promotion;
 use Tests\TestCase;
 
 class PromotionTest extends TestCase
@@ -19,7 +19,7 @@ class PromotionTest extends TestCase
         parent::setUp();
 
         $this->tester = new Promotion;
-        $this->mock = Mockery::mock('App\Promotion')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Promotion')->makePartial();
     }
 
     public function testProductsRelationship()
@@ -27,7 +27,7 @@ class PromotionTest extends TestCase
         $this->mock
             ->shouldReceive('belongsToMany')
             ->once()
-            ->with('App\Product')
+            ->with('Orbiagro\Models\Product')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->products());
@@ -38,7 +38,7 @@ class PromotionTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\PromoType', 'promo_type_id', 'id')
+            ->with('Orbiagro\Models\PromoType', 'promo_type_id', 'id')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->type());
@@ -49,7 +49,7 @@ class PromotionTest extends TestCase
         $this->mock
             ->shouldReceive('morphMany')
             ->once()
-            ->with('App\Image', 'imageable')
+            ->with('Orbiagro\Models\Image', 'imageable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->images());

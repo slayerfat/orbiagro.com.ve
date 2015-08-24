@@ -3,7 +3,7 @@
 use Orbiagro\Http\Requests;
 use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Orbiagro\Profile;
+use Orbiagro\Models\Profile;
 
 class ProfilesController extends Controller
 {

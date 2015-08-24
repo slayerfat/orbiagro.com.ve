@@ -60,7 +60,7 @@ class CreateProfilesTable extends Migration
         ];
 
         foreach ($types as $profile) {
-            $model = new App\Profile;
+            $model = new Orbiagro\Models\Profile;
             $model->description = $profile;
             $model->save();
         }
@@ -74,9 +74,9 @@ class CreateProfilesTable extends Migration
      */
     private function seedUser()
     {
-        $admin = App\Profile::where('description', 'Administrador')->firstOrFail();
+        $admin = Orbiagro\Models\Profile::where('description', 'Administrador')->firstOrFail();
 
-        $model             = new App\User;
+        $model             = new Orbiagro\Models\User;
         $model->profile_id = $admin->id;
         $model->created_at = Carbon\Carbon::now();
         $model->updated_at = Carbon\Carbon::now();

@@ -14,7 +14,7 @@ class VisitTableSeeder extends Seeder
 
         $product = Product::first();
 
-        factory(App\Visit::class, 3)->make()->each(function ($visit) use ($product) {
+        factory(Orbiagro\Models\Visit::class, 3)->make()->each(function ($visit) use ($product) {
             $product->visits()->save($visit);
         });
 

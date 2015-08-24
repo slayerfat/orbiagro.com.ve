@@ -126,17 +126,17 @@ class Person extends Model
     // --------------------------------------------------------------------------
     public function gender()
     {
-        return $this->belongsTo('App\Gender');
+        return $this->belongsTo('Orbiagro\Models\Gender');
     }
 
     public function nationality()
     {
-        return $this->belongsTo('App\Nationality');
+        return $this->belongsTo('Orbiagro\Models\Nationality');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Orbiagro\Models\User');
     }
 
     // --------------------------------------------------------------------------
@@ -144,6 +144,6 @@ class Person extends Model
     // --------------------------------------------------------------------------
     public function direction()
     {
-        return $this->morphMany('App\Direction', 'directionable');
+        return $this->morphMany('Orbiagro\Models\Direction', 'directionable');
     }
 }

@@ -14,7 +14,7 @@ class ProviderTableSeed extends Seeder
     {
         $this->command->info("*** Empezando creacion de Provider! ***");
 
-        factory(App\Provider::class, 3)->create();
+        factory(Orbiagro\Models\Provider::class, 3)->create();
 
         $this->command->info('providers completados.');
     }

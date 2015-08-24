@@ -130,17 +130,17 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Orbiagro\Models\User');
     }
 
     public function maker()
     {
-        return $this->belongsTo('App\Maker');
+        return $this->belongsTo('Orbiagro\Models\Maker');
     }
 
     public function subCategory()
     {
-        return $this->belongsTo('App\SubCategory');
+        return $this->belongsTo('Orbiagro\Models\SubCategory');
     }
 
     // --------------------------------------------------------------------------
@@ -148,7 +148,7 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function features()
     {
-        return $this->hasMany('App\Feature');
+        return $this->hasMany('Orbiagro\Models\Feature');
     }
 
     // --------------------------------------------------------------------------
@@ -156,17 +156,17 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function characteristics()
     {
-        return $this->hasOne('App\Characteristic');
+        return $this->hasOne('Orbiagro\Models\Characteristic');
     }
 
     public function mechanical()
     {
-        return $this->hasOne('App\MechanicalInfo');
+        return $this->hasOne('Orbiagro\Models\MechanicalInfo');
     }
 
     public function nutritional()
     {
-        return $this->hasOne('App\Nutritional');
+        return $this->hasOne('Orbiagro\Models\Nutritional');
     }
 
     // --------------------------------------------------------------------------
@@ -174,17 +174,17 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function promotions()
     {
-        return $this->belongsToMany('App\Promotion');
+        return $this->belongsToMany('Orbiagro\Models\Promotion');
     }
 
     public function purchases()
     {
-        return $this->belongsToMany('App\User')->withPivot('quantity')->withTimestamps();
+        return $this->belongsToMany('Orbiagro\Models\User')->withPivot('quantity')->withTimestamps();
     }
 
     public function providers()
     {
-        return $this->belongsToMany('App\Provider')->withPivot('sku');
+        return $this->belongsToMany('Orbiagro\Models\Provider')->withPivot('sku');
     }
 
     // --------------------------------------------------------------------------
@@ -199,27 +199,27 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function direction()
     {
-        return $this->morphOne('App\Direction', 'directionable');
+        return $this->morphOne('Orbiagro\Models\Direction', 'directionable');
     }
 
     public function files()
     {
-        return $this->morphMany('App\File', 'fileable');
+        return $this->morphMany('Orbiagro\Models\File', 'fileable');
     }
 
     public function images()
     {
-        return $this->morphMany('App\Image', 'imageable');
+        return $this->morphMany('Orbiagro\Models\Image', 'imageable');
     }
 
     public function image()
     {
-        return $this->morphOne('App\Image', 'imageable');
+        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
     }
 
     public function visits()
     {
-        return $this->morphMany('App\Visit', 'visitable');
+        return $this->morphMany('Orbiagro\Models\Visit', 'visitable');
     }
 
     // --------------------------------------------------------------------------

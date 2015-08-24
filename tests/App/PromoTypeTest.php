@@ -1,8 +1,8 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
-use Orbiagro\PromoType;
+use Tests\Orbiagro\Traits\TearsDownMockery;
+use Orbiagro\Models\PromoType;
 use Tests\TestCase;
 
 class PromoTypeTest extends TestCase
@@ -19,7 +19,7 @@ class PromoTypeTest extends TestCase
         parent::setUp();
 
         $this->tester = new PromoType;
-        $this->mock = Mockery::mock('App\PromoType')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\PromoType')->makePartial();
     }
 
     public function testPromotionsRelationship()
@@ -27,7 +27,7 @@ class PromoTypeTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Promotion')
+            ->with('Orbiagro\Models\Promotion')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->promotions());

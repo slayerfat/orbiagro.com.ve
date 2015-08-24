@@ -4,8 +4,8 @@ use Illuminate\Contracts\View\View;
 
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Category;
-use Orbiagro\PromoType;
-use Orbiagro\Promotion;
+use Orbiagro\Models\PromoType;
+use Orbiagro\Models\Promotion;
 use Orbiagro\Models\SubCategory;
 
 class Carrusel

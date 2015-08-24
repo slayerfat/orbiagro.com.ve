@@ -21,7 +21,7 @@ class ProductsController extends Controller
     use SEOToolsTrait, CanSaveUploads;
 
     /**
-     * @var \App\User
+     * @var \Orbiagro\Models\User
      */
     protected $user;
 

@@ -4,8 +4,8 @@ use Illuminate\Contracts\Auth\Guard;
 
 use Orbiagro\Models\Category;
 use Orbiagro\Models\SubCategory;
-use Orbiagro\Promotion;
-use Orbiagro\PromoType;
+use Orbiagro\Models\Promotion;
+use Orbiagro\Models\PromoType;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 

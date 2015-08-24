@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\Maker;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class MakerTest extends TestCase
         parent::setUp();
 
         $this->tester = new Maker;
-        $this->mock = Mockery::mock('App\Maker')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Maker')->makePartial();
     }
 
     public function testProductsRelationship()
@@ -27,7 +27,7 @@ class MakerTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Product')
+            ->with('Orbiagro\Models\Product')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->products());
@@ -38,7 +38,7 @@ class MakerTest extends TestCase
         $this->mock
             ->shouldReceive('morphOne')
             ->once()
-            ->with('App\Image', 'imageable')
+            ->with('Orbiagro\Models\Image', 'imageable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->image());

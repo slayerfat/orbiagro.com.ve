@@ -1,8 +1,8 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
-use Orbiagro\Profile;
+use Tests\Orbiagro\Traits\TearsDownMockery;
+use Orbiagro\Models\Profile;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -19,7 +19,7 @@ class ProfileTest extends TestCase
         parent::setUp();
 
         $this->tester = new Profile;
-        $this->mock = Mockery::mock('App\Profile')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Profile')->makePartial();
     }
 
     public function testUsersRelationship()
@@ -27,7 +27,7 @@ class ProfileTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\User')
+            ->with('Orbiagro\Models\User')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->users());

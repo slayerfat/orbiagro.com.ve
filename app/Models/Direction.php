@@ -50,7 +50,7 @@ class Direction extends Model
     // --------------------------------------------------------------------------
     public function map()
     {
-        return $this->hasOne('App\MapDetail');
+        return $this->hasOne('Orbiagro\Models\MapDetail');
     }
 
     // --------------------------------------------------------------------------
@@ -58,6 +58,6 @@ class Direction extends Model
     // --------------------------------------------------------------------------
     public function parish()
     {
-        return $this->belongsTo('App\Parish');
+        return $this->belongsTo('Orbiagro\Models\Parish');
     }
 }

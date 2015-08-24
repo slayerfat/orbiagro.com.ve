@@ -74,7 +74,7 @@ class Category extends Model
     // --------------------------------------------------------------------------
     public function subCategories()
     {
-        return $this->hasMany('App\SubCategory');
+        return $this->hasMany('Orbiagro\Models\SubCategory');
     }
 
     // --------------------------------------------------------------------------
@@ -82,11 +82,11 @@ class Category extends Model
     // --------------------------------------------------------------------------
     public function image()
     {
-        return $this->morphOne('App\Image', 'imageable');
+        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
     }
 
     public function products()
     {
-        return $this->hasManyThrough('App\product', 'App\SubCategory');
+        return $this->hasManyThrough('Orbiagro\Models\Product', 'Orbiagro\Models\SubCategory');
     }
 }

@@ -67,12 +67,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     public function person()
     {
-        return $this->hasOne('App\Person');
+        return $this->hasOne('Orbiagro\Models\Person');
     }
 
     public function confirmation()
     {
-        return $this->hasOne('App\UserConfirmation');
+        return $this->hasOne('Orbiagro\Models\UserConfirmation');
     }
 
     // --------------------------------------------------------------------------
@@ -80,17 +80,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     public function billings()
     {
-        return $this->hasMany('App\Billing');
+        return $this->hasMany('Orbiagro\Models\Billing');
     }
 
     public function products()
     {
-        return $this->hasMany('App\Product');
+        return $this->hasMany('Orbiagro\Models\Product');
     }
 
     public function visits()
     {
-        return $this->hasMany('App\Visit');
+        return $this->hasMany('Orbiagro\Models\Visit');
     }
 
     // --------------------------------------------------------------------------
@@ -98,7 +98,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     public function profile()
     {
-        return $this->belongsTo('App\Profile');
+        return $this->belongsTo('Orbiagro\Models\Profile');
     }
 
     // --------------------------------------------------------------------------
@@ -106,7 +106,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     public function purchases()
     {
-        return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
+        return $this->belongsToMany('Orbiagro\Models\Product')->withPivot('quantity')->withTimestamps();
     }
 
     // --------------------------------------------------------------------------

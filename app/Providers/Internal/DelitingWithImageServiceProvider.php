@@ -17,9 +17,9 @@ class DelitingWithImageServiceProvider extends ServiceProvider
     public function boot()
     {
         $models = [
-            App\Category::class,
-            App\Maker::class,
-            App\SubCategory::class,
+            Orbiagro\Models\Category::class,
+            Orbiagro\Models\Maker::class,
+            Orbiagro\Models\SubCategory::class,
         ];
 
         foreach ($models as $namespace) {

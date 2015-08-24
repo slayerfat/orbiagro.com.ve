@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\Direction;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class DirectionTest extends TestCase
         parent::setUp();
 
         $this->tester = new Direction;
-        $this->mock = Mockery::mock('App\Direction')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Direction')->makePartial();
     }
 
     public function testDirectionRelationship()
@@ -37,7 +37,7 @@ class DirectionTest extends TestCase
         $this->mock
             ->shouldReceive('hasOne')
             ->once()
-            ->with('App\MapDetail')
+            ->with('Orbiagro\Models\MapDetail')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->map());
@@ -48,7 +48,7 @@ class DirectionTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\Parish')
+            ->with('Orbiagro\Models\Parish')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->parish());

@@ -14,8 +14,8 @@
 // implementado asi por la libreria en español
 $faker = Faker\Factory::create('es_ES');
 
-$factory->define(App\User::class, function ($faker) {
-    $profileId = App\Profile::where('description', 'Usuario')->firstOrFail()->id;
+$factory->define(Orbiagro\Models\User::class, function ($faker) {
+    $profileId = Orbiagro\Models\Profile::where('description', 'Usuario')->firstOrFail()->id;
     return [
         'name'           => $faker->name,
         'email'          => $faker->email,
@@ -25,7 +25,7 @@ $factory->define(App\User::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Profile::class, function ($faker) {
+$factory->define(Orbiagro\Models\Profile::class, function ($faker) {
     return [
         'description' => $faker->text,
         'created_by'  => 1,
@@ -33,7 +33,7 @@ $factory->define(App\Profile::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Billing::class, function ($faker) {
+$factory->define(Orbiagro\Models\Billing::class, function ($faker) {
     return [
         'bank_id'      => 1,
         'card_type_id' => 1,
@@ -46,7 +46,7 @@ $factory->define(App\Billing::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Maker::class, function ($faker) {
+$factory->define(Orbiagro\Models\Maker::class, function ($faker) {
     return [
         'name'       => $faker->company(),
         'domain'     => $faker->domainName(),
@@ -56,7 +56,7 @@ $factory->define(App\Maker::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Characteristic::class, function ($faker) {
+$factory->define(Orbiagro\Models\Characteristic::class, function ($faker) {
     return [
         'height'     => rand(1, 1000),
         'width'      => rand(1, 1000),
@@ -68,7 +68,7 @@ $factory->define(App\Characteristic::class, function ($faker) {
     ];
 });
 
-$factory->define(App\MechanicalInfo::class, function ($faker) {
+$factory->define(Orbiagro\Models\MechanicalInfo::class, function ($faker) {
     return [
         'motor'        => rand(1, 16),
         'motor_serial' => rand(100000, 999999),
@@ -83,7 +83,7 @@ $factory->define(App\MechanicalInfo::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Nutritional::class, function ($faker) {
+$factory->define(Orbiagro\Models\Nutritional::class, function ($faker) {
     $date = Carbon\Carbon::now()->addDays(rand(1, 15))
     ->addMonths(rand(1, 11))
     ->addYears(rand(1, 10))
@@ -96,7 +96,7 @@ $factory->define(App\Nutritional::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Feature::class, function ($faker) {
+$factory->define(Orbiagro\Models\Feature::class, function ($faker) {
     return [
         'title'       => $faker->sentence(5),
         'description' => $faker->text,
@@ -105,7 +105,7 @@ $factory->define(App\Feature::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Person::class, function ($faker) {
+$factory->define(Orbiagro\Models\Person::class, function ($faker) {
     return [
         'gender_id'      => 1,
         'nationality_id' => 1,
@@ -121,7 +121,7 @@ $factory->define(App\Person::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Direction::class, function ($faker) {
+$factory->define(Orbiagro\Models\Direction::class, function ($faker) {
     return [
         'parish_id'  => 1,
         'details'    => $faker->streetAddress,
@@ -130,9 +130,9 @@ $factory->define(App\Direction::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Product::class, function ($faker) {
-    $maker  = App\Maker::random()->first();
-    $subCat = App\SubCategory::random()->first();
+$factory->define(Orbiagro\Models\Product::class, function ($faker) {
+    $maker  = Orbiagro\Models\Maker::random()->first();
+    $subCat = Orbiagro\Models\SubCategory::random()->first();
 
     return [
         'maker_id'        => $maker->id,
@@ -147,7 +147,7 @@ $factory->define(App\Product::class, function ($faker) {
     ];
 });
 
-$factory->define(App\MapDetail::class, function ($faker) {
+$factory->define(Orbiagro\Models\MapDetail::class, function ($faker) {
     return [
         'latitude'   => 10.492315,
         'longitude'  => -66.932899,
@@ -157,9 +157,9 @@ $factory->define(App\MapDetail::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Promotion::class, function ($faker) {
+$factory->define(Orbiagro\Models\Promotion::class, function ($faker) {
     $number = rand(1, 100);
-    $promoType = App\PromoType::where('description', 'primavera')->first();
+    $promoType = Orbiagro\Models\PromoType::where('description', 'primavera')->first();
 
     return [
         'title'         => $faker->sentence(5),
@@ -173,7 +173,7 @@ $factory->define(App\Promotion::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Provider::class, function ($faker) {
+$factory->define(Orbiagro\Models\Provider::class, function ($faker) {
     return [
         'name'            => $faker->company,
         'url'             => $faker->url,
@@ -195,9 +195,9 @@ $factory->define(App\Provider::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Visit::class, function ($faker) {
+$factory->define(Orbiagro\Models\Visit::class, function ($faker) {
     return [
-        'user_id'    => App\User::random()->first()->id,
+        'user_id'    => Orbiagro\Models\User::random()->first()->id,
         'total'      => rand(1, 100),
         'created_by' => 1,
         'updated_by' => 1,

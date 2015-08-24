@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\Person;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class PersonTest extends TestCase
         parent::setUp();
 
         $this->tester = new Person;
-        $this->mock = Mockery::mock('App\Person')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Person')->makePartial();
     }
 
     public function testGenderRelationship()
@@ -27,7 +27,7 @@ class PersonTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\Gender')
+            ->with('Orbiagro\Models\Gender')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->gender());
@@ -38,7 +38,7 @@ class PersonTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\Nationality')
+            ->with('Orbiagro\Models\Nationality')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->nationality());
@@ -49,7 +49,7 @@ class PersonTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\User')
+            ->with('Orbiagro\Models\User')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->user());
@@ -60,7 +60,7 @@ class PersonTest extends TestCase
         $this->mock
             ->shouldReceive('morphMany')
             ->once()
-            ->with('App\Direction', 'directionable')
+            ->with('Orbiagro\Models\Direction', 'directionable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->direction());

@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\Category;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class CategoryTest extends TestCase
         parent::setUp();
 
         $this->tester = new Category;
-        $this->mock = Mockery::mock('App\Category')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Category')->makePartial();
     }
 
     public function testSubCategoriesRelationship()
@@ -27,7 +27,7 @@ class CategoryTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\SubCategory')
+            ->with('Orbiagro\Models\SubCategory')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->subCategories());
@@ -38,7 +38,7 @@ class CategoryTest extends TestCase
         $this->mock
             ->shouldReceive('morphOne')
             ->once()
-            ->with('App\Image', 'imageable')
+            ->with('Orbiagro\Models\Image', 'imageable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->image());
@@ -49,7 +49,7 @@ class CategoryTest extends TestCase
         $this->mock
             ->shouldReceive('hasManyThrough')
             ->once()
-            ->with('App\product', 'App\SubCategory')
+            ->with('Orbiagro\Models\Product', 'Orbiagro\Models\SubCategory')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->products());

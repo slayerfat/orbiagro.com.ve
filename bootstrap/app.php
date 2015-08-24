@@ -28,17 +28,17 @@ $app = new Illuminate\Foundation\Application(
 
 $app->singleton(
     'Illuminate\Contracts\Http\Kernel',
-    'App\Http\Kernel'
+    'Orbiagro\Http\Kernel'
 );
 
 $app->singleton(
     'Illuminate\Contracts\Console\Kernel',
-    'App\Console\Kernel'
+    'Orbiagro\Console\Kernel'
 );
 
 $app->singleton(
     'Illuminate\Contracts\Debug\ExceptionHandler',
-    'App\Exceptions\Handler'
+    'Orbiagro\Exceptions\Handler'
 );
 
 /*

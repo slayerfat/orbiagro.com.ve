@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\CardType;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class CardTypeTest extends TestCase
         parent::setUp();
 
         $this->tester = new CardType;
-        $this->mock = Mockery::mock('App\CardType')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\CardType')->makePartial();
     }
 
     public function testBillingsRelationship()
@@ -27,7 +27,7 @@ class CardTypeTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Billing')
+            ->with('Orbiagro\Models\Billing')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->billings());

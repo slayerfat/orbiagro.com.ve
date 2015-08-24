@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\Bank;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class BankTest extends TestCase
         parent::setUp();
 
         $this->tester = new Bank;
-        $this->mock = Mockery::mock('App\Bank')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Bank')->makePartial();
     }
 
     public function testBillingsRelationship()
@@ -27,7 +27,7 @@ class BankTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Billing')
+            ->with('Orbiagro\Models\Billing')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->billings());

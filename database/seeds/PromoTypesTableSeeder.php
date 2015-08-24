@@ -29,7 +29,7 @@ class PromoTypesTableSeeder extends BaseSeeder
         ];
 
         foreach ($types as $type) {
-            $type = App\PromoType::create([
+            $type = Orbiagro\Models\PromoType::create([
                 'description' => $type,
                 'created_by'  => $this->user->id,
                 'updated_by'  => $this->user->id,

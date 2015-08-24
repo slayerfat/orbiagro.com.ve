@@ -14,6 +14,6 @@ class CardType extends Model
     // --------------------------------------------------------------------------
     public function billings()
     {
-        return $this->hasMany('App\Billing');
+        return $this->hasMany('Orbiagro\Models\Billing');
     }
 }

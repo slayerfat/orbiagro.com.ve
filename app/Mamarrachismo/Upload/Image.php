@@ -353,21 +353,21 @@ class Image extends Upload
         }
 
         switch (get_class($model)) {
-            case 'App\Product':
-            case 'App\Promotion':
+            case 'Orbiagro\Models\Product':
+            case 'Orbiagro\Models\Promotion':
                 $image->alt = $model->title;
                 return $model->images()->save($image);
 
-            case 'App\Feature':
+            case 'Orbiagro\Models\Feature':
                 $image->alt = $model->title;
                 return $model->image()->save($image);
 
-            case 'App\Category':
-            case 'App\SubCategory':
+            case 'Orbiagro\Models\Category':
+            case 'Orbiagro\Models\SubCategory':
                 $image->alt = $model->description;
                 return $model->image()->save($image);
 
-            case 'App\Maker':
+            case 'Orbiagro\Models\Maker':
                 $image->alt = $model->name;
                 return $model->image()->save($image);
 

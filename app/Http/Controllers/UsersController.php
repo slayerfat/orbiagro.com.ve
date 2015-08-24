@@ -5,7 +5,7 @@ use Orbiagro\Http\Requests;
 use Orbiagro\Http\Requests\UserRequest;
 use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Models\User;
-use Orbiagro\Profile;
+use Orbiagro\Models\Profile;
 
 class UsersController extends Controller
 {
@@ -72,10 +72,10 @@ class UsersController extends Controller
     public function productVisits($id, Guard $auth)
     {
         if (!$user = User::with(['visits' => function ($query) {
-            $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
+            $query->where('visitable_type', 'Orbiagro\\Product')->orderBy('updated_at', 'desc');
         }])->where('name', $id)->first()) {
             $user = User::with(['visits' => function ($query) {
-                $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
+                $query->where('visitable_type', 'Orbiagro\\Product')->orderBy('updated_at', 'desc');
             }])->findOrFail($id);
         }
 
@@ -143,7 +143,7 @@ class UsersController extends Controller
             $user = User::with('person', 'products', 'profile')->findOrFail($id);
         }
 
-        $products = \App\Product::where('user_id', $user->id)->paginate(4);
+        $products = \Orbiagro\Models\Product::where('user_id', $user->id)->paginate(4);
 
         return view('user.show', compact('user', 'products'));
     }
@@ -167,7 +167,7 @@ class UsersController extends Controller
                 ->findOrFail($id);
         }
 
-        $products = \App\Product::where('user_id', $user->id)->paginate(4);
+        $products = \Orbiagro\Models\Product::where('user_id', $user->id)->paginate(4);
 
         return view('user.show', compact('user', 'products'));
     }

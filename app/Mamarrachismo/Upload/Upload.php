@@ -108,22 +108,22 @@ abstract class Upload
     protected function generatePathFromModel($model)
     {
         switch (get_class($model)) {
-            case 'App\Product':
+            case 'Orbiagro\Models\Product':
                 return "products/{$model->id}";
 
-            case 'App\Feature':
+            case 'Orbiagro\Models\Feature':
                 return "products/{$model->product->id}";
 
-            case 'App\Category':
+            case 'Orbiagro\Models\Category':
                 return "category/{$model->id}";
 
-            case 'App\SubCategory':
+            case 'Orbiagro\Models\SubCategory':
                 return "sub-category/{$model->id}";
 
-            case 'App\Maker':
+            case 'Orbiagro\Models\Maker':
                 return "makers/{$model->id}";
 
-            case 'App\Promotion':
+            case 'Orbiagro\Models\Promotion':
                 return "promos/{$model->id}";
 
             default:

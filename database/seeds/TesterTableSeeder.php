@@ -15,15 +15,15 @@ class TesterTableSeeder extends Seeder
         $this->command->info('--- SOLO PARA PRUEBAS ---');
         $this->command->info('--- TESTER ---');
 
-        $gender      = App\Gender::where('description', 'Masculino')->firstOrFail();
-        $parish      = App\Parish::findOrFail(1);
-        $nationality = App\Nationality::where('description', 'Venezolano')->firstOrFail();
-        $profile     = App\Profile::where('description', 'Administrador')->firstOrFail();
+        $gender      = Orbiagro\Models\Gender::where('description', 'Masculino')->firstOrFail();
+        $parish      = Orbiagro\Models\Parish::findOrFail(1);
+        $nationality = Orbiagro\Models\Nationality::where('description', 'Venezolano')->firstOrFail();
+        $profile     = Orbiagro\Models\Profile::where('description', 'Administrador')->firstOrFail();
 
         // fix build #202
-        $tester = App\User::where('name', 'tester')->firstOrFail();
+        $tester = Orbiagro\Models\User::where('name', 'tester')->firstOrFail();
 
-        $person = new App\Person;
+        $person = new Orbiagro\Models\Person;
         $person->user_id        = $tester->id;
         $person->gender_id      = $gender->id;
         $person->nationality_id = $nationality->id;
@@ -38,7 +38,7 @@ class TesterTableSeeder extends Seeder
         $person->updated_by     = $tester->id;
         $tester->person()->save($person);
 
-        $direction = new App\Direction;
+        $direction = new Orbiagro\Models\Direction;
 
         $direction->parish_id  = $parish->id;
         $direction->details    = 'Calle del tester.';
@@ -48,9 +48,9 @@ class TesterTableSeeder extends Seeder
         $tester->person->direction()->save($direction);
 
         $this->command->info('--- DUMMY ---');
-        $profile = App\Profile::where('description', 'Usuario')->firstOrFail();
+        $profile = Orbiagro\Models\Profile::where('description', 'Usuario')->firstOrFail();
 
-        $tester = new App\User;
+        $tester = new Orbiagro\Models\User;
         $tester->name       = 'dummy';
         $tester->email      = 'dummy@tester.com';
         $tester->password   = Hash::make('dummypw');
@@ -59,9 +59,9 @@ class TesterTableSeeder extends Seeder
         $tester->updated_at = Carbon\Carbon::now();
         $tester->save();
 
-        $tester = App\User::where('name', 'dummy')->firstOrFail();
+        $tester = Orbiagro\Models\User::where('name', 'dummy')->firstOrFail();
 
-        $person = new App\Person;
+        $person = new Orbiagro\Models\Person;
         $person->user_id        = $tester->id;
         $person->gender_id      = $gender->id;
         $person->nationality_id = $nationality->id;
@@ -76,7 +76,7 @@ class TesterTableSeeder extends Seeder
         $person->updated_by     = $tester->id;
         $tester->person()->save($person);
 
-        $direction = new App\Direction;
+        $direction = new Orbiagro\Models\Direction;
 
         $direction->parish_id  = $parish->id;
         $direction->details    = 'Calle del dummy.';

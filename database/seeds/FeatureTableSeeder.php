@@ -19,8 +19,8 @@ class FeatureTableSeeder extends Seeder
         // upload necesita el ID del usuario a asociar.
         $this->upload = new Upload(1);
 
-        App\Product::all()->each(function ($product) {
-            $f = $product->features()->save(factory(App\Feature::class)->make());
+        Orbiagro\Models\Product::all()->each(function ($product) {
+            $f = $product->features()->save(factory(Orbiagro\Models\Feature::class)->make());
             $this->upload->createImage($f);
         });
 

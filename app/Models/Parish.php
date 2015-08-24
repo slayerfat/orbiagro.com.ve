@@ -24,7 +24,7 @@ class Parish extends Model
     // --------------------------------------------------------------------------
     public function town()
     {
-        return $this->belongsTo('App\Town');
+        return $this->belongsTo('Orbiagro\Models\Town');
     }
 
     // --------------------------------------------------------------------------
@@ -32,6 +32,6 @@ class Parish extends Model
     // --------------------------------------------------------------------------
     public function directions()
     {
-        return $this->hasMany('App\Direction');
+        return $this->hasMany('Orbiagro\Models\Direction');
     }
 }

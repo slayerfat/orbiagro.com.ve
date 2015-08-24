@@ -35,6 +35,6 @@ class Nationality extends Model
     // --------------------------------------------------------------------------
     public function people()
     {
-        return $this->hasMany('App\Person');
+        return $this->hasMany('Orbiagro\Models\Person');
     }
 }

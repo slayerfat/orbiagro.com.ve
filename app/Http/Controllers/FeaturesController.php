@@ -14,7 +14,7 @@ class FeaturesController extends Controller
     use CanSaveUploads;
 
     /**
-     * @var \App\User
+     * @var \Orbiagro\Models\User
      */
     protected $user;
 

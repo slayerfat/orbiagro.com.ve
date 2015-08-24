@@ -6,7 +6,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 
 // 5.1
 use Orbiagro\Models\User;
-use Orbiagro\Profile;
+use Orbiagro\Models\Profile;
 use Orbiagro\Models\UserConfirmation;
 use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Validator;

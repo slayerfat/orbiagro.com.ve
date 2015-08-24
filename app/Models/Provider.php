@@ -77,6 +77,6 @@ class Provider extends Model
     // --------------------------------------------------------------------------
     public function products()
     {
-        return $this->belongsToMany('App\Product')->withPivot('sku');
+        return $this->belongsToMany('Orbiagro\Models\Product')->withPivot('sku');
     }
 }

@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\File;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class FileTest extends TestCase
         parent::setUp();
 
         $this->tester = new File;
-        $this->mock = Mockery::mock('App\File')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\File')->makePartial();
     }
 
     public function testFilableRelationship()

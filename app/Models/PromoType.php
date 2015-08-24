@@ -18,6 +18,6 @@ class PromoType extends Model
     // --------------------------------------------------------------------------
     public function promotions()
     {
-        return $this->hasMany('App\Promotion');
+        return $this->hasMany('Orbiagro\Models\Promotion');
     }
 }

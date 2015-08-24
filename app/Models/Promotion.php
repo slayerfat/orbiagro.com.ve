@@ -114,7 +114,7 @@ class Promotion extends Model
     // --------------------------------------------------------------------------
     public function products()
     {
-        return $this->belongsToMany('App\Product');
+        return $this->belongsToMany('Orbiagro\Models\Product');
     }
 
     // --------------------------------------------------------------------------
@@ -122,7 +122,7 @@ class Promotion extends Model
     // --------------------------------------------------------------------------
     public function type()
     {
-        return $this->belongsTo('App\PromoType', 'promo_type_id', 'id');
+        return $this->belongsTo('Orbiagro\Models\PromoType', 'promo_type_id', 'id');
     }
 
     // --------------------------------------------------------------------------
@@ -130,7 +130,7 @@ class Promotion extends Model
     // --------------------------------------------------------------------------
     public function images()
     {
-        return $this->morphMany('App\Image', 'imageable');
+        return $this->morphMany('Orbiagro\Models\Image', 'imageable');
     }
 
     // --------------------------------------------------------------------------

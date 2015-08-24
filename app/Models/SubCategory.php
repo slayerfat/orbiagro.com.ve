@@ -78,7 +78,7 @@ class SubCategory extends Model
     // --------------------------------------------------------------------------
     public function category()
     {
-        return $this->belongsTo('App\Category');
+        return $this->belongsTo('Orbiagro\Models\Category');
     }
 
     // --------------------------------------------------------------------------
@@ -86,7 +86,7 @@ class SubCategory extends Model
     // --------------------------------------------------------------------------
     public function products()
     {
-        return $this->hasMany('App\Product');
+        return $this->hasMany('Orbiagro\Models\Product');
     }
 
     // --------------------------------------------------------------------------
@@ -98,11 +98,11 @@ class SubCategory extends Model
     // --------------------------------------------------------------------------
     public function image()
     {
-        return $this->morphOne('App\Image', 'imageable');
+        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
     }
 
     public function visits()
     {
-        return $this->morphMany('App\Visit', 'visitable');
+        return $this->morphMany('Orbiagro\Models\Visit', 'visitable');
     }
 }

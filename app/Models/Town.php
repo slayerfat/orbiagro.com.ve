@@ -22,11 +22,11 @@ class Town extends Model
 
     public function state()
     {
-        return $this->belongsTo('App\State');
+        return $this->belongsTo('Orbiagro\Models\State');
     }
 
     public function parishes()
     {
-        return $this->hasMany('App\Parish');
+        return $this->hasMany('Orbiagro\Models\Parish');
     }
 }

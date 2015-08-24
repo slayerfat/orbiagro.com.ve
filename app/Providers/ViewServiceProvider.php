@@ -14,27 +14,27 @@ class ViewServiceProvider extends ServiceProvider
     {
         view()->composer(
             'sub-category.addons.popular',
-            'App\Http\Composers\Visits@composePopularSubCats'
+            'Orbiagro\Http\Composers\Visits@composePopularSubCats'
         );
 
         view()->composer(
             'sub-category.addons.visited',
-            'App\Http\Composers\Visits@composeVisitedSubCats'
+            'Orbiagro\Http\Composers\Visits@composeVisitedSubCats'
         );
 
         view()->composer(
             'visit.addons.relatedProducts',
-            'App\Http\Composers\Visits@composeRelatedProducts'
+            'Orbiagro\Http\Composers\Visits@composeRelatedProducts'
         );
 
         view()->composer(
             'partials.carrusel-main',
-            'App\Http\Composers\Carrusel@composeHomeCarruselImages'
+            'Orbiagro\Http\Composers\Carrusel@composeHomeCarruselImages'
         );
 
         view()->composer(
             'partials.orbiagro-info',
-            'App\Http\Composers\OrbiagroInfo@composeInfo'
+            'Orbiagro\Http\Composers\OrbiagroInfo@composeInfo'
         );
     }
 

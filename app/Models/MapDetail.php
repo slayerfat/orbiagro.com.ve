@@ -50,6 +50,6 @@ class MapDetail extends Model
     // --------------------------------------------------------------------------
     public function direction()
     {
-        return $this->belongsTo('App\Direction');
+        return $this->belongsTo('Orbiagro\Models\Direction');
     }
 }

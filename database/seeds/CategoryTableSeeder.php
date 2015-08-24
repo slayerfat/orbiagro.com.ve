@@ -31,7 +31,7 @@ class CategoryTableSeeder extends BaseSeeder
         Storage::disk('public')->makeDirectory('category');
 
         foreach ($types as $category) {
-            $category = App\Category::create([
+            $category = Orbiagro\Models\Category::create([
                 'description' => $category,
                 'info'        => $faker->text(),
                 'slug'        => str_slug($category, '-'),

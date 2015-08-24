@@ -16,7 +16,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \App\User $user
+ * @property-read \Orbiagro\Models\User $user
  * @property-read \ $visitable
  */
 class Bank extends Model
@@ -29,12 +29,12 @@ class Bank extends Model
     // --------------------------------------------------------------------------
 
     /**
-     * @property-read \Illuminate\Database\Eloquent\Collection|\App\Billing[] $billings
+     * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Billing[] $billings
      *
-     * @return \Illuminate\Database\Eloquent\Collection|\App\Billing[]
+     * @return \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Billing[]
      */
     public function billings()
     {
-        return $this->hasMany('App\Billing');
+        return $this->hasMany('Orbiagro\Models\Billing');
     }
 }

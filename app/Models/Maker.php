@@ -54,7 +54,7 @@ class Maker extends Model
     // --------------------------------------------------------------------------
     public function products()
     {
-        return $this->hasMany('App\Product');
+        return $this->hasMany('Orbiagro\Models\Product');
     }
 
     // --------------------------------------------------------------------------
@@ -66,6 +66,6 @@ class Maker extends Model
     // --------------------------------------------------------------------------
     public function image()
     {
-        return $this->morphOne('App\Image', 'imageable');
+        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
     }
 }

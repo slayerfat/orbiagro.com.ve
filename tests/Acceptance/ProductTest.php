@@ -18,7 +18,7 @@ class ProductTest extends TestCase
     public function testNonOwnerCantEditProduct()
     {
         $this->markTestIncomplete();
-        $user = factory('App\User')->create();
+        $user = factory('Orbiagro\Models\User')->create();
         $this->actingAs($user)
         ->visit('/productos/1/editar')
         ->see('Ud. no tiene permisos para esta accion.')

@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->app->bind(
             'Illuminate\Contracts\Auth\Registrar',
-            'App\Services\Registrar'
+            'Orbiagro\Services\Registrar'
         );
     }
 }

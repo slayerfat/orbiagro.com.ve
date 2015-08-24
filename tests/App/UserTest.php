@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\User;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class UserTest extends TestCase
         parent::setUp();
 
         $this->tester = new User;
-        $this->mock = Mockery::mock('App\User')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\User')->makePartial();
     }
 
     public function testPersonRelationship()
@@ -27,7 +27,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasOne')
             ->once()
-            ->with('App\Person')
+            ->with('Orbiagro\Models\Person')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->person());
@@ -38,7 +38,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasOne')
             ->once()
-            ->with('App\UserConfirmation')
+            ->with('Orbiagro\Models\UserConfirmation')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->confirmation());
@@ -49,7 +49,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('App\Profile')
+            ->with('Orbiagro\Models\Profile')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->profile());
@@ -60,7 +60,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Billing')
+            ->with('Orbiagro\Models\Billing')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->billings());
@@ -71,7 +71,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Product')
+            ->with('Orbiagro\Models\Product')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->products());
@@ -82,7 +82,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('App\Visit')
+            ->with('Orbiagro\Models\Visit')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->visits());
@@ -93,7 +93,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('belongsToMany')
             ->once()
-            ->with('App\Product')
+            ->with('Orbiagro\Models\Product')
             ->andReturn(Mockery::self());
 
         $this->mock
@@ -112,7 +112,7 @@ class UserTest extends TestCase
 
     public function testIsAdmin()
     {
-        $this->tester->profile = factory('App\Profile')->make();
+        $this->tester->profile = factory('Orbiagro\Models\Profile')->make();
 
         $this->assertFalse($this->tester->isAdmin());
 
@@ -124,7 +124,7 @@ class UserTest extends TestCase
     public function testIsOwnerOrAdmin()
     {
         $this->tester->id = 1;
-        $this->tester->profile = factory('App\Profile')->make();
+        $this->tester->profile = factory('Orbiagro\Models\Profile')->make();
 
         $this->assertFalse($this->tester->isOwnerOrAdmin(2));
 
@@ -135,7 +135,7 @@ class UserTest extends TestCase
 
     public function testIsUser()
     {
-        $this->tester->profile = factory('App\Profile')->make();
+        $this->tester->profile = factory('Orbiagro\Models\Profile')->make();
 
         $this->assertFalse($this->tester->isUser());
 
@@ -146,7 +146,7 @@ class UserTest extends TestCase
 
     public function testIsDisabledAndIsVerified()
     {
-        $this->tester->profile = factory('App\Profile')->make();
+        $this->tester->profile = factory('Orbiagro\Models\Profile')->make();
 
         $this->assertTrue($this->tester->isVerified());
         $this->assertFalse($this->tester->isDisabled());

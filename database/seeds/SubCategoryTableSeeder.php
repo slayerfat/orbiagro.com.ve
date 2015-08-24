@@ -41,10 +41,10 @@ class SubCategoryTableSeeder extends BaseSeeder
         foreach ($types as $category => $values) {
             $this->command->info("$category");
 
-            $cat = App\Category::where('description', $category)->first();
+            $cat = Orbiagro\Models\Category::where('description', $category)->first();
             foreach ($values as $value) {
                 $this->command->info("$value");
-                $subCat = App\SubCategory::create([
+                $subCat = Orbiagro\Models\SubCategory::create([
                     'category_id' => $cat->id,
                     'description' => $value,
                     'info'        => $faker->text(),

@@ -16,7 +16,7 @@ class Kernel extends HttpKernel
         'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
         'Illuminate\Session\Middleware\StartSession',
         'Illuminate\View\Middleware\ShareErrorsFromSession',
-        'App\Http\Middleware\VerifyCsrfToken',
+        'Orbiagro\Http\Middleware\VerifyCsrfToken',
     ];
 
     /**
@@ -25,11 +25,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'            => 'App\Http\Middleware\Authenticate',
+        'auth'            => 'Orbiagro\Http\Middleware\Authenticate',
         'auth.basic'      => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-        'guest'           => 'App\Http\Middleware\RedirectIfAuthenticated',
-        'user.verified'   => 'App\Http\Middleware\RedirectIfVerified',
-        'user.unverified' => 'App\Http\Middleware\RedirectIfUnverified',
-        'user.admin'      => 'App\Http\Middleware\RedirectIfNotAdmin',
+        'guest'           => 'Orbiagro\Http\Middleware\RedirectIfAuthenticated',
+        'user.verified'   => 'Orbiagro\Http\Middleware\RedirectIfVerified',
+        'user.unverified' => 'Orbiagro\Http\Middleware\RedirectIfUnverified',
+        'user.admin'      => 'Orbiagro\Http\Middleware\RedirectIfNotAdmin',
     ];
 }

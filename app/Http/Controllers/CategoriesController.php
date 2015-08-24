@@ -14,7 +14,7 @@ class CategoriesController extends Controller
     /**
      * La instancia de la categoria.
      *
-     * @var App\Category
+     * @var Orbiagro\Models\Category
      */
     protected $cat;
 

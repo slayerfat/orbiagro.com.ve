@@ -1,7 +1,7 @@
-<?php namespace Tests\App;
+<?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\App\Traits\TearsDownMockery;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Models\Image;
 use Tests\TestCase;
 
@@ -19,7 +19,7 @@ class ImageTest extends TestCase
         parent::setUp();
 
         $this->tester = new Image;
-        $this->mock = Mockery::mock('App\Image')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Image')->makePartial();
     }
 
     public function testImageableRelationship()
