@@ -11,6 +11,10 @@ use App\SubCategory;
 class Carrusel
 {
 
+    /**
+     * @param  View   $view
+     * @return Response
+     */
     public function composeHomeCarruselImages(View $view)
     {
         $collection = collect();
@@ -31,12 +35,12 @@ class Carrusel
 
         $collection->push($item);
 
-        $products->each(function($product) use($collection) {
+        $products->each(function ($product) use ($collection) {
             $product->controller = 'ProductsController@show';
             $collection->push($product);
         });
 
-        $promotions->each(function($promo) use($collection) {
+        $promotions->each(function ($promo) use ($collection) {
             $promo->controller = 'PromotionsController@show';
             $collection->push($promo);
         });

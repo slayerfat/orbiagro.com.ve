@@ -6,20 +6,20 @@ class PeopleRequest extends Request
 {
 
     /**
-    * Determine if the user is authorized to make this request.
-    *
-    * @return bool
-    */
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize()
     {
         return $this->auth->user()->isOwnerOrAdmin($this->route('datos-personales'));
     }
 
     /**
-    * Get the validation rules that apply to the request.
-    *
-    * @return array
-    */
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
     public function rules()
     {
         // @see UserRequest

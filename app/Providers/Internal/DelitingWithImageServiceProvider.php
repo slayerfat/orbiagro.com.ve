@@ -10,10 +10,10 @@ class DelitingWithImageServiceProvider extends ServiceProvider
     use ModelEventsTrait;
 
     /**
-    * Bootstrap the application services.
-    *
-    * @return void
-    */
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         $models = [
@@ -28,10 +28,10 @@ class DelitingWithImageServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
         //

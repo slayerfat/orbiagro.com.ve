@@ -12,13 +12,13 @@ class File extends Upload
 {
 
     /**
-    * Crea el archivo relacionado con algun modelo.
-    *
-    * @param Model        $model El modelo relacionado para ser asociado.
-    * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
-    *
-    * @return boolean
-    */
+     * Crea el archivo relacionado con algun modelo.
+     *
+     * @param Model        $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
+     *
+     * @return boolean
+     */
     public function create(Model $model, UploadedFile $file = null)
     {
         if ($file === null) {
@@ -93,13 +93,13 @@ class File extends Upload
     // --------------------------------------------------------------------------
 
     /**
-    * crea el modelo nuevo de alguna imagen relacionada con algun producto.
-    *
-    * @param array  $array el array que contiene los datos para la imagen.
-    * @param Model  $model el modelo a asociar.
-    *
-    * @return boolean
-    */
+     * crea el modelo nuevo de alguna imagen relacionada con algun producto.
+     *
+     * @param array  $array el array que contiene los datos para la imagen.
+     * @param Model  $model el modelo a asociar.
+     *
+     * @return boolean
+     */
     private function createFileModel(array $array, $model)
     {
         $file = new FileModel($array);

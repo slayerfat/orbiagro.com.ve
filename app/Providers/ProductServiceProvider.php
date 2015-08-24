@@ -9,10 +9,10 @@ class ProductServiceProvider extends ServiceProvider
 {
 
     /**
-    * Bootstrap the application services.
-    *
-    * @return void
-    */
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         Product::deleting(function ($model) {
@@ -46,12 +46,12 @@ class ProductServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
-    //
+        //
     }
 }

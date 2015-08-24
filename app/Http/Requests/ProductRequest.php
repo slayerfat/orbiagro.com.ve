@@ -9,10 +9,10 @@ class ProductRequest extends Request
 {
 
     /**
-    * Determine if the user is authorized to make this request.
-    *
-    * @return bool
-    */
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize()
     {
         // si ruta es nula entonces se esta creado un nuevo recurso
@@ -26,10 +26,10 @@ class ProductRequest extends Request
     }
 
     /**
-    * Get the validation rules that apply to the request.
-    *
-    * @return array
-    */
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
     public function rules()
     {
         return [

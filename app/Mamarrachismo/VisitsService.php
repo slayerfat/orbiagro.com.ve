@@ -19,9 +19,9 @@ class VisitsService
 {
 
     /**
-    * Para almacenar Ids de los modelos a manipular.
-    * @var array
-    */
+     * Para almacenar Ids de los modelos a manipular.
+     * @var array
+     */
     protected $bag = [];
 
     // --------------------------------------------------------------------------
@@ -29,10 +29,10 @@ class VisitsService
     // --------------------------------------------------------------------------
 
     /**
-    * @param mixed $model el modelo a manipular.
-    *
-    * @return void
-    */
+     * @param mixed $model el modelo a manipular.
+     *
+     * @return void
+     */
     public function setNewVisit($model)
     {
         switch (get_class($model)) {
@@ -53,11 +53,11 @@ class VisitsService
     }
 
     /**
-    * @param mixed  $model     el objeto a manipular.
-    * @param int    $quantity  la cantidad a tomar.
-    *
-    * @return Illuminate\Database\Eloquent\Collection
-    */
+     * @param mixed  $model     el objeto a manipular.
+     * @param int    $quantity  la cantidad a tomar.
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     */
     public function getPopular($model, $quantity = 3)
     {
         $results = $this->findMostVisitedResource($model, $quantity);
@@ -74,11 +74,11 @@ class VisitsService
     }
 
     /**
-    * busca los productos dentro de los cookies y devuelve la coleccion.
-    *
-    * @param mixed $obj el objeto a manipular.
-    * @return Illuminate\Database\Eloquent\Collection
-    */
+     * busca los productos dentro de los cookies y devuelve la coleccion.
+     *
+     * @param mixed $obj el objeto a manipular.
+     * @return Illuminate\Database\Eloquent\Collection
+     */
     public function getVisitedResources($obj)
     {
         $result = $this->checkAndStoreVisits($obj);
@@ -95,13 +95,13 @@ class VisitsService
     // Funciones privadas
     // --------------------------------------------------------------------------
     /**
-    * usado para determinar cuales son los recursos mas populares (count)
-    *
-    * @param mixed $model    el modelo, nos interesa la clase (App\Product)
-    * @param int   $quantity la cantidad a tomar
-    *
-    * @return Collection
-    */
+     * usado para determinar cuales son los recursos mas populares (count)
+     *
+     * @param mixed $model    el modelo, nos interesa la clase (App\Product)
+     * @param int   $quantity la cantidad a tomar
+     *
+     * @return Collection
+     */
     private function findMostVisitedResource($model, $quantity)
     {
         return Visit::selectRaw('visitable_id, sum(total)')
@@ -113,13 +113,13 @@ class VisitsService
     }
 
     /**
-    * utilizado para obtener los recursos guardados en cookies.
-    *
-    * @param mixed $model
-    * @param array $array el arreglo con ids a buscar.
-    *
-    * @return Collection
-    */
+     * utilizado para obtener los recursos guardados en cookies.
+     *
+     * @param mixed $model
+     * @param array $array el arreglo con ids a buscar.
+     *
+     * @return Collection
+     */
     private function findResourceInDatabase($model, $array)
     {
         foreach ($array as $id) {
@@ -130,14 +130,14 @@ class VisitsService
     }
 
     /**
-    * itera el array de los productos visitados y lo
-    * cambia para que sea mas facil de manipular
-    * ['product_x' => y] ---> [x => y]
-    *
-    * @param array $array el array a iterar.
-    *
-    * @return array
-    */
+     * itera el array de los productos visitados y lo
+     * cambia para que sea mas facil de manipular
+     * ['product_x' => y] ---> [x => y]
+     *
+     * @param array $array el array a iterar.
+     *
+     * @return array
+     */
     private function parseIdsInArrayKeys($array)
     {
         $parsed = [];
@@ -151,13 +151,13 @@ class VisitsService
     }
 
     /**
-    * guarda las visitas a productos del usuario en la base de datos.
-    *
-    * @param array  $array el array a iterar (id => visitas).
-    * @param Object $model el modelo a manipular.
-    *
-    * @return boolean
-    */
+     * guarda las visitas a productos del usuario en la base de datos.
+     *
+     * @param array  $array el array a iterar (id => visitas).
+     * @param Object $model el modelo a manipular.
+     *
+     * @return boolean
+     */
     private function storeResourceVisits($model, $array)
     {
         $name = class_basename($model);
@@ -183,13 +183,13 @@ class VisitsService
     }
 
     /**
-    * Usado para crear el modelo relacion al recurso, en este caso una visita.
-    * @param  array  $array el arreglo con los productos a relacionar
-    * @param  string $name  el nombre del recurso (Product, SubCategory, etc)
-    * @param  Object $model el modelo a manipular.
-    *
-    * @return void
-    */
+     * Usado para crear el modelo relacion al recurso, en este caso una visita.
+     * @param  array  $array el arreglo con los productos a relacionar
+     * @param  string $name  el nombre del recurso (Product, SubCategory, etc)
+     * @param  Object $model el modelo a manipular.
+     *
+     * @return void
+     */
     private function createVisitModel($array, $name, $model)
     {
         if (gettype($model) !== 'object' && gettype($model) !== 'string') {
@@ -227,11 +227,11 @@ class VisitsService
     }
 
     /**
-    * para darle una fecha al cookie
-    *
-    * @param  string $model el tipo de modelo al que se le asociara el cookie
-    * @return boolean
-    */
+     * para darle una fecha al cookie
+     *
+     * @param  string $model el tipo de modelo al que se le asociara el cookie
+     * @return boolean
+     */
     private function setUpdatedCookieDate($model)
     {
         $date = Carbon::now();
@@ -242,15 +242,15 @@ class VisitsService
     }
 
     /**
-    * Crea un cookie relacionado a una vistita de algun recurso,
-    * ya sea un producto, rubro u otro tipo, genera el total y crea
-    * la fecha de la ultima visita para control.
-    *
-    * @method setNewVisitCookie
-    * @param  mixed             $model el nombre del modelo asociado
-    *
-    * @return void
-    */
+     * Crea un cookie relacionado a una vistita de algun recurso,
+     * ya sea un producto, rubro u otro tipo, genera el total y crea
+     * la fecha de la ultima visita para control.
+     *
+     * @method setNewVisitCookie
+     * @param  mixed             $model el nombre del modelo asociado
+     *
+     * @return void
+     */
     private function setNewVisitCookie($model)
     {
         $name = class_basename($model);
@@ -267,13 +267,13 @@ class VisitsService
     }
 
     /**
-    * busca en las cookies guardadas del usuario e
-    * invoca storeResourceVisits para guardar las visitas.
-    *
-    * @method checkAndStoreVisits
-    * @param  string              $model El nombre del modelo
-    * @return mixed
-    */
+     * busca en las cookies guardadas del usuario e
+     * invoca storeResourceVisits para guardar las visitas.
+     *
+     * @method checkAndStoreVisits
+     * @param  string              $model El nombre del modelo
+     * @return mixed
+     */
     private function checkAndStoreVisits($model)
     {
         $key = class_basename($model);
@@ -293,14 +293,14 @@ class VisitsService
     }
 
     /**
-    * Busca las visitas e itera para encontrar la coleccion
-    * de objetos (visitas de productos, rubros, etc)
-    * relacionados con el usuario.
-    *
-    * @method findVisitedResource
-    * @param  string               $model El modelo a manipular.
-    * @return Collection
-    */
+     * Busca las visitas e itera para encontrar la coleccion
+     * de objetos (visitas de productos, rubros, etc)
+     * relacionados con el usuario.
+     *
+     * @method findVisitedResource
+     * @param  string               $model El modelo a manipular.
+     * @return Collection
+     */
     private function findVisitedResource($model)
     {
         if (!Auth::user()) {

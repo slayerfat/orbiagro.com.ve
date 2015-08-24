@@ -13,13 +13,13 @@ class Image extends Upload
 {
 
     /**
-    * crea la(s) imagen(es) relacionadas con algun modelo.
-    *
-    * @param Model $model El modelo a relacionar con la imagen.
-    * @param array $array El array con los objetos UploadedFiles.
-    *
-    * @return \Illuminate\Support\Collection
-    */
+     * crea la(s) imagen(es) relacionadas con algun modelo.
+     *
+     * @param Model $model El modelo a relacionar con la imagen.
+     * @param array $array El array con los objetos UploadedFiles.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function createImages(Model $model, array $array = null)
     {
         $collection = collect();
@@ -64,13 +64,13 @@ class Image extends Upload
     }
 
     /**
-    * crea la imagen relacionada con algun modelo.
-    *
-    * @param Model        $model El modelo relacionado para ser asociado.
-    * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
-    *
-    * @return \Illuminate\Support\Collection
-    */
+     * crea la imagen relacionada con algun modelo.
+     *
+     * @param Model        $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function create(Model $model, UploadedFile $file = null)
     {
         $result = $this->createImages($model, [$file]);
@@ -83,13 +83,13 @@ class Image extends Upload
     }
 
     /**
-    * crea la imagen por defecto relacionada con algun modelo.
-    *
-    * @param object $model      El modelo relacionado para ser asociado.
-    * @param string $modelPath  La direccion a donde se guardara
-    *
-    * @return \Illuminate\Database\Eloquent\Model
-    */
+     * crea la imagen por defecto relacionada con algun modelo.
+     *
+     * @param object $model      El modelo relacionado para ser asociado.
+     * @param string $modelPath  La direccion a donde se guardara
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
     public function createDefaultImage($model, $modelPath = null)
     {
         if ($modelPath === null && isset($this->path)) {
@@ -123,14 +123,14 @@ class Image extends Upload
     }
 
     /**
-    * actualiza la imagen relacionada con algun modelo.
-    *
-    * @param Model         $model   El modelo de la imagen.
-    * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
-    * @param array         $options las opcions relacionadas con Intervention.
-    *
-    * @return Model
-    */
+     * actualiza la imagen relacionada con algun modelo.
+     *
+     * @param Model         $model   El modelo de la imagen.
+     * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
+     * @param array         $options las opcions relacionadas con Intervention.
+     *
+     * @return Model
+     */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
         // si no hay algun modelo relacionado, se crea uno de cero.
@@ -193,13 +193,13 @@ class Image extends Upload
     }
 
     /**
-    * elimina todas las imagenes del disco duro.
-    *
-    * @param App\Image  $imageModel El modelo de la imagen.
-    * @param boolean    $all        para determinar si se elimina del disco duro TODOS los archivos.
-    *
-    * @return void
-    */
+     * elimina todas las imagenes del disco duro.
+     *
+     * @param App\Image  $imageModel El modelo de la imagen.
+     * @param boolean    $all        para determinar si se elimina del disco duro TODOS los archivos.
+     *
+     * @return void
+     */
     public function deleteImageFiles($imageModel, $all)
     {
         $this->errors = [];
@@ -231,15 +231,15 @@ class Image extends Upload
     // --------------------------------------------------------------------------
 
     /**
-    * usado para crear en el disco duro el archivo relacionado a un producto.
-    *
-    * @param  UploadedFile $file
-    * @param  string       $path     la direccion a donde se guardara el archivo.
-    * @param  array        $options  las opcions relacionadas con Intervention.
-    *
-    * @return array        $data     la carpeta, nombre y
-    *                                extension del archivo guardado.
-    */
+     * usado para crear en el disco duro el archivo relacionado a un producto.
+     *
+     * @param  UploadedFile $file
+     * @param  string       $path     la direccion a donde se guardara el archivo.
+     * @param  array        $options  las opcions relacionadas con Intervention.
+     *
+     * @return array        $data     la carpeta, nombre y
+     *                                extension del archivo guardado.
+     */
     private function makeImageFile(UploadedFile $file, $path = null, array $options = null)
     {
         $data = parent::makeFile($file, $path);
@@ -267,11 +267,11 @@ class Image extends Upload
     }
 
     /**
-    * crea la imagen no modificada asociada al modelo.
-    *
-    * @param  array  $data la informacion relacionada con la imagen a crear.
-    * @return array
-    */
+     * crea la imagen no modificada asociada al modelo.
+     *
+     * @param  array  $data la informacion relacionada con la imagen a crear.
+     * @return array
+     */
     private function makeOriginalFile(array $data)
     {
         if (!Storage::disk('public')->exists($data['path'])) {
@@ -288,14 +288,14 @@ class Image extends Upload
     }
 
     /**
-    * crea los archivos de diferentes tamaños relacionados con alguna imagen.
-    *
-    * @param  \Intervention\Image\Image  $image la instancia de la imagen relacionada.
-    * @param  array                      $data  los datos relacionados, por ahora
-    *                                           solo se necesita la direccion del
-    *                                           modelo (producto/id).
-    * @return array
-    */
+     * crea los archivos de diferentes tamaños relacionados con alguna imagen.
+     *
+     * @param  \Intervention\Image\Image  $image la instancia de la imagen relacionada.
+     * @param  array                      $data  los datos relacionados, por ahora
+     *                                           solo se necesita la direccion del
+     *                                           modelo (producto/id).
+     * @return array
+     */
     private function createSmallMediumLargeFiles(Intervention\Image\Image $image, array $data)
     {
         if (!isset($data['dir'])) {
@@ -334,13 +334,13 @@ class Image extends Upload
     }
 
     /**
-    * crea el modelo nuevo de alguna imagen relacionada con algun producto.
-    *
-    * @param array  $array el array que contiene los datos para la imagen.
-    * @param Object $model el modelo a asociar.
-    *
-    * @return \Illuminate\Database\Eloquent\Model
-    */
+     * crea el modelo nuevo de alguna imagen relacionada con algun producto.
+     *
+     * @param array  $array el array que contiene los datos para la imagen.
+     * @param Object $model el modelo a asociar.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
     private function createImageModel(array $array, $model)
     {
         $image = new ImageModel($array);

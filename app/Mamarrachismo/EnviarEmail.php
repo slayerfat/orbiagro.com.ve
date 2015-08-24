@@ -60,10 +60,10 @@ class EnviarEmail
     // --------------------------------------------------------------------------
 
     /**
-    * version simplificada
-    *
-    * @return array
-    */
+     * version simplificada
+     *
+     * @return array
+     */
     public static function getAdminsEmail()
     {
         $obj = new self;
@@ -72,10 +72,10 @@ class EnviarEmail
     }
 
     /**
-    * version simplificada
-    *
-    * @return array
-    */
+     * version simplificada
+     *
+     * @return array
+     */
     public static function getUsersEmail()
     {
         $obj = new self;
@@ -84,13 +84,13 @@ class EnviarEmail
     }
 
     /**
-    * Se envia los correos deseados. TEP.
-    *
-    * @todo ajustarlo a este app.
-    *
-    * @param  array    $data  el array con los datos relacionados
-    * @return boolean
-    */
+     * Se envia los correos deseados. TEP.
+     *
+     * @todo ajustarlo a este app.
+     *
+     * @param  array    $data  el array con los datos relacionados
+     * @return boolean
+     */
     public static function enviarEmail($data, $emails)
     {
         // por si acaso...

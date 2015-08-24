@@ -16,11 +16,11 @@ class AuthController extends Controller
 {
 
     /**
-    * Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers
-    * @redirectPath()
-    *
-    * @var string
-    */
+     * Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers
+     * @redirectPath()
+     *
+     * @var string
+     */
     protected $redirectTo = '/';
 
     /*
@@ -37,21 +37,21 @@ class AuthController extends Controller
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
-    * Create a new authentication controller instance.
-    *
-    * @return void
-    */
+     * Create a new authentication controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'getLogout']);
     }
 
     /**
-    * Get a validator for an incoming registration request.
-    *
-    * @param  array  $data
-    * @return \Illuminate\Contracts\Validation\Validator
-    */
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function validator(array $data)
     {
         return Validator::make($data, [
@@ -62,11 +62,11 @@ class AuthController extends Controller
     }
 
     /**
-    * Create a new user instance after a valid registration.
-    *
-    * @param  array  $data
-    * @return User
-    */
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return User
+     */
     public function create(array $data)
     {
         $profile      = Profile::where('description', 'Desactivado')->firstOrFail();
@@ -98,11 +98,11 @@ class AuthController extends Controller
     }
 
     /**
-    * Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers
-    * @getFailedLoginMessage()
-    *
-    * @return string
-    */
+     * Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers
+     * @getFailedLoginMessage()
+     *
+     * @return string
+     */
     protected function getFailedLoginMessage()
     {
         return 'Los datos suministrados no concuerdan con nuestros archivos.';

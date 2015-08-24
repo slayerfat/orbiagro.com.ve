@@ -9,10 +9,10 @@ class ImageDeleteServiceProvider extends ServiceProvider
 {
 
     /**
-    * Bootstrap the application services.
-    *
-    * @return void
-    */
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         Image::deleting(function ($image) {
@@ -23,10 +23,10 @@ class ImageDeleteServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
         //

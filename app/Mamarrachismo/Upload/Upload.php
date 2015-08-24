@@ -10,38 +10,38 @@ abstract class Upload
 {
 
     /**
-    * @var mixed
-    */
+     * @var mixed
+     */
     public $errors;
 
     /**
-    * @var int
-    */
+     * @var int
+     */
     public $userId;
 
     /**
-    * el modelo a ser manipulado
-    *
-    * @var Object
-    */
+     * el modelo a ser manipulado
+     *
+     * @var Object
+     */
     public $model;
 
     /**
-    * la direccion para guardar el archivo relacionado al modelo.
-    * @var string
-    */
+     * la direccion para guardar el archivo relacionado al modelo.
+     * @var string
+     */
     protected $path;
 
     /**
-    * reglas para el validador.
-    * @var array
-    */
+     * reglas para el validador.
+     * @var array
+     */
     protected $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
 
     /**
-    * reglas para el validador.
-    * @var array
-    */
+     * reglas para el validador.
+     * @var array
+     */
     protected $fileRules = ['file' => 'mimes:pdf|max:10000'];
 
     /**
@@ -60,11 +60,11 @@ abstract class Upload
     }
 
     /**
-    * @param Model        $model El modelo relacionado para ser asociado.
-    * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
-    *
-    * @return \Illuminate\Support\Collection
-    */
+     * @param Model        $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     abstract public function create(Model $model, UploadedFile $file = null);
 
     /**
@@ -77,13 +77,13 @@ abstract class Upload
     abstract public function update(Model $model, UploadedFile $file = null, array $options = null);
 
     /**
-    * usado para crear en el disco duro el archivo relacionado a un producto.
-    *
-    * @param  UploadedFile $file
-    * @param  string $path la direccion a donde se guardara el archivo.
-    *
-    * @return array  $data la carpeta, nombre y extension del archivo guardado.
-    */
+     * usado para crear en el disco duro el archivo relacionado a un producto.
+     *
+     * @param  UploadedFile $file
+     * @param  string $path la direccion a donde se guardara el archivo.
+     *
+     * @return array  $data la carpeta, nombre y extension del archivo guardado.
+     */
     protected function makeFile(UploadedFile $file, $path = null)
     {
         // el nombre del archivo

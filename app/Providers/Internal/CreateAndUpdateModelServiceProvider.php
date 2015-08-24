@@ -12,10 +12,10 @@ class CreateAndUpdateModelServiceProvider extends ServiceProvider
     use ModelEventsTrait;
 
     /**
-    * Bootstrap the application services.
-    *
-    * @return void
-    */
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         if (!$id = Auth::id()) {
@@ -50,10 +50,10 @@ class CreateAndUpdateModelServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
         //

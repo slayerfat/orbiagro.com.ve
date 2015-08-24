@@ -6,10 +6,10 @@ class ViewServiceProvider extends ServiceProvider
 {
 
     /**
-    * Bootstrap the application services.
-    *
-    * @return void
-    */
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         view()->composer(
@@ -39,10 +39,10 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
         //

@@ -24,7 +24,7 @@ class BusServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register any application services.
+     * Register the application services.
      *
      * @return void
      */
