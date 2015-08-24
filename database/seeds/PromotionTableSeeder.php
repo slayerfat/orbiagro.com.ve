@@ -21,7 +21,7 @@ class PromotionTableSeeder extends Seeder
         $product = Orbiagro\Models\Product::first();
 
         factory(Orbiagro\Models\Promotion::class, 3)->create()->each(function ($promo) use ($product) {
-            $this->upload->createImage($promo);
+            $this->upload->create($promo);
             $product->promotions()->attach($promo);
         });
     }

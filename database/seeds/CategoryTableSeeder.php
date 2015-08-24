@@ -38,7 +38,7 @@ class CategoryTableSeeder extends BaseSeeder
                 'created_by'  => $this->user->id,
                 'updated_by'  => $this->user->id,
             ]);
-            $this->upload->createImage($category);
+            $this->upload->create($category);
         }
 
         $this->command->info('El Elegido creo las categorias.');

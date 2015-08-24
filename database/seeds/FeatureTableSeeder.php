@@ -21,7 +21,7 @@ class FeatureTableSeeder extends Seeder
 
         Orbiagro\Models\Product::all()->each(function ($product) {
             $f = $product->features()->save(factory(Orbiagro\Models\Feature::class)->make());
-            $this->upload->createImage($f);
+            $this->upload->create($f);
         });
 
         $this->command->info('Creacion de features completado.');

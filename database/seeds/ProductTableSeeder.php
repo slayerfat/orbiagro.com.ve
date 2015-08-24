@@ -41,14 +41,14 @@ class ProductTableSeeder extends Seeder
                 // se guarda la imagen del producto
                 // por estar nulo el primer argumento, saldra una
                 // imagen por defecto, -sin imagen-
-                $this->upload->createImage($product);
+                $this->upload->create($product);
 
                 // como los features tienen una imagen asociada
                 // se guarda la instancia como variable $f
                 // y se guarda una imagen.
                 $f = $product->features()->save(factory(Orbiagro\Models\Feature::class)->make());
 
-                $this->upload->createImage($f);
+                $this->upload->create($f);
 
                 // estos son el resto de las entidades relacionadas con producto.
                 $product->characteristics()->save(factory(Orbiagro\Models\Characteristic::class)->make());

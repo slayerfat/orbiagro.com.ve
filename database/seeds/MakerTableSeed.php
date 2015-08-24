@@ -24,7 +24,7 @@ class MakerTableSeeder extends BaseSeeder
         Storage::disk('public')->makeDirectory('makers');
 
         factory(Orbiagro\Models\Maker::class, 2)->create()->each(function ($model) use ($upload) {
-            $upload->createImage($model);
+            $upload->create($model);
         });
     }
 }

@@ -53,7 +53,7 @@ class SubCategoryTableSeeder extends BaseSeeder
                     'updated_by'  => $this->user->id,
                 ]);
 
-                $this->upload->createImage($subCat);
+                $this->upload->create($subCat);
             }
         }
 
