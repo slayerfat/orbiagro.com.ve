@@ -171,6 +171,7 @@ class CheckDollar
     private function makeFile()
     {
         $storage = $this->storage;
+
         $data = file_get_contents($this->dollarTodayUrl);
 
         if (!$data) {

@@ -1,10 +1,12 @@
 <?php namespace App\Mamarrachismo;
 
+use Auth;
 use Cookie;
 use Exception;
 use Carbon\Carbon;
 use App\Mamarrachismo\Transformer;
-use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 use App\Product;
 use App\SubCategory;
 use App\Visit;
@@ -29,9 +31,11 @@ class VisitsService
     /**
      * @param mixed $model el modelo a manipular.
      *
+     * @param Model $model
+     *
      * @return void
      */
-    public function setNewVisit($model)
+    public function setNewVisit(Model $model)
     {
         switch (get_class($model)) {
             case 'App\SubCategory':
@@ -45,18 +49,18 @@ class VisitsService
                 return $this->setNewVisitCookie($model->subCategory);
 
             default:
-                throw new Exception("Error, es necesario especificar modelo valido.", 2);
+                throw new Exception('Es necesario especificar modelo valido.');
 
         }
     }
 
     /**
-     * @param mixed  $model     el objeto a manipular.
+     * @param Model  $model     el objeto a manipular.
      * @param int    $quantity  la cantidad a tomar.
      *
-     * @return Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
-    public function getPopular($model, $quantity = 3)
+    public function getPopular(Model $model, $quantity = 3)
     {
         $results = $this->findMostVisitedResource($model, $quantity);
 
@@ -74,10 +78,10 @@ class VisitsService
     /**
      * busca los productos dentro de los cookies y devuelve la coleccion.
      *
-     * @param mixed $obj el objeto a manipular.
-     * @return Illuminate\Database\Eloquent\Collection
+     * @param Model $obj el objeto a manipular.
+     * @return Collection
      */
-    public function getVisitedResources($obj)
+    public function getVisitedResources(Model $obj)
     {
         $result = $this->checkAndStoreVisits($obj);
 
@@ -95,12 +99,12 @@ class VisitsService
     /**
      * usado para determinar cuales son los recursos mas populares (count)
      *
-     * @param mixed $model    el modelo, nos interesa la clase (App\Product)
+     * @param Model $model    el modelo, nos interesa la clase (App\Product)
      * @param int   $quantity la cantidad a tomar
      *
      * @return Collection
      */
-    private function findMostVisitedResource($model, $quantity)
+    private function findMostVisitedResource(Model $model, $quantity)
     {
         return Visit::selectRaw('visitable_id, sum(total)')
             ->where('visitable_type', get_class($model))
@@ -113,12 +117,12 @@ class VisitsService
     /**
      * utilizado para obtener los recursos guardados en cookies.
      *
-     * @param mixed $model
+     * @param Model $model
      * @param array $array el arreglo con ids a buscar.
      *
      * @return Collection
      */
-    private function findResourceInDatabase($model, $array)
+    private function findResourceInDatabase(Model $model, array $array)
     {
         foreach ($array as $id) {
             $this->bag[] = $id;
@@ -129,14 +133,15 @@ class VisitsService
 
     /**
      * itera el array de los productos visitados y lo
-     * cambia para que sea mas facil de manipular
-     * ['product_x' => y] ---> [x => y]
+     * cambia para que sea mas facil de manipular.
+     *
+     * @example ['product_x' => y] ---> [x => y]
      *
      * @param array $array el array a iterar.
      *
      * @return array
      */
-    private function parseIdsInArrayKeys($array)
+    private function parseIdsInArrayKeys(array $array)
     {
         $parsed = [];
 
@@ -151,22 +156,22 @@ class VisitsService
     /**
      * guarda las visitas a productos del usuario en la base de datos.
      *
+     * @param Model $model el modelo a manipular.
      * @param array  $array el array a iterar (id => visitas).
-     * @param Object $model el modelo a manipular.
      *
      * @return boolean
      */
-    private function storeResourceVisits($model, $array, Guard $auth)
+    private function storeResourceVisits(Model $model, array $array)
     {
         $name = class_basename($model);
 
         if (!$name) {
-            throw new Exception("No se puede guardar visita sin un modelo asociado", 3);
+            throw new Exception('No se puede guardar visita sin un modelo asociado.');
         }
 
         $date = Cookie::get("{$name}VisitedAt");
 
-        if (!$auth->user() || !isset($array) || !$date) {
+        if (!Auth::user() || !isset($array) || !$date) {
             return null;
         }
 
@@ -182,16 +187,17 @@ class VisitsService
 
     /**
      * Usado para crear el modelo relacion al recurso, en este caso una visita.
+     *
      * @param  array  $array el arreglo con los productos a relacionar
      * @param  string $name  el nombre del recurso (Product, SubCategory, etc)
-     * @param  Object $model el modelo a manipular.
+     * @param  Model $model el modelo a manipular.
      *
      * @return void
      */
-    private function createVisitModel($array, $name, $model, Guard $auth)
+    private function createVisitModel(array $array, $name, Model $model)
     {
         if (gettype($model) !== 'object' && gettype($model) !== 'string') {
-            throw new Exception('Error: el modelo especificado no es del tipo adecuado', 1);
+            throw new Exception('El modelo especificado no es del tipo adecuado');
         }
 
         // si la visita no existe en la base de datos se crea, sino se actualiza
@@ -207,12 +213,12 @@ class VisitsService
             }
 
             // se determina si hay o no que crear una nueva visita
-            if ($auth->user()->visits()->where('visitable_id', $result->id)->get()->isEmpty()) {
+            if (Auth::user()->visits()->where('visitable_id', $result->id)->get()->isEmpty()) {
                 $visit = new Visit;
                 $visit->total = $total;
-                $visit->user_id = $auth->user()->id;
+                $visit->user_id = Auth::user()->id;
                 $result->visits()->save($visit);
-            } elseif ($visit = $auth->user()->visits()->where('visitable_id', $result->id)->first()) {
+            } elseif ($visit = Auth::user()->visits()->where('visitable_id', $result->id)->first()) {
                 $visit->total += $total;
                 $visit->save();
             }
@@ -227,10 +233,10 @@ class VisitsService
     /**
      * para darle una fecha al cookie
      *
-     * @param  string $model el tipo de modelo al que se le asociara el cookie
+     * @param  Model $model el tipo de modelo al que se le asociara el cookie
      * @return boolean
      */
-    private function setUpdatedCookieDate($model)
+    private function setUpdatedCookieDate(Model $model)
     {
         $date = Carbon::now();
 
@@ -245,11 +251,12 @@ class VisitsService
      * la fecha de la ultima visita para control.
      *
      * @method setNewVisitCookie
-     * @param  mixed             $model el nombre del modelo asociado
+     *
+     * @param  Model $model el nombre del modelo asociado
      *
      * @return void
      */
-    private function setNewVisitCookie($model)
+    private function setNewVisitCookie(Model $model)
     {
         $name = class_basename($model);
 
@@ -269,10 +276,12 @@ class VisitsService
      * invoca storeResourceVisits para guardar las visitas.
      *
      * @method checkAndStoreVisits
-     * @param  string              $model El nombre del modelo
-     * @return mixed
+     *
+     * @param  Model $model El nombre del modelo
+     *
+     * @return array|\Illuminate\Database\Eloquent\Model
      */
-    private function checkAndStoreVisits($model)
+    private function checkAndStoreVisits(Model $model)
     {
         $key = class_basename($model);
 
@@ -296,19 +305,21 @@ class VisitsService
      * relacionados con el usuario.
      *
      * @method findVisitedResource
-     * @param  string               $model El modelo a manipular.
+     *
+     * @param  Model $model El modelo a manipular.
+     *
      * @return Collection
      */
-    private function findVisitedResource($model, Guard $auth)
+    private function findVisitedResource(Model $model)
     {
-        if (!$auth->user()) {
+        if (!Auth::user()) {
             return collect();
         }
 
         // se buscan las visitas que tengan
         // el tipo de visitable igual al model solicitado,
         // junto con el visitable (Producto, Rubro, Etc)
-        $visits = $auth->user()
+        $visits = Auth::user()
             ->visits()
             ->where('visitable_type', get_class($model))
             ->with('visitable')

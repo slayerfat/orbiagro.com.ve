@@ -3,6 +3,7 @@
 use Auth;
 use Mail;
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php
@@ -16,6 +17,23 @@ class EnviarEmail
     */
     protected $emails = [];
 
+    /**
+     * @var User
+     */
+    private $users;
+
+    /**
+     * Genera una instancia de EnviarEmail
+     *
+     * @param User $user
+     *
+     * @return void
+     */
+    public function __construct(User $user)
+    {
+        $this->users = $user;
+    }
+
     // --------------------------------------------------------------------------
     // Funciones Publicas
     // --------------------------------------------------------------------------
@@ -25,10 +43,7 @@ class EnviarEmail
      */
     public function getAdministratorsEmail()
     {
-        // se buscan los administradores
-        $models = User::admins()->get();
-
-        return $this->iterateModels($models);
+        return $this->iterateModels($this->getAdmins());
     }
 
     /**
@@ -36,16 +51,31 @@ class EnviarEmail
      */
     public function getAllUsersEmail()
     {
-        // se buscan los administradores
-        $models = User::admins()->get();
-
-        return $this->iterateModels($models);
+        return $this->iterateModels($this->getAdmins());
     }
 
     // --------------------------------------------------------------------------
     // Funciones Privadas
     // --------------------------------------------------------------------------
-    private function iterateModels($models)
+
+    /**
+     * Devuelve una coleccion de los administradores en el sistema.
+     *
+     * @return Collection
+     */
+    private function getAdmins()
+    {
+        return $this->users->admins()->get();
+    }
+
+    /**
+     * Itera los modelos y revulve un array con sus correos.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection $models
+     *
+     * @return array
+     */
+    private function iterateModels(Collection $models)
     {
         // logica simplificada por ahora.
         // ver: https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php#L27
@@ -91,7 +121,9 @@ class EnviarEmail
      *
      * @todo ajustarlo a este app.
      *
-     * @param  array    $data  el array con los datos relacionados
+     * @param  array    $data   el array con los datos relacionados
+     * @param  array    $emails
+     *
      * @return boolean
      */
     public static function enviarEmail($data, $emails)
