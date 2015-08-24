@@ -19,7 +19,7 @@ class ProviderTest extends TestCase
         parent::setUp();
 
         $this->tester = new Provider;
-        $this->mock = Mockery::mock('Orbiagro\Provider')->makePartial();
+        $this->mock = Mockery::mock('Orbiagro\Models\Provider')->makePartial();
     }
 
     public function testProductsRelationship()
