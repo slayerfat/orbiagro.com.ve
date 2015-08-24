@@ -1,8 +1,9 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Parish;
+use Orbiagro\Models\MapDetail;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -77,7 +78,7 @@ class Direction extends Model
     // --------------------------------------------------------------------------
     public function map()
     {
-        return $this->hasOne('Orbiagro\Models\MapDetail');
+        return $this->hasOne(MapDetail::class);
     }
 
     // --------------------------------------------------------------------------
@@ -85,6 +86,6 @@ class Direction extends Model
     // --------------------------------------------------------------------------
     public function parish()
     {
-        return $this->belongsTo('Orbiagro\Models\Parish');
+        return $this->belongsTo(Parish::class);
     }
 }

@@ -1,7 +1,7 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Billing;
 use Illuminate\Database\Eloquent\Model;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -43,6 +43,6 @@ class Bank extends Model
      */
     public function billings()
     {
-        return $this->hasMany('Orbiagro\Models\Billing');
+        return $this->hasMany(Billing::class);
     }
 }

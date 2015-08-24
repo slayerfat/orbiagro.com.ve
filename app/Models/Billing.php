@@ -1,7 +1,9 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Bank;
+use Orbiagro\Models\User;
+use Orbiagro\Models\CardType;
 use Illuminate\Database\Eloquent\Model;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -45,32 +47,26 @@ class Billing extends Model
     // --------------------------------------------------------------------------
 
     /**
-     * @property-read \Orbiagro\Models\Bank $bank
-     *
-     * @return \Orbiagro\Models\Bank
+     * @return Bank
      */
     public function bank()
     {
-        return $this->belongsTo('Orbiagro\Models\Bank');
+        return $this->belongsTo(Bank::class);
     }
 
     /**
-     * @property-read \Orbiagro\Models\CardType $cardType
-     *
-     * @return \Orbiagro\Models\CardType
+     * @return CardType
      */
     public function cardType()
     {
-        return $this->belongsTo('Orbiagro\Models\CardType');
+        return $this->belongsTo(CardType::class);
     }
 
     /**
-     * @property-read \Orbiagro\Models\User $user
-     *
-     * @return \Orbiagro\Models\User
+     * @return User
      */
     public function user()
     {
-        return $this->belongsTo('Orbiagro\Models\User');
+        return $this->belongsTo(User::class);
     }
 }

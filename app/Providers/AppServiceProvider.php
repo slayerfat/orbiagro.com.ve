@@ -1,6 +1,9 @@
 <?php namespace Orbiagro\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Auth\Registrar;
+use Laracasts\Generators\GeneratorsServiceProvider;
+use Orbiagro\Services\Registrar as OrbiagroRegistrar;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,11 +30,11 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         if ($this->app->environment() == 'local') {
-            $this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
+            $this->app->register(GeneratorsServiceProvider::class);
         }
         $this->app->bind(
-            'Illuminate\Contracts\Auth\Registrar',
-            'Orbiagro\Services\Registrar'
+            Registrar::class,
+            OrbiagroRegistrar::class
         );
     }
 }

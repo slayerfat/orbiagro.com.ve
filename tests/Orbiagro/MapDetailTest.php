@@ -1,9 +1,10 @@
 <?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\Orbiagro\Traits\TearsDownMockery;
-use Orbiagro\Models\MapDetail;
 use Tests\TestCase;
+use Orbiagro\Models\MapDetail;
+use Orbiagro\Models\Direction;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 
 class MapDetailTest extends TestCase
 {
@@ -19,7 +20,7 @@ class MapDetailTest extends TestCase
         parent::setUp();
 
         $this->tester = new MapDetail;
-        $this->mock = Mockery::mock('Orbiagro\Models\MapDetail')->makePartial();
+        $this->mock = Mockery::mock(MapDetail::class)->makePartial();
     }
 
     public function testDirectionRelationship()
@@ -27,7 +28,7 @@ class MapDetailTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('Orbiagro\Models\Direction')
+            ->with(Direction::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->direction());

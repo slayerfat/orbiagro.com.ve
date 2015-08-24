@@ -1,9 +1,12 @@
 <?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\Orbiagro\Traits\TearsDownMockery;
-use Orbiagro\Models\Feature;
 use Tests\TestCase;
+use Orbiagro\Models\File;
+use Orbiagro\Models\Image;
+use Orbiagro\Models\Feature;
+use Orbiagro\Models\Product;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 
 class FeatureTest extends TestCase
 {
@@ -19,7 +22,7 @@ class FeatureTest extends TestCase
         parent::setUp();
 
         $this->tester = new Feature;
-        $this->mock = Mockery::mock('Orbiagro\Models\Feature')->makePartial();
+        $this->mock = Mockery::mock(Feature::class)->makePartial();
     }
 
     public function testProductRelationship()
@@ -27,7 +30,7 @@ class FeatureTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('Orbiagro\Models\Product')
+            ->with(Product::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->product());
@@ -38,7 +41,7 @@ class FeatureTest extends TestCase
         $this->mock
             ->shouldReceive('morphOne')
             ->once()
-            ->with('Orbiagro\Models\Image', 'imageable')
+            ->with(Image::class, 'imageable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->image());
@@ -49,7 +52,7 @@ class FeatureTest extends TestCase
         $this->mock
             ->shouldReceive('morphOne')
             ->once()
-            ->with('Orbiagro\Models\File', 'fileable')
+            ->with(File::class, 'fileable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->file());

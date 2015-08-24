@@ -1,7 +1,7 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Town;
 use Illuminate\Database\Eloquent\Model;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -38,6 +38,6 @@ class State extends Model
     // --------------------------------------------------------------------------
     public function towns()
     {
-        return $this->hasMany('Orbiagro\Models\Town');
+        return $this->hasMany(Town::class);
     }
 }

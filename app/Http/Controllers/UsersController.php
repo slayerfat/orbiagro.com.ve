@@ -71,11 +71,15 @@ class UsersController extends Controller
      */
     public function productVisits($id, Guard $auth)
     {
-        if (!$user = User::with(['visits' => function ($query) {
-            $query->where('visitable_type', 'Orbiagro\\Product')->orderBy('updated_at', 'desc');
-        }])->where('name', $id)->first()) {
+        $user = User::with(['visits' => function ($query) {
+            $query->where('visitable_type', Orbiagro\Models\Product::class)
+                ->orderBy('updated_at', 'desc');
+        }])->where('name', $id)->first();
+
+        if (!$user) {
             $user = User::with(['visits' => function ($query) {
-                $query->where('visitable_type', 'Orbiagro\\Product')->orderBy('updated_at', 'desc');
+                $query->where('visitable_type', Orbiagro\Models\Product::class)
+                    ->orderBy('updated_at', 'desc');
             }])->findOrFail($id);
         }
 

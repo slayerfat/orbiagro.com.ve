@@ -1,13 +1,14 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Image;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\PromoType;
 use Illuminate\Database\Eloquent\Model;
-
 use Orbiagro\Mamarrachismo\Transformer;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
-use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
-use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
+use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
  * Orbiagro\Models\Promotion
@@ -146,7 +147,7 @@ class Promotion extends Model
     // --------------------------------------------------------------------------
     public function products()
     {
-        return $this->belongsToMany('Orbiagro\Models\Product');
+        return $this->belongsToMany(Product::class);
     }
 
     // --------------------------------------------------------------------------
@@ -154,7 +155,7 @@ class Promotion extends Model
     // --------------------------------------------------------------------------
     public function type()
     {
-        return $this->belongsTo('Orbiagro\Models\PromoType', 'promo_type_id', 'id');
+        return $this->belongsTo(PromoType::class, 'promo_type_id', 'id');
     }
 
     // --------------------------------------------------------------------------
@@ -162,7 +163,7 @@ class Promotion extends Model
     // --------------------------------------------------------------------------
     public function images()
     {
-        return $this->morphMany('Orbiagro\Models\Image', 'imageable');
+        return $this->morphMany(Image::class, 'imageable');
     }
 
     // --------------------------------------------------------------------------

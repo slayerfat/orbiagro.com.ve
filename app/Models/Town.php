@@ -1,7 +1,8 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\State;
+use Orbiagro\Models\Parish;
 use Illuminate\Database\Eloquent\Model;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -42,11 +43,11 @@ class Town extends Model
 
     public function state()
     {
-        return $this->belongsTo('Orbiagro\Models\State');
+        return $this->belongsTo(State::class);
     }
 
     public function parishes()
     {
-        return $this->hasMany('Orbiagro\Models\Parish');
+        return $this->hasMany(Parish::class);
     }
 }

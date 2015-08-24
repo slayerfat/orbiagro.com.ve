@@ -19,7 +19,7 @@ class ImageTest extends TestCase
         parent::setUp();
 
         $this->tester = new Image;
-        $this->mock = Mockery::mock('Orbiagro\Models\Image')->makePartial();
+        $this->mock = Mockery::mock(Image::class)->makePartial();
     }
 
     public function testImageableRelationship()

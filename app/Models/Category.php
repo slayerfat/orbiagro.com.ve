@@ -1,11 +1,13 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Image;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\SubCategory;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
-use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
-use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
+use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
  * Orbiagro\Models\Category
@@ -96,7 +98,7 @@ class Category extends Model
     // --------------------------------------------------------------------------
     public function subCategories()
     {
-        return $this->hasMany('Orbiagro\Models\SubCategory');
+        return $this->hasMany(SubCategory::class);
     }
 
     // --------------------------------------------------------------------------
@@ -104,11 +106,14 @@ class Category extends Model
     // --------------------------------------------------------------------------
     public function image()
     {
-        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
 
     public function products()
     {
-        return $this->hasManyThrough('Orbiagro\Models\Product', 'Orbiagro\Models\SubCategory');
+        return $this->hasManyThrough(
+            Product::class,
+            SubCategory::class
+        );
     }
 }

@@ -1,9 +1,10 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Town;
+use Orbiagro\Models\Direction;
 use Illuminate\Database\Eloquent\Model;
-
-use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
  * Orbiagro\Models\Parish
@@ -45,7 +46,7 @@ class Parish extends Model
     // --------------------------------------------------------------------------
     public function town()
     {
-        return $this->belongsTo('Orbiagro\Models\Town');
+        return $this->belongsTo(Town::class);
     }
 
     // --------------------------------------------------------------------------
@@ -53,6 +54,6 @@ class Parish extends Model
     // --------------------------------------------------------------------------
     public function directions()
     {
-        return $this->hasMany('Orbiagro\Models\Direction');
+        return $this->hasMany(Direction::class);
     }
 }

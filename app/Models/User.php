@@ -1,14 +1,19 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Visit;
+use Orbiagro\Models\Person;
+use Orbiagro\Models\Billing;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Profile;
 use Illuminate\Auth\Authenticatable;
+use Orbiagro\Models\UserConfirmation;
 use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Mamarrachismo\ModelValidation;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-use Orbiagro\Mamarrachismo\ModelValidation;
-use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 
 /**
  * Orbiagro\Models\User
@@ -98,12 +103,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     public function person()
     {
-        return $this->hasOne('Orbiagro\Models\Person');
+        return $this->hasOne(Person::class);
     }
 
     public function confirmation()
     {
-        return $this->hasOne('Orbiagro\Models\UserConfirmation');
+        return $this->hasOne(UserConfirmation::class);
     }
 
     // --------------------------------------------------------------------------
@@ -111,17 +116,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     public function billings()
     {
-        return $this->hasMany('Orbiagro\Models\Billing');
+        return $this->hasMany(Billing::class);
     }
 
     public function products()
     {
-        return $this->hasMany('Orbiagro\Models\Product');
+        return $this->hasMany(Product::class);
     }
 
     public function visits()
     {
-        return $this->hasMany('Orbiagro\Models\Visit');
+        return $this->hasMany(Visit::class);
     }
 
     // --------------------------------------------------------------------------
@@ -129,7 +134,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     public function profile()
     {
-        return $this->belongsTo('Orbiagro\Models\Profile');
+        return $this->belongsTo(Profile::class);
     }
 
     // --------------------------------------------------------------------------
@@ -137,7 +142,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     public function purchases()
     {
-        return $this->belongsToMany('Orbiagro\Models\Product')->withPivot('quantity')->withTimestamps();
+        return $this->belongsToMany(Product::class)->withPivot('quantity')->withTimestamps();
     }
 
     // --------------------------------------------------------------------------

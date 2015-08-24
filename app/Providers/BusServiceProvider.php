@@ -1,5 +1,7 @@
 <?php namespace Orbiagro\Providers;
 
+use Orbiagro\Commands as OrbiagroCommands;
+use Orbiagro\Handlers\Commands;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,8 +19,8 @@ class BusServiceProvider extends ServiceProvider
         $dispatcher->mapUsing(function ($command) {
             return Dispatcher::simpleMapping(
                 $command,
-                'Orbiagro\Commands',
-                'Orbiagro\Handlers\Commands'
+                OrbiagroCommands::class,
+                Commands::class
             );
         });
     }

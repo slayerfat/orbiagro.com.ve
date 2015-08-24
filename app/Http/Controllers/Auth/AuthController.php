@@ -3,7 +3,6 @@
 use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-
 // 5.1
 use Orbiagro\Models\User;
 use Orbiagro\Models\Profile;
@@ -92,7 +91,11 @@ class AuthController extends Controller
         $emails = (array)$user->email;
         Email::enviarEmail($data, $emails);
 
-        flash()->info('Usuario creado exitosamene, un correo de confirmación ha sido enviado a '.$user->email);
+        flash()->info(
+            'Usuario creado exitosamene, un correo de confirmación '
+            .'ha sido enviado a '
+            .$user->email
+        );
 
         return $user;
     }
@@ -107,5 +110,4 @@ class AuthController extends Controller
     {
         return 'Los datos suministrados no concuerdan con nuestros archivos.';
     }
-
 }

@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Promotion;
 use Illuminate\Database\Eloquent\Model;
 
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
@@ -35,6 +36,6 @@ class PromoType extends Model
     // --------------------------------------------------------------------------
     public function promotions()
     {
-        return $this->hasMany('Orbiagro\Models\Promotion');
+        return $this->hasMany(Promotion::class);
     }
 }

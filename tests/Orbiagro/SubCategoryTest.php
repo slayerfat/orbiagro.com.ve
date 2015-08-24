@@ -1,9 +1,13 @@
 <?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\Orbiagro\Traits\TearsDownMockery;
-use Orbiagro\Models\SubCategory;
 use Tests\TestCase;
+use Orbiagro\Models\Image;
+use Orbiagro\Models\Visit;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\SubCategory;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 
 class SubCategoryTest extends TestCase
 {
@@ -20,7 +24,7 @@ class SubCategoryTest extends TestCase
 
         $this->tester = new SubCategory;
 
-        $this->mock = Mockery::mock('Orbiagro\Models\SubCategory')->makePartial();
+        $this->mock = Mockery::mock(SubCategory::class)->makePartial();
     }
 
     public function testCategoryRelationship()
@@ -28,7 +32,7 @@ class SubCategoryTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('Orbiagro\Models\Category')
+            ->with(Category::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->category());
@@ -39,7 +43,7 @@ class SubCategoryTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('Orbiagro\Models\Product')
+            ->with(Product::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->products());
@@ -50,7 +54,7 @@ class SubCategoryTest extends TestCase
         $this->mock
             ->shouldReceive('morphOne')
             ->once()
-            ->with('Orbiagro\Models\Image', 'imageable')
+            ->with(Image::class, 'imageable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->image());
@@ -61,7 +65,7 @@ class SubCategoryTest extends TestCase
         $this->mock
             ->shouldReceive('morphMany')
             ->once()
-            ->with('Orbiagro\Models\Visit', 'visitable')
+            ->with(Visit::class, 'visitable')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->visits());

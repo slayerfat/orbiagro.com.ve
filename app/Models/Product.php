@@ -1,15 +1,26 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\User;
+use Orbiagro\Models\Maker;
+use Orbiagro\Models\Visit;
+use Orbiagro\Models\File;
+use Orbiagro\Models\Image;
+use Orbiagro\Models\Feature;
+use Orbiagro\Models\Provider;
+use Orbiagro\Models\Direction;
+use Orbiagro\Models\Promotion;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Models\Nutritional;
+use Orbiagro\Models\Characteristic;
+use Orbiagro\Models\MechanicalInfo;
+use Orbiagro\Mamarrachismo\Transformer;
+use Orbiagro\Mamarrachismo\CheckDollar;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-use Orbiagro\Mamarrachismo\Transformer;
-
-use Orbiagro\Mamarrachismo\CheckDollar;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
-use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
+use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
  * Orbiagro\Models\Product
@@ -180,17 +191,17 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function user()
     {
-        return $this->belongsTo('Orbiagro\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     public function maker()
     {
-        return $this->belongsTo('Orbiagro\Models\Maker');
+        return $this->belongsTo(Maker::class);
     }
 
     public function subCategory()
     {
-        return $this->belongsTo('Orbiagro\Models\SubCategory');
+        return $this->belongsTo(SubCategory::class);
     }
 
     // --------------------------------------------------------------------------
@@ -198,7 +209,7 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function features()
     {
-        return $this->hasMany('Orbiagro\Models\Feature');
+        return $this->hasMany(Feature::class);
     }
 
     // --------------------------------------------------------------------------
@@ -206,17 +217,17 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function characteristics()
     {
-        return $this->hasOne('Orbiagro\Models\Characteristic');
+        return $this->hasOne(Characteristic::class);
     }
 
     public function mechanical()
     {
-        return $this->hasOne('Orbiagro\Models\MechanicalInfo');
+        return $this->hasOne(MechanicalInfo::class);
     }
 
     public function nutritional()
     {
-        return $this->hasOne('Orbiagro\Models\Nutritional');
+        return $this->hasOne(Nutritional::class);
     }
 
     // --------------------------------------------------------------------------
@@ -224,17 +235,19 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function promotions()
     {
-        return $this->belongsToMany('Orbiagro\Models\Promotion');
+        return $this->belongsToMany(Promotion::class);
     }
 
     public function purchases()
     {
-        return $this->belongsToMany('Orbiagro\Models\User')->withPivot('quantity')->withTimestamps();
+        return $this->belongsToMany(User::class)
+            ->withPivot('quantity')
+            ->withTimestamps();
     }
 
     public function providers()
     {
-        return $this->belongsToMany('Orbiagro\Models\Provider')->withPivot('sku');
+        return $this->belongsToMany(Provider::class)->withPivot('sku');
     }
 
     // --------------------------------------------------------------------------
@@ -249,27 +262,27 @@ class Product extends Model
     // --------------------------------------------------------------------------
     public function direction()
     {
-        return $this->morphOne('Orbiagro\Models\Direction', 'directionable');
+        return $this->morphOne(Direction::class, 'directionable');
     }
 
     public function files()
     {
-        return $this->morphMany('Orbiagro\Models\File', 'fileable');
+        return $this->morphMany(File::class, 'fileable');
     }
 
     public function images()
     {
-        return $this->morphMany('Orbiagro\Models\Image', 'imageable');
+        return $this->morphMany(Image::class, 'imageable');
     }
 
     public function image()
     {
-        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
 
     public function visits()
     {
-        return $this->morphMany('Orbiagro\Models\Visit', 'visitable');
+        return $this->morphMany(Visit::class, 'visitable');
     }
 
     // --------------------------------------------------------------------------

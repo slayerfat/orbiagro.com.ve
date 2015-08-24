@@ -13,6 +13,8 @@ class OrbiagroInfo
      */
     public function composeInfo(View $view)
     {
-        $view->with('business', new Business);
+        $obj = new Business; // no necesita parametros, por ahora.
+
+        $view->with('business', $obj);
     }
 }

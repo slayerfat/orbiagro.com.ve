@@ -281,7 +281,7 @@ class VisitsService
      *
      * @param  string $model El nombre del modelo
      *
-     * @return array|\Illuminate\Database\Eloquent\Model
+     * @return array
      */
     private function checkAndStoreVisits($model)
     {
@@ -298,7 +298,7 @@ class VisitsService
             return $parsed;
         }
 
-        return collect();
+        return [];
     }
 
     /**

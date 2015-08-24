@@ -112,7 +112,7 @@ class File extends Upload
                 return $model->file()->save($file);
 
             default:
-                throw new Exception("Error: modelo desconocido, no se puede guardar archivo relacionado", 1);
+                throw new Exception('Modelo desconocido, no se puede guardar archivo.');
         }
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 
@@ -44,6 +45,6 @@ class Profile extends Model
     // --------------------------------------------------------------------------
     public function users()
     {
-        return $this->hasMany('Orbiagro\Models\User');
+        return $this->hasMany(User::class);
     }
 }

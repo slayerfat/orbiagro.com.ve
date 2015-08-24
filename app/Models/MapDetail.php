@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Direction;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 
@@ -73,6 +74,6 @@ class MapDetail extends Model
     // --------------------------------------------------------------------------
     public function direction()
     {
-        return $this->belongsTo('Orbiagro\Models\Direction');
+        return $this->belongsTo(Direction::class);
     }
 }

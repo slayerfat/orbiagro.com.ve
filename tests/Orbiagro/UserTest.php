@@ -1,9 +1,15 @@
 <?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\Orbiagro\Traits\TearsDownMockery;
-use Orbiagro\Models\User;
 use Tests\TestCase;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Visit;
+use Orbiagro\Models\Person;
+use Orbiagro\Models\Profile;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Billing;
+use Orbiagro\Models\UserConfirmation;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 
 class UserTest extends TestCase
 {
@@ -19,7 +25,7 @@ class UserTest extends TestCase
         parent::setUp();
 
         $this->tester = new User;
-        $this->mock = Mockery::mock('Orbiagro\Models\User')->makePartial();
+        $this->mock = Mockery::mock(User::class)->makePartial();
     }
 
     public function testPersonRelationship()
@@ -27,7 +33,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasOne')
             ->once()
-            ->with('Orbiagro\Models\Person')
+            ->with(Person::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->person());
@@ -38,7 +44,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasOne')
             ->once()
-            ->with('Orbiagro\Models\UserConfirmation')
+            ->with(UserConfirmation::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->confirmation());
@@ -49,7 +55,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('Orbiagro\Models\Profile')
+            ->with(Profile::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->profile());
@@ -60,7 +66,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('Orbiagro\Models\Billing')
+            ->with(Billing::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->billings());
@@ -71,7 +77,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('Orbiagro\Models\Product')
+            ->with(Product::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->products());
@@ -82,7 +88,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with('Orbiagro\Models\Visit')
+            ->with(Visit::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->visits());
@@ -93,7 +99,7 @@ class UserTest extends TestCase
         $this->mock
             ->shouldReceive('belongsToMany')
             ->once()
-            ->with('Orbiagro\Models\Product')
+            ->with(Product::class)
             ->andReturn(Mockery::self());
 
         $this->mock
@@ -112,7 +118,7 @@ class UserTest extends TestCase
 
     public function testIsAdmin()
     {
-        $this->tester->profile = factory('Orbiagro\Models\Profile')->make();
+        $this->tester->profile = factory(Profile::class)->make();
 
         $this->assertFalse($this->tester->isAdmin());
 
@@ -124,7 +130,7 @@ class UserTest extends TestCase
     public function testIsOwnerOrAdmin()
     {
         $this->tester->id = 1;
-        $this->tester->profile = factory('Orbiagro\Models\Profile')->make();
+        $this->tester->profile = factory(Profile::class)->make();
 
         $this->assertFalse($this->tester->isOwnerOrAdmin(2));
 
@@ -135,7 +141,7 @@ class UserTest extends TestCase
 
     public function testIsUser()
     {
-        $this->tester->profile = factory('Orbiagro\Models\Profile')->make();
+        $this->tester->profile = factory(Profile::class)->make();
 
         $this->assertFalse($this->tester->isUser());
 
@@ -146,7 +152,7 @@ class UserTest extends TestCase
 
     public function testIsDisabledAndIsVerified()
     {
-        $this->tester->profile = factory('Orbiagro\Models\Profile')->make();
+        $this->tester->profile = factory(Profile::class)->make();
 
         $this->assertTrue($this->tester->isVerified());
         $this->assertFalse($this->tester->isDisabled());

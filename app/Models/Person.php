@@ -1,8 +1,11 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\User;
+use Orbiagro\Models\Gender;
+use Orbiagro\Models\Direction;
+use Orbiagro\Models\Nationality;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -166,17 +169,17 @@ class Person extends Model
     // --------------------------------------------------------------------------
     public function gender()
     {
-        return $this->belongsTo('Orbiagro\Models\Gender');
+        return $this->belongsTo(Gender::class);
     }
 
     public function nationality()
     {
-        return $this->belongsTo('Orbiagro\Models\Nationality');
+        return $this->belongsTo(Nationality::class);
     }
 
     public function user()
     {
-        return $this->belongsTo('Orbiagro\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     // --------------------------------------------------------------------------
@@ -184,6 +187,6 @@ class Person extends Model
     // --------------------------------------------------------------------------
     public function direction()
     {
-        return $this->morphMany('Orbiagro\Models\Direction', 'directionable');
+        return $this->morphMany(Direction::class, 'directionable');
     }
 }

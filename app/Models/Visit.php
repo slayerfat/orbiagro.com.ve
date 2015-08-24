@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
@@ -42,7 +43,7 @@ class Visit extends Model
     // --------------------------------------------------------------------------
     public function user()
     {
-        return $this->belongsTo('Orbiagro\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     // --------------------------------------------------------------------------

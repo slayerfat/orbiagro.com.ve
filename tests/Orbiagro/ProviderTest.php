@@ -1,9 +1,10 @@
 <?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\Orbiagro\Traits\TearsDownMockery;
-use Orbiagro\Models\Provider;
 use Tests\TestCase;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Provider;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 
 class ProviderTest extends TestCase
 {
@@ -19,7 +20,7 @@ class ProviderTest extends TestCase
         parent::setUp();
 
         $this->tester = new Provider;
-        $this->mock = Mockery::mock('Orbiagro\Models\Provider')->makePartial();
+        $this->mock = Mockery::mock(Provider::class)->makePartial();
     }
 
     public function testProductsRelationship()
@@ -27,7 +28,7 @@ class ProviderTest extends TestCase
         $this->mock
             ->shouldReceive('belongsToMany')
             ->once()
-            ->with('Orbiagro\Models\Product')
+            ->with(Product::class)
             ->andReturn(Mockery::self());
 
         $this->mock

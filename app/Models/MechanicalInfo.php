@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Transformer;
@@ -89,7 +90,7 @@ class MechanicalInfo extends Model
     // --------------------------------------------------------------------------
     public function product()
     {
-        return $this->belongsTo('Orbiagro\Models\Product');
+        return $this->belongsTo(Product::class);
     }
 
     // --------------------------------------------------------------------------

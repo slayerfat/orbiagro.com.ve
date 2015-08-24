@@ -1,11 +1,10 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Product;
 use Illuminate\Database\Eloquent\Model;
-
 use Orbiagro\Mamarrachismo\ModelValidation;
-
-use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
  * Orbiagro\Models\Provider
@@ -125,6 +124,6 @@ class Provider extends Model
     // --------------------------------------------------------------------------
     public function products()
     {
-        return $this->belongsToMany('Orbiagro\Models\Product')->withPivot('sku');
+        return $this->belongsToMany(Product::class)->withPivot('sku');
     }
 }

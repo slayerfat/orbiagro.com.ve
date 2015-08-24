@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Person;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 
@@ -52,6 +53,6 @@ class Gender extends Model
     // --------------------------------------------------------------------------
     public function people()
     {
-        return $this->hasMany('Orbiagro\Models\Person');
+        return $this->hasMany(Person::class);
     }
 }

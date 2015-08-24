@@ -1,8 +1,9 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\Image;
+use Orbiagro\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 
@@ -78,7 +79,7 @@ class Maker extends Model
     // --------------------------------------------------------------------------
     public function products()
     {
-        return $this->hasMany('Orbiagro\Models\Product');
+        return $this->hasMany(Product::class);
     }
 
     // --------------------------------------------------------------------------
@@ -90,6 +91,6 @@ class Maker extends Model
     // --------------------------------------------------------------------------
     public function image()
     {
-        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
 }

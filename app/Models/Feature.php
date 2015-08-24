@@ -1,8 +1,10 @@
 <?php namespace Orbiagro\Models;
 
+use Orbiagro\Models\File;
+use Orbiagro\Models\Image;
+use Orbiagro\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -63,7 +65,7 @@ class Feature extends Model
     // --------------------------------------------------------------------------
     public function product()
     {
-        return $this->belongsTo('Orbiagro\Models\Product');
+        return $this->belongsTo(Product::class);
     }
 
     // --------------------------------------------------------------------------
@@ -71,11 +73,11 @@ class Feature extends Model
     // --------------------------------------------------------------------------
     public function file()
     {
-        return $this->morphOne('Orbiagro\Models\File', 'fileable');
+        return $this->morphOne(File::class, 'fileable');
     }
 
     public function image()
     {
-        return $this->morphOne('Orbiagro\Models\Image', 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
 }

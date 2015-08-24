@@ -21,7 +21,6 @@ class CategoriesController extends Controller
     /**
      * Create a new controller instance.
      * @param Category $cat
-     * @param Guard    $auth
      *
      * @return void
      */

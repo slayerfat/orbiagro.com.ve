@@ -1,9 +1,12 @@
 <?php namespace Tests\Orbiagro;
 
 use \Mockery;
-use Tests\Orbiagro\Traits\TearsDownMockery;
-use Orbiagro\Models\Billing;
 use Tests\TestCase;
+use Orbiagro\Models\Bank;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Billing;
+use Orbiagro\Models\CardType;
+use Tests\Orbiagro\Traits\TearsDownMockery;
 
 class BillingTest extends TestCase
 {
@@ -19,7 +22,7 @@ class BillingTest extends TestCase
         parent::setUp();
 
         $this->tester = new Billing;
-        $this->mock = Mockery::mock('Orbiagro\Models\Billing')->makePartial();
+        $this->mock = Mockery::mock(Billing::class)->makePartial();
     }
 
     public function testBankRelationship()
@@ -27,7 +30,7 @@ class BillingTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('Orbiagro\Models\Bank')
+            ->with(Bank::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->bank());
@@ -38,7 +41,7 @@ class BillingTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('Orbiagro\Models\CardType')
+            ->with(CardType::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->cardType());
@@ -49,7 +52,7 @@ class BillingTest extends TestCase
         $this->mock
             ->shouldReceive('belongsTo')
             ->once()
-            ->with('Orbiagro\Models\User')
+            ->with(User::class)
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->user());
