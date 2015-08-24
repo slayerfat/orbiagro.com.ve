@@ -23,6 +23,9 @@ class BankTest extends TestCase
         $this->mock = Mockery::mock(Bank::class)->makePartial();
     }
 
+    /**
+     * @covers Orbiagro\Models\Bank::billings
+     */
     public function testBillingsRelationship()
     {
         $this->mock
