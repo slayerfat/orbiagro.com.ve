@@ -2,6 +2,7 @@
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Orbiagro\Console\Commands\Inspire;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'Orbiagro\Console\Commands\Inspire',
+        Inspire::class,
     ];
 
     /**

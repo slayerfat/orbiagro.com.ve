@@ -21,9 +21,16 @@ class Carrusel
 
         $products = Product::latest()->take(5)->get();
 
-        $typesId = PromoType::whereIn('description', ['primavera', 'verano', 'otoño', 'invierno'])->lists('id');
+        $typesId = PromoType::whereIn(
+            'description',
+            ['primavera', 'verano', 'otoño', 'invierno']
+        )->lists('id');
+
         // selecciona las promociones existentes segun el tipo ya seleccionado
-        $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
+        $promotions = Promotion::whereIn('promo_type_id', $typesId)
+            ->random()
+            ->take(3)
+            ->get();
 
         $item = Category::random()->first();
         $item->controller = 'CategoriesController@show';

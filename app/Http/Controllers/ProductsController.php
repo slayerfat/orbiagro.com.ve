@@ -62,7 +62,7 @@ class ProductsController extends Controller
         $cats     = Category::all();
         $subCats  = SubCategory::all();
 
-        $visitedProducts = $visits->getVisitedResources(new Product);
+        $visitedProducts = $visits->getVisitedResources(Product::class);
 
         $this->seo()->setTitle('Productos en orbiagro.com.ve');
         $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
@@ -117,7 +117,7 @@ class ProductsController extends Controller
             $products = $parent::findOrFail($parentId)->products()->paginate(20);
         }
 
-        $visitedProducts = $visits->getVisitedResources(new Product);
+        $visitedProducts = $visits->getVisitedResources(Product::class);
 
         $cats = Category::all();
 
@@ -210,7 +210,8 @@ class ProductsController extends Controller
         }
 
         $visits->setNewVisit($product);
-        $visitedProducts = $visits->getVisitedResources($product);
+
+        $visitedProducts = $visits->getVisitedResources(Product::class);
 
         if ($this->user) {
             $isUserValid = $this->user->isOwnerOrAdmin($product->user_id);

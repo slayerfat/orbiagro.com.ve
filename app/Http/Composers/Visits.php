@@ -10,6 +10,11 @@ class Visits
 {
 
     /**
+     * @var VisitsService
+     */
+    public $visits;
+
+    /**
      * @param VisitsService $visits
      *
      * @return void
@@ -25,7 +30,7 @@ class Visits
      */
     public function composePopularSubCats(View $view)
     {
-        $view->with('popularSubCats', $this->visits->getPopular(new SubCategory));
+        $view->with('popularSubCats', $this->visits->getPopular(SubCategory::class));
     }
 
     /**
@@ -34,7 +39,7 @@ class Visits
      */
     public function composeRelatedProducts(View $view)
     {
-        $view->with('visitedProducts', $this->visits->getVisitedResources(new Product));
+        $view->with('visitedProducts', $this->visits->getVisitedResources(Product::class));
     }
 
     /**
@@ -43,6 +48,6 @@ class Visits
      */
     public function composeVisitedSubCats(View $view)
     {
-        $view->with('visitedSubCats', $this->visits->getVisitedResources(new SubCategory));
+        $view->with('visitedSubCats', $this->visits->getVisitedResources(SubCategory::class));
     }
 }

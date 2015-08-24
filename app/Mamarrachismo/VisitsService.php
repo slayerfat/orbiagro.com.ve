@@ -55,12 +55,12 @@ class VisitsService
     }
 
     /**
-     * @param Model  $model     el objeto a manipular.
-     * @param int    $quantity  la cantidad a tomar.
+     * @param string $model    el objeto a manipular.
+     * @param int    $quantity la cantidad a tomar.
      *
      * @return Collection
      */
-    public function getPopular(Model $model, $quantity = 3)
+    public function getPopular($model, $quantity = 3)
     {
         $results = $this->findMostVisitedResource($model, $quantity);
 
@@ -72,16 +72,16 @@ class VisitsService
             $this->bag[] = $result->visitable_id;
         });
 
-        return $model->find($this->bag);
+        return $model::find($this->bag);
     }
 
     /**
      * busca los productos dentro de los cookies y devuelve la coleccion.
      *
-     * @param Model $obj el objeto a manipular.
+     * @param string $obj el objeto a manipular.
      * @return Collection
      */
-    public function getVisitedResources(Model $obj)
+    public function getVisitedResources($obj)
     {
         $result = $this->checkAndStoreVisits($obj);
 
@@ -93,21 +93,23 @@ class VisitsService
 
         return $visitedResources;
     }
+
     // --------------------------------------------------------------------------
     // Funciones privadas
     // --------------------------------------------------------------------------
+
     /**
      * usado para determinar cuales son los recursos mas populares (count)
      *
-     * @param Model $model    el modelo, nos interesa la clase (Orbiagro\Models\Product)
+     * @param string $model    el modelo, nos interesa la clase (Orbiagro\Models\Product)
      * @param int   $quantity la cantidad a tomar
      *
      * @return Collection
      */
-    private function findMostVisitedResource(Model $model, $quantity)
+    private function findMostVisitedResource($model, $quantity)
     {
         return Visit::selectRaw('visitable_id, sum(total)')
-            ->where('visitable_type', get_class($model))
+            ->where('visitable_type', $model)
             ->groupBy('visitable_id')
             ->orderBy('total', 'desc')
             ->take($quantity)
@@ -117,12 +119,12 @@ class VisitsService
     /**
      * utilizado para obtener los recursos guardados en cookies.
      *
-     * @param Model $model
+     * @param string $model
      * @param array $array el arreglo con ids a buscar.
      *
      * @return Collection
      */
-    private function findResourceInDatabase(Model $model, array $array)
+    private function findResourceInDatabase($model, array $array)
     {
         foreach ($array as $id) {
             $this->bag[] = $id;
@@ -156,12 +158,12 @@ class VisitsService
     /**
      * guarda las visitas a productos del usuario en la base de datos.
      *
-     * @param Model $model el modelo a manipular.
+     * @param string $model el modelo a manipular.
      * @param array  $array el array a iterar (id => visitas).
      *
      * @return boolean
      */
-    private function storeResourceVisits(Model $model, array $array)
+    private function storeResourceVisits($model, array $array)
     {
         $name = class_basename($model);
 
@@ -190,13 +192,13 @@ class VisitsService
      *
      * @param  array  $array el arreglo con los productos a relacionar
      * @param  string $name  el nombre del recurso (Product, SubCategory, etc)
-     * @param  Model $model el modelo a manipular.
+     * @param  string $model el modelo a manipular.
      *
      * @return void
      */
-    private function createVisitModel(array $array, $name, Model $model)
+    private function createVisitModel(array $array, $name, $model)
     {
-        if (gettype($model) !== 'object' && gettype($model) !== 'string') {
+        if (gettype($model) !== 'string') {
             throw new Exception('El modelo especificado no es del tipo adecuado');
         }
 
@@ -233,10 +235,10 @@ class VisitsService
     /**
      * para darle una fecha al cookie
      *
-     * @param  Model $model el tipo de modelo al que se le asociara el cookie
+     * @param  string $model el tipo de modelo al que se le asociara el cookie
      * @return boolean
      */
-    private function setUpdatedCookieDate(Model $model)
+    private function setUpdatedCookieDate($model)
     {
         $date = Carbon::now();
 
@@ -277,11 +279,11 @@ class VisitsService
      *
      * @method checkAndStoreVisits
      *
-     * @param  Model $model El nombre del modelo
+     * @param  string $model El nombre del modelo
      *
      * @return array|\Illuminate\Database\Eloquent\Model
      */
-    private function checkAndStoreVisits(Model $model)
+    private function checkAndStoreVisits($model)
     {
         $key = class_basename($model);
 
@@ -306,11 +308,11 @@ class VisitsService
      *
      * @method findVisitedResource
      *
-     * @param  Model $model El modelo a manipular.
+     * @param  string $model El modelo a manipular.
      *
      * @return Collection
      */
-    private function findVisitedResource(Model $model)
+    private function findVisitedResource($model)
     {
         if (!Auth::user()) {
             return collect();
@@ -321,7 +323,7 @@ class VisitsService
         // junto con el visitable (Producto, Rubro, Etc)
         $visits = Auth::user()
             ->visits()
-            ->where('visitable_type', get_class($model))
+            ->where('visitable_type', $model)
             ->with('visitable')
             ->get();
 
@@ -338,10 +340,6 @@ class VisitsService
 
         }
 
-        if (get_class($model) == 'Product') {
-            return $model->load('user', 'subCategory');
-        }
-
-        return $model->find($this->bag);
+        return $model::find($this->bag);
     }
 }
