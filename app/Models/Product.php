@@ -11,6 +11,56 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 
+/**
+ * Orbiagro\Models\Product
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property integer $maker_id
+ * @property integer $sub_category_id
+ * @property string $title
+ * @property string $description
+ * @property string $heroDetails
+ * @property float $price
+ * @property integer $quantity
+ * @property string $slug
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property \Carbon\Carbon $deleted_at
+ * @property-read mixed $paginate
+ * @property-read \Orbiagro\Models\User $user
+ * @property-read \Orbiagro\Models\Maker $maker
+ * @property-read \Orbiagro\Models\SubCategory $subCategory
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Feature[] $features
+ * @property-read \Orbiagro\Models\Characteristic $characteristics
+ * @property-read \Orbiagro\Models\MechanicalInfo $mechanical
+ * @property-read \Orbiagro\Models\Nutritional $nutritional
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Promotion[] $promotions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\User[] $purchases
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Provider[] $providers
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\File[] $files
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Image[] $images
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereMakerId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereSubCategoryId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereHeroDetails($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product wherePrice($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereQuantity($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereCreatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereUpdatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product latest()
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product random()
+ */
 class Product extends Model
 {
 

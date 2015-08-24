@@ -10,6 +10,37 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 
+/**
+ * Orbiagro\Models\User
+ *
+ * @property integer $id
+ * @property integer $profile_id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property string $remember_token
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $deleted_at
+ * @property-read \Orbiagro\Models\Person $person
+ * @property-read \Orbiagro\Models\UserConfirmation $confirmation
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Billing[] $billings
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
+ * @property-read \Orbiagro\Models\Profile $profile
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $purchases
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereProfileId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User wherePassword($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User admins()
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User random()
+ */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 

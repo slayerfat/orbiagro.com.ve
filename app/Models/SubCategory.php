@@ -7,6 +7,32 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 
+/**
+ * Orbiagro\Models\SubCategory
+ *
+ * @property integer $id
+ * @property integer $category_id
+ * @property string $description
+ * @property string $info
+ * @property string $slug
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \Orbiagro\Models\Category $category
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereCategoryId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereInfo($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereCreatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereUpdatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory random()
+ */
 class SubCategory extends Model
 {
 

@@ -9,6 +9,38 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 
+/**
+ * Orbiagro\Models\Promotion
+ *
+ * @property integer $id
+ * @property integer $promo_type_id
+ * @property string $title
+ * @property string $slug
+ * @property integer $percentage
+ * @property integer $static
+ * @property string $begins
+ * @property string $ends
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Orbiagro\Models\PromoType $type
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Image[] $images
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion wherePromoTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion wherePercentage($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereStatic($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereBegins($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereEnds($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereCreatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereUpdatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion random()
+ */
 class Promotion extends Model
 {
 

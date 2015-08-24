@@ -7,6 +7,28 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 
+/**
+ * Orbiagro\Models\Category
+ *
+ * @property integer $id
+ * @property string $description
+ * @property string $info
+ * @property string $slug
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\SubCategory[] $subCategories
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereInfo($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereCreatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereUpdatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category random()
+ */
 class Category extends Model
 {
 

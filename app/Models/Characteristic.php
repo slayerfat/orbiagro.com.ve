@@ -6,6 +6,33 @@ use Orbiagro\Mamarrachismo\ModelValidation;
 
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
+/**
+ * Orbiagro\Models\Characteristic
+ *
+ * @property integer $id
+ * @property integer $product_id
+ * @property integer $height
+ * @property integer $width
+ * @property integer $depth
+ * @property integer $weight
+ * @property integer $units
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property-read \Orbiagro\Models\Product $product
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereProductId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereHeight($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereWidth($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereDepth($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereWeight($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereUnits($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereCreatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereUpdatedBy($value)
+ */
 class Characteristic extends Model
 {
 

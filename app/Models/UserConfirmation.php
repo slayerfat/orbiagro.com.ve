@@ -2,6 +2,17 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Orbiagro\Models\UserConfirmation
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property string $data
+ * @property-read \Orbiagro\Models\User $user
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\UserConfirmation whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\UserConfirmation whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\UserConfirmation whereData($value)
+ */
 class UserConfirmation extends Model
 {
 

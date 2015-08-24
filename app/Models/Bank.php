@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
- * TEST:
+ * Orbiagro\Models\Bank
  *
  * @property integer $id
  * @property integer $user_id
@@ -18,6 +18,14 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property-read \Orbiagro\Models\User $user
  * @property-read \ $visitable
+ * @property string $description
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Billing[] $billings
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Bank whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Bank whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Bank whereCreatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Bank whereUpdatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Bank whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Bank whereUpdatedAt($value)
  */
 class Bank extends Model
 {

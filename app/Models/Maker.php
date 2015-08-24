@@ -6,6 +6,30 @@ use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 
+/**
+ * Orbiagro\Models\Maker
+ *
+ * @property integer $id
+ * @property string $name
+ * @property string $slug
+ * @property string $domain
+ * @property string $url
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereDomain($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereUrl($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereCreatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereUpdatedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker random()
+ */
 class Maker extends Model
 {
 
