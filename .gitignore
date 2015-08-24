@@ -4,3 +4,6 @@
 composer.lock
 
 tests/_output/*
+
+_ide_helper.php
+_ide_helper_models.php
