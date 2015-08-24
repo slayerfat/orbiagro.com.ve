@@ -21,7 +21,7 @@
         </h2>
         @if(Auth::user()->isAdmin() && $user->person)
           <h2>
-            {{$user->person->formatted_names()}}
+            {{$user->person->formattedNames()}}
           </h2>
           <h3>
             Cedula: {{$user->person->identity_card}}

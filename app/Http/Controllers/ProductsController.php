@@ -222,7 +222,7 @@ class ProductsController extends Controller
         }
 
         $this->seo()->setTitle(
-            "{$product->title} - {$product->price_bs()}"
+            "{$product->title} - {$product->priceBs()}"
         )->setDescription(
             $product->title.' en '.$product->subCategory->description
             .', consigue mas en '.$product->subCategory->category->description

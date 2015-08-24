@@ -21,7 +21,7 @@
         Ancho
       </td>
       <td>
-        {{ $product->characteristics->width_cm() }}
+        {{ $product->characteristics->widthCm() }}
       </td>
     </tr>
     <tr>
@@ -37,7 +37,7 @@
         Peso
       </td>
       <td>
-        {{ $product->characteristics->weight_kg() }}
+        {{ $product->characteristics->weightKg() }}
       </td>
     </tr>
     <tr>

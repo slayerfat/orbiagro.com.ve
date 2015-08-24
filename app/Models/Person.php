@@ -102,7 +102,7 @@ class Person extends Model
         return null;
     }
 
-    public function formatted_names()
+    public function formattedNames()
     {
         if (isset($this->attributes['first_name'])
         && isset($this->attributes['first_surname'])) {

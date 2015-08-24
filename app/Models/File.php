@@ -40,7 +40,7 @@ class File extends Model
     // --------------------------------------------------------------------------
     public function setPathAttribute($value)
     {
-        if ($this->file_exists($value)) {
+        if ($this->fileExists($value)) {
             return $this->attributes['path'] = $value;
         }
 
@@ -71,7 +71,13 @@ class File extends Model
     // --------------------------------------------------------------------------
     // Private Methods
     // --------------------------------------------------------------------------
-    private function file_exists($path)
+
+    /**
+     * @param string $param
+     *
+     * @return boolean
+     */
+    private function fileExists($path)
     {
         if (Storage::disk('public')->exists($path)) {
             return true;

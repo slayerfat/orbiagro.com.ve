@@ -22,7 +22,7 @@
             <h4 class="media-heading product-title">{{ $product->title }}</h4>
           </a>
           <div class="col-md-3 product-price">
-            {{ $product->price_bs() }}
+            {{ $product->priceBs() }}
           </div>
           <div class="col-md-9 product-features">
             @if($product->features)

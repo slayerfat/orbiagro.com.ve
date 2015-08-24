@@ -96,7 +96,7 @@ class MechanicalInfo extends Model
     // --------------------------------------------------------------------------
     // Metodos Publicos
     // --------------------------------------------------------------------------
-    public function mileage_km()
+    public function mileageKm()
     {
         $mileage = Transformer::toReadable($this->attributes['mileage']);
 
@@ -107,7 +107,7 @@ class MechanicalInfo extends Model
         return null;
     }
 
-    public function horsepower_hp()
+    public function horsepowerHP()
     {
         $horsepower = Transformer::toReadable($this->attributes['horsepower']);
 

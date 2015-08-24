@@ -40,9 +40,9 @@ class CharacteristicTest extends TestCase
             $this->tester->$attr = '2000';
 
             $this->assertEquals(2000, $this->tester->$attr);
-            $method = $attr.'_cm';
+            $method = $attr.'Cm';
             $this->assertEquals('2.000 cm.', $this->tester->$method());
-            $method = $attr.'_mm';
+            $method = $attr.'Mm';
             $this->assertEquals('20.000 mm.', $this->tester->$method());
         }
     }
@@ -63,7 +63,7 @@ class CharacteristicTest extends TestCase
         $this->tester->units = '2000';
 
         $this->assertEquals(2000, $this->tester->units);
-        $this->assertEquals('2.000 Unidades.', $this->tester->formatted_units());
+        $this->assertEquals('2.000 Unidades.', $this->tester->formattedUnits());
     }
 
     /**
@@ -81,9 +81,9 @@ class CharacteristicTest extends TestCase
         $this->tester->weight = '2000';
 
         $this->assertEquals(2000, $this->tester->weight);
-        $this->assertEquals('2.000 Kg.', $this->tester->weight_kg());
-        $this->assertEquals('2 T.', $this->tester->weight_tons());
-        $this->assertEquals('2.000.000 g.', $this->tester->weight_g());
+        $this->assertEquals('2.000 Kg.', $this->tester->weightKg());
+        $this->assertEquals('2 T.', $this->tester->weightTons());
+        $this->assertEquals('2.000.000 g.', $this->tester->weightGm());
     }
 
     /**

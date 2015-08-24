@@ -120,7 +120,7 @@ class Characteristic extends Model
     * Devuelve el peso en formato legible en Gramos.
     * @return mixed
     */
-    public function weight_g()
+    public function weightGm()
     {
         $weight = Transformer::transform($this->attributes['weight'], 'kg', 'g');
 
@@ -137,7 +137,7 @@ class Characteristic extends Model
      * Devuelve el peso en formato legible en Kg.
      * @return mixed
      */
-    public function weight_kg()
+    public function weightKg()
     {
         $weight = Transformer::toReadable($this->attributes['weight']);
 
@@ -152,7 +152,7 @@ class Characteristic extends Model
      * Devuelve el peso en formato legible en Toneladas.
      * @return mixed
      */
-    public function weight_tons()
+    public function weightTons()
     {
         $weight = Transformer::transform($this->attributes['weight'], 'kg', 't');
         $weight = Transformer::toReadable($weight);
@@ -168,7 +168,7 @@ class Characteristic extends Model
      * Devuelve las unidades en formato legible en Unidades.
      * @return mixed
      */
-    public function formatted_units()
+    public function formattedUnits()
     {
         $units = Transformer::toReadable($this->attributes['units']);
 
@@ -183,7 +183,7 @@ class Characteristic extends Model
      * Devuelve el ancho en formato legible en cm.
      * @return mixed
      */
-    public function width_cm()
+    public function widthCm()
     {
         $width = Transformer::toReadable($this->attributes['width']);
 
@@ -198,7 +198,7 @@ class Characteristic extends Model
      * Devuelve el ancho en formato legible en mm.
      * @return mixed
      */
-    public function width_mm()
+    public function widthMm()
     {
         $width = Transformer::transform($this->attributes['width'], 'cm', 'mm');
 
@@ -215,7 +215,7 @@ class Characteristic extends Model
      * Devuelve el ancho en formato legible en cm.
      * @return mixed
      */
-    public function height_cm()
+    public function heightCm()
     {
         $height = Transformer::toReadable($this->attributes['height']);
 
@@ -230,7 +230,7 @@ class Characteristic extends Model
      * Devuelve el ancho en formato legible en mm.
      * @return mixed
      */
-    public function height_mm()
+    public function heightMm()
     {
         $height = Transformer::transform($this->attributes['height'], 'cm', 'mm');
 
@@ -247,7 +247,7 @@ class Characteristic extends Model
      * Devuelve el ancho en formato legible en cm.
      * @return mixed
      */
-    public function depth_cm()
+    public function depthCm()
     {
         $depth = Transformer::toReadable($this->attributes['depth']);
 
@@ -262,7 +262,7 @@ class Characteristic extends Model
      * Devuelve el ancho en formato legible en mm.
      * @return mixed
      */
-    public function depth_mm()
+    public function depthMm()
     {
         $depth = Transformer::transform($this->attributes['depth'], 'cm', 'mm');
 

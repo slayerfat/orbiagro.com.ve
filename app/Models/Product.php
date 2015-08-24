@@ -295,7 +295,7 @@ class Product extends Model
         return $this;
     }
 
-    public function check_dollar(CheckDollar $checkDollar = null)
+    public function checkDollar(CheckDollar $checkDollar = null)
     {
         // si existe un parametro y es valido
         if ($checkDollar !== null && $checkDollar->isValid()) {
@@ -320,21 +320,21 @@ class Product extends Model
         return null;
     }
 
-    public function price_dollar(CheckDollar $checkDollar = null)
+    public function priceDollar(CheckDollar $checkDollar = null)
     {
         // si el objeto fue pasado como parametro
         if ($checkDollar !== null && $checkDollar->isValid()) {
-            $dollar = $this->check_dollar($checkDollar);
+            $dollar = $this->checkDollar($checkDollar);
 
             // si el objeto existe como atributo
         } elseif ($checkDollar === null && isset($this->CheckDollar)) {
-            $dollar = $this->check_dollar($this->CheckDollar);
+            $dollar = $this->checkDollar($this->CheckDollar);
 
             // si no fue pasado ningun parametro
         } elseif ($checkDollar === null) {
             $checkDollar = new CheckDollar;
 
-            $dollar = $this->check_dollar($checkDollar);
+            $dollar = $this->checkDollar($checkDollar);
         }
 
         // si existe un $dollar y existe el precio del producto:
@@ -347,7 +347,7 @@ class Product extends Model
         return null;
     }
 
-    public function price_bs($otherNumber = null)
+    public function priceBs($otherNumber = null)
     {
         if ($otherNumber) {
             return Transformer::toReadable($otherNumber);
@@ -362,7 +362,7 @@ class Product extends Model
         return "Bs. {$price}";
     }
 
-    public function price_formatted()
+    public function priceFormatted()
     {
         if (isset($this->attributes['price'])) {
             $price = Transformer::toReadable($this->attributes['price']);

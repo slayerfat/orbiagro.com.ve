@@ -70,21 +70,21 @@ class PersonTest extends TestCase
     {
         $this->tester->first_name = 'tester';
         $this->tester->first_surname = 'tester';
-        $this->assertEquals('Tester Tester', $this->tester->formatted_names());
+        $this->assertEquals('Tester Tester', $this->tester->formattedNames());
     }
 
     public function testFormattedNamesShouldNotThrowException()
     {
-        $this->assertNull($this->tester->formatted_names());
+        $this->assertNull($this->tester->formattedNames());
 
         $this->tester->first_name = 'tester';
-        $this->assertEquals('Tester', $this->tester->formatted_names());
+        $this->assertEquals('Tester', $this->tester->formattedNames());
 
         $this->tester->last_name = 'tester';
-        $this->assertEquals('Tester', $this->tester->formatted_names());
+        $this->assertEquals('Tester', $this->tester->formattedNames());
 
         $this->tester->last_surname = 'tester';
-        $this->assertEquals('Tester', $this->tester->formatted_names());
+        $this->assertEquals('Tester', $this->tester->formattedNames());
     }
 
     public function testCorrectFormattedFirstNames()

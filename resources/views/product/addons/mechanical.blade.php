@@ -21,7 +21,7 @@
         Kilometraje
       </td>
       <td>
-        {{ $product->mechanical->mileage_km() }}
+        {{ $product->mechanical->mileageKm() }}
       </td>
     </tr>
     <tr>
@@ -53,7 +53,7 @@
         Caballaje
       </td>
       <td>
-        {{ $product->mechanical->horsepower_hp() }}
+        {{ $product->mechanical->horsepowerHP() }}
       </td>
     </tr>
     <tr>

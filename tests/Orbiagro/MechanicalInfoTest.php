@@ -53,7 +53,7 @@ class MechanicalInfoTest extends TestCase
     {
         $this->tester->horsepower = '2000';
         $this->assertEquals(2000, $this->tester->horsepower);
-        $this->assertEquals('2.000 HP.', $this->tester->horsepower_hp());
+        $this->assertEquals('2.000 HP.', $this->tester->horsepowerHP());
     }
 
     /**
@@ -69,7 +69,7 @@ class MechanicalInfoTest extends TestCase
     {
         $this->tester->mileage = 1000;
         $this->assertEquals(1000, $this->tester->mileage);
-        $this->assertEquals('1.000 Km.', $this->tester->mileage_km());
+        $this->assertEquals('1.000 Km.', $this->tester->mileageKm());
     }
 
     /**

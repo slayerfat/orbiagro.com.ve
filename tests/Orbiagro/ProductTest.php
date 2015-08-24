@@ -236,12 +236,12 @@ class ProductTest extends TestCase
         $dollar->dollar->promedio = 1;
 
         // pasandole el objeto al metodo
-        $this->assertEquals(1, $this->tester->check_dollar($dollar));
+        $this->assertEquals(1, $this->tester->checkDollar($dollar));
 
         // invocando al metodo sin objeto:
         $this->tester->setDollar($dollar);
 
-        $this->assertEquals(1, $this->tester->check_dollar());
+        $this->assertEquals(1, $this->tester->checkDollar());
     }
 
     public function testCheckPriceDollarMethod()
@@ -255,22 +255,22 @@ class ProductTest extends TestCase
         $dollar->dollar->promedio = 1;
 
         // tratar de hacer esto sin precio deberia dar nulo
-        $this->assertNull($this->tester->price_dollar($dollar));
+        $this->assertNull($this->tester->priceDollar($dollar));
 
         // deberia funcionar normal
         $this->tester->price = 1;
-        $this->assertNotNull($this->tester->price_dollar($dollar));
+        $this->assertNotNull($this->tester->priceDollar($dollar));
 
         // invocando al metodo sin objeto:
         unset($this->tester->dollar);
         $this->tester->setDollar($dollar);
 
-        $this->assertNotNull($this->tester->price_dollar());
+        $this->assertNotNull($this->tester->priceDollar());
     }
 
     public function testCheckPriceBsMethod()
     {
-        $this->assertNull($this->tester->price_bs());
+        $this->assertNull($this->tester->priceBs());
     }
 
     public function testCorrectFormattedPrice()
@@ -285,15 +285,15 @@ class ProductTest extends TestCase
 
         $this->tester->price = '1000,12';
         $this->assertEquals(1000.12, $this->tester->price);
-        $this->assertEquals('Bs. 1.000,12', $this->tester->price_bs());
-        $this->assertEquals('1.000,12', $this->tester->price_formatted());
-        $this->assertEquals("$ 1.000,12", $this->tester->price_dollar($dollar));
+        $this->assertEquals('Bs. 1.000,12', $this->tester->priceBs());
+        $this->assertEquals('1.000,12', $this->tester->priceFormatted());
+        $this->assertEquals("$ 1.000,12", $this->tester->priceDollar($dollar));
 
         $this->tester->price = 1000.12;
         $this->assertEquals(1000.12, $this->tester->price);
-        $this->assertEquals('Bs. 1.000,12', $this->tester->price_bs());
-        $this->assertEquals('1.000,12', $this->tester->price_formatted());
-        $this->assertEquals("$ 1.000,12", $this->tester->price_dollar($dollar));
+        $this->assertEquals('Bs. 1.000,12', $this->tester->priceBs());
+        $this->assertEquals('1.000,12', $this->tester->priceFormatted());
+        $this->assertEquals("$ 1.000,12", $this->tester->priceDollar($dollar));
     }
 
     public function testQuantityAttribute()
