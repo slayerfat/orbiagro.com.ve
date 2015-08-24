@@ -1,15 +1,15 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\ModelValidation;
-use App\Mamarrachismo\Transformer;
+use Orbiagro\Mamarrachismo\ModelValidation;
+use Orbiagro\Mamarrachismo\Transformer;
 
-use App\Mamarrachismo\CheckDollar;
+use Orbiagro\Mamarrachismo\CheckDollar;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Mamarrachismo\Traits\InternalDBManagement;
-use App\Mamarrachismo\Traits\CanSearchRandomly;
-use App\Mamarrachismo\Traits\HasShortTitle;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 
 class Product extends Model
 {

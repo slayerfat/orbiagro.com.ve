@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Provider;
+use Orbiagro\Models\Provider;
 use Tests\TestCase;
 
 class ProviderTest extends TestCase

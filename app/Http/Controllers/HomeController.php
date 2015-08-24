@@ -1,11 +1,11 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 
-use App\Category;
-use App\SubCategory;
-use App\Promotion;
-use App\PromoType;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Promotion;
+use Orbiagro\PromoType;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 

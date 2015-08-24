@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Image;
+use Orbiagro\Models\Image;
 use Tests\TestCase;
 
 class ImageTest extends TestCase

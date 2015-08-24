@@ -1,9 +1,9 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Mamarrachismo\Traits\InternalDBManagement;
-use App\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 
 class Parish extends Model
 {

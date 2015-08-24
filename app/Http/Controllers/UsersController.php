@@ -1,11 +1,11 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
-use App\Http\Requests;
-use App\Http\Requests\UserRequest;
-use App\Http\Controllers\Controller;
-use App\User;
-use App\Profile;
+use Orbiagro\Http\Requests;
+use Orbiagro\Http\Requests\UserRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\User;
+use Orbiagro\Profile;
 
 class UsersController extends Controller
 {

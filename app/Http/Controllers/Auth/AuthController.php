@@ -1,14 +1,14 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php namespace Orbiagro\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 
 // 5.1
-use App\User;
-use App\Profile;
-use App\UserConfirmation;
-use App\Mamarrachismo\EnviarEmail as Email;
+use Orbiagro\Models\User;
+use Orbiagro\Profile;
+use Orbiagro\Models\UserConfirmation;
+use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 

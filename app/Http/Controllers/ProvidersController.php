@@ -1,8 +1,8 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests\ProviderRequest;
-use App\Http\Controllers\Controller;
-use App\Provider;
+use Orbiagro\Http\Requests\ProviderRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\Provider;
 
 class ProvidersController extends Controller
 {

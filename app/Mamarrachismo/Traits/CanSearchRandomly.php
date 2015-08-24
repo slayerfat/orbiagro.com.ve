@@ -1,4 +1,4 @@
-<?php namespace App\Mamarrachismo\Traits;
+<?php namespace Orbiagro\Mamarrachismo\Traits;
 
 trait CanSearchRandomly
 {

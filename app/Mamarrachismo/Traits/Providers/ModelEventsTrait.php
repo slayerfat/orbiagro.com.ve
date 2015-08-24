@@ -1,4 +1,4 @@
-<?php namespace App\Mamarrachismo\Traits\Providers;
+<?php namespace Orbiagro\Mamarrachismo\Traits\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

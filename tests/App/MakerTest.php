@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Maker;
+use Orbiagro\Models\Maker;
 use Tests\TestCase;
 
 class MakerTest extends TestCase

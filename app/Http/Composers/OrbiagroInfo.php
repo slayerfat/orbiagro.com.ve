@@ -1,8 +1,8 @@
-<?php namespace App\Http\Composers;
+<?php namespace Orbiagro\Http\Composers;
 
 use Illuminate\Contracts\View\View;
 
-use App\Mamarrachismo\Business;
+use Orbiagro\Mamarrachismo\Business;
 
 class OrbiagroInfo
 {

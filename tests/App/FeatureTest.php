@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Feature;
+use Orbiagro\Models\Feature;
 use Tests\TestCase;
 
 class FeatureTest extends TestCase

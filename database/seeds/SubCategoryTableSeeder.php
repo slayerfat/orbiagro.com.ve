@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
 class SubCategoryTableSeeder extends BaseSeeder
 {

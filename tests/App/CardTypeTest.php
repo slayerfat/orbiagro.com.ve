@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\CardType;
+use Orbiagro\Models\CardType;
 use Tests\TestCase;
 
 class CardTypeTest extends TestCase

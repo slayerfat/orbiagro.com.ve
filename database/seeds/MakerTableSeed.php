@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
 class MakerTableSeeder extends BaseSeeder
 {

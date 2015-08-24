@@ -1,9 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests\MakerRequest;
-use App\Http\Controllers\Controller;
-use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use App\Maker;
+use Orbiagro\Http\Requests\MakerRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Models\Maker;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 

@@ -1,7 +1,7 @@
-<?php namespace App\Http\Requests;
+<?php namespace Orbiagro\Http\Requests;
 
-use App\Http\Requests\Request;
-use App\Characteristic;
+use Orbiagro\Http\Requests\Request;
+use Orbiagro\Models\Characteristic;
 
 class CharacteristicRequest extends Request
 {

@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Nutritional;
+use Orbiagro\Models\Nutritional;
 use Tests\TestCase;
 
 class NutritionalTest extends TestCase

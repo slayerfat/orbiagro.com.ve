@@ -1,10 +1,10 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\Transformer;
-use App\Mamarrachismo\ModelValidation;
+use Orbiagro\Mamarrachismo\Transformer;
+use Orbiagro\Mamarrachismo\ModelValidation;
 
-use App\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 class Characteristic extends Model
 {

@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Profile;
+use Orbiagro\Profile;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase

@@ -1,15 +1,15 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace Orbiagro\Mamarrachismo;
 
 use Auth;
 use Cookie;
 use Exception;
 use Carbon\Carbon;
-use App\Mamarrachismo\Transformer;
+use Orbiagro\Mamarrachismo\Transformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use App\Product;
-use App\SubCategory;
-use App\Visit;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Models\Visit;
 
 /**
  * clase utilizada para buscar y crear nuevas

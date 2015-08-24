@@ -1,10 +1,10 @@
-<?php namespace App\Http\Composers;
+<?php namespace Orbiagro\Http\Composers;
 
 use Illuminate\Contracts\View\View;
-use App\Mamarrachismo\VisitsService;
+use Orbiagro\Mamarrachismo\VisitsService;
 
-use App\Product;
-use App\SubCategory;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\SubCategory;
 
 class Visits
 {

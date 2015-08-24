@@ -1,4 +1,4 @@
-<?php namespace App\Http\Requests;
+<?php namespace Orbiagro\Http\Requests;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Foundation\Http\FormRequest;

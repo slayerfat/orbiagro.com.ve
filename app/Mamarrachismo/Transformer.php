@@ -1,4 +1,4 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace Orbiagro\Mamarrachismo;
 
 class Transformer
 {

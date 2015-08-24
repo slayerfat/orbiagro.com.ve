@@ -1,12 +1,12 @@
-<?php namespace App\Mamarrachismo\Upload;
+<?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
 use Validator;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\Upload\Upload;
-use App\File as FileModel;
+use Orbiagro\Mamarrachismo\Upload\Upload;
+use Orbiagro\Models\File as FileModel;
 
 class File extends Upload
 {

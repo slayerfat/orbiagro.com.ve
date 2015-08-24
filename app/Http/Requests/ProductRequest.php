@@ -1,9 +1,9 @@
-<?php namespace App\Http\Requests;
+<?php namespace Orbiagro\Http\Requests;
 
 use Auth;
-use App\Http\Requests\Request;
+use Orbiagro\Http\Requests\Request;
 
-use App\Product;
+use Orbiagro\Models\Product;
 
 class ProductRequest extends Request
 {

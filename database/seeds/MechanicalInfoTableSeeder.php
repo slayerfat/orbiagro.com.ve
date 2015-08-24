@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\User;
-use App\Product;
-use App\MechanicalInfo;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\MechanicalInfo;
 
 class MechanicalInfoTableSeeder extends BaseSeeder
 {

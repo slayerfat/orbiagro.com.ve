@@ -1,10 +1,10 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests;
+use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Product;
-use App\Provider;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Provider;
 
 class ProductsProvidersController extends Controller
 {

@@ -1,8 +1,8 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace Orbiagro\Mamarrachismo;
 
 use Auth;
 use Mail;
-use App\User;
+use Orbiagro\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 /**

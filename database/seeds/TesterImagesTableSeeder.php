@@ -2,10 +2,10 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\User;
-use App\Image;
-use App\File;
-use App\Product;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Image;
+use Orbiagro\Models\File;
+use Orbiagro\Models\Product;
 
 class TesterImagesTableSeeder extends Seeder
 {

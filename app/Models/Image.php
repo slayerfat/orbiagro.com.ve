@@ -1,10 +1,10 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Storage;
-use App\Mamarrachismo\ModelValidation;
+use Orbiagro\Mamarrachismo\ModelValidation;
 
-use App\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 class Image extends Model
 {

@@ -1,9 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Orbiagro\Http\Requests;
+use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Profile;
+use Orbiagro\Profile;
 
 class ProfilesController extends Controller
 {

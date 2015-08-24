@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\File;
+use Orbiagro\Models\File;
 use Tests\TestCase;
 
 class FileTest extends TestCase

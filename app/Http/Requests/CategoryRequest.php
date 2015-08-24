@@ -1,6 +1,6 @@
-<?php namespace App\Http\Requests;
+<?php namespace Orbiagro\Http\Requests;
 
-use App\Http\Requests\Request;
+use Orbiagro\Http\Requests\Request;
 
 class CategoryRequest extends Request
 {

@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Billing;
+use Orbiagro\Models\Billing;
 use Tests\TestCase;
 
 class BillingTest extends TestCase

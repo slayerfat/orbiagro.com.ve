@@ -1,8 +1,8 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
  * TEST:

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Product;
+use Orbiagro\Models\Product;
 
 class PurchaseTableSeeder extends BaseSeeder
 {

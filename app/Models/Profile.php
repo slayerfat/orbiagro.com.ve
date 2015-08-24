@@ -1,7 +1,7 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\ModelValidation;
+use Orbiagro\Mamarrachismo\ModelValidation;
 
 class Profile extends Model
 {

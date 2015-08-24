@@ -1,4 +1,4 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -7,8 +7,8 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Mamarrachismo\ModelValidation;
-use App\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\ModelValidation;
+use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {

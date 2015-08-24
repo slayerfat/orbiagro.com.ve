@@ -1,9 +1,9 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\ModelValidation;
+use Orbiagro\Mamarrachismo\ModelValidation;
 
-use App\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 class Gender extends Model
 {

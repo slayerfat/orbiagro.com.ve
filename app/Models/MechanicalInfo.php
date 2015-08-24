@@ -1,10 +1,10 @@
-<?php namespace App;
+<?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\ModelValidation;
-use App\Mamarrachismo\Transformer;
+use Orbiagro\Mamarrachismo\ModelValidation;
+use Orbiagro\Mamarrachismo\Transformer;
 
-use App\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 class MechanicalInfo extends Model
 {

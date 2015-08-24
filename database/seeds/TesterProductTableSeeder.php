@@ -2,13 +2,13 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\User;
-use App\SubCategory;
-use App\Maker;
-use App\Parish;
-use App\Direction;
-use App\MapDetail;
-use App\Product;
+use Orbiagro\Models\User;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Models\Maker;
+use Orbiagro\Models\Parish;
+use Orbiagro\Models\Direction;
+use Orbiagro\Models\MapDetail;
+use Orbiagro\Models\Product;
 
 class TesterProductTableSeeder extends Seeder
 {

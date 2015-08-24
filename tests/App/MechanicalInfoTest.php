@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\MechanicalInfo;
+use Orbiagro\Models\MechanicalInfo;
 use Tests\TestCase;
 
 class MechanicalInfoTest extends TestCase

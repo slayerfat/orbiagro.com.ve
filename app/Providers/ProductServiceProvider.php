@@ -1,8 +1,8 @@
-<?php namespace App\Providers;
+<?php namespace Orbiagro\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Product;
+use Orbiagro\Models\Product;
 use Storage;
 
 class ProductServiceProvider extends ServiceProvider

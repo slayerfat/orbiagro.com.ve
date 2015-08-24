@@ -1,16 +1,16 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests\CharacteristicRequest;
-use App\Http\Requests\MechanicalInfoRequest;
-use App\Http\Requests\NutritionalRequest;
+use Orbiagro\Http\Requests\CharacteristicRequest;
+use Orbiagro\Http\Requests\MechanicalInfoRequest;
+use Orbiagro\Http\Requests\NutritionalRequest;
 use Illuminate\Database\Eloquent\Model;
-use App\Http\Controllers\Controller;
+use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
-use App\Http\Requests\Request;
-use App\Characteristic;
-use App\MechanicalInfo;
-use App\Nutritional;
-use App\Product;
+use Orbiagro\Http\Requests\Request;
+use Orbiagro\Models\Characteristic;
+use Orbiagro\Models\MechanicalInfo;
+use Orbiagro\Models\Nutritional;
+use Orbiagro\Models\Product;
 
 class RelatedProductModelsController extends Controller
 {

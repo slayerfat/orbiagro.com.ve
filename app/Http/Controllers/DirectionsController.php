@@ -1,9 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\State;
-use App\Town;
-use App\Parish;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\State;
+use Orbiagro\Models\Town;
+use Orbiagro\Models\Parish;
 
 class DirectionsController extends Controller
 {

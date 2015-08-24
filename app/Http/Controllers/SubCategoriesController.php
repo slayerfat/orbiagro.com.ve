@@ -1,14 +1,14 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests;
+use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-use App\Http\Requests\SubCategoryRequest;
-use App\Http\Controllers\Controller;
-use App\Product;
-use App\Category;
-use App\SubCategory;
-use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Http\Requests\SubCategoryRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Mamarrachismo\VisitsService;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class SubCategoriesController extends Controller

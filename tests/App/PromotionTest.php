@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Promotion;
+use Orbiagro\Promotion;
 use Tests\TestCase;
 
 class PromotionTest extends TestCase

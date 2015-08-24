@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\User;
-use App\Product;
-use App\Visit;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Visit;
 
 class VisitTableSeeder extends Seeder
 {

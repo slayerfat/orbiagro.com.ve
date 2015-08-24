@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\User;
-use App\Image;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Image;
 
 class TesterMakerTableSeed extends Seeder
 {

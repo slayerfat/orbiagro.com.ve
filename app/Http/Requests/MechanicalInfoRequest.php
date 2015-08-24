@@ -1,7 +1,7 @@
-<?php namespace App\Http\Requests;
+<?php namespace Orbiagro\Http\Requests;
 
-use App\Http\Requests\Request;
-use App\MechanicalInfo;
+use Orbiagro\Http\Requests\Request;
+use Orbiagro\Models\MechanicalInfo;
 
 class MechanicalInfoRequest extends Request
 {

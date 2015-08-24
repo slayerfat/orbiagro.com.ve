@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\SubCategory;
+use Orbiagro\Models\SubCategory;
 use Tests\TestCase;
 
 class SubCategoryTest extends TestCase

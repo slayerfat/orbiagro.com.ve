@@ -1,12 +1,12 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 
-use App\Http\Requests\FeatureRequest;
-use App\Http\Controllers\Controller;
-use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use App\Product;
-use App\Feature;
+use Orbiagro\Http\Requests\FeatureRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Feature;
 
 class FeaturesController extends Controller
 {

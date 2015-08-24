@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Gender;
+use Orbiagro\Models\Gender;
 use Tests\TestCase;
 
 class GenderTest extends TestCase

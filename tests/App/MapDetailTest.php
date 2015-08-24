@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\MapDetail;
+use Orbiagro\Models\MapDetail;
 use Tests\TestCase;
 
 class MapDetailTest extends TestCase

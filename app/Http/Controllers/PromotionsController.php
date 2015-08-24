@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Orbiagro\Http\Requests;
+use Orbiagro\Http\Controllers\Controller;
 
 class PromotionsController extends Controller
 {

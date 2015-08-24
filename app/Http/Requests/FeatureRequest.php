@@ -1,7 +1,7 @@
-<?php namespace App\Http\Requests;
+<?php namespace Orbiagro\Http\Requests;
 
-use App\Http\Requests\Request;
-use App\Feature;
+use Orbiagro\Http\Requests\Request;
+use Orbiagro\Models\Feature;
 
 class FeatureRequest extends Request
 {

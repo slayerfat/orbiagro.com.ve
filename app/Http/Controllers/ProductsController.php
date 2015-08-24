@@ -1,18 +1,18 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use App\Http\Requests\ProductRequest;
-use App\Http\Controllers\Controller;
-use App\Mamarrachismo\VisitsService;
-use App\Product;
-use App\Category;
-use App\SubCategory;
-use App\MapDetail;
-use App\Direction;
-use App\Maker;
+use Orbiagro\Http\Requests\ProductRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Mamarrachismo\VisitsService;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Models\MapDetail;
+use Orbiagro\Models\Direction;
+use Orbiagro\Models\Maker;
 
-use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class ProductsController extends Controller

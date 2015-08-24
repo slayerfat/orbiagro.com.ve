@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Person;
+use Orbiagro\Models\Person;
 use Tests\TestCase;
 
 class PersonTest extends TestCase

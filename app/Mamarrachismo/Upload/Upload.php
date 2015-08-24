@@ -1,4 +1,4 @@
-<?php namespace App\Mamarrachismo\Upload;
+<?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
 use Validator;

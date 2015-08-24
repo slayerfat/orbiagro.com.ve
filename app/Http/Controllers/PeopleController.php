@@ -1,13 +1,13 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use App\Http\Requests\PeopleRequest;
-use App\Http\Controllers\Controller;
-use App\User;
-use App\Person;
-use App\Gender;
-use App\Nationality;
+use Orbiagro\Http\Requests\PeopleRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Person;
+use Orbiagro\Models\Gender;
+use Orbiagro\Models\Nationality;
 
 class PeopleController extends Controller
 {

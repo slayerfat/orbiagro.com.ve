@@ -1,8 +1,8 @@
-<?php namespace App\Providers;
+<?php namespace Orbiagro\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Mamarrachismo\Traits\Providers\ModelEventsTrait;
+use Orbiagro\Mamarrachismo\Traits\Providers\ModelEventsTrait;
 
 class DelitingWithImageServiceProvider extends ServiceProvider
 {

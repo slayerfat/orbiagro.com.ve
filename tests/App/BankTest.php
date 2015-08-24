@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Bank;
+use Orbiagro\Models\Bank;
 use Tests\TestCase;
 
 class BankTest extends TestCase

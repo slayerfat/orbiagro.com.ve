@@ -1,4 +1,4 @@
-<?php namespace App\Mamarrachismo\Upload;
+<?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
 use Validator;
@@ -6,8 +6,8 @@ use Storage;
 use Intervention;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\Upload\Upload;
-use App\Image as ImageModel;
+use Orbiagro\Mamarrachismo\Upload\Upload;
+use Orbiagro\Models\Image as ImageModel;
 
 class Image extends Upload
 {

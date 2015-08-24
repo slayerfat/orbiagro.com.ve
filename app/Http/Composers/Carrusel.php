@@ -1,12 +1,12 @@
-<?php namespace App\Http\Composers;
+<?php namespace Orbiagro\Http\Composers;
 
 use Illuminate\Contracts\View\View;
 
-use App\Product;
-use App\Category;
-use App\PromoType;
-use App\Promotion;
-use App\SubCategory;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Category;
+use Orbiagro\PromoType;
+use Orbiagro\Promotion;
+use Orbiagro\Models\SubCategory;
 
 class Carrusel
 {

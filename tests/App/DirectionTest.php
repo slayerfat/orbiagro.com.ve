@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Direction;
+use Orbiagro\Models\Direction;
 use Tests\TestCase;
 
 class DirectionTest extends TestCase

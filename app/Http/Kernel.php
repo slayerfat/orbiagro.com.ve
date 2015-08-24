@@ -1,4 +1,4 @@
-<?php namespace App\Http;
+<?php namespace Orbiagro\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 

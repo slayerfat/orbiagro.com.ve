@@ -2,7 +2,7 @@
 
 use \Mockery;
 use Tests\App\Traits\TearsDownMockery;
-use App\Nationality;
+use Orbiagro\Models\Nationality;
 use Tests\TestCase;
 
 class NationalityTest extends TestCase

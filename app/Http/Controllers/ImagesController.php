@@ -1,13 +1,13 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
 use Auth;
-use App\Image;
+use Orbiagro\Models\Image;
 use Intervention;
-use App\Http\Requests;
+use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
-use App\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
 class ImagesController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php namespace Tests\App\Mamarrachismo;
 
-use App\Mamarrachismo\Transformer;
+use Orbiagro\Mamarrachismo\Transformer;
 use Tests\TestCase;
 
 class TransformerTest extends TestCase

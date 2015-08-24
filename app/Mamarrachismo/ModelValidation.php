@@ -1,7 +1,7 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace Orbiagro\Mamarrachismo;
 
 use Validator;
-use App\User;
+use Orbiagro\Models\User;
 
 /**
  * @todo mejorar los metodos estaticos de esta clase

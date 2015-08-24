@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\User;
+use Orbiagro\Models\User;
 
 class NationalityTableSeeder extends BaseSeeder
 {

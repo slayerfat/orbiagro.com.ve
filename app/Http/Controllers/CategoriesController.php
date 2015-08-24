@@ -1,9 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Category;
-use App\Http\Requests\CategoryRequest;
-use App\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\Category;
+use Orbiagro\Http\Requests\CategoryRequest;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class CategoriesController extends Controller

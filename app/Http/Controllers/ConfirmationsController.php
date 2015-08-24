@@ -1,11 +1,11 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Mamarrachismo\EnviarEmail as Email;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Auth;
-use App\User;
-use App\Profile;
-use App\UserConfirmation;
+use Orbiagro\Models\User;
+use Orbiagro\Profile;
+use Orbiagro\Models\UserConfirmation;
 
 class ConfirmationsController extends Controller
 {

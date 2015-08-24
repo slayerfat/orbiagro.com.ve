@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Person;
+use Orbiagro\Models\Person;
 
 class PeopleTableSeeder extends BaseSeeder {
 

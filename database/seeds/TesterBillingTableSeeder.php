@@ -2,10 +2,10 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\User;
-use App\Bank;
-use App\CardType;
-use App\Billing;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Bank;
+use Orbiagro\Models\CardType;
+use Orbiagro\Models\Billing;
 
 class TesterBillingTableSeeder extends Seeder
 {

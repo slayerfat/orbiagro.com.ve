@@ -1,13 +1,13 @@
-<?php namespace App\Mamarrachismo\Traits\Controllers;
+<?php namespace Orbiagro\Mamarrachismo\Traits\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use App\Http\Requests\Request;
+use Orbiagro\Http\Requests\Request;
 // el abstracto de ImageUpload y FileUpload
-use App\Mamarrachismo\Upload\Upload;
-use App\Mamarrachismo\Upload\Image as ImageUpload;
-use App\Mamarrachismo\Upload\File as FileUpload;
+use Orbiagro\Mamarrachismo\Upload\Upload;
+use Orbiagro\Mamarrachismo\Upload\Image as ImageUpload;
+use Orbiagro\Mamarrachismo\Upload\File as FileUpload;
 
 trait CanSaveUploads
 {

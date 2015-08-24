@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Image;
-use App\File;
-use App\Product;
+use Orbiagro\Models\Image;
+use Orbiagro\Models\File;
+use Orbiagro\Models\Product;
 
 class ImagesTableSeeder extends BaseSeeder
 {
