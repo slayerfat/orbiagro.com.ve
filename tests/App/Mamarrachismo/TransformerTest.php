@@ -7,9 +7,9 @@ class TransformerTest extends TestCase
 {
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();

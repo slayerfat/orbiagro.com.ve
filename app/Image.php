@@ -51,11 +51,11 @@ class Image extends Model
     }
 
     /**
-    * Relacion polimorfica
-    * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-    *
-    * Category, SubCategory, Feature, Maker, Product, Promotion
-    */
+     * Relacion polimorfica
+     * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+     *
+     * Category, SubCategory, Feature, Maker, Product, Promotion
+     */
     public function imageable()
     {
         return $this->morphTo();

@@ -7,10 +7,10 @@ class CreateMechanicalInfosTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('mechanical_infos', function (Blueprint $table) {
@@ -34,10 +34,10 @@ class CreateMechanicalInfosTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('mechanical_infos');

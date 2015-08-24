@@ -11,9 +11,9 @@ class SubCategoryTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -75,8 +75,8 @@ class SubCategoryTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectDescriptionValueShouldBeNull($data)
     {
         $this->tester->description = $data;
@@ -90,8 +90,8 @@ class SubCategoryTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectSlugValueShouldBeNull($data)
     {
         $this->tester->slug = $data;
@@ -107,8 +107,8 @@ class SubCategoryTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectInfoValueShouldBeNull($data)
     {
         $this->tester->info = $data;

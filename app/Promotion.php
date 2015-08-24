@@ -138,8 +138,8 @@ class Promotion extends Model
     // --------------------------------------------------------------------------
 
     /**
-    * Devuelve el descuento estatico concadenado con Bs.
-    */
+     * Devuelve el descuento estatico concadenado con Bs.
+     */
     public function readableStatic($otherNumber = null)
     {
         if ($otherNumber) {
@@ -156,8 +156,8 @@ class Promotion extends Model
     }
 
     /**
-    * Devuelve el descuento en porcentaje concadenado con %.
-    */
+     * Devuelve el descuento en porcentaje concadenado con %.
+     */
     public function readablePercentage()
     {
         if (isset($this->attributes['percentage'])) {
@@ -168,8 +168,8 @@ class Promotion extends Model
     }
 
     /**
-    * Devuelve el descuento en numero ej: 100 => 1, 10 => 0.1.
-    */
+     * Devuelve el descuento en numero ej: 100 => 1, 10 => 0.1.
+     */
     public function decimalPercentage()
     {
         if (isset($this->attributes['percentage'])) {
@@ -184,9 +184,9 @@ class Promotion extends Model
     // --------------------------------------------------------------------------
 
     /**
-    * chequea si el valor es punto flotante o no.
-    * @param mixed $value
-    */
+     * chequea si el valor es punto flotante o no.
+     * @param mixed $value
+     */
     protected function isFloat($value)
     {
         if (is_float($value)) {

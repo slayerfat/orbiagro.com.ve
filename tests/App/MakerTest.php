@@ -11,9 +11,9 @@ class MakerTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -51,8 +51,8 @@ class MakerTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectNameValueShouldBeNull($data)
     {
         $this->tester->name = $data;
@@ -68,8 +68,8 @@ class MakerTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectSlugValueShouldBeNull($data)
     {
         $this->tester->slug = $data;

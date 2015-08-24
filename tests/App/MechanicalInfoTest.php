@@ -11,9 +11,9 @@ class MechanicalInfoTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -40,8 +40,8 @@ class MechanicalInfoTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectCylindersValueShouldBeNull($data)
     {
         $this->tester->cylinders = $data;
@@ -56,8 +56,8 @@ class MechanicalInfoTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectHorsepowerValueShouldBeNull($data)
     {
         $this->tester->horsepower = $data;
@@ -72,8 +72,8 @@ class MechanicalInfoTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectMileageValueShouldBeNull($data)
     {
         $this->tester->mileage = $data;
@@ -87,8 +87,8 @@ class MechanicalInfoTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectTractionValueShouldBeNull($data)
     {
         $this->tester->traction = $data;
@@ -102,8 +102,8 @@ class MechanicalInfoTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectLiftValueShouldBeNull($data)
     {
         $this->tester->lift = $data;

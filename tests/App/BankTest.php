@@ -11,9 +11,9 @@ class BankTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();

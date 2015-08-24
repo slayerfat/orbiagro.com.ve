@@ -11,9 +11,9 @@ class PersonTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -96,8 +96,8 @@ class PersonTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectFirstNamesValueShouldBeNull($data)
     {
         $this->tester->first_name = $data;
@@ -115,8 +115,8 @@ class PersonTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectLastNamesValueShouldBeNull($data)
     {
         $this->tester->first_surname = $data;
@@ -132,8 +132,8 @@ class PersonTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectPhoneValueShouldBeNull($data)
     {
         $this->tester->phone = $data;
@@ -150,8 +150,8 @@ class PersonTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectIdentityCardNumberValueShouldBeNull($data)
     {
         $this->tester->identity_card = $data;

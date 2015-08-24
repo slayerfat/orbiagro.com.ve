@@ -7,10 +7,10 @@ class CreateMapDetailsTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('map_details', function (Blueprint $table) {
@@ -32,10 +32,10 @@ class CreateMapDetailsTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('map_details');

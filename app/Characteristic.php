@@ -73,13 +73,13 @@ class Characteristic extends Model
     // --------------------------------------------------------------------------
 
     /**
-    * convierte algun valor numero a otra medida.
-    *
-    * @param  mixed  $int        el numero a convertir.
-    * @param  string $base       la unidad de medida que esta asociada al numero.
-    * @param  string $attribute  el atributo que se desea modificar.
-    * @return mixed              el resultado.
-    */
+     * convierte algun valor numero a otra medida.
+     *
+     * @param  mixed  $int        el numero a convertir.
+     * @param  string $base       la unidad de medida que esta asociada al numero.
+     * @param  string $attribute  el atributo que se desea modificar.
+     * @return mixed              el resultado.
+     */
     public function convert($int, $base, $attribute = null)
     {
         if ($attribute) {
@@ -107,9 +107,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve el peso en formato legible en Kg.
-    * @return mixed
-    */
+     * Devuelve el peso en formato legible en Kg.
+     * @return mixed
+     */
     public function weight_kg()
     {
         $weight = Transformer::toReadable($this->attributes['weight']);
@@ -122,9 +122,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve el peso en formato legible en Toneladas.
-    * @return mixed
-    */
+     * Devuelve el peso en formato legible en Toneladas.
+     * @return mixed
+     */
     public function weight_tons()
     {
         $weight = Transformer::transform($this->attributes['weight'], 'kg', 't');
@@ -138,9 +138,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve las unidades en formato legible en Unidades.
-    * @return mixed
-    */
+     * Devuelve las unidades en formato legible en Unidades.
+     * @return mixed
+     */
     public function formatted_units()
     {
         $units = Transformer::toReadable($this->attributes['units']);
@@ -153,9 +153,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve el ancho en formato legible en cm.
-    * @return mixed
-    */
+     * Devuelve el ancho en formato legible en cm.
+     * @return mixed
+     */
     public function width_cm()
     {
         $width = Transformer::toReadable($this->attributes['width']);
@@ -168,9 +168,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve el ancho en formato legible en mm.
-    * @return mixed
-    */
+     * Devuelve el ancho en formato legible en mm.
+     * @return mixed
+     */
     public function width_mm()
     {
         $width = Transformer::transform($this->attributes['width'], 'cm', 'mm');
@@ -185,9 +185,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve el ancho en formato legible en cm.
-    * @return mixed
-    */
+     * Devuelve el ancho en formato legible en cm.
+     * @return mixed
+     */
     public function height_cm()
     {
         $height = Transformer::toReadable($this->attributes['height']);
@@ -200,9 +200,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve el ancho en formato legible en mm.
-    * @return mixed
-    */
+     * Devuelve el ancho en formato legible en mm.
+     * @return mixed
+     */
     public function height_mm()
     {
         $height = Transformer::transform($this->attributes['height'], 'cm', 'mm');
@@ -217,9 +217,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve el ancho en formato legible en cm.
-    * @return mixed
-    */
+     * Devuelve el ancho en formato legible en cm.
+     * @return mixed
+     */
     public function depth_cm()
     {
         $depth = Transformer::toReadable($this->attributes['depth']);
@@ -232,9 +232,9 @@ class Characteristic extends Model
     }
 
     /**
-    * Devuelve el ancho en formato legible en mm.
-    * @return mixed
-    */
+     * Devuelve el ancho en formato legible en mm.
+     * @return mixed
+     */
     public function depth_mm()
     {
         $depth = Transformer::transform($this->attributes['depth'], 'cm', 'mm');

@@ -29,10 +29,10 @@ class Product extends Model
     ];
 
     /**
-    * The attributes that should be mutated to dates.
-    *
-    * @var array
-    */
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = ['deleted_at'];
 
     protected $checkDollar;
@@ -95,9 +95,9 @@ class Product extends Model
     }
 
     /**
-    * regresa los eventos paginados
-    * @return object LengthAwarePaginator
-    */
+     * regresa los eventos paginados
+     * @return object LengthAwarePaginator
+     */
     public function getPaginateAttribute()
     {
         return $this->get()->paginate(5);
@@ -311,12 +311,12 @@ class Product extends Model
     }
 
     /**
-    * forceDeleting es el atributo relacionado cuando
-    * algun modelo es eliminado de verdad
-    * en la aplicacion.
-    *
-    * @return boolean
-    */
+     * forceDeleting es el atributo relacionado cuando
+     * algun modelo es eliminado de verdad
+     * en la aplicacion.
+     *
+     * @return boolean
+     */
     public function isForceDeleting()
     {
         return $this->forceDeleting;

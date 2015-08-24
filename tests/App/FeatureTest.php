@@ -11,9 +11,9 @@ class FeatureTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -62,8 +62,8 @@ class FeatureTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectTitleValueShouldBeNull($data)
     {
         $this->tester->title = $data;
@@ -71,8 +71,8 @@ class FeatureTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectDescriptionValueShouldBeNull($data)
     {
         $this->tester->description = $data;

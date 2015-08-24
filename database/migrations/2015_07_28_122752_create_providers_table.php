@@ -7,10 +7,10 @@ class CreateProvidersTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('providers', function (Blueprint $table) {
@@ -40,10 +40,10 @@ class CreateProvidersTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('providers');

@@ -7,10 +7,10 @@ class UserConfirmationsTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('user_confirmations', function (Blueprint $table) {
@@ -22,10 +22,10 @@ class UserConfirmationsTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('user_confirmations');

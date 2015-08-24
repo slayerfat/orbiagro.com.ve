@@ -11,9 +11,9 @@ class ProductTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -178,8 +178,8 @@ class ProductTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectSlugValueShouldBeNull($data)
     {
         $this->tester->slug = $data;
@@ -194,8 +194,8 @@ class ProductTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectTitleValueShouldBeNull($data)
     {
         $this->tester->title = $data;
@@ -203,8 +203,8 @@ class ProductTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectDescriptionValueShouldBeNull($data)
     {
         $this->tester->description = $data;
@@ -293,8 +293,8 @@ class ProductTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectPriceValueShouldBeNull($data)
     {
         $this->tester->price = $data;

@@ -11,9 +11,9 @@ class PromotionTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -63,8 +63,8 @@ class PromotionTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectTitleValueShouldBeNull($data)
     {
         $this->tester->title = $data;
@@ -78,8 +78,8 @@ class PromotionTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectSlugValueShouldBeNull($data)
     {
         $this->tester->slug = $data;
@@ -99,8 +99,8 @@ class PromotionTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectPercentageValueShouldBeNull($data)
     {
         $this->tester->percentage = $data;
@@ -118,8 +118,8 @@ class PromotionTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectStaticValueShouldBeNull($data)
     {
         $this->tester->static = $data;
@@ -127,8 +127,8 @@ class PromotionTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectBeginsValueShouldBeNull($data)
     {
         $this->tester->begins = $data;

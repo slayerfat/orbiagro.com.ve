@@ -14,11 +14,17 @@ class BaseSeeder extends Seeder
      */
     protected $user;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         $this->user = $this->getUser();
     }
 
+    /**
+     * @return User
+     */
     protected function getUser()
     {
         $user = User::where('name', 'tester')->first();

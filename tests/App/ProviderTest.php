@@ -11,9 +11,9 @@ class ProviderTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -47,8 +47,8 @@ class ProviderTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectNameValueShouldBeNull($data)
     {
         $this->tester->name = $data;
@@ -62,8 +62,8 @@ class ProviderTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectSlugValueShouldBeNull($data)
     {
         $this->tester->slug = $data;

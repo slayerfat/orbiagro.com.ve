@@ -7,10 +7,10 @@ class CreateNutritionalsTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('nutritionals', function (Blueprint $table) {
@@ -27,10 +27,10 @@ class CreateNutritionalsTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('nutritionals');

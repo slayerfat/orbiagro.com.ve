@@ -11,9 +11,9 @@ class ImageTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -39,8 +39,8 @@ class ImageTest extends TestCase
     }
 
     /**
-    * @dataProvider dataProvider
-    */
+     * @dataProvider dataProvider
+     */
     public function testIncorrectPathValueShouldBeNull($data)
     {
         $this->tester->path = $data;

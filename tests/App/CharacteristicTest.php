@@ -11,9 +11,9 @@ class CharacteristicTest extends TestCase
     use TearsDownMockery;
 
     /**
-    * https://phpunit.de/manual/current/en/fixtures.html
-    * @method setUp
-    */
+     * https://phpunit.de/manual/current/en/fixtures.html
+     * @method setUp
+     */
     public function setUp()
     {
         parent::setUp();
@@ -47,8 +47,8 @@ class CharacteristicTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectHeightWidthDepthValuesShouldBeNull($data)
     {
         foreach (['height', 'width', 'depth'] as $attr) {
@@ -66,8 +66,8 @@ class CharacteristicTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectUnitsValuesShouldBeNull($data)
     {
         $this->tester->units = $data;
@@ -86,8 +86,8 @@ class CharacteristicTest extends TestCase
     }
 
     /**
-    * @dataProvider defaultDataProvider
-    */
+     * @dataProvider defaultDataProvider
+     */
     public function testIncorrectWeightValuesShouldBeNull($data)
     {
         $this->tester->weight = $data;

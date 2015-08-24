@@ -10,15 +10,16 @@ class Town extends Model
     use InternalDBManagement;
 
     /**
-    * The attributes excluded from the model's JSON form.
-    *
-    * @var array
-    */
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
     protected $hidden = ['created_at', 'updated_at'];
 
-    /**
-    * Relaciones
-    */
+    // --------------------------------------------------------------------------
+    // Relaciones
+    // --------------------------------------------------------------------------
+
     public function state()
     {
         return $this->belongsTo('App\State');

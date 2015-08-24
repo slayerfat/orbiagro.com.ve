@@ -16,24 +16,24 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     use Authenticatable, CanResetPassword, SoftDeletes, CanSearchRandomly;
 
     /**
-    * The database table used by the model.
-    *
-    * @var string
-    */
+     * The database table used by the model.
+     *
+     * @var string
+     */
     protected $table = 'users';
 
     /**
-    * The attributes that are mass assignable.
-    *
-    * @var array
-    */
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = ['name', 'email', 'password'];
 
     /**
-    * The attributes excluded from the model's JSON form.
-    *
-    * @var array
-    */
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
     protected $hidden = ['password', 'remember_token'];
 
     // --------------------------------------------------------------------------
@@ -142,10 +142,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-    * chequea si el id del foreign key del producto es igual al id del usuario
-    *
-    * @param int $id el foreign key del producto.
-    */
+     * chequea si el id del foreign key del producto es igual al id del usuario
+     *
+     * @param int $id el foreign key del producto.
+     */
     public function isOwner($id)
     {
         if (!isset($this->attributes['id'])) {
@@ -165,10 +165,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-    * chequea si el id del foreign key del producto es igual al id del usuario
-    *
-    * @param int $id el foreign key del producto.
-    */
+     * chequea si el id del foreign key del producto es igual al id del usuario
+     *
+     * @param int $id el foreign key del producto.
+     */
     public function isOwnerOrAdmin($id)
     {
         if ($this->profile->description === 'Administrador') {
@@ -179,22 +179,22 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-    * devuelve los productos eliminados relacionados con un usuario
-    *
-    * @param int $quantity la cantidad a tomar
-    */
+     * devuelve los productos eliminados relacionados con un usuario
+     *
+     * @param int $quantity la cantidad a tomar
+     */
     public function latestDeletedProducts($quantity = 5)
     {
         return $this->products()->onlyTrashed()->latest()->take($quantity)->get();
     }
 
     /**
-    * forceDeleting es el atributo relacionado cuando
-    * algun modelo es eliminado de verdad
-    * en la aplicacion.
-    *
-    * @return boolean
-    */
+     * forceDeleting es el atributo relacionado cuando
+     * algun modelo es eliminado de verdad
+     * en la aplicacion.
+     *
+     * @return boolean
+     */
     public function isForceDeleting()
     {
         return $this->forceDeleting;

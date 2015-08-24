@@ -6,10 +6,10 @@ class UserConfirmation extends Model
 {
 
     /**
-    * La tabla no posee timestamps
-    *
-    * @var boolean
-    */
+     * La tabla no posee timestamps
+     *
+     * @var boolean
+     */
     public $timestamps = false;
 
     protected $fillable = [

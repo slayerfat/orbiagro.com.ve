@@ -11,10 +11,10 @@ class Parish extends Model
     use InternalDBManagement, CanSearchRandomly;
 
     /**
-    * The attributes excluded from the model's JSON form.
-    *
-    * @var array
-    */
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
     protected $hidden = ['created_at', 'updated_at'];
 
     // --------------------------------------------------------------------------
