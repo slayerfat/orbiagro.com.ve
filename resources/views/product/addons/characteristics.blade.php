@@ -13,7 +13,7 @@
         Alto
       </td>
       <td>
-        {{ $product->characteristics->height_cm() }}
+        {{ $product->characteristics->heightCm() }}
       </td>
     </tr>
     <tr>
@@ -29,7 +29,7 @@
         Profundidad
       </td>
       <td>
-        {{ $product->characteristics->depth_cm() }}
+        {{ $product->characteristics->depthCm() }}
       </td>
     </tr>
     <tr>

@@ -148,26 +148,41 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // --------------------------------------------------------------------------
     // Funciones Publicas
     // --------------------------------------------------------------------------
+    /**
+     * @return boolean
+     */
     public function isAdmin()
     {
         return $this->profile->description === 'Administrador';
     }
 
+    /**
+     * @return boolean
+     */
     public function isUser()
     {
         return $this->profile->description === 'Usuario';
     }
 
+    /**
+     * @return boolean
+     */
     public function isDisabled()
     {
         return $this->profile->description === 'Desactivado';
     }
 
+    /**
+     * @return boolean
+     */
     public function isVerified()
     {
         return $this->profile->description !== 'Desactivado';
     }
 
+    /**
+     * @return boolean
+     */
     public function hasConfirmation()
     {
         if ($this->confirmation) {
@@ -181,20 +196,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * chequea si el id del foreign key del producto es igual al id del usuario
      *
      * @param int $id el foreign key del producto.
+     *
+     * @return boolean
      */
     public function isOwner($id)
     {
-        if (!isset($this->attributes['id'])) {
-            $this->attributes['id'] = null;
+        if (isset($this->attributes['id'])) {
+            $userId = $this->attributes['id'];
+        } elseif (isset($this->attributes['name'])) {
+            $userId = $this->attributes['name'];
         }
 
-        if (!isset($this->attributes['name'])) {
-            $this->attributes['name'] = null;
-        }
-
-        if ($this->attributes['id'] === $id ||
-        $this->attributes['name'] === $id) {
-            return true;
+        if (isset($userId)) {
+            return $userId == $id;
         }
 
         return false;
@@ -204,6 +218,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * chequea si el id del foreign key del producto es igual al id del usuario
      *
      * @param int $id el foreign key del producto.
+     *
+     * @return boolean
      */
     public function isOwnerOrAdmin($id)
     {

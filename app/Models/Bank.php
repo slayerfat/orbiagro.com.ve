@@ -35,12 +35,6 @@ class Bank extends Model
     // --------------------------------------------------------------------------
     // Relaciones
     // --------------------------------------------------------------------------
-
-    /**
-     * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Billing[] $billings
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Billing[]
-     */
     public function billings()
     {
         return $this->hasMany(Billing::class);

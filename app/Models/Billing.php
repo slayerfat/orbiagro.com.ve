@@ -46,25 +46,16 @@ class Billing extends Model
     // Relaciones
     // --------------------------------------------------------------------------
 
-    /**
-     * @return Bank
-     */
     public function bank()
     {
         return $this->belongsTo(Bank::class);
     }
 
-    /**
-     * @return CardType
-     */
     public function cardType()
     {
         return $this->belongsTo(CardType::class);
     }
 
-    /**
-     * @return User
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
