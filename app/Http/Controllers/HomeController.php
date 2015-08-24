@@ -15,23 +15,23 @@ class HomeController extends Controller
     use SEOToolsTrait;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('auth', ['except' => 'index']);
     }
 
     /**
-    * Show the application index to the user.
-    *
-    * @todo mejorar logica de seleccion de tipos de promociones,
-    *       abstraer a una clase o incluirlo dentro de la clase Promotion
-    *
-    * @return Response
-    */
+     * Show the application index to the user.
+     *
+     * @todo mejorar logica de seleccion de tipos de promociones,
+     *       abstraer a una clase o incluirlo dentro de la clase Promotion
+     *
+     * @return Response
+     */
     public function index()
     {
         $subCategory = SubCategory::has('products')->random()->first();

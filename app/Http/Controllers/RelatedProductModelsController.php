@@ -1,12 +1,11 @@
 <?php namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Database\Eloquent\Model;
-
 use App\Http\Requests\CharacteristicRequest;
 use App\Http\Requests\MechanicalInfoRequest;
 use App\Http\Requests\NutritionalRequest;
+use Illuminate\Database\Eloquent\Model;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\Guard;
 use App\Http\Requests\Request;
 use App\Characteristic;
 use App\MechanicalInfo;

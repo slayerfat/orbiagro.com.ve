@@ -1,10 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Controller;
 use App\Product;
 use App\Provider;
 
@@ -12,10 +10,23 @@ class ProductsProvidersController extends Controller
 {
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+        $this->middleware('user.admin');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param  int      $productId
+     * @return Response
+     */
     public function create($productId)
     {
         if (!$product = Product::where('slug', $productId)->first()) {
@@ -38,10 +49,12 @@ class ProductsProvidersController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @param  int     $productId
+     * @param  Request $request
+     * @return Response
+     */
     public function store($productId, Request $request)
     {
         $this->validate($request, [
@@ -59,11 +72,12 @@ class ProductsProvidersController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $productId
+     * @param  int $providerId
+     * @return Response
+     */
     public function edit($productId, $providerId)
     {
         if (!$product = Product::where('slug', $productId)->first()) {
@@ -79,11 +93,14 @@ class ProductsProvidersController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  int $productId
+     * @param  int $providerId
+     * @param  Request $request
+     *
+     * @return Response
+     */
     public function update($productId, $providerId, Request $request)
     {
         $this->validate($request, [
@@ -108,11 +125,12 @@ class ProductsProvidersController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int $productId
+     * @param  int $providerId
+     * @return Response
+     */
     public function destroy($productId, $providerId)
     {
         if (!$product = Product::where('slug', $productId)->first()) {

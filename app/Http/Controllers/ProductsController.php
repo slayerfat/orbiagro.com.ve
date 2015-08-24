@@ -24,7 +24,7 @@ class ProductsController extends Controller
      * @var \App\User
      */
     protected $user;
-   
+
     /**
      * Create a new controller instance.
      *
@@ -335,11 +335,11 @@ class ProductsController extends Controller
     }
 
     /**
-    * Restores the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Restores the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function restore($id)
     {
         $product = Product::withTrashed()->findOrFail($id);

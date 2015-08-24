@@ -1,29 +1,27 @@
 <?php namespace App\Http\Controllers;
 
-use Auth;
 use App\Http\Requests\ProviderRequest;
 use App\Http\Controllers\Controller;
-
 use App\Provider;
 
 class ProvidersController extends Controller
 {
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('user.admin');
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         $providers = Provider::with('products')->get();
@@ -32,10 +30,10 @@ class ProvidersController extends Controller
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
     public function create()
     {
         $provider = new Provider;
@@ -44,10 +42,11 @@ class ProvidersController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @param  ProviderRequest $request
+     * @return Response
+     */
     public function store(ProviderRequest $request)
     {
         $provider = new Provider($request->all());
@@ -60,11 +59,11 @@ class ProvidersController extends Controller
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function show($id)
     {
         $provider = Provider::with('products')->findOrFail($id);
@@ -73,11 +72,11 @@ class ProvidersController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         $provider = Provider::findOrFail($id);
@@ -86,11 +85,13 @@ class ProvidersController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  ProviderRequest $request
+     *
+     * @return Response
+     */
     public function update($id, ProviderRequest $request)
     {
         $provider = Provider::findOrFail($id);
@@ -103,11 +104,11 @@ class ProvidersController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $provider = Provider::findOrFail($id);

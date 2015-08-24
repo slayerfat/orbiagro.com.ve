@@ -13,10 +13,10 @@ class MakersController extends Controller
     use SEOToolsTrait, CanSaveUploads;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     * @param  Maker $maker
+     * @return void
+     */
     public function __construct(Maker $maker)
     {
         $rules = ['except' => ['show']];
@@ -29,10 +29,10 @@ class MakersController extends Controller
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         $makers = Maker::with('products')->get();
@@ -45,10 +45,10 @@ class MakersController extends Controller
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
     public function create()
     {
         return view('maker.create')->with(['maker' => $this->maker]);
@@ -80,11 +80,11 @@ class MakersController extends Controller
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function show($id)
     {
         if (!$this->maker = Maker::with('products')->where('slug', $id)->first()) {
@@ -99,11 +99,11 @@ class MakersController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         $this->maker = Maker::findOrFail($id);
@@ -136,11 +136,11 @@ class MakersController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $this->maker = Maker::findOrFail($id);

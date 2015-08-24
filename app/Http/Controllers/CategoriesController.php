@@ -96,11 +96,11 @@ class CategoriesController extends Controller
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function show($id)
     {
         if (!$cat = Category::where('slug', $id)->first()) {
@@ -117,11 +117,11 @@ class CategoriesController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         $this->cat = Category::findOrFail($id);
@@ -156,11 +156,11 @@ class CategoriesController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $this->cat = category::findOrFail($id);

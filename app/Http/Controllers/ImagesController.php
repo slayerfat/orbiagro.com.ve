@@ -13,21 +13,21 @@ class ImagesController extends Controller
 {
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('user.admin');
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         $image = Image::findOrFail($id);
@@ -74,11 +74,11 @@ class ImagesController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $image = Image::with('imageable')->findOrFail($id);
@@ -90,13 +90,13 @@ class ImagesController extends Controller
     }
 
     /**
-    * Utilizado para generar el nombre del controlador y
-    * el identificador necesario para encontrar el recurso.
-    *
-    * @param  Model $model el modelo a manipular.
-    *
-    * @return array
-    */
+     * Utilizado para generar el nombre del controlador y
+     * el identificador necesario para encontrar el recurso.
+     *
+     * @param  Model $model el modelo a manipular.
+     *
+     * @return array
+     */
     protected function getControllerNameFromModel(Model $model)
     {
         $array = ['controller' => '', 'id' => null];
