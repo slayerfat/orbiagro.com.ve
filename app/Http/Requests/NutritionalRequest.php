@@ -6,6 +6,8 @@ use Orbiagro\Http\Requests\Traits\CanSearchIDs;
 class NutritionalRequest extends Request
 {
 
+    use CanSearchIDs;
+
     /**
      * @var array
      */
@@ -21,8 +23,6 @@ class NutritionalRequest extends Request
             'routeParam' => 'nutritionals'
         ]
     ];
-
-    use CanSearchIDs;
 
     /**
      * Determine if the user is authorized to make this request.

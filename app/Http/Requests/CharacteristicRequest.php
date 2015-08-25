@@ -1,10 +1,28 @@
 <?php namespace Orbiagro\Http\Requests;
 
 use Orbiagro\Http\Requests\Request;
-use Orbiagro\Models\Characteristic;
+use Orbiagro\Http\Requests\Traits\CanSearchIDs;
 
 class CharacteristicRequest extends Request
 {
+
+    use CanSearchIDs;
+
+    /**
+     * @var array
+     */
+    protected $resourcesData = [
+        [
+            'methodType' => 'POST',
+            'class'      => \Orbiagro\Models\Product::class,
+            'routeParam' => 'products'
+        ],
+        [
+            'methodType' => 'PATCH',
+            'class'      => \Orbiagro\Models\Characteristic::class,
+            'routeParam' => 'characteristics'
+        ]
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -13,15 +31,9 @@ class CharacteristicRequest extends Request
      */
     public function authorize()
     {
-        // si ruta es nula entonces se esta creado un nuevo recurso
-        if (!$this->route('mechanicals')) {
-            return $this->auth->user()->isVerified();
-        }
+        $id = $this->findId($this->resourcesData);
 
-        // si ruta no es nula entonces se esta manipulando un recurso
-        $char = Characteristic::findOrFail($this->route('mechanicals'));
-
-        return $this->auth->user()->isOwnerOrAdmin($char->product->user_id);
+        return $this->auth->user()->isOwnerOrAdmin($id);
     }
 
     /**
@@ -31,6 +43,11 @@ class CharacteristicRequest extends Request
      */
     public function rules()
     {
-        return [];
+        return [
+            'height' => 'numeric',
+            'heidth' => 'numeric',
+            'depth' => 'numeric',
+            'units' => 'numeric',
+        ];
     }
 }

@@ -136,7 +136,38 @@ class UserTest extends TestCase
 
         $this->tester->profile->description = 'Administrador';
 
+        // verdadero por la descripcion del perfil.
         $this->assertTrue($this->tester->isOwnerOrAdmin(2));
+    }
+
+    /**
+     * @covers Orbiagro\Models\User::isOwnerOrAdmin
+     */
+    public function testIsOwnerOrAdminShouldReturnFalseWhenNullOrFalseGiven()
+    {
+        $this->tester->profile = factory(Profile::class)->make();
+
+        $this->assertFalse($this->tester->isOwnerOrAdmin(null));
+
+        $this->assertFalse($this->tester->isOwnerOrAdmin(false));
+
+        $this->tester->profile->description = 'Administrador';
+
+        $this->assertTrue($this->tester->isOwnerOrAdmin(null));
+
+        $this->assertTrue($this->tester->isOwnerOrAdmin(false));
+    }
+
+    /**
+     * @covers Orbiagro\Models\User::isOwner
+     */
+    public function testIsOwnerShouldReturnFalseWhenNullOrFalseGiven()
+    {
+        $this->tester->id = 1;
+
+        $this->assertFalse($this->tester->isOwner(null));
+
+        $this->assertFalse($this->tester->isOwner(false));
     }
 
     public function testIsUser()

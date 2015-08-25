@@ -298,8 +298,10 @@ class RelatedProductModelsController extends Controller
     {
         switch (class_basename($model)) {
             case 'MechanicalInfo':
-            case 'Characteristic':
                 return 'mechanical';
+
+            case 'Characteristic':
+                return 'characteristic';
 
             case 'Nutritional':
                 return 'nutritional';
