@@ -12,7 +12,7 @@ class ProviderRequest extends Request
      */
     public function authorize()
     {
-        return $this->auth->user()->isAdmin();
+        return $this->isUserAdmin();
     }
 
     /**
@@ -45,8 +45,8 @@ class ProviderRequest extends Request
             case 'PUT':
             case 'PATCH':
                 return [
-                    'name'            => 'required|unique:providers,name,'.(int)$this->route('proveedores'),
-                    'url'             => 'url|unique:providers,url,'.(int)$this->route('proveedores'),
+                    'name'            => 'required|unique:providers,name,'.(int)$this->route('providers'),
+                    'url'             => 'url|unique:providers,url,'.(int)$this->route('providers'),
                     'contact_name'    => 'string|max:255',
                     'contact_title'   => 'alpha|max:10',
                     'contact_email'   => 'email',

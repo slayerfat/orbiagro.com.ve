@@ -1,9 +1,22 @@
 <?php namespace Orbiagro\Http\Requests;
 
 use Orbiagro\Http\Requests\Request;
+use Orbiagro\Http\Requests\Traits\CanSearchIDs;
 
 class PeopleRequest extends Request
 {
+
+    use CanSearchIDs;
+
+    /**
+     * @var array
+     */
+    protected $resourcesData = [
+        [
+            'class'      => \Orbiagro\Models\Person::class,
+            'routeParam' => 'users'
+        ]
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -12,7 +25,11 @@ class PeopleRequest extends Request
      */
     public function authorize()
     {
-        return $this->auth->user()->isOwnerOrAdmin($this->route('datos-personales'));
+        if ($this->isUserAdmin()) {
+            return true;
+        }
+
+        return $this->isUserOwner($this->resourcesData);
     }
 
     /**
@@ -22,7 +39,9 @@ class PeopleRequest extends Request
      */
     public function rules()
     {
-        // @see UserRequest
+        /**
+         * @see UserRequest
+         */
         switch ($this->method()) {
             case 'POST':
                 return [
@@ -40,7 +59,8 @@ class PeopleRequest extends Request
             case 'PUT':
             case 'PATCH':
                 return [
-                    'identity_card'  => 'numeric|between:999999,99999999|unique:people,identity_card,'.(int)$this->route('personas'),
+                    'identity_card'  => 'numeric|between:999999,99999999|unique:people,identity_card,'
+                                            .(int)$this->route('users'),
                     'first_name'     => 'alpha|max:40',
                     'last_name'      => 'alpha|max:40',
                     'first_surname'  => 'alpha|max:40',

@@ -72,7 +72,7 @@ class RelatedProductModelsController extends Controller
      */
     protected function createPrototype($id, Model $model, Guard $auth)
     {
-        $relation = $this->getRelationName($model);
+        $relation = $this->getRelatedMethod($model);
 
         $product  = Product::findOrFail($id)->load($relation);
 
@@ -82,8 +82,6 @@ class RelatedProductModelsController extends Controller
 
         // para la vista
         $variables = [];
-
-        $relation  = $this->getRelatedMethod($model);
 
         $results   = $this->getViewVariables($model);
 
@@ -155,11 +153,9 @@ class RelatedProductModelsController extends Controller
      */
     protected function storePrototype($id, Model $model, Request $request)
     {
-        $relation = $this->getRelationName($model);
+        $relation = $this->getRelatedMethod($model);
 
         $product = Product::findOrFail($id)->load($relation);
-
-        $relation = $this->getRelatedMethod($model);
 
         if ($product->$relation) {
             return $this->redirectToRoute(
@@ -290,44 +286,24 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * Regresa el hijo o relacion del modelo.
-     *
-     * @return string
-     */
-    protected function getRelationName(Model $model)
-    {
-        switch (class_basename($model)) {
-            case 'MechanicalInfo':
-                return 'mechanical';
-
-            case 'Characteristic':
-                return 'characteristic';
-
-            case 'Nutritional':
-                return 'nutritional';
-
-            default:
-                return abort(500);
-        }
-    }
-
-    /**
      * Regresa el nombre del metodo relacionado con el modelo.
      *
      * @return string
      */
     protected function getRelatedMethod(Model $model)
     {
-        switch (class_basename($model)) {
-            case 'MechanicalInfo':
-            case 'Nutritional':
-                return $this->getRelationName($model);
+        switch (get_class($model)) {
+            case MechanicalInfo::class:
+                return 'mechanical';
 
-            case 'Characteristic':
+            case Nutritional::class:
+                return 'nutritional';
+
+            case Characteristic::class:
                 return 'characteristics';
 
             default:
-                return abort(500);
+                return abort(500, 'No se encontro modelo relacionado');
         }
     }
 
@@ -340,27 +316,27 @@ class RelatedProductModelsController extends Controller
      */
     protected function getViewVariables(Model $model)
     {
-        switch (class_basename($model)) {
-            case 'MechanicalInfo':
+        switch (get_class($model)) {
+            case MechanicalInfo::class:
                 return [
                     'target'       => 'mechanicalInfo.',
                     'variableName' => 'mech',
                 ];
 
-            case 'Nutritional':
+            case Nutritional::class:
                 return [
                     'target'       => 'nutritional.',
                     'variableName' => 'nutritional',
                 ];
 
-            case 'Characteristic':
+            case Characteristic::class:
                 return [
                     'target'       => 'characteristic.',
                     'variableName' => 'characteristic',
                 ];
 
             default:
-                return abort(500);
+                return abort(500, 'No se pudieron generar variables');
         }
     }
 }

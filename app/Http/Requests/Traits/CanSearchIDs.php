@@ -1,9 +1,23 @@
 <?php namespace Orbiagro\Http\Requests\Traits;
 
+use LogicException;
 use InvalidArgumentException;
 
 trait CanSearchIDs
 {
+
+    /**
+     * Invoca findId y regresa si el usuario isOwner or nah.
+     *
+     * @param  array   $array
+     *
+     * @return boolean
+     */
+    protected function isUserOwner(array $array)
+    {
+        return $this->auth->user()
+            ->isOwner($this->findId($array));
+    }
 
     /**
      * Busca y retorna el ID de algun recurso solicitado.
@@ -18,7 +32,7 @@ trait CanSearchIDs
 
         foreach ($data as $array) {
             if (isset($array['methodType'])) {
-                if (strtoupper($this->method) != $array['methodType']) {
+                if (strtoupper($this->method()) != $array['methodType']) {
                     continue;
                 }
             }
@@ -41,16 +55,33 @@ trait CanSearchIDs
      */
     protected function findResourceId($result)
     {
-        switch (get_class($result)) {
-            case \Orbiagro\Models\Product::class:
-                return $result->user_id;
+        if (is_null($result)) {
+            return $result;
+        }
 
+        switch (get_class($result)) {
+            case \Orbiagro\Models\Person::class:
+            case \Orbiagro\Models\Product::class:
+                $id = $result->user_id;
+                break;
+
+            case \Orbiagro\Models\Feature::class:
             case \Orbiagro\Models\Nutritional::class:
-                return $result->product->user_id;
+            case \Orbiagro\Models\Characteristic::class:
+                $id = $result->product->user_id;
+                break;
 
             default:
-                return null;
+                throw new InvalidArgumentException(
+                    __METHOD__.' no encontro una clase apropiada.'
+                );
         }
+
+        if ($id === null) {
+            $this->throwNullIdException($result);
+        }
+
+        return $id;
     }
 
     /**
@@ -70,5 +101,22 @@ trait CanSearchIDs
                 throw new InvalidArgumentException('Index class en array no definido y requerido');
             }
         }
+    }
+
+    protected function throwNullIdException($class)
+    {
+        if (method_exists($class, 'user')) {
+            throw new LogicException(
+                'El modelo de tipo '
+                .get_class($class)
+                .' tiene un user_id null y posee un metodo definido, puede ser un modelo huerfano.'
+            );
+        }
+
+        throw new LogicException(
+            'El modelo de tipo '
+            .get_class($class)
+            .' tiene un user_id null y no posee metodo definido, chequear logica.'
+        );
     }
 }

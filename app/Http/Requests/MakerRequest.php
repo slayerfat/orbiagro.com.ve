@@ -12,7 +12,7 @@ class MakerRequest extends Request
      */
     public function authorize()
     {
-        return $this->auth->user()->isAdmin();
+        return $this->isUserAdmin();
     }
 
     /**
@@ -34,9 +34,9 @@ class MakerRequest extends Request
             case 'PUT':
             case 'PATCH':
                 return [
-                    'name'   => 'required|between:5,40|unique:makers,name,'.(int)$this->route('fabricantes'),
-                    'domain' => 'max:255|unique:makers,domain,'.(int)$this->route('fabricantes'),
-                    'url'    => 'url|max:255|unique:makers,url,'.(int)$this->route('fabricantes'),
+                    'name'   => 'required|between:5,40|unique:makers,name,'.(int)$this->route('makers'),
+                    'domain' => 'max:255|unique:makers,domain,'.(int)$this->route('makers'),
+                    'url'    => 'url|max:255|unique:makers,url,'.(int)$this->route('makers'),
                     'image'  => 'image|mimes:jpeg,jpg,png,gif,svg'
                 ];
 

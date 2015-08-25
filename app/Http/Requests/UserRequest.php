@@ -12,7 +12,7 @@ class UserRequest extends Request
      */
     public function authorize()
     {
-        return $this->auth->user()->isOwnerOrAdmin($this->route('usuarios'));
+        return $this->auth->user()->isOwnerOrAdmin($this->route('users'));
     }
 
     /**
@@ -36,8 +36,8 @@ class UserRequest extends Request
             case 'PUT':
             case 'PATCH':
                 return [
-                    'name'       => 'required|max:255|unique:users,name,'.(int)$this->route('usuarios'),
-                    'email'      => 'required|email|max:255|unique:users,email,'.(int)$this->route('usuarios'),
+                    'name'       => 'required|max:255|unique:users,name,'.(int)$this->route('users'),
+                    'email'      => 'required|email|max:255|unique:users,email,'.(int)$this->route('users'),
                     'password'   => 'confirmed|min:6',
                     'profile_id' => 'required|numeric',
                 ];

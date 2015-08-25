@@ -31,9 +31,11 @@ class CharacteristicRequest extends Request
      */
     public function authorize()
     {
-        $id = $this->findId($this->resourcesData);
+        if ($this->isUserAdmin()) {
+            return true;
+        }
 
-        return $this->auth->user()->isOwnerOrAdmin($id);
+        return $this->isUserOwner($this->resourcesData);
     }
 
     /**
@@ -46,8 +48,8 @@ class CharacteristicRequest extends Request
         return [
             'height' => 'numeric',
             'heidth' => 'numeric',
-            'depth' => 'numeric',
-            'units' => 'numeric',
+            'depth'  => 'numeric',
+            'units'  => 'numeric',
         ];
     }
 }

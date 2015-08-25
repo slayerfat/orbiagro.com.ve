@@ -30,9 +30,11 @@ class NutritionalRequest extends Request
      */
     public function authorize()
     {
-        $id = $this->findId($this->resourcesData);
+        if ($this->isUserAdmin()) {
+            return true;
+        }
 
-        return $this->auth->user()->isOwnerOrAdmin($id);
+        return $this->isUserOwner($this->resourcesData);
     }
 
     /**

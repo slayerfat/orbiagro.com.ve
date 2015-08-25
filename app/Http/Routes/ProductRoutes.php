@@ -31,18 +31,6 @@ class ProductRoutes extends Routes
                 'prefix'     => 'productos/distintivos',
                 'middleware' => 'auth',
             ],
-            'rtDetails'    => [
-                'uses'     => 'FeaturesController',
-                'as'       => 'products.features',
-                'resource' => '{products}',
-                'ignore'   => ['index', 'show', 'edit', 'update', 'destroy']
-            ]
-        ],
-        [
-            'routerOptions'  => [
-                'prefix'     => 'productos/distintivos',
-                'middleware' => 'auth',
-            ],
             'rtDetails' => [
                 'uses'     => 'FeaturesController',
                 'as'       => 'features',
@@ -289,6 +277,29 @@ class ProductRoutes extends Routes
                 'as'   => 'products.images.store'
             ]
         ],
+
+        /**
+         * Feature Create/Store
+         */
+        [
+            'method'         => 'get',
+            'url'            => 'productos/{products}/distintivos/crear',
+            'data'           => [
+                'uses'       => 'FeaturesController@create',
+                'as'         => 'products.features.create',
+                'middleware' => 'auth'
+            ]
+        ],
+        [
+            'method'         => 'post',
+            'url'            => 'productos/{products}/distintivos',
+            'data'           => [
+                'uses'       => 'FeaturesController@store',
+                'as'         => 'products.features.store',
+                'middleware' => 'auth'
+            ]
+        ],
+
     ];
 
     /**

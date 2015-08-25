@@ -12,7 +12,7 @@ class CategoryRequest extends Request
      */
     public function authorize()
     {
-        return $this->auth->user()->isAdmin();
+        return $this->isUserAdmin();
     }
 
     /**
