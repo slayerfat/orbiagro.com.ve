@@ -6,14 +6,20 @@ class MiscRoutes extends Routes
 {
 
     /**
-     * Genera una instancia de esta locura.
-     *
-     * @return void
+     * @var array
      */
-    public function __construct()
-    {
-        $this->options = $this->getNonRestfulOptions();
-    }
+    protected $nonRestfulOptions = [
+        [
+            'method' => 'get',
+            'url' => '/welcome',
+            'data' => ['uses' => 'WelcomeController@index', 'as' => 'welcome']
+        ],
+        [
+            'method' => 'get',
+            'url' => '/',
+            'data' => ['uses' => 'HomeController@index', 'as' => 'home']
+        ],
+    ];
 
     /**
      * Genera todas las rutas relacionadas con esta clase
@@ -22,33 +28,6 @@ class MiscRoutes extends Routes
      */
     public function execute()
     {
-        $this->registerSigleRoute($this->options);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getRestfulOptions()
-    {
-        return [];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getNonRestfulOptions()
-    {
-        return [
-            [
-                'method' => 'get',
-                'url' => '/welcome',
-                'data' => ['uses' => 'WelcomeController@index', 'as' => 'welcome']
-            ],
-            [
-                'method' => 'get',
-                'url' => '/',
-                'data' => ['uses' => 'HomeController@index', 'as' => 'home']
-            ],
-        ];
+        $this->registerSigleRoute($this->nonRestfulOptions);
     }
 }

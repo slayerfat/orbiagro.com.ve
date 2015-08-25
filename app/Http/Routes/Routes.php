@@ -9,37 +9,31 @@ use Route;
 abstract class Routes
 {
     /**
-     * Las opciones para crear las rutas, segun cada tipo.
+     * Las opciones para crear un grupo RESTful de rutas.
      *
      * @var array
      */
-    protected $options;
+    protected $restfulOptions;
+
+    /**
+     * Las opciones para crear las rutas, segun cada tipo.
+     * Deberia contener un array con
+     * routerOptions
+     *     prefix: cosas
+     * rtDetails
+     *     uses    : CosaController,
+     *     as      : thing,
+     *     resource: {cosas},
+     *     ignore  : [create, edit, ...]
+     *
+     * @var array
+     */
+    protected $nonRestfulOptions;
 
     /**
      * @return void
      */
     abstract public function execute();
-
-    /**
-     * @example     Deberia contener un array con
-     *              'routerOptions' => [
-     *                  'prefix' => 'productos'
-     *              ],
-     *              'rtDetails' => [
-     *                  'uses'     => 'ProductsController',
-     *                  'as'       => 'product',
-     *                  'resource' => '{productos}',
-     *                  'ignore'   => null
-     *              ]
-     *
-     * @return array
-     */
-    abstract protected function getRestfulOptions();
-
-    /**
-     * @return array
-     */
-    abstract protected function getNonRestfulOptions();
 
     /**
      * itera las opciones para registrar las rutas.
@@ -66,6 +60,8 @@ abstract class Routes
     {
         Route::group($options, function () use ($details) {
             $defaults = [
+                'index'   => ['get', '/'],
+                'show'    => ['get', '/'.$details['resource']],
                 'create'  => ['get', '/crear'],
                 'store'   => ['post', '/'],
                 'edit'    => ['get', '/'.$details['resource'].'/editar'],
