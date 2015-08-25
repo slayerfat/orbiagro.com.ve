@@ -9,7 +9,9 @@
 
 $routes = collect();
 
+// se asume que el orden importa.
 $routes->push(new Orbiagro\Http\Routes\UserRoutes);
+$routes->push(new Orbiagro\Http\Routes\ProductRoutes);
 $routes->push(new Orbiagro\Http\Routes\MiscRoutes);
 
 $routes->each(function ($route) {

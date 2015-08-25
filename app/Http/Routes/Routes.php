@@ -21,6 +21,17 @@ abstract class Routes
     abstract public function execute();
 
     /**
+     * @example     Deberia contener un array con
+     *              'routerOptions' => [
+     *                  'prefix' => 'productos'
+     *              ],
+     *              'rtDetails' => [
+     *                  'uses'     => 'ProductsController',
+     *                  'as'       => 'product',
+     *                  'resource' => '{productos}',
+     *                  'ignore'   => null
+     *              ]
+     *
      * @return array
      */
     abstract protected function getRestfulOptions();
@@ -54,45 +65,36 @@ abstract class Routes
     protected function registerRESTfulGroup(array $options, array $details)
     {
         Route::group($options, function () use ($details) {
-            Route::get(
-                '/crear',
-                [
-                    'uses' => $details['uses'].'@create',
-                    'as'   => $details['as'].'.create'
-                ]
-            );
+            $defaults = [
+                'create'  => ['get', '/crear'],
+                'store'   => ['post', '/'],
+                'edit'    => ['get', '/'.$details['resource'].'/editar'],
+                'update'  => ['patch', '/'.$details['resource']],
+                'destroy' => ['delete', '/'.$details['resource']],
+            ];
 
-            Route::post(
-                '/',
-                [
-                    'uses' => $details['uses'].'@store',
-                    'as'   => $details['as'].'.store'
-                ]
-            );
+            // si en los detalles hay ignore, se salta.
+            // es decir, si hay ignore, se ignora el metodo/ruta
+            if (isset($details['ignore'])) {
+                $defaults = array_except($defaults, $details['ignore']);
+            }
 
-            Route::get(
-                '/'.$details['resource'].'/editar',
-                [
-                    'uses' => $details['uses'].'@edit',
-                    'as'   => $details['as'].'.edit'
-                ]
-            );
-
-            Route::patch(
-                '/'.$details['resource'],
-                [
-                    'uses' => $details['uses'].'@update',
-                    'as'   => $details['as'].'.update'
-                ]
-            );
-
-            Route::delete(
-                '/'.$details['resource'],
-                [
-                    'uses' => $details['uses'].'@destroy',
-                    'as'   => $details['as'].'.destroy'
-                ]
-            );
+            foreach ($defaults as $name => $rule) {
+                /**
+                 * rule[0] es el metodo
+                 * rule[1] es el url
+                 *
+                 * @example Route::rule[0](rule[1], ...)
+                 *          Route::create('/',      ...)
+                 */
+                Route::$rule[0](
+                    $rule[1],
+                    [
+                        'uses' => $details['uses'].'@'.$name,
+                        'as'   => $details['as'].'.'.$name
+                    ]
+                );
+            }
         });
     }
 }

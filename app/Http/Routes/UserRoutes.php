@@ -123,9 +123,6 @@ class UserRoutes extends Routes
     protected function getRestfulOptions()
     {
         return [
-            /**
-             * Usuarios
-             */
             [
                 'routerOptions' => [
                         'prefix' => 'usuarios',
