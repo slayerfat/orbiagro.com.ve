@@ -13,8 +13,6 @@ abstract class Request extends FormRequest
     /**
      * @method __construct
      * @param Guard $auth
-     *
-     * @return void
      */
     public function __construct(Guard $auth)
     {

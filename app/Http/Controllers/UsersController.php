@@ -19,8 +19,6 @@ class UsersController extends Controller
      * Create a new controller instance.
      *
      * @param User $user
-     *
-     * @return void
      */
     public function __construct(User $user)
     {

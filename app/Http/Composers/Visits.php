@@ -16,8 +16,6 @@ class Visits
 
     /**
      * @param VisitsService $visits
-     *
-     * @return void
      */
     public function __construct(VisitsService $visits)
     {

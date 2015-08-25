@@ -21,8 +21,6 @@ class CategoriesController extends Controller
     /**
      * Create a new controller instance.
      * @param Category $cat
-     *
-     * @return void
      */
     public function __construct(Category $cat)
     {

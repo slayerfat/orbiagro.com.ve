@@ -26,8 +26,6 @@ class EnviarEmail
      * Genera una instancia de EnviarEmail
      *
      * @param User $user
-     *
-     * @return void
      */
     public function __construct(User $user)
     {

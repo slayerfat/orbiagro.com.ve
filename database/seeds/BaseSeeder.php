@@ -15,7 +15,7 @@ class BaseSeeder extends Seeder
     protected $user;
 
     /**
-     * @return void
+     * @uses BaseSeeder::getUser()
      */
     public function __construct()
     {

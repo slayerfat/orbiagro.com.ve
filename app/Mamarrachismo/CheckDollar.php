@@ -51,8 +51,6 @@ class CheckDollar
     /**
      * @param Carbon  $carbon
      * @param Storage $storage
-     *
-     * @return void
      */
     public function __construct(Carbon $carbon, Storage $storage)
     {

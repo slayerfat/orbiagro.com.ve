@@ -73,7 +73,7 @@ class File extends Model
     // --------------------------------------------------------------------------
 
     /**
-     * @param string $param
+     * @param string $path
      *
      * @return boolean
      */

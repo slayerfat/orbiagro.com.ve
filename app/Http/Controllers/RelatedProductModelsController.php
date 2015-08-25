@@ -19,8 +19,6 @@ class RelatedProductModelsController extends Controller
      * Create a new controller instance.
      *
      * @method __construct
-     *
-     * @return void
      */
     public function __construct()
     {

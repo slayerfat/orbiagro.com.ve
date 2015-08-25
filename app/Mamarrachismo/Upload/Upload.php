@@ -49,8 +49,6 @@ abstract class Upload
      * de algun usuario (para asociarlo al created_by o updated_by).
      *
      * @param int $userID
-     *
-     * @return void
      */
     public function __construct($userID = null)
     {

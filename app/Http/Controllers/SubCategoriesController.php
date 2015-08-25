@@ -25,8 +25,6 @@ class SubCategoriesController extends Controller
      * Create a new controller instance.
      *
      * @param SubCategory $subCat
-     *
-     * @return void
      */
     public function __construct(SubCategory $subCat)
     {

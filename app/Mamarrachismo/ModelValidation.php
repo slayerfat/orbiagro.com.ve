@@ -22,8 +22,6 @@ class ModelValidation
     /**
      * @param int $userId
      * @param User $user
-     *
-     * @return void
      */
     public function __construct($userId = null, User $user = null)
     {

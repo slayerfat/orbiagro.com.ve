@@ -35,8 +35,6 @@ class Transformer
 
     /**
      * @param int $number
-     *
-     * @return void
      */
     public function __construct($number = null)
     {

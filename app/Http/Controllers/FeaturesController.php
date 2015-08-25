@@ -28,8 +28,6 @@ class FeaturesController extends Controller
      *
      * @param Feature $feature
      * @param Guard   $auth
-     *
-     * @return void
      */
     public function __construct(Feature $feature, Guard $auth)
     {

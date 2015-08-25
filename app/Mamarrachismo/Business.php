@@ -32,6 +32,10 @@ class Business
      */
     public $slogan = '';
 
+    /**
+     * @uses \Orbiagro\Mamarrachismo\Business::generateStatements()
+     * @uses \Orbiagro\Mamarrachismo\Business::generateSlogans()
+     */
     public function __construct()
     {
         $this->generateStatements();
@@ -48,7 +52,8 @@ class Business
     {
         $this->statements = collect([
             [
-                'text'  => 'Pagina web destacada en compra y venta de productos industriales, pensado en particulares y empresas interesadas.',
+                'text'  => 'Pagina web destacada en compra y venta de productos'
+                    .'industriales, pensado en particulares y empresas interesadas.',
                 'class' => 'fa fa-refresh fa-300px fa-spin',
             ],
             [
@@ -56,11 +61,13 @@ class Business
                 'class' => 'fa fa-btc fa-300px fa-real-pulse',
             ],
             [
-                'text'  => 'Facilita la compra y venta de productos alimenticios, forestales, maquinaria, implementos agricolas y metalmecanicos.',
+                'text'  => 'Facilita la compra y venta de productos alimenticios, '
+                    .'forestales, maquinaria, implementos agricolas y metalmecanicos.',
                 'class' => 'fa fa-300px fa-spin fa-cog',
             ],
             [
-                'text'  => 'Buscamos establecer lazos comerciales y de mercadeo que generen intercambios lucrativos relacionados con la producción agro-industrial.',
+                'text'  => 'Buscamos establecer lazos comerciales y de mercadeo que generen '
+                    .'intercambios lucrativos relacionados con la producción agro-industrial.',
                 'class' => 'fa fa-300px fa-line-chart',
             ],
         ]);

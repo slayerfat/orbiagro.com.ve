@@ -29,8 +29,6 @@ class ProductsController extends Controller
      * Create a new controller instance.
      *
      * @param Guard $auth
-     *
-     * @return void
      */
     public function __construct(Guard $auth)
     {

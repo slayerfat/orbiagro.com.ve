@@ -15,7 +15,6 @@ class MakersController extends Controller
     /**
      * Create a new controller instance.
      * @param  Maker $maker
-     * @return void
      */
     public function __construct(Maker $maker)
     {
