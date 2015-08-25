@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Mamarrachismo\Traits;
 
 use Auth;
+use Exception;
 
 trait InternalDBManagement
 {
@@ -49,7 +50,7 @@ trait InternalDBManagement
         // si existe o no, igual necesita un actualizado por
         $this->attributes['updated_by'] = $this->userId;
 
-        parent::save();
+        parent::save($options);
     }
 
     /**
@@ -57,6 +58,10 @@ trait InternalDBManagement
      * poder asociar su id con algun modelo.
      *
      * @method setUserid
+     *
+     * @throws Exception
+     *
+     * @return void
      */
     protected function setUserid()
     {
@@ -65,7 +70,7 @@ trait InternalDBManagement
         }
 
         if (!isset($this->userId)) {
-            throw new \Exception("Para guardar estos datos, se necesita informacion del usuario");
+            throw new Exception("Para guardar estos datos, se necesita informacion del usuario");
         }
     }
 }

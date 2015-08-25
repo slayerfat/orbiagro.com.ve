@@ -107,6 +107,13 @@ trait CanSearchIDs
         }
     }
 
+    /**
+     * @throws LogicException
+     *
+     * @param  string $class
+     *
+     * @return void
+     */
     protected function throwNullIdException($class)
     {
         if (method_exists($class, 'user')) {

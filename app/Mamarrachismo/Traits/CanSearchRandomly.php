@@ -4,7 +4,10 @@ trait CanSearchRandomly
 {
     /**
      * Busca aleatoriamente un recurso
+     *
      * @param  \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeRandom($query)
     {
@@ -12,6 +15,6 @@ trait CanSearchRandomly
         // si (env('APP_ENV') == 'ntesting')
           // query orderByRaw('RANDOM()');
 
-        $query->orderByRaw('RAND()');
+        return $query->orderByRaw('RAND()');
     }
 }
