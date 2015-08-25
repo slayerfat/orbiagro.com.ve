@@ -15,7 +15,7 @@ class ProductRoutes extends Routes
                 ],
             'rtDetails'        => [
                     'uses'     => 'ProductsController',
-                    'as'       => 'product',
+                    'as'       => 'products',
                     'resource' => '{products}'
                 ]
         ],
@@ -33,7 +33,7 @@ class ProductRoutes extends Routes
             ],
             'rtDetails'    => [
                 'uses'     => 'FeaturesController',
-                'as'       => 'product.feature',
+                'as'       => 'products.features',
                 'resource' => '{products}',
                 'ignore'   => ['index', 'show', 'edit', 'update', 'destroy']
             ]
@@ -45,7 +45,7 @@ class ProductRoutes extends Routes
             ],
             'rtDetails' => [
                 'uses'     => 'FeaturesController',
-                'as'       => 'feature',
+                'as'       => 'features',
                 'resource' => '{features}',
                 'ignore'   => ['index', 'show', 'create', 'store']
             ]
@@ -162,7 +162,7 @@ class ProductRoutes extends Routes
             'url'      => 'productos/{products}/caracteristicas/crear',
             'data'     => [
                 'uses' => 'RelatedProductModelsController@createCharacteristic',
-                'as'   => 'products.characteristic.create'
+                'as'   => 'products.characteristics.create'
             ]
         ],
         [
@@ -170,7 +170,7 @@ class ProductRoutes extends Routes
             'url'      => 'productos/{products}/caracteristicas',
             'data'     => [
                 'uses' => 'RelatedProductModelsController@storeCharacteristic',
-                'as'   => 'products.characteristic.store'
+                'as'   => 'products.characteristics.store'
             ]
         ],
         [
@@ -178,7 +178,7 @@ class ProductRoutes extends Routes
             'url'      => 'productos/caracteristicas/{characteristics}/editar',
             'data'     => [
                 'uses' => 'RelatedProductModelsController@editCharacteristic',
-                'as'   => 'products.characteristic.edit'
+                'as'   => 'products.characteristics.edit'
             ]
         ],
         [
@@ -186,7 +186,7 @@ class ProductRoutes extends Routes
             'url'      => 'productos/caracteristicas/{characteristics}',
             'data'     => [
                 'uses' => 'RelatedProductModelsController@updateCharacteristic',
-                'as'   => 'products.characteristic.update'
+                'as'   => 'products.characteristics.update'
             ]
         ],
 
@@ -298,13 +298,9 @@ class ProductRoutes extends Routes
      */
     public function execute()
     {
-        foreach ($this->restfulOptions as $array) {
-            $this->registerRESTfulGroup(
-                $array['routerOptions'],
-                $array['rtDetails']
-            );
-        }
-
-        $this->registerSigleRoute($this->nonRestfulOptions);
+        return $this->executePrototype(
+            $this->restfulOptions,
+            $this->nonRestfulOptions
+        );
     }
 }

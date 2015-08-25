@@ -201,6 +201,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function isOwner($id)
     {
+        if (!isset($id)) {
+            return false;
+        }
+
         if (isset($this->attributes['id'])) {
             $userId = $this->attributes['id'];
         } elseif (isset($this->attributes['name'])) {

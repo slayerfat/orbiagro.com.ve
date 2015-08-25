@@ -77,7 +77,7 @@ class RelatedProductModelsController extends Controller
         $product  = Product::findOrFail($id)->load($relation);
 
         if (!$auth->user()->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.show', $product->slug);
+            return $this->redirectToroute('products.show', $product->slug);
         }
 
         // para la vista
@@ -89,7 +89,7 @@ class RelatedProductModelsController extends Controller
 
         if ($product->$relation) {
             return $this->redirectToRoute(
-                'productos.show',
+                'products.show',
                 $product->slug,
                 'Este Producto ya posee este recurso.'
             );
@@ -163,7 +163,7 @@ class RelatedProductModelsController extends Controller
 
         if ($product->$relation) {
             return $this->redirectToRoute(
-                'productos.show',
+                'products.show',
                 $product->slug,
                 'Este Producto ya este recurso, por favor actualice.'
             );
@@ -226,7 +226,7 @@ class RelatedProductModelsController extends Controller
         $model = $model::findOrFail($id)->load('product');
 
         if (!$auth->user()->isOwnerOrAdmin($model->product->user_id)) {
-            return $this->redirectToRoute('productos.show', $model->product->slug);
+            return $this->redirectToroute('products.show', $model->product->slug);
         }
 
         $results = $this->getViewVariables($model);

@@ -16,7 +16,7 @@ class UserRoutes extends Routes
                 ],
             'rtDetails' => [
                     'uses'     => 'UsersController',
-                    'as'       => 'user',
+                    'as'       => 'users',
                     'resource' => '{users}'
                 ]
         ],
@@ -29,7 +29,7 @@ class UserRoutes extends Routes
                 ],
             'rtDetails' => [
                     'uses'     => 'PeopleController',
-                    'as'       => 'user.people',
+                    'as'       => 'users.people',
                     'resource' => '{users}'
                 ]
         ],
@@ -47,7 +47,7 @@ class UserRoutes extends Routes
             'url' => 'usuarios/{users}/productos',
             'data' => [
                 'uses' => 'UsersController@products',
-                'as' => 'user.products'
+                'as' => 'users.products'
             ]
         ],
 
@@ -59,7 +59,7 @@ class UserRoutes extends Routes
             'url' => 'usuarios/{users}/restore',
             'data' => [
                 'uses' => 'UsersController@restore',
-                'as' => 'user.restore'
+                'as' => 'users.restore'
             ]
         ],
 
@@ -71,7 +71,7 @@ class UserRoutes extends Routes
             'url' => 'usuarios/eliminados/{users}',
             'data' => [
                 'uses' => 'UsersController@showTrashed',
-                'as' => 'user.trashed'
+                'as' => 'users.trashed'
             ]
         ],
 
@@ -85,7 +85,7 @@ class UserRoutes extends Routes
             'url' => 'usuarios/{users}/confirmar-eliminacion',
             'data' => [
                 'uses' => 'UsersController@preDestroy',
-                'as' => 'user.destroy.pre'
+                'as' => 'users.destroy.pre'
             ]
         ],
 
@@ -97,7 +97,7 @@ class UserRoutes extends Routes
             'url' => 'usuarios/{users}/forceDestroy',
             'data' => [
                 'uses' => 'UsersController@forceDestroy',
-                'as' => 'user.destroy.forced'
+                'as' => 'users.destroy.forced'
             ]
         ],
 
@@ -109,7 +109,7 @@ class UserRoutes extends Routes
             'url' => 'usuarios/{users}/visitas/productos',
             'data' => [
                 'uses' => 'UsersController@productVisits',
-                'as' => 'user.products.visits'
+                'as' => 'users.products.visits'
             ]
         ],
     ];
@@ -121,14 +121,9 @@ class UserRoutes extends Routes
      */
     public function execute()
     {
-        foreach ($this->restfulOptions as $array) {
-            $this->registerRESTfulGroup(
-                $array['routerOptions'],
-                $array['rtDetails']
-            );
-        }
-
-        $this->registerSigleRoute($this->nonRestfulOptions);
-
+        return $this->executePrototype(
+            $this->restfulOptions,
+            $this->nonRestfulOptions
+        );
     }
 }

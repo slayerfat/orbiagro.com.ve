@@ -16,12 +16,12 @@ class ProductRequest extends Request
     public function authorize()
     {
         // si ruta es nula entonces se esta creado un nuevo recurso
-        if (!$this->route('productos')) {
+        if (!$this->route('products')) {
             return Auth::user()->isVerified();
         }
 
         // si ruta no es nula entonces se esta manipulando un recurso
-        $producto = Product::findOrFail($this->route('productos'));
+        $producto = Product::findOrFail($this->route('products'));
         return Auth::user()->isOwnerOrAdmin($producto->user_id);
     }
 

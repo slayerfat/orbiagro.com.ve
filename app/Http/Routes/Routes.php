@@ -13,7 +13,7 @@ abstract class Routes
      *
      * @var array
      */
-    protected $restfulOptions;
+    protected $restfulOptions = [];
 
     /**
      * Las opciones para crear las rutas, segun cada tipo.
@@ -28,12 +28,32 @@ abstract class Routes
      *
      * @var array
      */
-    protected $nonRestfulOptions;
+    protected $nonRestfulOptions = [];
 
     /**
      * @return void
      */
     abstract public function execute();
+
+    /**
+     * el prototipo basico para registrar rutas.
+     *
+     * @param  array  $restfulArray
+     * @param  array  $nonRestfulArray
+     *
+     * @return void
+     */
+    protected function executePrototype(array $restfulArray, array $nonRestfulArray)
+    {
+        foreach ($restfulArray as $array) {
+            $this->registerRESTfulGroup(
+                $array['routerOptions'],
+                $array['rtDetails']
+            );
+        }
+
+        $this->registerSigleRoute($nonRestfulArray);
+    }
 
     /**
      * itera las opciones para registrar las rutas.
@@ -92,5 +112,16 @@ abstract class Routes
                 );
             }
         });
+    }
+
+    /**
+     * Se registra mamarrachamente un listado de controladores.
+     * 
+     * @param  array  $data
+     * @return void
+     */
+    protected function registerControllerPrototype(array $data)
+    {
+        Route::controllers($data);
     }
 }

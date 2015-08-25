@@ -58,11 +58,11 @@ class FeaturesController extends Controller
                 ]);
             }
 
-            return $this->redirectToRoute('productos.show', $product->slug);
+            return $this->redirectToroute('products.show', $product->slug);
         }
 
         return $this->redirectToRoute(
-            'productos.show',
+            'products.show',
             $product->slug,
             'Este Producto ya posee 5 Distintivos, por favor actualice los existentes.'
         );
@@ -84,7 +84,7 @@ class FeaturesController extends Controller
         // el producto puede tener como maximo 5 features
         if ($product->features->count() >= 5) {
             return $this->redirectToRoute(
-                'productos.show',
+                'products.show',
                 $product->slug,
                 'Este Producto ya posee 5 Distintivos, por favor actualice los existentes.'
             );
@@ -105,7 +105,7 @@ class FeaturesController extends Controller
         $this->createImage($request, $this->feature);
 
 
-        return redirect()->route('productos.show', $product->slug);
+        return redirect()->route('products.show', $product->slug);
     }
 
     /**
@@ -119,7 +119,7 @@ class FeaturesController extends Controller
         $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
 
         if (!$this->user->isOwnerOrAdmin($this->feature->product->user->id)) {
-            return $this->redirectToRoute('productos.show', $this->feature->product->slug);
+            return $this->redirectToroute('products.show', $this->feature->product->slug);
         }
 
         return view('feature.edit')->with(['feature' => $this->feature]);
@@ -149,7 +149,7 @@ class FeaturesController extends Controller
 
         $this->updateImage($request, $this->feature);
 
-        return redirect()->route('productos.show', $this->feature->product->slug);
+        return redirect()->route('products.show', $this->feature->product->slug);
     }
 
     /**
@@ -163,13 +163,13 @@ class FeaturesController extends Controller
         $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
 
         if (!$this->user->isOwnerOrAdmin($this->feature->product->user->id)) {
-            return $this->redirectToRoute('productos.show', $this->feature->product->slug);
+            return $this->redirectToroute('products.show', $this->feature->product->slug);
         }
 
         $this->feature->delete();
 
         return $this->redirectToRoute(
-            'productos.show',
+            'products.show',
             $this->feature->product->slug,
             'El Distintivo ha sido eliminado correctamente.',
             'info'

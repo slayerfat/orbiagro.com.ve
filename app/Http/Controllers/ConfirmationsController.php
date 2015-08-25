@@ -62,7 +62,7 @@ class ConfirmationsController extends Controller
      *
      * @return Response
      */
-    public function generateConfirm()
+    public function createConfirm()
     {
         $user = Auth::user();
 

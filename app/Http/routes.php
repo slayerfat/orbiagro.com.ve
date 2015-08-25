@@ -1,9 +1,10 @@
 <?php
 
 
-use Orbiagro\Http\Routes\UserRoutes;
-use Orbiagro\Http\Routes\ProductRoutes;
-use Orbiagro\Http\Routes\MiscRoutes;
+use Orbiagro\Http\Routes\UserRoutes as User;
+use Orbiagro\Http\Routes\ProductRoutes as Product;
+use Orbiagro\Http\Routes\CategoriesRoutes as Categories;
+use Orbiagro\Http\Routes\MiscRoutes as Misc;
 
 /**
  * @todo ver como mover esto a un ServiceProvider o algo similar.
@@ -14,9 +15,10 @@ use Orbiagro\Http\Routes\MiscRoutes;
 $routes = collect();
 
 // se asume que el orden importa.
-$routes->push(new UserRoutes);
-$routes->push(new ProductRoutes);
-$routes->push(new MiscRoutes);
+$routes->push(new User);
+$routes->push(new Product);
+$routes->push(new Categories);
+$routes->push(new Misc);
 
 $routes->each(function ($route) {
     $route->execute();

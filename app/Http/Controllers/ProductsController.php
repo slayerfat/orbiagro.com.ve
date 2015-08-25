@@ -248,7 +248,7 @@ class ProductsController extends Controller
         }
 
         if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.show', $id);
+            return $this->redirectToroute('products.show', $id);
         }
 
         $makers = Maker::lists('name', 'id');
@@ -306,7 +306,7 @@ class ProductsController extends Controller
         $product = Product::findOrFail($id);
 
         if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.show', $id);
+            return $this->redirectToroute('products.show', $id);
         }
 
         $product->delete();
@@ -326,7 +326,7 @@ class ProductsController extends Controller
         $product = Product::withTrashed()->findOrFail($id);
 
         if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.index');
+            return $this->redirectToroute('products.index');
         }
 
         $product->forceDelete();
@@ -346,7 +346,7 @@ class ProductsController extends Controller
         $product = Product::withTrashed()->findOrFail($id);
 
         if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.index');
+            return $this->redirectToroute('products.index');
         }
 
         $product->restore();

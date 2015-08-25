@@ -14,12 +14,12 @@ class FeatureRequest extends Request
     public function authorize()
     {
         // si ruta es nula entonces se esta creado un nuevo recurso
-        if (!$this->route('productos')) {
+        if (!$this->route('products')) {
             return $this->auth->user()->isVerified();
         }
 
         // si ruta no es nula entonces se esta manipulando un recurso
-        $feature = Feature::findOrFail($this->route('productos'));
+        $feature = Feature::findOrFail($this->route('products'));
 
         return $this->auth->user()->isOwnerOrAdmin($feature->product->user_id);
     }

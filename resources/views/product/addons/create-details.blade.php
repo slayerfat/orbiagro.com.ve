@@ -32,7 +32,7 @@
 
     var ckEditor  = '{!! asset('js/editor/ckEditor.js') !!}';
 
-    var productDetailsUrl = '{!! route('productos.details', $product->id) !!}';
+    var productDetailsUrl = '{!! route('products.details', $product->id) !!}';
 
     var toggleMessage = function(){
       return $('.product-hero-details-message').fadeToggle(1000, function(){

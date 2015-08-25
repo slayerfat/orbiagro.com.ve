@@ -8,16 +8,187 @@ class MiscRoutes extends Routes
     /**
      * @var array
      */
+    protected $restfulOptions = [
+        /**
+         * Maker
+         */
+        [
+            'routerOptions'    => [
+                    'prefix'   => 'fabricantes',
+                ],
+            'rtDetails'        => [
+                    'uses'     => 'MakersController',
+                    'as'       => 'makers',
+                    'resource' => '{makers}'
+                ]
+        ],
+
+        /**
+         * Profiles
+         */
+        [
+            'routerOptions'    => [
+                    'prefix'   => 'perfiles',
+                ],
+            'rtDetails'        => [
+                    'uses'     => 'ProfilesController',
+                    'as'       => 'profiles',
+                    'resource' => '{profiles}'
+                ]
+        ],
+
+        /**
+         * Provider
+         */
+        [
+            'routerOptions'    => [
+                    'prefix'   => 'proveedores',
+                ],
+            'rtDetails'        => [
+                    'uses'     => 'ProvidersController',
+                    'as'       => 'providers',
+                    'resource' => '{providers}'
+                ]
+        ],
+
+        /**
+         * Image
+         */
+        [
+            'routerOptions'    => [
+                    'prefix'   => 'imagenes',
+                ],
+            'rtDetails'        => [
+                    'uses'     => 'ImagesController',
+                    'as'       => 'images',
+                    'resource' => '{images}',
+                    'ignore'   => ['index', 'show', 'create', 'store']
+                ]
+        ],
+
+        /**
+         * Image
+         */
+        [
+            'routerOptions'    => [
+                    'prefix'   => 'promociones',
+                ],
+            'rtDetails'        => [
+                    'uses'     => 'PromotionsController',
+                    'as'       => 'promotions',
+                    'resource' => '{promotions}',
+                ]
+        ],
+    ];
+
+    /**
+     * @var array
+     */
     protected $nonRestfulOptions = [
+        /**
+         * sanity-check
+         */
         [
             'method' => 'get',
             'url' => '/welcome',
             'data' => ['uses' => 'WelcomeController@index', 'as' => 'welcome']
         ],
+        /**
+         * Home
+         */
         [
             'method' => 'get',
             'url' => '/',
+            'data' => ['uses' => 'HomeController@index', 'as' => '/']
+        ],
+        [
+            'method' => 'get',
+            'url' => 'home',
             'data' => ['uses' => 'HomeController@index', 'as' => 'home']
+        ],
+
+        /**
+         * usuario por verificar
+         */
+        [
+            'method'         => 'get',
+            'url'            => 'usuarios/por-verificar',
+            'data'           => [
+                'uses'       => 'HomeController@unverified',
+                'as'         => 'users.unverified',
+                'middleware' => 'user.verified',
+            ]
+        ],
+
+        /**
+         * para generar confirmaciones de usuario
+         */
+        [
+            'method'         => 'get',
+            'url'            => 'usuarios/generar-confirmacion',
+            'data'           => [
+                'uses'       => 'ConfirmationsController@createConfirm',
+                'as'         => 'users.confirmation.create',
+                'middleware' => 'user.verified',
+            ]
+        ],
+        [
+            'method'         => 'get',
+            'url'            => 'usuarios/confirmar/{string}',
+            'data'           => [
+                'uses'       => 'ConfirmationsController@confirm',
+                'as'         => 'users.confirmation.confirm',
+                'middleware' => 'user.verified',
+            ]
+        ],
+
+        /**
+         * Ajax de Direcciones
+         */
+        [
+            'method'         => 'get',
+            'url'            => 'direcciones/estados',
+            'data'           => [
+                'uses'       => 'DirectionsController@states',
+                'as'         => 'api.states.index',
+                'middleware' => 'auth',
+            ]
+        ],
+        [
+            'method'         => 'get',
+            'url'            => 'direcciones/estados/{states}/municipios',
+            'data'           => [
+                'uses'       => 'DirectionsController@towns',
+                'as'         => 'api.states.towns.index',
+                'middleware' => 'auth',
+            ]
+        ],
+        [
+            'method'         => 'get',
+            'url'            => 'direcciones/municipios/{towns}',
+            'data'           => [
+                'uses'       => 'DirectionsController@town',
+                'as'         => 'api.towns.show',
+                'middleware' => 'auth',
+            ]
+        ],
+        [
+            'method'         => 'get',
+            'url'            => 'direcciones/municipios/{towns}/parroquias',
+            'data'           => [
+                'uses'       => 'DirectionsController@parishes',
+                'as'         => 'api.towns.parishes.index',
+                'middleware' => 'auth',
+            ]
+        ],
+        [
+            'method'         => 'get',
+            'url'            => 'direcciones/parroquia/{parishes}',
+            'data'           => [
+                'uses'       => 'DirectionsController@parish',
+                'as'         => 'api.parishes.show',
+                'middleware' => 'auth',
+            ]
         ],
     ];
 
@@ -28,6 +199,14 @@ class MiscRoutes extends Routes
      */
     public function execute()
     {
-        $this->registerSigleRoute($this->nonRestfulOptions);
+        $this->executePrototype(
+            $this->restfulOptions,
+            $this->nonRestfulOptions
+        );
+
+        $this->registerControllerPrototype([
+            'auth'     => 'Auth\AuthController',
+            'password' => 'Auth\PasswordController',
+        ]);
     }
 }
