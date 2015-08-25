@@ -23,6 +23,13 @@ abstract class Controller extends BaseController
         $message = $message ? $message :'Ud. no tiene permisos para esta accion.';
 
         flash()->$method($message);
+
+        // añadida esta condicion para que no salga
+        // en el url esto: /algo/otra-cosa?
+        if (is_null($id)) {
+            return redirect()->route($route);
+        }
+
         return redirect()->route($route, $id);
     }
 }

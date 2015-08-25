@@ -21,8 +21,10 @@ class File extends Upload
      */
     public function create(Model $model, UploadedFile $file = null)
     {
+        $collection = collect();
+
         if ($file === null) {
-            return false;
+            return $collection;
         }
 
         // el validador
@@ -37,13 +39,13 @@ class File extends Upload
 
         // se crea el archivo en el HD.
         if (!$result = $this->makeFile($file, $this->path)) {
-            return false;
+            return $collection;
         }
 
         // se crea el modelo.
-        $this->createFileModel($result, $model);
+        $collection->push($this->createFileModel($result, $model));
 
-        return true;
+        return $collection;
     }
 
     /**
@@ -55,12 +57,15 @@ class File extends Upload
      *
      * @internal $options no implementadas.
      *
-     * @return boolean
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
         if ($model->file == null) {
-            return $this->create($model, $file);
+            // create devuelve una coleccion
+            $result = $this->create($model, $file);
+
+            return $result->first();
         }
 
         $fileModel = $model->file;
@@ -85,7 +90,7 @@ class File extends Upload
             return $fileModel->update($result);
         }
 
-        return false;
+        return $fileModel;
     }
 
     // --------------------------------------------------------------------------

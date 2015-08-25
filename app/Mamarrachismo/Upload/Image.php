@@ -135,7 +135,10 @@ class Image extends Upload
     {
         // si no hay algun modelo relacionado, se crea uno de cero.
         if ($model->image == null) {
-            return $this->create($model, $file);
+            // create devuelve una coleccion
+            $results = $this->create($model, $file);
+
+            return $results->first();
         }
 
         $imageModel = $model->image;

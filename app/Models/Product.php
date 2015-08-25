@@ -51,6 +51,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Promotion[] $promotions
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\User[] $purchases
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Provider[] $providers
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Direction $direction
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\File[] $files
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Image[] $images
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits

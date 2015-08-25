@@ -225,6 +225,8 @@ class RelatedProductModelsController extends Controller
 
         $results = $this->getViewVariables($model);
 
+        $variables = [];
+
         $variables[$results['variableName']] = $model;
 
         return view($results['target'].'edit')->with($variables);

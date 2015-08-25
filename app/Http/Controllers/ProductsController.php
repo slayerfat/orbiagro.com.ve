@@ -119,6 +119,8 @@ class ProductsController extends Controller
 
         $cats = Category::all();
 
+        $description = '';
+
         if ($parent instanceof Category) {
             $subCats     = Category::where('slug', $parentId)->first()->subCategories;
             $description = $subCats->first()->category->description;
@@ -226,8 +228,6 @@ class ProductsController extends Controller
             .', consigue mas en '.$product->subCategory->category->description
             .' dentro de orbiagro.com.ve'
         );
-
-        // $this->seo()->setKeywords(); taxonomias
         $this->seo()->opengraph()->setUrl(action('ProductsController@show', $id));
 
         return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
@@ -303,14 +303,11 @@ class ProductsController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToroute('products.show', $id);
-        }
-
-        $product->delete();
-
-        flash()->info('El Producto ha sido eliminado correctamente.');
-        return redirect()->action('ProductsController@index');
+        return $this->destroyDeleteRestorePrototype(
+            $product,
+            'delete',
+            'El Producto ha sido eliminado correctamente.'
+        );
     }
 
     /**
@@ -323,14 +320,11 @@ class ProductsController extends Controller
     {
         $product = Product::withTrashed()->findOrFail($id);
 
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToroute('products.index');
-        }
-
-        $product->forceDelete();
-
-        flash()->info('El Producto ha sido eliminado permanentemente.');
-        return redirect()->action('ProductsController@index');
+        return $this->destroyDeleteRestorePrototype(
+            $product,
+            'forceDelete',
+            'El Producto ha sido eliminado permanentemente.'
+        );
     }
 
     /**
@@ -343,14 +337,45 @@ class ProductsController extends Controller
     {
         $product = Product::withTrashed()->findOrFail($id);
 
+        return $this->destroyDeleteRestorePrototype(
+            $product,
+            'restore',
+            'El Producto ha sido restaurado exitosamente.',
+            'success',
+            'products.show'
+        );
+    }
+
+    /**
+     * Ejecuta la operacion segun los paramentros. Este metodo sirve
+     * para deshabilitar, eliminar y restaurar productos.
+     *
+     * @param  Product $product
+     * @param  string $method
+     * @param  string $message
+     * @param  string $severity
+     * @param  string $route
+     *
+     * @return Response
+     */
+    protected function destroyDeleteRestorePrototype(
+        Product $product,
+        $method,
+        $message,
+        $severity = 'info',
+        $route = 'products.index'
+    ) {
         if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToroute('products.index');
+            return $this->redirectToroute('products.show', $product->user_id);
         }
 
-        $product->restore();
+        $product->$method();
 
-        flash()->success('El Producto ha sido restaurado exitosamente.');
-        return redirect()->action('ProductsController@show', $product->slug);
+        if ($route == 'products.index') {
+            return $this->redirectToroute($route, null, $message, $severity);
+        }
+
+        return $this->redirectToroute($route, $product->slug, $message, $severity);
     }
 
     /**

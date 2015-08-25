@@ -91,30 +91,6 @@ class EnviarEmail
     // --------------------------------------------------------------------------
 
     /**
-     * version simplificada
-     *
-     * @return array
-     */
-    public static function getAdminsEmail()
-    {
-        $obj = new self;
-
-        return $obj->getAdministratorsEmail();
-    }
-
-    /**
-     * version simplificada
-     *
-     * @return array
-     */
-    public static function getUsersEmail()
-    {
-        $obj = new self;
-
-        return $obj->getAdministratorsEmail();
-    }
-
-    /**
      * Se envia los correos deseados. TEP.
      *
      * @todo ajustarlo a este app.
