@@ -1,4 +1,4 @@
-<?php namespace Orbiagro\Http\Requests\Traits;
+<?php namespace Orbiagro\Mamarrachismo\Traits\Requests;
 
 use LogicException;
 use InvalidArgumentException;

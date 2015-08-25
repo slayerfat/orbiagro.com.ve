@@ -1,7 +1,7 @@
 <?php namespace Orbiagro\Http\Requests;
 
 use Orbiagro\Http\Requests\Request;
-use Orbiagro\Http\Requests\Traits\CanSearchIDs;
+use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
 
 class NutritionalRequest extends Request
 {
