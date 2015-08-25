@@ -81,9 +81,9 @@ abstract class Routes
         Route::group($options, function () use ($details) {
             $defaults = [
                 'index'   => ['get', '/'],
-                'show'    => ['get', '/'.$details['resource']],
                 'create'  => ['get', '/crear'],
                 'store'   => ['post', '/'],
+                'show'    => ['get', '/'.$details['resource']],
                 'edit'    => ['get', '/'.$details['resource'].'/editar'],
                 'update'  => ['patch', '/'.$details['resource']],
                 'destroy' => ['delete', '/'.$details['resource']],
@@ -116,7 +116,7 @@ abstract class Routes
 
     /**
      * Se registra mamarrachamente un listado de controladores.
-     * 
+     *
      * @param  array  $data
      * @return void
      */

@@ -1,12 +1,23 @@
 <?php namespace Orbiagro\Http\Requests;
 
-use Auth;
 use Orbiagro\Http\Requests\Request;
-
-use Orbiagro\Models\Product;
+use Orbiagro\Http\Requests\Traits\CanSearchIDs;
 
 class ProductRequest extends Request
 {
+
+    use CanSearchIDs;
+
+    /**
+     * @var array
+     */
+    protected $resourcesData = [
+        [
+            'methodType' => 'PATCH',
+            'class'      => \Orbiagro\Models\Product::class,
+            'routeParam' => 'products'
+        ],
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -15,14 +26,11 @@ class ProductRequest extends Request
      */
     public function authorize()
     {
-        // si ruta es nula entonces se esta creado un nuevo recurso
-        if (!$this->route('products')) {
-            return Auth::user()->isVerified();
+        if ($this->isUserAdmin()) {
+            return true;
         }
 
-        // si ruta no es nula entonces se esta manipulando un recurso
-        $producto = Product::findOrFail($this->route('products'));
-        return Auth::user()->isOwnerOrAdmin($producto->user_id);
+        return $this->isUserOwner($this->resourcesData);
     }
 
     /**

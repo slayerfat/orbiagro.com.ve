@@ -1,9 +1,23 @@
 <?php namespace Orbiagro\Http\Requests;
 
 use Orbiagro\Http\Requests\Request;
+use Orbiagro\Http\Requests\Traits\CanSearchIDs;
 
 class UserRequest extends Request
 {
+
+    use CanSearchIDs;
+
+    /**
+     * @var array
+     */
+    protected $resourcesData = [
+        [
+            'methodType' => 'PATCH',
+            'class'      => \Orbiagro\Models\User::class,
+            'routeParam' => 'users'
+        ],
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -12,7 +26,11 @@ class UserRequest extends Request
      */
     public function authorize()
     {
-        return $this->auth->user()->isOwnerOrAdmin($this->route('users'));
+        if ($this->isUserAdmin()) {
+            return true;
+        }
+
+        return $this->isUserOwner($this->resourcesData);
     }
 
     /**

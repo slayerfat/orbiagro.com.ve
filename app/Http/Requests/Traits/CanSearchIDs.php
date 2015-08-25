@@ -60,6 +60,10 @@ trait CanSearchIDs
         }
 
         switch (get_class($result)) {
+            case \Orbiagro\Models\User::class:
+                $id = $result->id;
+                break;
+
             case \Orbiagro\Models\Person::class:
             case \Orbiagro\Models\Product::class:
                 $id = $result->user_id;
