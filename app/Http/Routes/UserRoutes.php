@@ -12,7 +12,7 @@ class UserRoutes extends Routes
      */
     public function __construct()
     {
-        $this->options = $this->getDefaulOptions();
+        $this->options = $this->getRestfulOptions();
     }
 
     /**
@@ -29,21 +29,103 @@ class UserRoutes extends Routes
             );
         }
 
-        $this->registerSigleRoute([
+        $this->registerSigleRoute($this->getNonRestfulOptions());
+
+    }
+
+    /**
+     * Las rutas adicionales que no son por defecto.
+     *
+     * @return array
+     */
+    protected function getNonRestfulOptions()
+    {
+        return [
+            /**
+             * Productos de un usuario
+             */
             [
                 'method' => 'get',
-                'url' => '/welcome',
-                'data' => ['uses' => 'WelcomeController@index', 'as' => 'welcome']
-            ]
-        ]);
+                'url' => 'usuarios/{usuarios}/productos',
+                'data' => [
+                    'uses' => 'UsersController@products',
+                    'as' => 'user.products'
+                ]
+            ],
+
+            /**
+             * restaura al usuario en la base de datos
+             */
+            [
+                'method' => 'post',
+                'url' => 'usuarios/{usuarios}/restore',
+                'data' => [
+                    'uses' => 'UsersController@restore',
+                    'as' => 'user.restore'
+                ]
+            ],
+
+            /**
+             * Usuarios Eliminados
+             */
+            [
+                'method' => 'get',
+                'url' => 'usuarios/eliminados/{usuarios}',
+                'data' => [
+                    'uses' => 'UsersController@showTrashed',
+                    'as' => 'user.trashed'
+                ]
+            ],
+
+            /**
+             * UX de un usuario que quiere eliminar su cuenta
+             *
+             * @todo mejorar esto
+             */
+            [
+                'method' => 'get',
+                'url' => 'usuarios/{usuarios}/confirmar-eliminacion',
+                'data' => [
+                    'uses' => 'UsersController@preDestroy',
+                    'as' => 'user.destroy.pre'
+                ]
+            ],
+
+            /**
+             * Eliminar usuarios de DB
+             */
+            [
+                'method' => 'delete',
+                'url' => 'usuarios/{usuarios}/forceDestroy',
+                'data' => [
+                    'uses' => 'UsersController@forceDestroy',
+                    'as' => 'user.destroy.forced'
+                ]
+            ],
+
+            /**
+             * Visitas de productos de un usuario
+             */
+            [
+                'method' => 'get',
+                'url' => 'usuarios/{usuarios}/visitas/productos',
+                'data' => [
+                    'uses' => 'UsersController@productVisits',
+                    'as' => 'user.products.visits'
+                ]
+            ],
+        ];
     }
 
     /**
      * @return array
      */
-    protected function getDefaulOptions()
+    protected function getRestfulOptions()
     {
         return [
+            /**
+             * Usuarios
+             */
             [
                 'routerOptions' => [
                         'prefix' => 'usuarios',
@@ -54,13 +136,16 @@ class UserRoutes extends Routes
                         'resource' => '{usuarios}'
                     ]
             ],
+            /**
+             * Datos Personales (Person)
+             */
             [
                 'routerOptions' => [
-                        'prefix' => 'usuarios',
+                        'prefix' => 'usuarios/datos-personales',
                     ],
                 'rtDetails' => [
-                        'uses'     => 'UsersController',
-                        'as'       => 'user',
+                        'uses'     => 'PeopleController',
+                        'as'       => 'user.people',
                         'resource' => '{usuarios}'
                     ]
             ],

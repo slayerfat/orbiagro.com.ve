@@ -23,7 +23,12 @@ abstract class Routes
     /**
      * @return array
      */
-    abstract protected function getDefaulOptions();
+    abstract protected function getRestfulOptions();
+
+    /**
+     * @return array
+     */
+    abstract protected function getNonRestfulOptions();
 
     /**
      * itera las opciones para registrar las rutas.
