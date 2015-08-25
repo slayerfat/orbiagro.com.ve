@@ -14,7 +14,7 @@ class CategoriesController extends Controller
     /**
      * La instancia de la categoria.
      *
-     * @var Orbiagro\Models\Category
+     * @var \Orbiagro\Models\Category
      */
     protected $cat;
 
@@ -28,7 +28,7 @@ class CategoriesController extends Controller
 
         $this->middleware('user.admin', ['except' => ['index', 'show']]);
 
-        $this->cat  = $cat;
+        $this->cat = $cat;
     }
 
     /**

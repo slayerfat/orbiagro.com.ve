@@ -7,7 +7,7 @@ class Business
      * una coleccion de arrays que poseen el texto y
      * caracteristicas asociadas a la declaracion.
      *
-     * @var \Collection
+     * @var \Illuminate\Support\Collection
      */
     public $statements;
 
@@ -21,7 +21,7 @@ class Business
     /**
      * una coleccion de texto con slogans.
      *
-     * @var \Collection
+     * @var \Illuminate\Support\Collection
      */
     public $slogans;
 
