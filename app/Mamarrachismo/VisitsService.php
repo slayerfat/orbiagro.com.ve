@@ -4,11 +4,8 @@ use Auth;
 use Cookie;
 use Exception;
 use Carbon\Carbon;
-use Orbiagro\Mamarrachismo\Transformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\SubCategory;
 use Orbiagro\Models\Visit;
 
 /**

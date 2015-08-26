@@ -1,11 +1,13 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Controllers\Controller;
+use Log;
+use Exception;
 use Orbiagro\Models\Category;
+use Illuminate\View\View as Response;
+use Illuminate\Database\QueryException;
 use Orbiagro\Http\Requests\CategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use Illuminate\View\View as Response;
 
 class CategoriesController extends Controller
 {
@@ -166,18 +168,20 @@ class CategoriesController extends Controller
         try {
             $this->cat->delete();
 
-        } catch (\Exception $e) {
-            if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000) {
+        } catch (Exception $e) {
+            if ($e instanceof QueryException || $e->getCode() == 23000) {
                 flash()->error('No deben haber Productos asociados.');
 
                 return redirect()->action('CategoriesController@show', $this->cat->slug);
             }
 
-            \Log::error($e);
+            Log::error($e);
+
             abort(500);
         }
 
         flash()->success('La Categoria ha sido eliminada correctamente.');
+
         return redirect()->action('CategoriesController@index');
     }
 }
