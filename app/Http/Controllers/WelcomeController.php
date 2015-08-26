@@ -1,5 +1,7 @@
 <?php namespace Orbiagro\Http\Controllers;
 
+use Illuminate\View\View as Response;
+
 class WelcomeController extends Controller
 {
 

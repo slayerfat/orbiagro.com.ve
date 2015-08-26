@@ -6,6 +6,7 @@ use Auth;
 use Orbiagro\Models\User;
 use Orbiagro\Models\Profile;
 use Orbiagro\Models\UserConfirmation;
+use Illuminate\View\View as Response;
 
 class ConfirmationsController extends Controller
 {

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Provider;
+use Illuminate\View\View as Response;
 
 class ProductsProvidersController extends Controller
 {

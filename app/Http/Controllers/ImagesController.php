@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
+use Illuminate\View\View as Response;
 
 /**
  * Class ImagesController
@@ -132,7 +133,7 @@ class ImagesController extends Controller
                 break;
 
             default:
-                throw new Exception('modelo desconocido, no se puede crear ruta ', modelo.get_class($model));
+                throw new Exception('modelo desconocido, no se puede crear ruta de '.get_class($model));
 
         }
 

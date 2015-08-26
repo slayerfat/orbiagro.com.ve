@@ -7,6 +7,7 @@ use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\User;
 use Orbiagro\Models\Profile;
+use Illuminate\View\View as Response;
 
 /**
  * Class UsersController
@@ -76,13 +77,13 @@ class UsersController extends Controller
     public function productVisits($id, Guard $auth)
     {
         $user = User::with(['visits' => function ($query) {
-            $query->where('visitable_type', Orbiagro\Models\Product::class)
+            $query->where('visitable_type', Product::class)
                 ->orderBy('updated_at', 'desc');
         }])->where('name', $id)->first();
 
         if (!$user) {
             $user = User::with(['visits' => function ($query) {
-                $query->where('visitable_type', Orbiagro\Models\Product::class)
+                $query->where('visitable_type', Product::class)
                     ->orderBy('updated_at', 'desc');
             }])->findOrFail($id);
         }
@@ -96,7 +97,12 @@ class UsersController extends Controller
         // la coleccion de productos
         $products = collect();
 
-        $user->visits->each(function ($visit) use ($products) {
+        /**
+         * & requerido.
+         *
+         * @see http://php.net/manual/en/functions.anonymous.php
+         */
+        $user->visits->each(function ($visit) use (&$products) {
             $products = $products->push($visit->visitable);
         });
 

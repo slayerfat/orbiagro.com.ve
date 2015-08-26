@@ -7,6 +7,7 @@ use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Feature;
+use Illuminate\View\View as Response;
 
 /**
  * Class FeaturesController

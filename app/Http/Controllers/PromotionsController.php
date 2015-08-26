@@ -4,6 +4,7 @@ namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Orbiagro\Http\Requests;
+use Illuminate\View\View as Response;
 use Orbiagro\Http\Controllers\Controller;
 
 class PromotionsController extends Controller

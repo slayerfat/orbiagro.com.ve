@@ -4,6 +4,7 @@ use Orbiagro\Http\Requests;
 use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Orbiagro\Models\Profile;
+use Illuminate\View\View as Response;
 
 class ProfilesController extends Controller
 {
@@ -49,6 +50,7 @@ class ProfilesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param Request $request
      * @return Response
      */
     public function store(Request $request)

@@ -1,6 +1,8 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Orbiagro\Http\Requests\ProductRequest;
 use Orbiagro\Http\Controllers\Controller;
@@ -14,6 +16,7 @@ use Orbiagro\Models\Maker;
 
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\View\View as Response;
 
 class ProductsController extends Controller
 {
@@ -410,11 +413,11 @@ class ProductsController extends Controller
      *
      * @todo abstraer a un metodo generico.
      *
-     * @param \Illuminate\Database\Eloquent\Collection $models
+     * @param Collection $models
      *
      * @return array
      */
-    private function toAsocArray(\Illuminate\Database\Eloquent\Collection $models)
+    private function toAsocArray(Collection $models)
     {
         $cats = [];
 

@@ -8,6 +8,7 @@ use Orbiagro\Models\Promotion;
 use Orbiagro\Models\PromoType;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\View\View as Response;
 
 /**
  * Class HomeController

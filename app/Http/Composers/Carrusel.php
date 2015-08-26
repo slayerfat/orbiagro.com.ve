@@ -7,6 +7,7 @@ use Orbiagro\Models\Category;
 use Orbiagro\Models\PromoType;
 use Orbiagro\Models\Promotion;
 use Orbiagro\Models\SubCategory;
+use Illuminate\View\View as Response;
 
 /**
  * Class Carrusel

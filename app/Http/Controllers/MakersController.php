@@ -1,10 +1,10 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Exception;
-use QueryException;
 use Orbiagro\Models\Maker;
 use Orbiagro\Http\Requests\MakerRequest;
 use Orbiagro\Http\Controllers\Controller;
+use Illuminate\View\View as Response;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
@@ -152,7 +152,7 @@ class MakersController extends Controller
         try {
             $this->maker->delete();
         } catch (Exception $e) {
-            if ($e instanceof QueryException || (int)$e->errorInfo[0] == 23000) {
+            if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000) {
                 flash()->error('No deben haber productos asociados.');
 
                 return redirect()->action('MakersController@show', $this->maker->slug);

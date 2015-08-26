@@ -5,6 +5,7 @@ use Orbiagro\Mamarrachismo\VisitsService;
 
 use Orbiagro\Models\Product;
 use Orbiagro\Models\SubCategory;
+use Illuminate\View\View as Response;
 
 /**
  * Class Visits

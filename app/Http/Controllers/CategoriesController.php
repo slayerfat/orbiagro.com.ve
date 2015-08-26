@@ -5,6 +5,7 @@ use Orbiagro\Models\Category;
 use Orbiagro\Http\Requests\CategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\View\View as Response;
 
 class CategoriesController extends Controller
 {

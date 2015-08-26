@@ -2,6 +2,7 @@
 
 use Orbiagro\Http\Requests\ProviderRequest;
 use Orbiagro\Http\Controllers\Controller;
+use Illuminate\View\View as Response;
 use Orbiagro\Models\Provider;
 
 class ProvidersController extends Controller

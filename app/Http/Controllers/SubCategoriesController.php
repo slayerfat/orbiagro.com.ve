@@ -10,6 +10,7 @@ use Orbiagro\Models\SubCategory;
 use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\View\View as Response;
 
 class SubCategoriesController extends Controller
 {

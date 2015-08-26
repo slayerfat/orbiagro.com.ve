@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Models\State;
 use Orbiagro\Models\Town;
@@ -11,7 +12,7 @@ class DirectionsController extends Controller
     /**
      * Regresa todos los estados.
      *
-     * @return \Collection
+     * @return Collection
      */
     public function states()
     {
@@ -23,7 +24,7 @@ class DirectionsController extends Controller
      *
      * @param int $id el id del estado tal
      *
-     * @return \Collection
+     * @return Collection
      */
     public function towns($id)
     {
@@ -36,7 +37,7 @@ class DirectionsController extends Controller
      *
      * @param int $id el id del municipio tal
      *
-     * @return \Collection
+     * @return Collection
      */
     public function town($id)
     {
@@ -51,7 +52,7 @@ class DirectionsController extends Controller
      *
      * @param int $id el id de la municipio tal
      *
-     * @return \Collection
+     * @return Collection
      */
     public function parishes($id)
     {
@@ -64,7 +65,7 @@ class DirectionsController extends Controller
      *
      * @param int $id el id de la parroquia tal
      *
-     * @return \Collection
+     * @return Collection
      */
     public function parish($id)
     {

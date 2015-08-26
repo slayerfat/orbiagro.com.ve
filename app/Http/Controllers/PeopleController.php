@@ -8,6 +8,7 @@ use Orbiagro\Models\User;
 use Orbiagro\Models\Person;
 use Orbiagro\Models\Gender;
 use Orbiagro\Models\Nationality;
+use Illuminate\View\View as Response;
 
 /**
  * Class PeopleController

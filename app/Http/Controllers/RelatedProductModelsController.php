@@ -11,6 +11,7 @@ use Orbiagro\Models\Characteristic;
 use Orbiagro\Models\MechanicalInfo;
 use Orbiagro\Models\Nutritional;
 use Orbiagro\Models\Product;
+use Illuminate\View\View as Response;
 
 class RelatedProductModelsController extends Controller
 {
@@ -26,10 +27,9 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int            $id
-     * @param  MechanicalInfo $nuts
-     * @param  Guard          $auth
-     *
+     * @param  int $id
+     * @param MechanicalInfo $mech
+     * @param  Guard $auth
      * @return Response
      */
     public function createMechInfo($id, MechanicalInfo $mech, Guard $auth)
@@ -288,7 +288,8 @@ class RelatedProductModelsController extends Controller
     /**
      * Regresa el nombre del metodo relacionado con el modelo.
      *
-     * @return string
+     * @param Model $model
+     * @return string|void
      */
     protected function getRelatedMethod(Model $model)
     {
@@ -312,6 +313,7 @@ class RelatedProductModelsController extends Controller
      * esta necesita el destino y el nombre de
      * la variable para el Model Binding.
      *
+     * @param Model $model
      * @return array
      */
     protected function getViewVariables(Model $model)
