@@ -50,6 +50,13 @@
       "php artisan ide-helper:meta",
       "php artisan optimize"
     ],
+    "post-autoload-dump": [
+      "php artisan clear-compiled",
+      "php artisan ide-helper:generate",
+      "php artisan ide-helper:models -W",
+      "php artisan ide-helper:meta",
+      "php artisan optimize"
+    ],
     "post-create-project-cmd": [
       "php -r \"copy('.env.example', '.env');\"",
       "php artisan key:generate"

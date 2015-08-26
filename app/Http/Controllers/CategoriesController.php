@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Orbiagro\Http\Requests\CategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 
 class CategoriesController extends Controller
 {
@@ -15,17 +16,18 @@ class CategoriesController extends Controller
     use SEOToolsTrait, CanSaveUploads;
 
     /**
-     * La instancia de la categoria.
+     * La instancia del repositorio
      *
-     * @var \Orbiagro\Models\Category
+     * @var CategoryRepositoryInterface
      */
     protected $cat;
 
     /**
      * Create a new controller instance.
-     * @param Category $cat
+     *
+     * @param CategoryRepositoryInterface $cat
      */
-    public function __construct(Category $cat)
+    public function __construct(CategoryRepositoryInterface $cat)
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
 
@@ -41,21 +43,13 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $cats  = $this->cat->all()->load('subCategories');
+        $cats  = $this->cat->getAll();
 
-        $productsCollection = collect();
-
-        foreach ($cats as $cat) {
-            foreach ($cat->subCategories as $subCat) {
-                $productsCollection->push(
-                    $subCat->products()->random()->take(6)->get()
-                );
-            }
-        }
+        $productsCollection = $this->cat->getRelatedProducts($cats);
 
         $this->seo()->setTitle('Categorias en orbiagro.com.ve');
         $this->seo()->setDescription('Categorias existentes es orbiagro.com.ve');
-        $this->seo()->opengraph()->setUrl(action('CategoriesController@index'));
+        $this->seo()->opengraph()->setUrl(route('cats.index'));
 
         return view('category.index', compact('cats', 'productsCollection'));
     }
@@ -68,7 +62,7 @@ class CategoriesController extends Controller
     public function create()
     {
         return view('category.create')->with([
-            'cat' => $this->cat
+            'cat' => $this->cat->getNewInstance()
         ]);
     }
 

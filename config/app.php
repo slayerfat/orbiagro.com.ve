@@ -162,6 +162,7 @@ return [
         */
         Orbiagro\Providers\ImageDeleteServiceProvider::class,
         Orbiagro\Providers\ProductServiceProvider::class,
+        Orbiagro\Providers\RepositoryServiceProvider::class,
 
         /**
         * Vendor
