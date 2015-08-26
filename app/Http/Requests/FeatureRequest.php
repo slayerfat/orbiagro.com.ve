@@ -1,8 +1,14 @@
 <?php namespace Orbiagro\Http\Requests;
 
+use Orbiagro\Models\Feature;
+use Orbiagro\Models\Product;
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
 
+/**
+ * Class FeatureRequest
+ * @package Orbiagro\Http\Requests
+ */
 class FeatureRequest extends Request
 {
     use CanSearchIDs;
@@ -13,12 +19,12 @@ class FeatureRequest extends Request
     protected $resourcesData = [
         [
             'methodType' => 'POST',
-            'class'      => \Orbiagro\Models\Product::class,
+            'class'      => Product::class,
             'routeParam' => 'products'
         ],
         [
             'methodType' => 'PATCH',
-            'class'      => \Orbiagro\Models\Feature::class,
+            'class'      => Feature::class,
             'routeParam' => 'features'
         ]
     ];

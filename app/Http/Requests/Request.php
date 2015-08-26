@@ -3,6 +3,10 @@
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class Request
+ * @package Orbiagro\Http\Requests
+ */
 abstract class Request extends FormRequest
 {
     /**

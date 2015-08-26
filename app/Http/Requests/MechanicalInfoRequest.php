@@ -2,7 +2,13 @@
 
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
+use Orbiagro\Models\MechanicalInfo;
+use Orbiagro\Models\Product;
 
+/**
+ * Class MechanicalInfoRequest
+ * @package Orbiagro\Http\Requests
+ */
 class MechanicalInfoRequest extends Request
 {
     use CanSearchIDs;
@@ -13,12 +19,12 @@ class MechanicalInfoRequest extends Request
     protected $resourcesData = [
         [
             'methodType' => 'POST',
-            'class'      => \Orbiagro\Models\Product::class,
+            'class'      => Product::class,
             'routeParam' => 'products'
         ],
         [
             'methodType' => 'PATCH',
-            'class'      => \Orbiagro\Models\MechanicalInfo::class,
+            'class'      => MechanicalInfo::class,
             'routeParam' => 'mechanicals'
         ]
     ];

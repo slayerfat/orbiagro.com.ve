@@ -4,6 +4,10 @@ use Illuminate\Contracts\View\View;
 
 use Orbiagro\Mamarrachismo\Business;
 
+/**
+ * Class OrbiagroInfo
+ * @package Orbiagro\Http\Composers
+ */
 class OrbiagroInfo
 {
 

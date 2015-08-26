@@ -2,7 +2,12 @@
 
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
+use Orbiagro\Models\Product;
 
+/**
+ * Class ProductRequest
+ * @package Orbiagro\Http\Requests
+ */
 class ProductRequest extends Request
 {
 
@@ -14,7 +19,7 @@ class ProductRequest extends Request
     protected $resourcesData = [
         [
             'methodType' => 'PATCH',
-            'class'      => \Orbiagro\Models\Product::class,
+            'class'      => Product::class,
             'routeParam' => 'products'
         ],
     ];

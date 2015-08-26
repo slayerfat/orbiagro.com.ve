@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Auth;
+use Exception;
 use Orbiagro\Models\Image;
 use Intervention;
 use Orbiagro\Http\Requests;
@@ -9,6 +10,10 @@ use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
+/**
+ * Class ImagesController
+ * @package Orbiagro\Http\Controllers
+ */
 class ImagesController extends Controller
 {
 
@@ -92,8 +97,8 @@ class ImagesController extends Controller
      * el identificador necesario para encontrar el recurso.
      *
      * @param  Model $model el modelo a manipular.
-     *
      * @return array
+     * @throws Exception
      */
     protected function getControllerNameFromModel(Model $model)
     {
@@ -127,7 +132,7 @@ class ImagesController extends Controller
                 break;
 
             default:
-                throw new \Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".get_class($model), 2);
+                throw new Exception('modelo desconocido, no se puede crear ruta ', modelo.get_class($model));
 
         }
 

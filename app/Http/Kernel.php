@@ -1,7 +1,23 @@
 <?php namespace Orbiagro\Http;
 
+use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Orbiagro\Http\Middleware\Authenticate;
+use Orbiagro\Http\Middleware\RedirectIfAuthenticated;
+use Orbiagro\Http\Middleware\RedirectIfNotAdmin;
+use Orbiagro\Http\Middleware\RedirectIfUnverified;
+use Orbiagro\Http\Middleware\RedirectIfVerified;
+use Orbiagro\Http\Middleware\VerifyCsrfToken;
 
+/**
+ * Class Kernel
+ * @package Orbiagro\Http
+ */
 class Kernel extends HttpKernel
 {
 
@@ -11,12 +27,12 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \Illuminate\Cookie\Middleware\EncryptCookies::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \Orbiagro\Http\Middleware\VerifyCsrfToken::class,
+        CheckForMaintenanceMode::class,
+        EncryptCookies::class,
+        AddQueuedCookiesToResponse::class,
+        StartSession::class,
+        ShareErrorsFromSession::class,
+        VerifyCsrfToken::class,
     ];
 
     /**
@@ -25,11 +41,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'            => \Orbiagro\Http\Middleware\Authenticate::class,
-        'auth.basic'      => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest'           => \Orbiagro\Http\Middleware\RedirectIfAuthenticated::class,
-        'user.verified'   => \Orbiagro\Http\Middleware\RedirectIfVerified::class,
-        'user.unverified' => \Orbiagro\Http\Middleware\RedirectIfUnverified::class,
-        'user.admin'      => \Orbiagro\Http\Middleware\RedirectIfNotAdmin::class,
+        'auth'            => Authenticate::class,
+        'auth.basic'      => AuthenticateWithBasicAuth::class,
+        'guest'           => RedirectIfAuthenticated::class,
+        'user.verified'   => RedirectIfVerified::class,
+        'user.unverified' => RedirectIfUnverified::class,
+        'user.admin'      => RedirectIfNotAdmin::class,
     ];
 }

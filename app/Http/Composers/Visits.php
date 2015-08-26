@@ -6,6 +6,10 @@ use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\SubCategory;
 
+/**
+ * Class Visits
+ * @package Orbiagro\Http\Composers
+ */
 class Visits
 {
 

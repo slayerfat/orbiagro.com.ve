@@ -2,6 +2,15 @@
 
 use Orbiagro\Http\Requests\Request;
 
+/**
+ * Class MakerRequest
+ * @package Orbiagro\Http\Requests
+ */
+
+/**
+ * Class MakerRequest
+ * @package Orbiagro\Http\Requests
+ */
 class MakerRequest extends Request
 {
 
@@ -41,6 +50,7 @@ class MakerRequest extends Request
                 ];
 
             default:
+                return [];
                 break;
         }
     }

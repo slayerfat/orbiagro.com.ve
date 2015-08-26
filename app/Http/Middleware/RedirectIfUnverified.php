@@ -2,6 +2,10 @@
 
 use Closure;
 
+/**
+ * Class RedirectIfUnverified
+ * @package Orbiagro\Http\Middleware
+ */
 class RedirectIfUnverified
 {
 

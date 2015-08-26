@@ -2,6 +2,10 @@
 
 use Closure;
 
+/**
+ * Class RedirectIfVerified
+ * @package Orbiagro\Http\Middleware
+ */
 class RedirectIfVerified
 {
 

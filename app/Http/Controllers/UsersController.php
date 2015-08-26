@@ -4,9 +4,14 @@ use Illuminate\Contracts\Auth\Guard;
 use Orbiagro\Http\Requests;
 use Orbiagro\Http\Requests\UserRequest;
 use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\Product;
 use Orbiagro\Models\User;
 use Orbiagro\Models\Profile;
 
+/**
+ * Class UsersController
+ * @package Orbiagro\Http\Controllers
+ */
 class UsersController extends Controller
 {
 
@@ -47,6 +52,7 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param $id
      * @return Response
      */
     public function products($id)
@@ -145,7 +151,7 @@ class UsersController extends Controller
             $user = User::with('person', 'products', 'profile')->findOrFail($id);
         }
 
-        $products = \Orbiagro\Models\Product::where('user_id', $user->id)->paginate(4);
+        $products = Product::where('user_id', $user->id)->paginate(4);
 
         return view('user.show', compact('user', 'products'));
     }
@@ -169,7 +175,7 @@ class UsersController extends Controller
                 ->findOrFail($id);
         }
 
-        $products = \Orbiagro\Models\Product::where('user_id', $user->id)->paginate(4);
+        $products = Product::where('user_id', $user->id)->paginate(4);
 
         return view('user.show', compact('user', 'products'));
     }

@@ -9,6 +9,10 @@ use Orbiagro\Models\Person;
 use Orbiagro\Models\Gender;
 use Orbiagro\Models\Nationality;
 
+/**
+ * Class PeopleController
+ * @package Orbiagro\Http\Controllers
+ */
 class PeopleController extends Controller
 {
 
@@ -19,6 +23,7 @@ class PeopleController extends Controller
 
     /**
      * Create a new controller instance.
+     * @param Person $person
      */
     public function __construct(Person $person)
     {

@@ -2,7 +2,12 @@
 
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
+use Orbiagro\Models\Person;
 
+/**
+ * Class PeopleRequest
+ * @package Orbiagro\Http\Requests
+ */
 class PeopleRequest extends Request
 {
 
@@ -13,7 +18,7 @@ class PeopleRequest extends Request
      */
     protected $resourcesData = [
         [
-            'class'      => \Orbiagro\Models\Person::class,
+            'class'      => Person::class,
             'routeParam' => 'users'
         ]
     ];
@@ -72,7 +77,7 @@ class PeopleRequest extends Request
                 ];
 
             default:
-                break;
+                return [];
         }
     }
 }

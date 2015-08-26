@@ -2,6 +2,10 @@
 
 use Orbiagro\Http\Routes\Routes;
 
+/**
+ * Class MiscRoutes
+ * @package Orbiagro\Http\Routes
+ */
 class MiscRoutes extends Routes
 {
 

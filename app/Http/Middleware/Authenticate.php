@@ -3,6 +3,10 @@
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
+/**
+ * Class Authenticate
+ * @package Orbiagro\Http\Middleware
+ */
 class Authenticate
 {
 

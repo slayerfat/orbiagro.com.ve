@@ -2,8 +2,13 @@
 
 use Orbiagro\Http\Requests\Request;
 
+/**
+ * Class CategoryRequest
+ * @package Orbiagro\Http\Requests
+ */
 class CategoryRequest extends Request
 {
+
 
     /**
      * Determine if the user is authorized to make this request.

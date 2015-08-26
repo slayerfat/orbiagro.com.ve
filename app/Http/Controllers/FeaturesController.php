@@ -8,6 +8,10 @@ use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Feature;
 
+/**
+ * Class FeaturesController
+ * @package Orbiagro\Http\Controllers
+ */
 class FeaturesController extends Controller
 {
 

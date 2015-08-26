@@ -1,12 +1,17 @@
 <?php namespace Orbiagro\Http\Controllers;
 
+use Exception;
+use QueryException;
+use Orbiagro\Models\Maker;
 use Orbiagro\Http\Requests\MakerRequest;
 use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use Orbiagro\Models\Maker;
-
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
+/**
+ * Class MakersController
+ * @package Orbiagro\Http\Controllers
+ */
 class MakersController extends Controller
 {
 
@@ -37,7 +42,7 @@ class MakersController extends Controller
         $makers = Maker::with('products')->get();
 
         $this->seo()->setTitle('Fabricantes en orbiagro.com.ve');
-        $this->seo()->setDescription('Fabricantes existentes es orbiagro.com.ve');
+        $this->seo()->setDescription('Fabricantes existentes en orbiagro.com.ve');
         $this->seo()->opengraph()->setUrl(action('MakersController@index'));
 
         return view('maker.index', compact('makers'));
@@ -81,7 +86,7 @@ class MakersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function show($id)
@@ -100,7 +105,7 @@ class MakersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function edit($id)
@@ -113,7 +118,7 @@ class MakersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int          $id
+     * @param  int $id
      * @param  MakerRequest $request
      *
      * @return Response
@@ -137,7 +142,7 @@ class MakersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function destroy($id)
@@ -146,8 +151,8 @@ class MakersController extends Controller
 
         try {
             $this->maker->delete();
-        } catch (\Exception $e) {
-            if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000) {
+        } catch (Exception $e) {
+            if ($e instanceof QueryException || (int)$e->errorInfo[0] == 23000) {
                 flash()->error('No deben haber productos asociados.');
 
                 return redirect()->action('MakersController@show', $this->maker->slug);

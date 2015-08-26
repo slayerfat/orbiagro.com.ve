@@ -2,6 +2,10 @@
 
 use Orbiagro\Http\Requests\Request;
 
+/**
+ * Class ProviderRequest
+ * @package Orbiagro\Http\Requests
+ */
 class ProviderRequest extends Request
 {
 
@@ -63,7 +67,7 @@ class ProviderRequest extends Request
                 ];
 
             default:
-                break;
+                return [];
         }
     }
 }

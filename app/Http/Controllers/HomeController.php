@@ -9,6 +9,10 @@ use Orbiagro\Models\PromoType;
 
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
+/**
+ * Class HomeController
+ * @package Orbiagro\Http\Controllers
+ */
 class HomeController extends Controller
 {
 

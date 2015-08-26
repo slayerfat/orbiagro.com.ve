@@ -2,7 +2,13 @@
 
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
+use Orbiagro\Models\Nutritional;
+use Orbiagro\Models\Product;
 
+/**
+ * Class NutritionalRequest
+ * @package Orbiagro\Http\Requests
+ */
 class NutritionalRequest extends Request
 {
 
@@ -14,12 +20,12 @@ class NutritionalRequest extends Request
     protected $resourcesData = [
         [
             'methodType' => 'POST',
-            'class'      => \Orbiagro\Models\Product::class,
+            'class'      => Product::class,
             'routeParam' => 'products'
         ],
         [
             'methodType' => 'PATCH',
-            'class'      => \Orbiagro\Models\Nutritional::class,
+            'class'      => Nutritional::class,
             'routeParam' => 'nutritionals'
         ]
     ];

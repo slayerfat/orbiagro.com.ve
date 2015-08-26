@@ -2,6 +2,10 @@
 
 use Closure;
 
+/**
+ * Class RedirectIfNotAdmin
+ * @package Orbiagro\Http\Middleware
+ */
 class RedirectIfNotAdmin
 {
 

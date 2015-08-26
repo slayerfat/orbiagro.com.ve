@@ -8,6 +8,10 @@ use Orbiagro\Models\PromoType;
 use Orbiagro\Models\Promotion;
 use Orbiagro\Models\SubCategory;
 
+/**
+ * Class Carrusel
+ * @package Orbiagro\Http\Composers
+ */
 class Carrusel
 {
 

@@ -11,6 +11,10 @@ use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
+/**
+ * Class AuthController
+ * @package Orbiagro\Http\Controllers\Auth
+ */
 class AuthController extends Controller
 {
 

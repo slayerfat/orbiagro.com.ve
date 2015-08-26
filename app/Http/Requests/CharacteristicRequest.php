@@ -1,8 +1,14 @@
 <?php namespace Orbiagro\Http\Requests;
 
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Characteristic;
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
 
+/**
+ * Class CharacteristicRequest
+ * @package Orbiagro\Http\Requests
+ */
 class CharacteristicRequest extends Request
 {
 
@@ -14,12 +20,12 @@ class CharacteristicRequest extends Request
     protected $resourcesData = [
         [
             'methodType' => 'POST',
-            'class'      => \Orbiagro\Models\Product::class,
+            'class'      => Product::class,
             'routeParam' => 'products'
         ],
         [
             'methodType' => 'PATCH',
-            'class'      => \Orbiagro\Models\Characteristic::class,
+            'class'      => Characteristic::class,
             'routeParam' => 'characteristics'
         ]
     ];

@@ -2,6 +2,10 @@
 
 use Orbiagro\Http\Routes\Routes;
 
+/**
+ * Class CategoriesRoutes
+ * @package Orbiagro\Http\Routes
+ */
 class CategoriesRoutes extends Routes
 {
 
@@ -62,7 +66,7 @@ class CategoriesRoutes extends Routes
      */
     public function execute()
     {
-        return $this->executePrototype(
+        $this->executePrototype(
             $this->restfulOptions,
             $this->nonRestfulOptions
         );

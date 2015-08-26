@@ -2,7 +2,12 @@
 
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
+use Orbiagro\Models\User;
 
+/**
+ * Class UserRequest
+ * @package Orbiagro\Http\Requests
+ */
 class UserRequest extends Request
 {
 
@@ -14,7 +19,7 @@ class UserRequest extends Request
     protected $resourcesData = [
         [
             'methodType' => 'PATCH',
-            'class'      => \Orbiagro\Models\User::class,
+            'class'      => User::class,
             'routeParam' => 'users'
         ],
     ];
@@ -61,7 +66,7 @@ class UserRequest extends Request
                 ];
 
             default:
-                break;
+                return [];
         }
     }
 }

@@ -3,7 +3,7 @@
 use Route;
 
 /**
- * @internal http://i.imgur.com/xVyoSl.jpg
+ * @see http://i.imgur.com/xVyoSl.jpg
  */
 
 abstract class Routes
