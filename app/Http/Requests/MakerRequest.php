@@ -1,16 +1,5 @@
 <?php namespace Orbiagro\Http\Requests;
 
-use Orbiagro\Http\Requests\Request;
-
-/**
- * Class MakerRequest
- * @package Orbiagro\Http\Requests
- */
-
-/**
- * Class MakerRequest
- * @package Orbiagro\Http\Requests
- */
 class MakerRequest extends Request
 {
 

@@ -29,24 +29,24 @@ class VisitsService
     // --------------------------------------------------------------------------
 
     /**
-     * @param mixed $model el modelo a manipular.
+     * @param Model|mixed $model
      *
-     * @param Model $model
-     *
-     * @return void
+     * @throws Exception
      */
     public function setNewVisit(Model $model)
     {
         switch (get_class($model)) {
             case 'Orbiagro\Models\SubCategory':
-                return $this->setNewVisitCookie($model);
+                $this->setNewVisitCookie($model);
+                break;
 
             case 'Orbiagro\Models\Product':
                 // para el caso del producto, se debe guardar
                 // tanto el mismo como su rubro para obtener las visitas y populares
                 $this->setNewVisitCookie($model);
 
-                return $this->setNewVisitCookie($model->subCategory);
+                $this->setNewVisitCookie($model->subCategory);
+                break;
 
             default:
                 throw new Exception('Es necesario especificar modelo valido.');

@@ -5,7 +5,6 @@ use Validator;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\Upload\Upload;
 use Orbiagro\Models\File as FileModel;
 
 class File extends Upload
@@ -14,10 +13,10 @@ class File extends Upload
     /**
      * Crea el archivo relacionado con algun modelo.
      *
-     * @param Model        $model El modelo relacionado para ser asociado.
-     * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
-     *
-     * @return boolean
+     * @param Model $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file Objeto UploadedFiles con la imagen.
+     * @return bool
+     * @throws Exception
      */
     public function create(Model $model, UploadedFile $file = null)
     {
@@ -32,7 +31,7 @@ class File extends Upload
 
         if ($validator->fails()) {
             $this->errors = $validator->errors()->all();
-            throw new Exception("Error, archivo no valido", 3);
+            throw new Exception('Archivo no valido.');
         }
 
         $this->path = $this->generatePathFromModel($model);
@@ -51,13 +50,13 @@ class File extends Upload
     /**
      * Actualiza el archivo relacionado con algun modelo.
      *
-     * @param  Model        $model   Eloquen Model del padre asociado.
-     * @param  UploadedFile $file    El modelo del archivo.
-     * @param  array        $options Las opcions relacionadas, no implementado.
-     *
+     * @param  Model $model Eloquen Model del padre asociado.
+     * @param  UploadedFile $file El modelo del archivo.
+     * @param  array $options Las opcions relacionadas, no implementado.
+     * @return Model
+     * @throws Exception
      * @internal $options no implementadas.
      *
-     * @return \Illuminate\Database\Eloquent\Model
      */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
@@ -77,7 +76,7 @@ class File extends Upload
 
         if (!$file || $validator->fails()) {
             $this->errors = $validator;
-            throw new Exception("Error, archivo no valido", 3);
+            throw new Exception('Archivo no valido.');
         }
 
         // se chequea si existe el archivo y se elimina
@@ -86,7 +85,9 @@ class File extends Upload
         }
 
         // se crea la imagen en el HD y se actualiza el modelo.
-        if ($result = $this->makeFile($file, $this->path, $options = null)) {
+        $result = $this->makeFile($file, $this->path, $options = null);
+
+        if ($result) {
             return $fileModel->update($result);
         }
 
@@ -100,10 +101,10 @@ class File extends Upload
     /**
      * crea el modelo nuevo de alguna imagen relacionada con algun producto.
      *
-     * @param array  $array el array que contiene los datos para la imagen.
-     * @param Model  $model el modelo a asociar.
-     *
-     * @return boolean
+     * @param array $array el array que contiene los datos para la imagen.
+     * @param Model $model el modelo a asociar.
+     * @return bool
+     * @throws Exception
      */
     private function createFileModel(array $array, $model)
     {

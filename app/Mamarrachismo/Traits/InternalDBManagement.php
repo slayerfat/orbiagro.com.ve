@@ -30,6 +30,8 @@ trait InternalDBManagement
      * @param array $options la declaracion de este metodo debe ser compatible con eloquent. NO QUITAR.
      *
      * @method save
+     *
+     * @return \Illuminate\Database\Eloquent\Model::save()
      */
     public function save(array $options = [])
     {
@@ -50,7 +52,7 @@ trait InternalDBManagement
         // si existe o no, igual necesita un actualizado por
         $this->attributes['updated_by'] = $this->userId;
 
-        parent::save($options);
+        return parent::save($options);
     }
 
     /**

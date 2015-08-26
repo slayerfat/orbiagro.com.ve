@@ -1,11 +1,5 @@
 <?php namespace Orbiagro\Http\Requests;
 
-use Orbiagro\Http\Requests\Request;
-
-/**
- * Class ProviderRequest
- * @package Orbiagro\Http\Requests
- */
 class ProviderRequest extends Request
 {
 

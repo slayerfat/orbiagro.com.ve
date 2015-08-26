@@ -1,7 +1,5 @@
 <?php namespace Orbiagro\Http\Routes;
 
-use Orbiagro\Http\Routes\Routes;
-
 /**
  * Class ProductRoutes
  * @package Orbiagro\Http\Routes
@@ -230,7 +228,7 @@ class ProductRoutes extends Routes
             ]
         ],
         [
-            'method'   => 'get',
+            'method'   => 'post',
             'url'      => 'productos/{products}/proveedores',
             'data'     => [
                 'uses' => 'ProductsProvidersController@store',

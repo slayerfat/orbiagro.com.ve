@@ -1,14 +1,9 @@
 <?php namespace Orbiagro\Http\Requests;
 
-use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
 use Orbiagro\Models\MechanicalInfo;
 use Orbiagro\Models\Product;
 
-/**
- * Class MechanicalInfoRequest
- * @package Orbiagro\Http\Requests
- */
 class MechanicalInfoRequest extends Request
 {
     use CanSearchIDs;

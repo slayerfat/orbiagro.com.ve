@@ -10,3 +10,4 @@ _ide_helper_models.php
 
 #phpstorm
 .idea
+/.phpstorm.meta.php

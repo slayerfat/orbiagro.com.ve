@@ -1,11 +1,5 @@
 <?php namespace Orbiagro\Http\Requests;
 
-use Orbiagro\Http\Requests\Request;
-
-/**
- * Class CategoryRequest
- * @package Orbiagro\Http\Requests
- */
 class CategoryRequest extends Request
 {
 

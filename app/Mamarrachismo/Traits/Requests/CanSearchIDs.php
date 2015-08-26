@@ -2,6 +2,13 @@
 
 use LogicException;
 use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Models\Characteristic;
+use Orbiagro\Models\Feature;
+use Orbiagro\Models\Nutritional;
+use Orbiagro\Models\Person;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\User;
 
 trait CanSearchIDs
 {
@@ -22,6 +29,7 @@ trait CanSearchIDs
     /**
      * Busca y retorna el ID de algun recurso solicitado.
      *
+     * @param array $data
      * @return int
      */
     protected function findId(array $data)
@@ -50,7 +58,7 @@ trait CanSearchIDs
     /**
      * Retorna el ID segun el tipo de modelo.
      *
-     * @param  string $result
+     * @param  Model $result
      * @return int|null
      */
     protected function findResourceId($result)
@@ -60,18 +68,18 @@ trait CanSearchIDs
         }
 
         switch (get_class($result)) {
-            case \Orbiagro\Models\User::class:
+            case User::class:
                 $id = $result->id;
                 break;
 
-            case \Orbiagro\Models\Person::class:
-            case \Orbiagro\Models\Product::class:
+            case Person::class:
+            case Product::class:
                 $id = $result->user_id;
                 break;
 
-            case \Orbiagro\Models\Feature::class:
-            case \Orbiagro\Models\Nutritional::class:
-            case \Orbiagro\Models\Characteristic::class:
+            case Feature::class:
+            case Nutritional::class:
+            case Characteristic::class:
                 $id = $result->product->user_id;
                 break;
 
@@ -110,7 +118,7 @@ trait CanSearchIDs
     /**
      * @throws LogicException
      *
-     * @param  string $class
+     * @param  Model $class
      *
      * @return void
      */

@@ -1,13 +1,8 @@
 <?php namespace Orbiagro\Http\Requests;
 
-use Orbiagro\Http\Requests\Request;
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
 use Orbiagro\Models\User;
 
-/**
- * Class UserRequest
- * @package Orbiagro\Http\Requests
- */
 class UserRequest extends Request
 {
 

@@ -1,7 +1,5 @@
 <?php namespace Orbiagro\Http\Routes;
 
-use Orbiagro\Http\Routes\Routes;
-
 /**
  * Class UserRoutes
  * @package Orbiagro\Http\Routes

@@ -2,7 +2,7 @@
 
 use Orbiagro\Models\Feature;
 use Orbiagro\Models\Product;
-use Orbiagro\Http\Requests\Request;
+
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
 
 /**

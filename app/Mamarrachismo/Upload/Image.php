@@ -6,7 +6,6 @@ use Storage;
 use Intervention;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\Upload\Upload;
 use Orbiagro\Models\Image as ImageModel;
 
 class Image extends Upload
@@ -17,8 +16,8 @@ class Image extends Upload
      *
      * @param Model $model El modelo a relacionar con la imagen.
      * @param array $array El array con los objetos UploadedFiles.
-     *
      * @return \Illuminate\Support\Collection
+     * @throws Exception
      */
     public function createImages(Model $model, array $array = null)
     {
@@ -48,7 +47,7 @@ class Image extends Upload
 
                 $this->errors = $validator->errors()->all();
 
-                throw new Exception("Error, Imagenes no validas.", 5);
+                throw new Exception('Imagenes no validas.');
             }
 
             // se crea la imagen en el HD.
@@ -85,12 +84,12 @@ class Image extends Upload
     /**
      * crea la imagen por defecto relacionada con algun modelo.
      *
-     * @param object $model      El modelo relacionado para ser asociado.
-     * @param string $modelPath  La direccion a donde se guardara
-     *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @param Model $model El modelo relacionado para ser asociado.
+     * @param string $modelPath La direccion a donde se guardara
+     * @return Model
+     * @throws Exception
      */
-    public function createDefaultImage($model, $modelPath = null)
+    public function createDefaultImage(Model $model, $modelPath = null)
     {
         if ($modelPath === null && isset($this->path)) {
             $modelPath = $this->path;
@@ -102,7 +101,7 @@ class Image extends Upload
 
         // se copia el archivo
         if (!Storage::disk('public')->copy('sin_imagen.gif', $path)) {
-            throw new \Exception("Error, Imagen por defecto no puede ser creada", 4);
+            throw new Exception('Imagen por defecto no puede ser creada.');
         }
 
         // la data necesaria para crear el modelo de imagen.
@@ -125,11 +124,11 @@ class Image extends Upload
     /**
      * actualiza la imagen relacionada con algun modelo.
      *
-     * @param Model         $model   El modelo de la imagen.
-     * @param UploadedFile  $file    Objeto UploadedFiles con la imagen.
-     * @param array         $options las opcions relacionadas con Intervention.
-     *
+     * @param Model $model El modelo de la imagen.
+     * @param UploadedFile $file Objeto UploadedFiles con la imagen.
+     * @param array $options las opcions relacionadas con Intervention.
      * @return Model
+     * @throws Exception
      */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
@@ -151,7 +150,7 @@ class Image extends Upload
         if (!isset($file) || $validator->fails()) {
             $this->errors = $validator->errors()->all();
 
-            throw new Exception("Error, archivo no valido", 3);
+            throw new Exception('Archivo no valido.');
         }
 
         // verdadero porque se eliminan TODOS los archivos
@@ -172,7 +171,7 @@ class Image extends Upload
      * @param  int   $posX
      * @param  int   $posY
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function cropImage(Model $image, $width, $height, $posX = null, $posY = null)
     {
@@ -272,13 +271,14 @@ class Image extends Upload
     /**
      * crea la imagen no modificada asociada al modelo.
      *
-     * @param  array  $data la informacion relacionada con la imagen a crear.
+     * @param  array $data la informacion relacionada con la imagen a crear.
      * @return array
+     * @throws Exception
      */
     private function makeOriginalFile(array $data)
     {
         if (!Storage::disk('public')->exists($data['path'])) {
-            throw new Exception('No existe archivo asociado en el disco.', 2);
+            throw new Exception('No existe archivo asociado en el disco.');
         }
 
         $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
@@ -293,11 +293,12 @@ class Image extends Upload
     /**
      * crea los archivos de diferentes tamaños relacionados con alguna imagen.
      *
-     * @param  \Intervention\Image\Image  $image la instancia de la imagen relacionada.
-     * @param  array                      $data  los datos relacionados, por ahora
-     *                                           solo se necesita la direccion del
-     *                                           modelo (producto/id).
+     * @param  \Intervention\Image\Image $image la instancia de la imagen relacionada.
+     * @param  array $data los datos relacionados, por ahora
+     *                     solo se necesita la direccion del
+     *                     modelo (producto/id).
      * @return array
+     * @throws Exception
      */
     private function createSmallMediumLargeFiles(Intervention\Image\Image $image, array $data)
     {
@@ -339,12 +340,12 @@ class Image extends Upload
     /**
      * crea el modelo nuevo de alguna imagen relacionada con algun producto.
      *
-     * @param array  $array el array que contiene los datos para la imagen.
-     * @param Object $model el modelo a asociar.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @param array $array el array que contiene los datos para la imagen.
+     * @param Model $model el modelo a asociar.
+     * @return Model
+     * @throws Exception
      */
-    private function createImageModel(array $array, $model)
+    private function createImageModel(array $array, Model $model)
     {
         $image = new ImageModel($array);
 
@@ -375,8 +376,11 @@ class Image extends Upload
                 return $model->image()->save($image);
 
             default:
-                throw new Exception("Error: modelo desconocido, no se puede guardar imagen", 1);
-
+                throw new Exception(
+                    'Modelo '
+                    .get_class($model)
+                    .'desconocido, no se puede guardar imagen.'
+                );
         }
     }
 }

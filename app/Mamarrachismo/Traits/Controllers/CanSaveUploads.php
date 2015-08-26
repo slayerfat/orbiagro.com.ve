@@ -1,6 +1,5 @@
 <?php namespace Orbiagro\Mamarrachismo\Traits\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Orbiagro\Http\Requests\Request;
