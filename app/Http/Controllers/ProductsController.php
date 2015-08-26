@@ -1,35 +1,39 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests\ProductRequest;
-use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Orbiagro\Http\Requests\ProductRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Mamarrachismo\VisitsService;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Models\MapDetail;
+use Orbiagro\Models\Direction;
+use Orbiagro\Models\Maker;
 
-use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Upload\Image as Upload;
-
-use App\Product;
-use App\Category;
-use App\SubCategory;
-use App\MapDetail;
-use App\Direction;
-use App\Maker;
-
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\View\View as Response;
 
 class ProductsController extends Controller
 {
 
-    use SEOToolsTrait;
+    use SEOToolsTrait, CanSaveUploads;
 
+    /**
+     * @var \Orbiagro\Models\User
+     */
     protected $user;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
-    public function __construct()
+     * Create a new controller instance.
+     *
+     * @param Guard $auth
+     */
+    public function __construct(Guard $auth)
     {
         $rules = ['except' =>
             [
@@ -44,25 +48,25 @@ class ProductsController extends Controller
 
         $this->middleware('user.unverified', $rules);
 
-        $this->user   = Auth::user();
+        $this->user = $auth->user();
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @param  VisitsService $visits
+     * @return Response
+     */
     public function index(VisitsService $visits)
     {
         $products = Product::paginate(20);
         $cats     = Category::all();
         $subCats  = SubCategory::all();
 
-        $visitedProducts = $visits->getVisitedResources(new Product);
+        $visitedProducts = $visits->getVisitedResources(Product::class);
 
         $this->seo()->setTitle('Productos en orbiagro.com.ve');
         $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
-        // $this->seo()->setKeywords(); taxonomias
         $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
 
         return view('product.index', compact(
@@ -74,72 +78,69 @@ class ProductsController extends Controller
     }
 
     /**
-    * Display a listing of the resource according to category.
-    *
-    * @todo refactor
-    *
-    * @return Response
-    */
+     * Muestra el index segun el Categoria.
+     *
+     * @param  int           $categoryId
+     * @param  VisitsService $visits
+     *
+     * @return Response
+     */
     public function indexByCategory($categoryId, VisitsService $visits)
     {
-        if (!$products = Category::where('slug', $categoryId)->first()->products()->paginate(20)) {
-            $products  = Category::findOrFail($categoryId)->products()->paginate(20);
-        }
-
-        $cats     = Category::all();
-        $subCats  = Category::where('slug', $categoryId)->first()->subCategories;
-
-        $visitedProducts = $visits->getVisitedResources(new Product);
-
-        $this->seo()->setTitle(
-            'Productos de '
-            .$subCats->first()->category->description
-            .' en orbiagro.com.ve'
-        )->setDescription(
-            'Productos y Articulos de '
-            .$subCats->first()->category->description
-            .' en existencia en orbiagro.com.ve'
-        );
-
-        $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
-
-        return view('product.index', compact(
-            'products',
-            'cats',
-            'subCats',
-            'visitedProducts'
-        ));
+        return $this->indexByParent(new Category, $categoryId, $visits);
     }
 
     /**
-    * Display a listing of the resource according to sub-category.
-    *
-    * @todo refactor
-    *
-    * @return Response
-    */
+     * Muestra el index segun el Rubro.
+     *
+     * @param  int           $subCategoryId
+     * @param  VisitsService $visits
+     *
+     * @return Response
+     */
     public function indexBySubCategory($subCategoryId, VisitsService $visits)
     {
-        if (!$products = SubCategory::where('slug', $subCategoryId)->first()->products()->paginate(20)) {
-            $products = SubCategory::findOrFail($subCategoryId)->products()->paginate(20);
+        return $this->indexByParent(new SubCategory, $subCategoryId, $visits);
+    }
+
+    /**
+     * Muestra el index segun la Categoria, Rubro, etc.
+     *
+     * @param  Model         $parent
+     * @param  int           $parentId
+     * @param  VisitsService $visits
+     *
+     * @return Response
+     */
+    private function indexByParent($parent, $parentId, VisitsService $visits)
+    {
+        if (!$products = $parent::where('slug', $parentId)->first()->products()->paginate(20)) {
+            $products = $parent::findOrFail($parentId)->products()->paginate(20);
         }
 
-        $cats     = Category::all();
-        $subCats  = SubCategory::all();
+        $visitedProducts = $visits->getVisitedResources(Product::class);
 
-        $visitedProducts = $visits->getVisitedResources(new Product);
+        $cats = Category::all();
+
+        $description = '';
+
+        if ($parent instanceof Category) {
+            $subCats     = Category::where('slug', $parentId)->first()->subCategories;
+            $description = $subCats->first()->category->description;
+        } elseif ($parent instanceof SubCategory) {
+            $subCats     = SubCategory::all();
+            $description = $products->first()->subCategory->description;
+        }
 
         $this->seo()->setTitle(
             'Productos de '
-            .$products->first()->subCategory->description
+            .$description
             .' en orbiagro.com.ve'
         )->setDescription(
             'Productos y Articulos de '
-            .$products->first()->subCategory->description
+            .$description
             .' en existencia en orbiagro.com.ve'
         );
-
-        $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
 
         return view('product.index', compact(
             'products',
@@ -150,10 +151,12 @@ class ProductsController extends Controller
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @param  Product  $product
+     *
+     * @return Response
+     */
     public function create(Product $product)
     {
         if ($this->user->isDisabled()) {
@@ -171,14 +174,13 @@ class ProductsController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
-    public function store(ProductRequest $request, Upload $upload)
+     * Store a newly created resource in storage.
+     *
+     * @param  ProductRequest $request
+     * @return Response
+     */
+    public function store(ProductRequest $request)
     {
-        // se crean los modelos
-        $upload->userId = Auth::id();
         $data       = $request->all();
         $product    = new Product($data);
         $dir        = new Direction($data);
@@ -189,19 +191,21 @@ class ProductsController extends Controller
         $product->direction()->save($dir);
         $product->direction->map()->save($map);
 
-        // se iteran las imagenes y se guardan los modelos
-        $upload->createImages($product, $request->file('images'));
-
         flash()->success('El Producto ha sido creado con exito.');
+
+        // se iteran las imagenes y se guardan los modelos
+        $this->createImages($request, $product);
+
         return redirect()->action('ProductsController@show', $product->slug);
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Display the specified resource.
+     *
+     * @param  int           $id
+     * @param  VisitsService $visits
+     * @return Response
+     */
     public function show($id, VisitsService $visits)
     {
         if (!$product = Product::with('user', 'subCategory')->where('slug', $id)->first()) {
@@ -209,7 +213,8 @@ class ProductsController extends Controller
         }
 
         $visits->setNewVisit($product);
-        $visitedProducts = $visits->getVisitedResources($product);
+
+        $visitedProducts = $visits->getVisitedResources(Product::class);
 
         if ($this->user) {
             $isUserValid = $this->user->isOwnerOrAdmin($product->user_id);
@@ -220,25 +225,23 @@ class ProductsController extends Controller
         }
 
         $this->seo()->setTitle(
-            "{$product->title} - {$product->price_bs()}"
+            "{$product->title} - {$product->priceBs()}"
         )->setDescription(
             $product->title.' en '.$product->subCategory->description
             .', consigue mas en '.$product->subCategory->category->description
             .' dentro de orbiagro.com.ve'
         );
-
-        // $this->seo()->setKeywords(); taxonomias
         $this->seo()->opengraph()->setUrl(action('ProductsController@show', $id));
 
         return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         if (!$product = Product::with('user')->where('slug', $id)->first()) {
@@ -246,7 +249,7 @@ class ProductsController extends Controller
         }
 
         if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.show', $id);
+            return $this->redirectToroute('products.show', $id);
         }
 
         $makers = Maker::lists('name', 'id');
@@ -259,11 +262,12 @@ class ProductsController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  int            $id
+     * @param  ProductRequest $request
+     * @return Response
+     */
     public function update($id, ProductRequest $request)
     {
         $product = Product::with('direction', 'user')->findOrFail($id);
@@ -293,71 +297,97 @@ class ProductsController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
 
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.show', $id);
-        }
-
-        $product->delete();
-
-        flash()->info('El Producto ha sido eliminado correctamente.');
-        return redirect()->action('ProductsController@index');
+        return $this->destroyDeleteRestorePrototype(
+            $product,
+            'delete',
+            'El Producto ha sido eliminado correctamente.'
+        );
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function forceDestroy($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
 
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.index');
-        }
-
-        $product->forceDelete();
-
-        flash()->info('El Producto ha sido eliminado permanentemente.');
-        return redirect()->action('ProductsController@index');
+        return $this->destroyDeleteRestorePrototype(
+            $product,
+            'forceDelete',
+            'El Producto ha sido eliminado permanentemente.'
+        );
     }
 
     /**
-    * Restores the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Restores the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function restore($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
 
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return $this->redirectToRoute('productos.index');
-        }
-
-        $product->restore();
-
-        flash()->success('El Producto ha sido restaurado exitosamente.');
-        return redirect()->action('ProductsController@show', $product->slug);
+        return $this->destroyDeleteRestorePrototype(
+            $product,
+            'restore',
+            'El Producto ha sido restaurado exitosamente.',
+            'success',
+            'products.show'
+        );
     }
 
     /**
-    * Restores the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Ejecuta la operacion segun los paramentros. Este metodo sirve
+     * para deshabilitar, eliminar y restaurar productos.
+     *
+     * @param  Product $product
+     * @param  string $method
+     * @param  string $message
+     * @param  string $severity
+     * @param  string $route
+     *
+     * @return Response
+     */
+    protected function destroyDeleteRestorePrototype(
+        Product $product,
+        $method,
+        $message,
+        $severity = 'info',
+        $route = 'products.index'
+    ) {
+        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
+            return $this->redirectToroute('products.show', $product->user_id);
+        }
+
+        $product->$method();
+
+        if ($route == 'products.index') {
+            return $this->redirectToroute($route, null, $message, $severity);
+        }
+
+        return $this->redirectToroute($route, $product->slug, $message, $severity);
+    }
+
+    /**
+     * Restores the specified resource.
+     *
+     * @param  int     $id
+     * @param  Request $request
+     * @return Response
+     */
     public function heroDetails($id, Request $request)
     {
         $this->validate($request, [
@@ -378,14 +408,16 @@ class ProductsController extends Controller
     }
 
     /**
-    * devuelve un array asociativo con los elementos
-    * y sus subelementos.
-    *
-    * @todo abstraer a un metodo generico.
-    *
-    * @param IlluminateDatabaseEloquentCollection $models
-    */
-    private function toAsocArray(\Illuminate\Database\Eloquent\Collection $models)
+     * devuelve un array asociativo con los elementos
+     * y sus subelementos.
+     *
+     * @todo abstraer a un metodo generico.
+     *
+     * @param Collection $models
+     *
+     * @return array
+     */
+    private function toAsocArray(Collection $models)
     {
         $cats = [];
 

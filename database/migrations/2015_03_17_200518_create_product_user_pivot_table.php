@@ -7,10 +7,10 @@ class CreateProductUserPivotTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('product_user', function (Blueprint $table) {
@@ -24,10 +24,10 @@ class CreateProductUserPivotTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('product_user');

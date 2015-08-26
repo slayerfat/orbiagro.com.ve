@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Product;
-use App\Provider;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Provider;
 
 class ProductProviderTableSeed extends Seeder
 {

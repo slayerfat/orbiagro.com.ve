@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Product;
-use App\Nutritional;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Nutritional;
 
 class NutritionalTableSeeder extends BaseSeeder
 {

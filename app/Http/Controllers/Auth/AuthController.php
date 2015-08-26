@@ -1,26 +1,29 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php namespace Orbiagro\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-
 // 5.1
-use App\User;
-use App\Profile;
-use App\UserConfirmation;
-use App\Mamarrachismo\EnviarEmail as Email;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Profile;
+use Orbiagro\Models\UserConfirmation;
+use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
+/**
+ * Class AuthController
+ * @package Orbiagro\Http\Controllers\Auth
+ */
 class AuthController extends Controller
 {
 
     /**
-    * Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers
-    * @redirectPath()
-    *
-    * @var string
-    */
+     * Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers
+     * @redirectPath()
+     *
+     * @var string
+     */
     protected $redirectTo = '/';
 
     /*
@@ -37,21 +40,19 @@ class AuthController extends Controller
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
-    * Create a new authentication controller instance.
-    *
-    * @return void
-    */
+     * Create a new authentication controller instance.
+     */
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'getLogout']);
     }
 
     /**
-    * Get a validator for an incoming registration request.
-    *
-    * @param  array  $data
-    * @return \Illuminate\Contracts\Validation\Validator
-    */
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function validator(array $data)
     {
         return Validator::make($data, [
@@ -62,11 +63,11 @@ class AuthController extends Controller
     }
 
     /**
-    * Create a new user instance after a valid registration.
-    *
-    * @param  array  $data
-    * @return User
-    */
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return User
+     */
     public function create(array $data)
     {
         $profile      = Profile::where('description', 'Desactivado')->firstOrFail();
@@ -92,20 +93,23 @@ class AuthController extends Controller
         $emails = (array)$user->email;
         Email::enviarEmail($data, $emails);
 
-        flash()->info('Usuario creado exitosamene, un correo de confirmación ha sido enviado a '.$user->email);
+        flash()->info(
+            'Usuario creado exitosamene, un correo de confirmación '
+            .'ha sido enviado a '
+            .$user->email
+        );
 
         return $user;
     }
 
     /**
-    * Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers
-    * @getFailedLoginMessage()
-    *
-    * @return string
-    */
+     * Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers
+     * @getFailedLoginMessage()
+     *
+     * @return string
+     */
     protected function getFailedLoginMessage()
     {
         return 'Los datos suministrados no concuerdan con nuestros archivos.';
     }
-
 }

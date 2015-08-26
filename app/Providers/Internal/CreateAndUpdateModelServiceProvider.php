@@ -1,10 +1,10 @@
-<?php namespace App\Providers\Internal;
+<?php namespace Orbiagro\Providers\Internal;
 
 use Illuminate\Support\ServiceProvider;
 
 use Auth;
 
-use App\Mamarrachismo\Traits\Providers\ModelEventsTrait;
+use Orbiagro\Mamarrachismo\Traits\Providers\ModelEventsTrait;
 
 class CreateAndUpdateModelServiceProvider extends ServiceProvider
 {
@@ -12,10 +12,10 @@ class CreateAndUpdateModelServiceProvider extends ServiceProvider
     use ModelEventsTrait;
 
     /**
-    * Bootstrap the application services.
-    *
-    * @return void
-    */
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         if (!$id = Auth::id()) {
@@ -23,25 +23,25 @@ class CreateAndUpdateModelServiceProvider extends ServiceProvider
         }
 
         $models = [
-            'App\Characteristic',
-            'App\Feature',
-            'App\MechanicalInfo',
-            'App\Nutritional',
-            'App\Bank',
-            'App\CardType',
-            'App\State',
-            'App\Town',
-            'App\Parish',
-            'App\Promotion',
-            'App\PromoType',
-            'App\Provider',
-            'App\Gender',
-            'App\Nationality',
-            'App\Person',
-            'App\Visit',
-            'App\Billing',
-            'App\Direction',
-            'App\File',
+            'Orbiagro\Models\Characteristic',
+            'Orbiagro\Models\Feature',
+            'Orbiagro\Models\MechanicalInfo',
+            'Orbiagro\Models\Nutritional',
+            'Orbiagro\Models\Bank',
+            'Orbiagro\Models\CardType',
+            'Orbiagro\Models\State',
+            'Orbiagro\Models\Town',
+            'Orbiagro\Models\Parish',
+            'Orbiagro\Models\Promotion',
+            'Orbiagro\Models\PromoType',
+            'Orbiagro\Provider',
+            'Orbiagro\Models\Gender',
+            'Orbiagro\Models\Nationality',
+            'Orbiagro\Models\Person',
+            'Orbiagro\Models\Visit',
+            'Orbiagro\Models\Billing',
+            'Orbiagro\Models\Direction',
+            'Orbiagro\Models\File',
         ];
 
         foreach ($models as $namespace) {
@@ -50,10 +50,10 @@ class CreateAndUpdateModelServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
         //

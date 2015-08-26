@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\CardType;
+use Orbiagro\Models\CardType;
 
 class CardTypeTableSeeder extends BaseSeeder
 {

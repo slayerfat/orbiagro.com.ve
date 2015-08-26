@@ -34,7 +34,7 @@
         <div class="row">
           <div class="col-xs-12">
             <h2>
-              <strong>{{ $product->price_bs() }}</strong>
+              <strong>{{ $product->priceBs() }}</strong>
             </h2>
             <p>
               {{ $product->quantity }} Unidades

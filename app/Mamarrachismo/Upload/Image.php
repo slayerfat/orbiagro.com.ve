@@ -1,26 +1,25 @@
-<?php namespace App\Mamarrachismo\Upload;
+<?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
 use Validator;
 use Storage;
 use Intervention;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-use App\Mamarrachismo\Upload\Upload;
-use App\Image as Model;
+use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Models\Image as ImageModel;
 
 class Image extends Upload
 {
 
     /**
-    * crea la(s) imagen(es) relacionadas con algun modelo.
-    *
-    * @param object $model  El modelo a relacionar con la imagen.
-    * @param array  $array  El array con los objetos UploadedFiles.
-    *
-    * @return \Illuminate\Support\Collection
-    */
-    public function createImages($model, array $array = null)
+     * crea la(s) imagen(es) relacionadas con algun modelo.
+     *
+     * @param Model $model El modelo a relacionar con la imagen.
+     * @param array $array El array con los objetos UploadedFiles.
+     * @return \Illuminate\Support\Collection
+     * @throws Exception
+     */
+    public function createImages(Model $model, array $array = null)
     {
         $collection = collect();
 
@@ -48,7 +47,7 @@ class Image extends Upload
 
                 $this->errors = $validator->errors()->all();
 
-                throw new Exception("Error, Imagenes no validas.", 5);
+                throw new Exception('Imagenes no validas.');
             }
 
             // se crea la imagen en el HD.
@@ -64,14 +63,14 @@ class Image extends Upload
     }
 
     /**
-    * crea la imagen relacionada con algun modelo.
-    *
-    * @param object        $model El modelo relacionado para ser asociado.
-    * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
-    *
-    * @return \Illuminate\Support\Collection
-    */
-    public function createImage($model, UploadedFile $file = null)
+     * crea la imagen relacionada con algun modelo.
+     *
+     * @param Model        $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function create(Model $model, UploadedFile $file = null)
     {
         $result = $this->createImages($model, [$file]);
 
@@ -83,14 +82,14 @@ class Image extends Upload
     }
 
     /**
-    * crea la imagen por defecto relacionada con algun modelo.
-    *
-    * @param object $model      El modelo relacionado para ser asociado.
-    * @param string $modelPath  La direccion a donde se guardara
-    *
-    * @return \Illuminate\Database\Eloquent\Model
-    */
-    public function createDefaultImage($model, $modelPath = null)
+     * crea la imagen por defecto relacionada con algun modelo.
+     *
+     * @param Model $model El modelo relacionado para ser asociado.
+     * @param string $modelPath La direccion a donde se guardara
+     * @return Model
+     * @throws Exception
+     */
+    public function createDefaultImage(Model $model, $modelPath = null)
     {
         if ($modelPath === null && isset($this->path)) {
             $modelPath = $this->path;
@@ -102,7 +101,7 @@ class Image extends Upload
 
         // se copia el archivo
         if (!Storage::disk('public')->copy('sin_imagen.gif', $path)) {
-            throw new \Exception("Error, Imagen por defecto no puede ser creada", 4);
+            throw new Exception('Imagen por defecto no puede ser creada.');
         }
 
         // la data necesaria para crear el modelo de imagen.
@@ -123,24 +122,27 @@ class Image extends Upload
     }
 
     /**
-    * actualiza la imagen relacionada con algun modelo.
-    *
-    * @param UploadedFile  $file       Objeto UploadedFiles con la imagen.
-    * @param App\Image     $imageModel El modelo de la imagen.
-    * @param array         $options    las opcions relacionadas con Intervention.
-    *
-    * @return \Illuminate\Database\Eloquent\Model
-    */
-    public function updateImage(UploadedFile $file = null, Model $imageModel = null, array $options = null)
+     * actualiza la imagen relacionada con algun modelo.
+     *
+     * @param Model $model El modelo de la imagen.
+     * @param UploadedFile $file Objeto UploadedFiles con la imagen.
+     * @param array $options las opcions relacionadas con Intervention.
+     * @return Model
+     * @throws Exception
+     */
+    public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
-        $parentModel = $imageModel->imageable;
-
         // si no hay algun modelo relacionado, se crea uno de cero.
-        if ($imageModel == null) {
-            return $this->createImage($parentModel, $file);
+        if ($model->image == null) {
+            // create devuelve una coleccion
+            $results = $this->create($model, $file);
+
+            return $results->first();
         }
 
-        $this->path = $this->generatePathFromModel($parentModel);
+        $imageModel = $model->image;
+
+        $this->path = $this->generatePathFromModel($model);
 
         // el validador
         $validator = Validator::make(['image' => $file], $this->imageRules);
@@ -148,7 +150,7 @@ class Image extends Upload
         if (!isset($file) || $validator->fails()) {
             $this->errors = $validator->errors()->all();
 
-            throw new Exception("Error, archivo no valido", 3);
+            throw new Exception('Archivo no valido.');
         }
 
         // verdadero porque se eliminan TODOS los archivos
@@ -156,7 +158,7 @@ class Image extends Upload
 
         // se crea la imagen en el HD y se actualiza el modelo.
         if (!$result = $this->makeImageFile($file, $this->path, $options)) {
-            return $this->createDefaultImage($parentModel, $this->path);
+            return $this->createDefaultImage($model, $this->path);
         }
 
         return $imageModel->update($result);
@@ -169,7 +171,7 @@ class Image extends Upload
      * @param  int   $posX
      * @param  int   $posY
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function cropImage(Model $image, $width, $height, $posX = null, $posY = null)
     {
@@ -193,13 +195,13 @@ class Image extends Upload
     }
 
     /**
-    * elimina todas las imagenes del disco duro.
-    *
-    * @param App\Image  $imageModel El modelo de la imagen.
-    * @param boolean    $all        para determinar si se elimina del disco duro TODOS los archivos.
-    *
-    * @return void
-    */
+     * elimina todas las imagenes del disco duro.
+     *
+     * @param Image   $imageModel El modelo de la imagen.
+     * @param boolean $all        para determinar si se elimina del disco duro TODOS los archivos.
+     *
+     * @return void
+     */
     public function deleteImageFiles($imageModel, $all)
     {
         $this->errors = [];
@@ -231,15 +233,15 @@ class Image extends Upload
     // --------------------------------------------------------------------------
 
     /**
-    * usado para crear en el disco duro el archivo relacionado a un producto.
-    *
-    * @param  UploadedFile $file
-    * @param  string       $path     la direccion a donde se guardara el archivo.
-    * @param  array        $options  las opcions relacionadas con Intervention.
-    *
-    * @return array        $data     la carpeta, nombre y
-    *                                extension del archivo guardado.
-    */
+     * usado para crear en el disco duro el archivo relacionado a un producto.
+     *
+     * @param  UploadedFile $file
+     * @param  string       $path     la direccion a donde se guardara el archivo.
+     * @param  array        $options  las opcions relacionadas con Intervention.
+     *
+     * @return array        $data     la carpeta, nombre y
+     *                                extension del archivo guardado.
+     */
     private function makeImageFile(UploadedFile $file, $path = null, array $options = null)
     {
         $data = parent::makeFile($file, $path);
@@ -267,15 +269,16 @@ class Image extends Upload
     }
 
     /**
-    * crea la imagen no modificada asociada al modelo.
-    *
-    * @param  array  $data la informacion relacionada con la imagen a crear.
-    * @return array
-    */
+     * crea la imagen no modificada asociada al modelo.
+     *
+     * @param  array $data la informacion relacionada con la imagen a crear.
+     * @return array
+     * @throws Exception
+     */
     private function makeOriginalFile(array $data)
     {
         if (!Storage::disk('public')->exists($data['path'])) {
-            throw new Exception('No existe archivo asociado en el disco.', 2);
+            throw new Exception('No existe archivo asociado en el disco.');
         }
 
         $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
@@ -288,14 +291,15 @@ class Image extends Upload
     }
 
     /**
-    * crea los archivos de diferentes tamaños relacionados con alguna imagen.
-    *
-    * @param  \Intervention\Image\Image  $image la instancia de la imagen relacionada.
-    * @param  array                      $data  los datos relacionados, por ahora
-    *                                           solo se necesita la direccion del
-    *                                           modelo (producto/id).
-    * @return array
-    */
+     * crea los archivos de diferentes tamaños relacionados con alguna imagen.
+     *
+     * @param  \Intervention\Image\Image $image la instancia de la imagen relacionada.
+     * @param  array $data los datos relacionados, por ahora
+     *                     solo se necesita la direccion del
+     *                     modelo (producto/id).
+     * @return array
+     * @throws Exception
+     */
     private function createSmallMediumLargeFiles(Intervention\Image\Image $image, array $data)
     {
         if (!isset($data['dir'])) {
@@ -334,16 +338,16 @@ class Image extends Upload
     }
 
     /**
-    * crea el modelo nuevo de alguna imagen relacionada con algun producto.
-    *
-    * @param array  $array el array que contiene los datos para la imagen.
-    * @param Object $model el modelo a asociar.
-    *
-    * @return \Illuminate\Database\Eloquent\Model
-    */
-    private function createImageModel(array $array, $model)
+     * crea el modelo nuevo de alguna imagen relacionada con algun producto.
+     *
+     * @param array $array el array que contiene los datos para la imagen.
+     * @param Model $model el modelo a asociar.
+     * @return Model
+     * @throws Exception
+     */
+    private function createImageModel(array $array, Model $model)
     {
-        $image = new Model($array);
+        $image = new ImageModel($array);
 
         // si la aplicacion esta por consola (artisan u otro)
         // se le asigna el created/updated by.
@@ -353,27 +357,30 @@ class Image extends Upload
         }
 
         switch (get_class($model)) {
-            case 'App\Product':
-            case 'App\Promotion':
+            case 'Orbiagro\Models\Product':
+            case 'Orbiagro\Models\Promotion':
                 $image->alt = $model->title;
                 return $model->images()->save($image);
 
-            case 'App\Feature':
+            case 'Orbiagro\Models\Feature':
                 $image->alt = $model->title;
                 return $model->image()->save($image);
 
-            case 'App\Category':
-            case 'App\SubCategory':
+            case 'Orbiagro\Models\Category':
+            case 'Orbiagro\Models\SubCategory':
                 $image->alt = $model->description;
                 return $model->image()->save($image);
 
-            case 'App\Maker':
+            case 'Orbiagro\Models\Maker':
                 $image->alt = $model->name;
                 return $model->image()->save($image);
 
             default:
-                throw new Exception("Error: modelo desconocido, no se puede guardar imagen", 1);
-
+                throw new Exception(
+                    'Modelo '
+                    .get_class($model)
+                    .'desconocido, no se puede guardar imagen.'
+                );
         }
     }
 }

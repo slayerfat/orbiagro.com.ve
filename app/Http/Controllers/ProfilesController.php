@@ -1,23 +1,22 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
+use Orbiagro\Http\Requests;
+use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-use App\Profile;
+use Orbiagro\Models\Profile;
+use Illuminate\View\View as Response;
 
 class ProfilesController extends Controller
 {
 
+    /**
+     * @var Profile
+     */
     protected $profile;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * @param Profile $profile
+     */
     public function __construct(Profile $profile)
     {
         $this->middleware('auth');
@@ -27,10 +26,10 @@ class ProfilesController extends Controller
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         $profiles = Profile::with('users')->paginate(5);
@@ -39,20 +38,21 @@ class ProfilesController extends Controller
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
     public function create()
     {
         return view('profile.create')->with(['profile' => $this->profile]);
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -68,11 +68,11 @@ class ProfilesController extends Controller
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function show($id)
     {
         if (!$this->profile = Profile::with('users')->where('description', $id)->first()) {
@@ -83,11 +83,11 @@ class ProfilesController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         $this->profile = Profile::findOrFail($id);
@@ -96,11 +96,12 @@ class ProfilesController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  int      $id
+     * @param  Request  $request
+     * @return Response
+     */
     public function update($id, Request $request)
     {
         $this->validate($request, [
@@ -117,11 +118,11 @@ class ProfilesController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $this->profile = Profile::findOrFail($id);

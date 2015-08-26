@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
 class MakerTableSeeder extends BaseSeeder
 {
@@ -23,8 +23,8 @@ class MakerTableSeeder extends BaseSeeder
         Storage::disk('public')->deleteDirectory('makers');
         Storage::disk('public')->makeDirectory('makers');
 
-        factory(App\Maker::class, 2)->create()->each(function ($model) use ($upload) {
-            $upload->createImage($model);
+        factory(Orbiagro\Models\Maker::class, 2)->create()->each(function ($model) use ($upload) {
+            $upload->create($model);
         });
     }
 }

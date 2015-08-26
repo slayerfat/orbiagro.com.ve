@@ -7,10 +7,10 @@ class CreateProfilesTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('profiles', function (Blueprint $table) {
@@ -29,10 +29,10 @@ class CreateProfilesTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
@@ -43,14 +43,14 @@ class CreateProfilesTable extends Migration
     }
 
     /**
-    * se decidio hacer esto asi por el hecho de que
-    * la gran mayoria de las tablas tienen created by
-    * y updated by lo que implica que se necesita un usuario
-    * antes de poder crear el esquema de datos.
-    *
-    * @method seedProfiles
-    * @return void
-    */
+     * se decidio hacer esto asi por el hecho de que
+     * la gran mayoria de las tablas tienen created by
+     * y updated by lo que implica que se necesita un usuario
+     * antes de poder crear el esquema de datos.
+     *
+     * @method seedProfiles
+     * @return void
+     */
     private function seedProfiles()
     {
         $types = [
@@ -60,23 +60,23 @@ class CreateProfilesTable extends Migration
         ];
 
         foreach ($types as $profile) {
-            $model = new App\Profile;
+            $model = new Orbiagro\Models\Profile;
             $model->description = $profile;
             $model->save();
         }
     }
 
     /**
-    * crea al primer usuario del sistema.
-    *
-    * @method seedUser
-    * @return void
-    */
+     * crea al primer usuario del sistema.
+     *
+     * @method seedUser
+     * @return void
+     */
     private function seedUser()
     {
-        $admin = App\Profile::where('description', 'Administrador')->firstOrFail();
+        $admin = Orbiagro\Models\Profile::where('description', 'Administrador')->firstOrFail();
 
-        $model             = new App\User;
+        $model             = new Orbiagro\Models\User;
         $model->profile_id = $admin->id;
         $model->created_at = Carbon\Carbon::now();
         $model->updated_at = Carbon\Carbon::now();

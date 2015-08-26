@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($nutritional, [
               'method' => 'PATCH',
-              'action' => ['NutritionalsController@update', $nutritional->id],
+              'route' => ['products.nutritionals.update', $nutritional->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('nutritional.forms.body', ['textoBotonSubmit' => 'Actualizar Valores Nutricionales'])

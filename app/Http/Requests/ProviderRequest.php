@@ -1,26 +1,23 @@
-<?php namespace App\Http\Requests;
-
-use Auth;
-use App\Http\Requests\Request;
+<?php namespace Orbiagro\Http\Requests;
 
 class ProviderRequest extends Request
 {
 
     /**
-    * Determine if the user is authorized to make this request.
-    *
-    * @return bool
-    */
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize()
     {
-        return Auth::user()->isAdmin();
+        return $this->isUserAdmin();
     }
 
     /**
-    * Get the validation rules that apply to the request.
-    *
-    * @return array
-    */
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
     public function rules()
     {
         switch ($this->method()) {
@@ -46,8 +43,8 @@ class ProviderRequest extends Request
             case 'PUT':
             case 'PATCH':
                 return [
-                    'name'            => 'required|unique:providers,name,'.(int)$this->route('proveedores'),
-                    'url'             => 'url|unique:providers,url,'.(int)$this->route('proveedores'),
+                    'name'            => 'required|unique:providers,name,'.(int)$this->route('providers'),
+                    'url'             => 'url|unique:providers,url,'.(int)$this->route('providers'),
                     'contact_name'    => 'string|max:255',
                     'contact_title'   => 'alpha|max:10',
                     'contact_email'   => 'email',
@@ -64,7 +61,7 @@ class ProviderRequest extends Request
                 ];
 
             default:
-                break;
+                return [];
         }
     }
 }

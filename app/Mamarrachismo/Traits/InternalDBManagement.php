@@ -1,6 +1,7 @@
-<?php namespace App\Mamarrachismo\Traits;
+<?php namespace Orbiagro\Mamarrachismo\Traits;
 
 use Auth;
+use Exception;
 
 trait InternalDBManagement
 {
@@ -29,6 +30,8 @@ trait InternalDBManagement
      * @param array $options la declaracion de este metodo debe ser compatible con eloquent. NO QUITAR.
      *
      * @method save
+     *
+     * @return \Illuminate\Database\Eloquent\Model::save()
      */
     public function save(array $options = [])
     {
@@ -49,7 +52,7 @@ trait InternalDBManagement
         // si existe o no, igual necesita un actualizado por
         $this->attributes['updated_by'] = $this->userId;
 
-        parent::save();
+        return parent::save($options);
     }
 
     /**
@@ -57,14 +60,19 @@ trait InternalDBManagement
      * poder asociar su id con algun modelo.
      *
      * @method setUserid
+     *
+     * @throws Exception
+     *
+     * @return void
      */
     protected function setUserid()
     {
         if (Auth::user()) {
             $this->userId = Auth::user()->id;
         }
+
         if (!isset($this->userId)) {
-            throw new \Exception("Para guardar estos datos, se necesita informacion del usuario");
+            throw new Exception("Para guardar estos datos, se necesita informacion del usuario");
         }
     }
 }

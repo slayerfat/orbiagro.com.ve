@@ -1,14 +1,24 @@
-<?php namespace App\Http\Composers;
+<?php namespace Orbiagro\Http\Composers;
 
 use Illuminate\Contracts\View\View;
+use Orbiagro\Mamarrachismo\Business;
+use Illuminate\View\View as Response;
 
-use App\Mamarrachismo\Business;
-
+/**
+ * Class OrbiagroInfo
+ * @package Orbiagro\Http\Composers
+ */
 class OrbiagroInfo
 {
 
+    /**
+     * @param  View   $view
+     * @return Response
+     */
     public function composeInfo(View $view)
     {
-        $view->with('business', new Business);
+        $obj = new Business; // no necesita parametros, por ahora.
+
+        $view->with('business', $obj);
     }
 }

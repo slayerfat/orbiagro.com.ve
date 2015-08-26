@@ -1,36 +1,37 @@
-<?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
+<?php namespace Orbiagro\Http\Controllers;
 
 use Auth;
+use Exception;
+use Orbiagro\Models\Image;
 use Intervention;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Http\Requests;
+use Illuminate\Http\Request;
+use Orbiagro\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
+use Illuminate\View\View as Response;
 
-use App\Image;
-
+/**
+ * Class ImagesController
+ * @package Orbiagro\Http\Controllers
+ */
 class ImagesController extends Controller
 {
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     */
     public function __construct()
     {
         $this->middleware('user.admin');
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         $image = Image::findOrFail($id);
@@ -39,13 +40,15 @@ class ImagesController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  Request  $request
-    * @param  int  $id
-    * @return Response
-    */
-    public function update(Request $request, $id, Upload $upload)
+     * Update the specified resource in storage.
+     *
+     * @param  int     $id
+     * @param  Request $request
+     * @param  Upload  $upload
+     *
+     * @return Response
+     */
+    public function update($id, Request $request, Upload $upload)
     {
         $upload->userId = Auth::id();
 
@@ -56,8 +59,7 @@ class ImagesController extends Controller
         flash()->success('Imagen Actualizada exitosamente.');
 
         if ($request->file('image')) {
-            // se iteran las imagenes y se guardan los modelos
-            $upload->updateImage($request->file('image'), $image);
+            $upload->update($image, $request->file('image'));
 
             return redirect()->action($data['controller'], $data['id']);
         }
@@ -76,11 +78,11 @@ class ImagesController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $image = Image::with('imageable')->findOrFail($id);
@@ -92,46 +94,46 @@ class ImagesController extends Controller
     }
 
     /**
-    * Utilizado para generar el nombre del controlador y
-    * el identificador necesario para encontrar el recurso.
-    *
-    * @param \Illuminate\Database\Eloquent\Model $model el modelo a manipular.
-    *
-    * @return array
-    */
-    protected function getControllerNameFromModel($model)
+     * Utilizado para generar el nombre del controlador y
+     * el identificador necesario para encontrar el recurso.
+     *
+     * @param  Model $model el modelo a manipular.
+     * @return array
+     * @throws Exception
+     */
+    protected function getControllerNameFromModel(Model $model)
     {
         $array = ['controller' => '', 'id' => null];
 
         switch (get_class($model)) {
-            case 'App\Product':
+            case 'Orbiagro\Models\Product':
                 $array['controller'] = 'ProductsController@show';
                 break;
 
-            case 'App\Feature':
+            case 'Orbiagro\Models\Feature':
                 $array['controller'] = 'ProductsController@show';
 
                 $array['id'] = $model->product->id;
                 break;
 
-            case 'App\Category':
+            case 'Orbiagro\Models\Category':
                 $array['controller'] = 'CategoriesController@show';
                 break;
 
-            case 'App\SubCategory':
+            case 'Orbiagro\Models\SubCategory':
                 $array['controller'] = 'SubCategoriesController@show';
                 break;
 
-            case 'App\Maker':
+            case 'Orbiagro\Models\Maker':
                 $array['controller'] = 'MakersController@show';
                 break;
 
-            case 'App\Promotion':
+            case 'Orbiagro\Models\Promotion':
                 $array['controller'] = 'PromotionsController@show';
                 break;
 
             default:
-                throw new \Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".get_class($model), 2);
+                throw new Exception('modelo desconocido, no se puede crear ruta de '.get_class($model));
 
         }
 

@@ -1,4 +1,4 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace Orbiagro\Mamarrachismo;
 
 use Storage;
 use Carbon\Carbon;
@@ -7,56 +7,60 @@ class CheckDollar
 {
 
     /**
-    * el dolar segun el dia/semana
-    * @var stdClass object
-    */
+     * el dolar segun el dia/semana
+     * @var stdClass object
+     */
     public $dollar;
 
     /**
-    * el euro segun el dia/semana
-    * @var stdClass object
-    */
+     * el euro segun el dia/semana
+     * @var stdClass object
+     */
     public $euro;
 
     /**
-    * El promedio del dolar
-    * @var stdClass object
-    */
+     * El promedio del dolar
+     * @var stdClass object
+     */
     public $promedio;
 
     /**
-    * los datos de los APIs
-    * @var stdClass object
-    */
+     * los datos de los APIs
+     * @var stdClass object
+     */
     private $data;
 
     /**
-    * El objeto storage para manipular algun archivo
-    * @var \Illuminate\Contracts\Filesystem\Factory
-    */
+     * El objeto storage para manipular algun archivo
+     * @var \Illuminate\Contracts\Filesystem\Factory
+     */
     private $storage;
 
     /**
-    * El objeto Carbon con el timestamp
-    * @var \Carbon\Carbon
-    */
+     * El objeto Carbon con el timestamp
+     * @var \Carbon\Carbon
+     */
     private $time;
 
     /**
-    * la direccion del 'API' de dollarToday
-    * @var string
-    */
+     * la direccion del 'API' de dollarToday
+     * @var string
+     */
     private $dollarTodayUrl = 'https://s3.amazonaws.com/dolartoday/data.json';
 
-    public function __construct()
+    /**
+     * @param Carbon  $carbon
+     * @param Storage $storage
+     */
+    public function __construct(Carbon $carbon, Storage $storage)
     {
-        $this->time = new Carbon;
+        $this->time = $carbon;
 
         if (app()->environment() == 'testing') {
             return;
         }
 
-        $this->storage = new Storage;
+        $this->storage = $storage;
 
         if ($this->fileExists()) {
             $this->parseDollarTodayJson();
@@ -73,8 +77,10 @@ class CheckDollar
     // --------------------------------------------------------------------------
 
     /**
-    * chequea si el objeto tiene data parseada de algun api.
-    */
+     * chequea si el objeto tiene data parseada de algun api.
+     *
+     * @return boolean
+     */
     public function isValid()
     {
         if (isset($this->data)) {
@@ -85,10 +91,12 @@ class CheckDollar
     }
 
     /**
-    * invoca a checkDollar y regresa mamarrachamente dollar
-    *
-    * @todo MEJORAR ESTE METODO.
-    */
+     * invoca a checkDollar y regresa mamarrachamente dollar
+     *
+     * @todo MEJORAR ESTE METODO.
+     *
+     * @return stdClass
+     */
     public function getDollar()
     {
         $this->checkDollar();
@@ -97,11 +105,11 @@ class CheckDollar
     }
 
     /**
-    * chequea si esta el archivo o no para ajustar el objeto
-    * y sus atributos.
-    *
-    * @return boolean
-    */
+     * chequea si esta el archivo o no para ajustar el objeto
+     * y sus atributos.
+     *
+     * @return boolean
+     */
     private function parseDollarTodayJson()
     {
         $storage = $this->storage;
@@ -118,8 +126,10 @@ class CheckDollar
     }
 
     /**
-    * chequea que el data en el objeto exista y devuelve el dolar
-    */
+     * chequea que el data en el objeto exista y devuelve el dolar
+     *
+     * @return boolean
+     */
     private function checkDollar()
     {
         if ($this->data) {
@@ -131,8 +141,10 @@ class CheckDollar
     }
 
     /**
-    * chequea que el archivo como tal exista.
-    */
+     * chequea que el archivo como tal exista.
+     *
+     * @return boolean
+     */
     private function fileExists()
     {
         $storage = $this->storage;
@@ -150,11 +162,14 @@ class CheckDollar
     }
 
     /**
-    * crea el archivo en el sistema y añade el timestamp local.
-    */
+     * crea el archivo en el sistema y añade el timestamp local.
+     *
+     * @return boolean
+     */
     private function makeFile()
     {
         $storage = $this->storage;
+
         $data = file_get_contents($this->dollarTodayUrl);
 
         if (!$data) {

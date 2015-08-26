@@ -1,17 +1,21 @@
-<?php namespace App\Http\Middleware;
+<?php namespace Orbiagro\Http\Middleware;
 
 use Closure;
 
+/**
+ * Class RedirectIfUnverified
+ * @package Orbiagro\Http\Middleware
+ */
 class RedirectIfUnverified
 {
 
     /**
-    * Handle an incoming request.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @param  \Closure  $next
-    * @return mixed
-    */
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
     public function handle($request, Closure $next)
     {
         if ($request->user()->hasConfirmation()) {

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
 class SubCategoryTableSeeder extends BaseSeeder
 {
@@ -41,10 +41,10 @@ class SubCategoryTableSeeder extends BaseSeeder
         foreach ($types as $category => $values) {
             $this->command->info("$category");
 
-            $cat = App\Category::where('description', $category)->first();
+            $cat = Orbiagro\Models\Category::where('description', $category)->first();
             foreach ($values as $value) {
                 $this->command->info("$value");
-                $subCat = App\SubCategory::create([
+                $subCat = Orbiagro\Models\SubCategory::create([
                     'category_id' => $cat->id,
                     'description' => $value,
                     'info'        => $faker->text(),
@@ -53,7 +53,7 @@ class SubCategoryTableSeeder extends BaseSeeder
                     'updated_by'  => $this->user->id,
                 ]);
 
-                $this->upload->createImage($subCat);
+                $this->upload->create($subCat);
             }
         }
 

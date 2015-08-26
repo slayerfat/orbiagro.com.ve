@@ -7,10 +7,10 @@ class CreatePromoTypesTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('promo_types', function (Blueprint $table) {
@@ -25,10 +25,10 @@ class CreatePromoTypesTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('promo_types');

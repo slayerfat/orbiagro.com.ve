@@ -7,10 +7,10 @@ class CreateSubCategoriesTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('sub_categories', function (Blueprint $table) {
@@ -32,10 +32,10 @@ class CreateSubCategoriesTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('sub_categories');

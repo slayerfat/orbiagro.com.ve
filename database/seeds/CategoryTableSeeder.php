@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 
 use Faker\Factory as Faker;
-use App\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
 class CategoryTableSeeder extends BaseSeeder
 {
@@ -31,14 +31,14 @@ class CategoryTableSeeder extends BaseSeeder
         Storage::disk('public')->makeDirectory('category');
 
         foreach ($types as $category) {
-            $category = App\Category::create([
+            $category = Orbiagro\Models\Category::create([
                 'description' => $category,
                 'info'        => $faker->text(),
                 'slug'        => str_slug($category, '-'),
                 'created_by'  => $this->user->id,
                 'updated_by'  => $this->user->id,
             ]);
-            $this->upload->createImage($category);
+            $this->upload->create($category);
         }
 
         $this->command->info('El Elegido creo las categorias.');

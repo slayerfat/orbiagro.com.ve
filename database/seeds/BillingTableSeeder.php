@@ -9,8 +9,8 @@ class BillingTableSeeder extends Seeder
     {
         $this->command->info("*** Empezando creacion de Billing! ***");
 
-        factory(App\Billing::class, 2)->make()->each(function ($bill) {
-            App\User::first()->billings()->save($bill);
+        factory(Orbiagro\Models\Billing::class, 2)->make()->each(function ($bill) {
+            Orbiagro\Models\User::first()->billings()->save($bill);
         });
 
         $this->command->info('Creacion de billing completada.');

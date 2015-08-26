@@ -150,23 +150,24 @@ return [
         /*
         * Application Service Providers...
         */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\BusServiceProvider::class,
-        App\Providers\ConfigServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        App\Providers\ViewServiceProvider::class,
+        Orbiagro\Providers\AppServiceProvider::class,
+        Orbiagro\Providers\BusServiceProvider::class,
+        Orbiagro\Providers\ConfigServiceProvider::class,
+        Orbiagro\Providers\EventServiceProvider::class,
+        Orbiagro\Providers\RouteServiceProvider::class,
+        Orbiagro\Providers\ViewServiceProvider::class,
 
         /**
         * App
         */
-        App\Providers\ImageDeleteServiceProvider::class,
-        App\Providers\ProductServiceProvider::class,
+        Orbiagro\Providers\ImageDeleteServiceProvider::class,
+        Orbiagro\Providers\ProductServiceProvider::class,
 
         /**
         * Vendor
         */
         Laracasts\Flash\FlashServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class
 
     ],

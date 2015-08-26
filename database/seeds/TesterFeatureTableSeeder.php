@@ -2,12 +2,12 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\User;
-use App\SubCategory;
-use App\Image;
-use App\File;
-use App\Maker;
-use App\Product;
+use Orbiagro\Models\User;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Models\Image;
+use Orbiagro\Models\File;
+use Orbiagro\Models\Maker;
+use Orbiagro\Models\Product;
 
 class TesterFeatureTableSeeder extends Seeder
 {
@@ -31,7 +31,7 @@ class TesterFeatureTableSeeder extends Seeder
             $this->command->info("Producto {$product->slug}");
             foreach (range(1, 2) as $index) {
                 $this->command->info("feature {$index}");
-                $feature              = new App\Feature;
+                $feature              = new Orbiagro\Models\Feature;
                 $feature->title       = 'tester';
                 $feature->description = 'tester';
                 $feature->created_by  = $user->id;

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\User;
+use Orbiagro\Models\User;
 
 class BaseSeeder extends Seeder
 {
@@ -14,11 +14,17 @@ class BaseSeeder extends Seeder
      */
     protected $user;
 
+    /**
+     * @uses BaseSeeder::getUser()
+     */
     public function __construct()
     {
         $this->user = $this->getUser();
     }
 
+    /**
+     * @return User
+     */
     protected function getUser()
     {
         $user = User::where('name', 'tester')->first();

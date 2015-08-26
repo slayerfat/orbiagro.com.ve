@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<?php $sexes = \App\Sex::all() ?>
+<?php $sexes = \Orbiagro\Sex::all() ?>
 
 <div class="form-group">
   <label class="col-md-4 control-label">Sexo</label>

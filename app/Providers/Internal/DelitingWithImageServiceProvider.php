@@ -1,8 +1,8 @@
-<?php namespace App\Providers;
+<?php namespace Orbiagro\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Mamarrachismo\Traits\Providers\ModelEventsTrait;
+use Orbiagro\Mamarrachismo\Traits\Providers\ModelEventsTrait;
 
 class DelitingWithImageServiceProvider extends ServiceProvider
 {
@@ -10,16 +10,16 @@ class DelitingWithImageServiceProvider extends ServiceProvider
     use ModelEventsTrait;
 
     /**
-    * Bootstrap the application services.
-    *
-    * @return void
-    */
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         $models = [
-            App\Category::class,
-            App\Maker::class,
-            App\SubCategory::class,
+            Orbiagro\Models\Category::class,
+            Orbiagro\Models\Maker::class,
+            Orbiagro\Models\SubCategory::class,
         ];
 
         foreach ($models as $namespace) {
@@ -28,10 +28,10 @@ class DelitingWithImageServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
         //

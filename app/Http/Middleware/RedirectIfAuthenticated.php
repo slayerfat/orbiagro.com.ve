@@ -1,9 +1,13 @@
-<?php namespace App\Http\Middleware;
+<?php namespace Orbiagro\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
 
+/**
+ * Class RedirectIfAuthenticated
+ * @package Orbiagro\Http\Middleware
+ */
 class RedirectIfAuthenticated
 {
 
@@ -18,7 +22,6 @@ class RedirectIfAuthenticated
      * Create a new filter instance.
      *
      * @param  Guard  $auth
-     * @return void
      */
     public function __construct(Guard $auth)
     {

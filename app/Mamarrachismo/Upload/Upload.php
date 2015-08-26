@@ -1,48 +1,55 @@
-<?php namespace App\Mamarrachismo\Upload;
+<?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
 use Validator;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Database\Eloquent\Model;
 
-class Upload
+abstract class Upload
 {
 
     /**
-    * @var mixed
-    */
+     * @var mixed
+     */
     public $errors;
 
     /**
-    * @var int
-    */
+     * @var int
+     */
     public $userId;
 
     /**
-    * el modelo a ser manipulado
-    *
-    * @var Object
-    */
+     * el modelo a ser manipulado
+     *
+     * @var Object
+     */
     public $model;
 
     /**
-    * la direccion para guardar el archivo relacionado al modelo.
-    * @var string
-    */
+     * la direccion para guardar el archivo relacionado al modelo.
+     * @var string
+     */
     protected $path;
 
     /**
-    * reglas para el validador.
-    * @var array
-    */
+     * reglas para el validador.
+     * @var array
+     */
     protected $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
 
     /**
-    * reglas para el validador.
-    * @var array
-    */
+     * reglas para el validador.
+     * @var array
+     */
     protected $fileRules = ['file' => 'mimes:pdf|max:10000'];
 
+    /**
+     * Para Utilizar esta clase es casi siempre necesario el uso del ID
+     * de algun usuario (para asociarlo al created_by o updated_by).
+     *
+     * @param int $userID
+     */
     public function __construct($userID = null)
     {
         if ($userID !== null) {
@@ -51,13 +58,30 @@ class Upload
     }
 
     /**
-    * usado para crear en el disco duro el archivo relacionado a un producto.
-    *
-    * @param  UploadedFile $file
-    * @param  string $path la direccion a donde se guardara el archivo.
-    *
-    * @return array  $data la carpeta, nombre y extension del archivo guardado.
-    */
+     * @param Model        $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    abstract public function create(Model $model, UploadedFile $file = null);
+
+    /**
+     * @param Model        $model   El modelo Eloquent.
+     * @param UploadedFile $file    Objeto UploadedFiles con el archivo.
+     * @param array        $options Las opcions relacionadas la operacion.
+     *
+     * @return Model
+     */
+    abstract public function update(Model $model, UploadedFile $file = null, array $options = null);
+
+    /**
+     * usado para crear en el disco duro el archivo relacionado a un producto.
+     *
+     * @param  UploadedFile $file
+     * @param  string $path la direccion a donde se guardara el archivo.
+     *
+     * @return array  $data la carpeta, nombre y extension del archivo guardado.
+     */
     protected function makeFile(UploadedFile $file, $path = null)
     {
         // el nombre del archivo
@@ -82,22 +106,22 @@ class Upload
     protected function generatePathFromModel($model)
     {
         switch (get_class($model)) {
-            case 'App\Product':
+            case 'Orbiagro\Models\Product':
                 return "products/{$model->id}";
 
-            case 'App\Feature':
+            case 'Orbiagro\Models\Feature':
                 return "products/{$model->product->id}";
 
-            case 'App\Category':
+            case 'Orbiagro\Models\Category':
                 return "category/{$model->id}";
 
-            case 'App\SubCategory':
+            case 'Orbiagro\Models\SubCategory':
                 return "sub-category/{$model->id}";
 
-            case 'App\Maker':
+            case 'Orbiagro\Models\Maker':
                 return "makers/{$model->id}";
 
-            case 'App\Promotion':
+            case 'Orbiagro\Models\Promotion':
                 return "promos/{$model->id}";
 
             default:

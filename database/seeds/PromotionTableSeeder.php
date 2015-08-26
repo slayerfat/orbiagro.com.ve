@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
 class PromotionTableSeeder extends Seeder
 {
@@ -18,10 +18,10 @@ class PromotionTableSeeder extends Seeder
         Storage::disk('public')->deleteDirectory('promos');
         Storage::disk('public')->makeDirectory('promos');
 
-        $product = App\Product::first();
+        $product = Orbiagro\Models\Product::first();
 
-        factory(App\Promotion::class, 3)->create()->each(function ($promo) use ($product) {
-            $this->upload->createImage($promo);
+        factory(Orbiagro\Models\Promotion::class, 3)->create()->each(function ($promo) use ($product) {
+            $this->upload->create($promo);
             $product->promotions()->attach($promo);
         });
     }

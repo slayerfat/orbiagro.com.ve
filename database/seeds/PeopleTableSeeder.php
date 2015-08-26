@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Person;
+use Orbiagro\Models\Person;
 
 class PeopleTableSeeder extends BaseSeeder {
 
@@ -30,7 +30,7 @@ class PeopleTableSeeder extends BaseSeeder {
       'updated_by'     => $this->user->id,
     ]);
 
-    $direction = new App\Direction;
+    $direction = new Orbiagro\Models\Direction;
 
     $direction->parish_id  = 1;
     $direction->details    = 'Av. Tal, Calle tal.';

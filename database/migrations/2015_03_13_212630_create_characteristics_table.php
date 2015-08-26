@@ -7,10 +7,10 @@ class CreateCharacteristicsTable extends Migration
 {
 
     /**
-    * Run the migrations.
-    *
-    * @return void
-    */
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('characteristics', function (Blueprint $table) {
@@ -31,10 +31,10 @@ class CreateCharacteristicsTable extends Migration
     }
 
     /**
-    * Reverse the migrations.
-    *
-    * @return void
-    */
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::drop('characteristics');

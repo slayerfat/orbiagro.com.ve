@@ -1,38 +1,48 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
-use App\Http\Requests\UserRequest;
-use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\Guard;
+use Orbiagro\Http\Requests;
+use Orbiagro\Http\Requests\UserRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Profile;
+use Illuminate\View\View as Response;
 
-use Illuminate\Http\Request;
-
-use App\User;
-use App\Profile;
-
+/**
+ * Class UsersController
+ * @package Orbiagro\Http\Controllers
+ */
 class UsersController extends Controller
 {
 
+    /**
+     * @var User
+     */
     protected $user;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @param User $user
+     */
     public function __construct(User $user)
     {
         $this->middleware('auth');
-        $this->middleware('user.admin', ['only' => 'index', 'forceDestroy', 'restore']);
+
+        $this->middleware(
+            'user.admin',
+            ['only' => 'index', 'forceDestroy', 'restore']
+        );
 
         $this->user = $user;
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         $users = User::with('person')->withTrashed()->get();
@@ -41,10 +51,11 @@ class UsersController extends Controller
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @param $id
+     * @return Response
+     */
     public function products($id)
     {
         if (!$user = User::with('products')->where('name', $id)->first()) {
@@ -57,29 +68,41 @@ class UsersController extends Controller
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
-    public function productVisits($id)
+     * Display a listing of the resource.
+     *
+     * @param  int    $id
+     * @param  Guard  $auth
+     * @return Response
+     */
+    public function productVisits($id, Guard $auth)
     {
-        if (!$user = User::with(['visits' => function ($query) {
-            $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
-        }])->where('name', $id)->first()) {
+        $user = User::with(['visits' => function ($query) {
+            $query->where('visitable_type', Product::class)
+                ->orderBy('updated_at', 'desc');
+        }])->where('name', $id)->first();
+
+        if (!$user) {
             $user = User::with(['visits' => function ($query) {
-                $query->where('visitable_type', 'App\\Product')->orderBy('updated_at', 'desc');
+                $query->where('visitable_type', Product::class)
+                    ->orderBy('updated_at', 'desc');
             }])->findOrFail($id);
         }
 
-        if (!Auth::user()->isOwnerOrAdmin($user->id)) {
+        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
             flash()->error('Ud. no tiene permisos para esta accion.');
+
             return redirect()->back();
         }
 
         // la coleccion de productos
         $products = collect();
 
-        $user->visits->each(function ($visit) use ($products) {
+        /**
+         * & requerido.
+         *
+         * @see http://php.net/manual/en/functions.anonymous.php
+         */
+        $user->visits->each(function ($visit) use (&$products) {
             $products = $products->push($visit->visitable);
         });
 
@@ -87,10 +110,10 @@ class UsersController extends Controller
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
     public function create()
     {
         $profiles = Profile::lists('description', 'id');
@@ -102,10 +125,12 @@ class UsersController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @param UserRequest $request
+     *
+     * @return Response
+     */
     public function store(UserRequest $request)
     {
         $profile = Profile::findOrFail($request->input('profile_id'));
@@ -121,28 +146,28 @@ class UsersController extends Controller
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function show($id)
     {
         if (!$user = User::with('person', 'products', 'profile')->where('name', $id)->first()) {
             $user = User::with('person', 'products', 'profile')->findOrFail($id);
         }
 
-        $products = \App\Product::where('user_id', $user->id)->paginate(4);
+        $products = Product::where('user_id', $user->id)->paginate(4);
 
         return view('user.show', compact('user', 'products'));
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function showTrashed($id)
     {
         $user = User::with('person', 'products', 'profile')
@@ -156,24 +181,25 @@ class UsersController extends Controller
                 ->findOrFail($id);
         }
 
-        $products = \App\Product::where('user_id', $user->id)->paginate(4);
+        $products = Product::where('user_id', $user->id)->paginate(4);
 
         return view('user.show', compact('user', 'products'));
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
-    public function edit($id)
+     * Show the form for editing the specified resource.
+     *
+     * @param  int   $id
+     * @param  Guard $auth
+     * @return Response
+     */
+    public function edit($id, Guard $auth)
     {
         if (!$user = User::with('profile')->where('name', $id)->first()) {
             $user = User::with('profile')->findOrFail($id);
         }
 
-        if (!Auth::user()->isOwnerOrAdmin($user->id)) {
+        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
             flash()->error('Ud. no tiene permisos para esta accion.');
             return redirect()->back();
         }
@@ -184,11 +210,13 @@ class UsersController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  int         $id
+     * @param  UserRequest $request
+     *
+     * @return Response
+     */
     public function update($id, UserRequest $request)
     {
         $user = User::findOrFail($id);
@@ -208,11 +236,11 @@ class UsersController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $this->user = User::findOrFail($id);
@@ -230,6 +258,12 @@ class UsersController extends Controller
         return redirect()->action('UsersController@showTrashed', $this->user->id);
     }
 
+    /**
+     * Elimina forzadamente de la base de datos.
+     *
+     * @param  int $id
+     * @return Response
+     */
     public function forceDestroy($id)
     {
         $user = User::where('id', $id)->withTrashed()->firstOrFail();
@@ -247,14 +281,16 @@ class UsersController extends Controller
         }
 
         flash()->success('El Usuario ha sido eliminado correctamente.');
+
         return redirect()->action('UsersController@index');
     }
 
     /**
-    * UX del usuario que vaya a eliminar su cuenta.
-    *
-    * @return Response
-    */
+     * UX del usuario que vaya a eliminar su cuenta.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function preDestroy($id)
     {
         if (!$user = User::where('name', $id)->first()) {
@@ -265,11 +301,11 @@ class UsersController extends Controller
     }
 
     /**
-    * Restores the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Restores the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function restore($id)
     {
         $user = User::where('id', $id)->withTrashed()->firstOrFail();

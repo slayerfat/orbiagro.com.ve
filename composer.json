@@ -17,14 +17,16 @@
     "phpspec/phpspec": "~2.1",
     "fzaninotto/faker": "~1.4",
     "laracasts/generators": "~1.1",
-    "mockery/mockery": "^0.9.4"
+    "mockery/mockery": "^0.9.4",
+    "barryvdh/laravel-ide-helper": "^2.1",
+    "doctrine/dbal": "^2.5"
   },
   "autoload": {
     "classmap": [
       "database"
     ],
     "psr-4": {
-      "App\\": "app/",
+      "Orbiagro\\": "app/",
       "Tests\\": "tests/"
     }
   },
@@ -36,10 +38,16 @@
   "scripts": {
     "post-install-cmd": [
       "php artisan clear-compiled",
+      "php artisan ide-helper:generate",
+      "php artisan ide-helper:models -W",
+      "php artisan ide-helper:meta",
       "php artisan optimize"
     ],
     "post-update-cmd": [
       "php artisan clear-compiled",
+      "php artisan ide-helper:generate",
+      "php artisan ide-helper:models -W",
+      "php artisan ide-helper:meta",
       "php artisan optimize"
     ],
     "post-create-project-cmd": [

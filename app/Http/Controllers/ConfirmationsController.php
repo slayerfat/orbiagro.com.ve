@@ -1,17 +1,22 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Mamarrachismo\EnviarEmail as Email;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Auth;
-use App\User;
-use App\Profile;
-use App\UserConfirmation;
-use Illuminate\Http\Request;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Profile;
+use Orbiagro\Models\UserConfirmation;
+use Illuminate\View\View as Response;
 
 class ConfirmationsController extends Controller
 {
 
+    /**
+     * Comprueba la confirmacion del usuario para ser validado.
+     *
+     * @param  string $confirmation la cadena de texto a comparar.
+     * @return Response
+     */
     public function confirm($confirmation)
     {
         if (!$confirmation) {
@@ -25,7 +30,7 @@ class ConfirmationsController extends Controller
         }
 
         if ($confirmModel->count() !== 1) {
-            foreach($confirmModel as $confirm) {
+            foreach ($confirmModel as $confirm) {
                 $confirm->delete();
             }
 
@@ -53,7 +58,12 @@ class ConfirmationsController extends Controller
         return redirect('auth/login');
     }
 
-    public function generateConfirm()
+    /**
+     * Genera una confirmacion y envia un correo electronico al usuario.
+     *
+     * @return Response
+     */
+    public function createConfirm()
     {
         $user = Auth::user();
 

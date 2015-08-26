@@ -1,35 +1,32 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
-use App\Http\Requests\SubCategoryRequest;
-use App\Http\Controllers\Controller;
-
+use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-
-use App\Product;
-use App\Category;
-use App\SubCategory;
-
-use App\Mamarrachismo\VisitsService;
-use App\Mamarrachismo\Upload\Image as Upload;
-
+use Orbiagro\Http\Requests\SubCategoryRequest;
+use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Mamarrachismo\VisitsService;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\View\View as Response;
 
 class SubCategoriesController extends Controller
 {
 
-    use SEOToolsTrait;
+    use SEOToolsTrait, CanSaveUploads;
 
-    protected $user;
-
+    /**
+     * @var SubCategory
+     */
     protected $subCat;
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @param SubCategory $subCat
+     */
     public function __construct(SubCategory $subCat)
     {
         $rules = ['except' => ['index', 'show', 'indexByCategory']];
@@ -38,16 +35,14 @@ class SubCategoriesController extends Controller
 
         $this->middleware('user.admin', $rules);
 
-        $this->user   = Auth::user();
-
         $this->subCat = $subCat;
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         $subCats = SubCategory::all();
@@ -62,14 +57,15 @@ class SubCategoriesController extends Controller
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
-    public function indexByCategory($categoryId)
+     * Display a listing of the resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function indexByCategory($id)
     {
-        if (!$subCats = Category::where('slug', $categoryId)->first()->subCategories) {
-            $subCats = Category::findOrFail($categoryId)->subCategories;
+        if (!$subCats = Category::where('slug', $id)->first()->subCategories) {
+            $subCats = Category::findOrFail($id)->subCategories;
         }
 
         $productsCollection = $this->getProductsInSubCat($subCats);
@@ -82,10 +78,10 @@ class SubCategoriesController extends Controller
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
     public function create()
     {
         $cats = Category::lists('description', 'id');
@@ -97,33 +93,36 @@ class SubCategoriesController extends Controller
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @return Response
-    */
-    public function store(SubCategoryRequest $request, Upload $upload)
+     * Store a newly created resource in storage.
+     *
+     * @param  SubCategoryRequest $request
+     * @return Response
+     */
+    public function store(SubCategoryRequest $request)
     {
         $cat = Category::findOrFail($request->input('category_id'));
-
-        // para los archivos del rubro
-        $upload->userId = $this->user->id;
 
         $this->subCat->fill($request->all());
 
         $cat->subCategories()->save($this->subCat);
 
-        $upload->createImage($this->subCat, $request->file('image'));
-
+        /**
+         * @see MakersController::store()
+         */
         flash()->success('Rubro creado exitosamente.');
+
+        $this->createImage($request, $this->subCat);
+
         return redirect()->action('SubCategoriesController@index');
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @param  VisitsService $visits
+     * @return Response
+     */
     public function show($id, VisitsService $visits)
     {
         if (!$subCat = SubCategory::where('slug', $id)->first()) {
@@ -147,11 +146,11 @@ class SubCategoriesController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function edit($id)
     {
         $this->subCat = SubCategory::findOrFail($id);
@@ -165,33 +164,35 @@ class SubCategoriesController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
-    public function update($id, SubCategoryRequest $request, Upload $upload)
+     * Update the specified resource in storage.
+     *
+     * @param  int                $id
+     * @param  SubCategoryRequest $request
+     *
+     * @return Response
+     */
+    public function update($id, SubCategoryRequest $request)
     {
         $this->subCat = SubCategory::findOrFail($id)->load('image');
 
         $this->subCat->update($request->all());
+
+        /**
+         * @see MakersController::store()
+         */
         flash()->success('El Rubro ha sido actualizado correctamente.');
 
-        if ($request->hasFile('image')) {
-            if (!$upload->updateImage($request->file('image'), $this->subCat->image)) {
-                flash()->warning('El Rubro ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-            }
-        }
+        $this->updateImage($request, $this->subCat);
 
         return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $this->subCat = SubCategory::findOrFail($id);
@@ -216,9 +217,9 @@ class SubCategoriesController extends Controller
     /**
      * Busca aleatoriamente una cantidad de productos y regresa la coleccion.
      *
-     * @param \Collection   $subCats Las categorias.
-     * @param  integer      $ammount La cantidad a tomar.
-     * @return \Collection
+     * @param  \Illuminate\Support\Collection $subCats Las categorias.
+     * @param  int                            $ammount La cantidad a tomar.
+     * @return \Illuminate\Support\Collection
      */
     private function getProductsInSubCat($subCats, $ammount = 12)
     {

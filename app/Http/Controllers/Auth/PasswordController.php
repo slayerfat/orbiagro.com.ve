@@ -1,10 +1,14 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php namespace Orbiagro\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
+/**
+ * Class PasswordController
+ * @package Orbiagro\Http\Controllers\Auth
+ */
 class PasswordController extends Controller
 {
 
@@ -26,7 +30,6 @@ class PasswordController extends Controller
      *
      * @param  \Illuminate\Contracts\Auth\Guard  $auth
      * @param  \Illuminate\Contracts\Auth\PasswordBroker  $passwords
-     * @return void
      */
     public function __construct(Guard $auth, PasswordBroker $passwords)
     {

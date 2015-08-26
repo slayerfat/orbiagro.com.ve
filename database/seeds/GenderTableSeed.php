@@ -18,7 +18,7 @@ class GenderTableSeeder extends BaseSeeder
         ];
 
         foreach ($types as $gender) {
-            App\Gender::create([
+            Orbiagro\Models\Gender::create([
                 'description' => $gender,
                 'created_by'  => $this->user->id,
                 'updated_by'  => $this->user->id,

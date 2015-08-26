@@ -1,6 +1,4 @@
-<?php namespace App\Mamarrachismo\Traits\Providers;
-
-use Illuminate\Support\ServiceProvider;
+<?php namespace Orbiagro\Mamarrachismo\Traits\Providers;
 
 use Storage;
 
@@ -41,7 +39,7 @@ trait ModelEventsTrait
             $this->id = $mdl->id;
         });
 
-        $model::deleted(function ($mdl) {
+        $model::deleted(function () {
             if ($this->image) {
                 $this->image->delete();
             }

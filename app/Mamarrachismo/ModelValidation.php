@@ -1,24 +1,28 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace Orbiagro\Mamarrachismo;
 
 use Validator;
-use App\User;
+use Orbiagro\Models\User;
 
 /**
-* @todo mejorar los metodos estaticos de esta clase
-*/
+ * @todo mejorar los metodos estaticos de esta clase
+ */
 class ModelValidation
 {
 
     /**
-    * @var string
-    */
+     * @var string
+     */
     public $userId;
 
     /**
-    * @var \App\User
-    */
+     * @var User
+     */
     public $user;
 
+    /**
+     * @param int $userId
+     * @param User $user
+     */
     public function __construct($userId = null, User $user = null)
     {
         $this->userId = $userId;
@@ -27,11 +31,11 @@ class ModelValidation
     }
 
     /**
-    * Regular Expresion para el numero de telefono con formato Venezolano.
-    * 0123456478
-    *
-    * @var string
-    */
+     * Regular Expresion para el numero de telefono con formato Venezolano.
+     * 0123456478
+     *
+     * @var string
+     */
     private static $completePhoneRegex = '/(?P<cero>[0]?)(?P<code>[0-9]{3})(?P<trio>[\d]{3})(?P<gangbang>[\d]{4})/';
 
     /**
@@ -43,12 +47,12 @@ class ModelValidation
     private static $rawPhoneRegex      = '/(?P<cero>0)?(?P<numbers>\d{10})/';
 
     /**
-    * Chequea y devuelve el telefono acomodado.
-    * ej: 02123334422 -> (212)-333-4422
-    * @param string $value el telefono a chequear.
-    *
-    * @return string o null.
-    */
+     * Chequea y devuelve el telefono acomodado.
+     * ej: 02123334422 -> (212)-333-4422
+     * @param string $value el telefono a chequear.
+     *
+     * @return string|null.
+     */
     public static function parsePhone($value)
     {
         $matches = [];
@@ -61,12 +65,12 @@ class ModelValidation
     }
 
     /**
-    * Chequea y devuelve el telefono en numeros.
-    * ej: algo1232224455xzx -> 1232224455
-    * @param string $value el telefono a chequear.
-    *
-    * @return string o null.
-    */
+     * Chequea y devuelve el telefono en numeros.
+     * ej: algo1232224455xzx -> 1232224455
+     * @param string $value el telefono a chequear.
+     *
+     * @return string|null.
+     */
     public static function parseRawPhone($value)
     {
         $matches = [];
@@ -79,10 +83,12 @@ class ModelValidation
     }
 
     /**
-    * Valida y regresa si es valido el valor.
-    * @param string  $value  el valor a chequear.
-    * @param integer $lenght el tamaño minimo.
-    */
+     * Valida y regresa si es valido el valor.
+     * @param string  $value  el valor a chequear.
+     * @param integer $lenght el tamaño minimo.
+     *
+     * @return mixed
+     */
     public static function byLenght($value, $lenght = 5)
     {
         if (strlen(trim($value)) >= $lenght) {
@@ -93,9 +99,11 @@ class ModelValidation
     }
 
     /**
-    * Valida si es numero y regresa si es valido el valor.
-    * @param mixed $value
-    */
+     * Valida si es numero y regresa si es valido el valor.
+     * @param mixed $value
+     *
+     * @return mixed
+     */
     public static function byNumeric($value)
     {
         if (is_numeric($value)) {
@@ -106,9 +114,11 @@ class ModelValidation
     }
 
     /**
-    * Valida si es numero y si es positivo, regresa si es valido el valor.
-    * @param mixed $value
-    */
+     * Valida si es numero y si es positivo, regresa si es valido el valor.
+     * @param mixed $value
+     *
+     * @return mixed
+     */
     public static function byNonNegative($value)
     {
         $number = self::byNumeric($value);

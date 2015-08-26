@@ -1,18 +1,18 @@
-<?php namespace App\Providers;
+<?php namespace Orbiagro\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Image;
+use Orbiagro\Models\Image;
 use File;
 
 class ImageDeleteServiceProvider extends ServiceProvider
 {
 
     /**
-    * Bootstrap the application services.
-    *
-    * @return void
-    */
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
     public function boot()
     {
         Image::deleting(function ($image) {
@@ -23,10 +23,10 @@ class ImageDeleteServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
         //

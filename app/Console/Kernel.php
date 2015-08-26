@@ -1,7 +1,8 @@
-<?php namespace App\Console;
+<?php namespace Orbiagro\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Orbiagro\Console\Commands\Inspire;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\Inspire',
+        Inspire::class,
     ];
 
     /**
