@@ -31,4 +31,32 @@ abstract class AbstractRepository
     {
         return $this->model->newInstance($data);
     }
+
+    /**
+     * @param  mixed $id
+     *
+     * @return Model
+     */
+    public function getBySlugOrId($id)
+    {
+        $model = $this->model
+            ->where('slug', $id)
+            ->first();
+
+        if (!$model) {
+            $model = $this->model->findOrFail($id);
+        }
+
+        return $model;
+    }
+
+    /**
+     * @param  mixed $id
+     *
+     * @return Model
+     */
+    public function getById($id)
+    {
+        return $this->model->findOrFail($id);
+    }
 }

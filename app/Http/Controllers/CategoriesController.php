@@ -75,18 +75,16 @@ class CategoriesController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $this->cat->fill($request->all());
-
-        $this->cat->save();
+        $cat = $this->cat->create($request->all());
 
         /**
          * @see MakersController::store()
          */
         flash()->success('Categoria creada exitosamente.');
 
-        $this->createImage($request, $this->cat);
+        $this->createImage($request, $cat);
 
-        return redirect()->action('CategoriesController@index');
+        return redirect()->route('cats.show', $cat->id);
     }
 
     /**
@@ -97,15 +95,13 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        if (!$cat = Category::where('slug', $id)->first()) {
-            $cat = Category::findOrFail($id);
-        }
+        $cat = $this->cat->getBySlugOrId($id);
 
-        $subCats = $cat->subCategories;
+        $subCats = $this->cat->getSubCats($cat);
 
         $this->seo()->setTitle("{$cat->description} en orbiagro.com.ve");
         $this->seo()->setDescription("{$cat->description} existentes es orbiagro.com.ve");
-        $this->seo()->opengraph()->setUrl(action('CategoriesController@show', $id));
+        $this->seo()->opengraph()->setUrl(route('cats.show', $id));
 
         return view('category.show', compact('cat', 'subCats'));
     }
@@ -118,11 +114,9 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        $this->cat = Category::findOrFail($id);
+        $cat = $this->cat->getById($id);
 
-        return view('category.edit')->with([
-            'cat' => $this->cat,
-        ]);
+        return view('category.edit', compact('cat'));
     }
 
     /**
@@ -135,18 +129,16 @@ class CategoriesController extends Controller
      */
     public function update($id, CategoryRequest $request)
     {
-        $this->cat = category::findOrFail($id)->load('image');
-
-        $this->cat->update($request->all());
+        $cat = $this->cat->update($id, $request->all());
 
         /**
          * @see MakersController::store()
          */
         flash()->success('La Categoria ha sido actualizada correctamente.');
 
-        $this->updateImage($request, $this->cat);
+        $this->updateImage($request, $cat);
 
-        return redirect()->action('CategoriesController@show', $this->cat->slug);
+        return redirect()->route('cats.show', $cat->slug);
     }
 
     /**
@@ -157,25 +149,10 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $this->cat = category::findOrFail($id);
-
-        try {
-            $this->cat->delete();
-
-        } catch (Exception $e) {
-            if ($e instanceof QueryException || $e->getCode() == 23000) {
-                flash()->error('No deben haber Productos asociados.');
-
-                return redirect()->action('CategoriesController@show', $this->cat->slug);
-            }
-
-            Log::error($e);
-
-            abort(500);
-        }
+        $this->cat->delete($id);
 
         flash()->success('La Categoria ha sido eliminada correctamente.');
 
-        return redirect()->action('CategoriesController@index');
+        return redirect()->route('cats.index');
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Repositories;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 
@@ -16,8 +17,9 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 
     /**
      * @param Collection $cats
-     * @param int $quantity
-     * @return \Illuminate\Support\Collection
+     * @param int        $quantity
+     *
+     * @return Collection
      */
     public function getRelatedProducts(Collection $cats, $quantity = 6)
     {
@@ -35,5 +37,58 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
         }
 
         return $productsCollection;
+    }
+
+
+    /**
+     * @param array $data
+     *
+     * @return Model
+     */
+    public function create(array $data)
+    {
+        $cat = $this->getNewInstance($data);
+
+        $cat->save($data);
+
+        return $cat;
+    }
+
+    /**
+     * @param Model $model
+     *
+     * @return Collection
+     */
+    public function getSubCats(Model $model)
+    {
+        return $model->subCategories;
+    }
+
+    /**
+     * @param       $id
+     * @param array $data
+     *
+     * @return Model
+     */
+    public function update($id, array $data)
+    {
+        $cat = $this->model->findOrFail($id)
+            ->load('image');
+
+        $cat->update($data);
+
+        return $cat;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return void
+     */
+    public function delete($id)
+    {
+        $cat = $this->cat->findOrFail($id);
+
+        $cat->delete();
     }
 }
