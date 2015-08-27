@@ -15,7 +15,8 @@
 $faker = Faker\Factory::create('es_ES');
 
 $factory->define(Orbiagro\Models\User::class, function ($faker) {
-    $profileId = Orbiagro\Models\Profile::where('description', 'Usuario')->firstOrFail()->id;
+    $profileId = Orbiagro\Models\Profile::where('description', 'Usuario')
+        ->firstOrFail()->id;
     return [
         'name'           => $faker->name,
         'email'          => $faker->email,
@@ -85,9 +86,9 @@ $factory->define(Orbiagro\Models\MechanicalInfo::class, function ($faker) {
 
 $factory->define(Orbiagro\Models\Nutritional::class, function ($faker) {
     $date = Carbon\Carbon::now()->addDays(rand(1, 15))
-    ->addMonths(rand(1, 11))
-    ->addYears(rand(1, 10))
-    ->toDateString();
+        ->addMonths(rand(1, 11))
+        ->addYears(rand(1, 10))
+        ->toDateString();
 
     return [
         'due'        => $date,
@@ -114,8 +115,8 @@ $factory->define(Orbiagro\Models\Person::class, function ($faker) {
         'identity_card'  => rand(99999, 99999999),
         'phone'          => $faker->phoneNumber,
         'birth_date'     => $faker->date,
-        'created_at'     => Carbon\Carbon\Carbon::now(),
-        'updated_at'     => Carbon\Carbon\Carbon::now(),
+        'created_at'     => Carbon\Carbon::now(),
+        'updated_at'     => Carbon\Carbon::now(),
         'created_by'     => 1,
         'updated_by'     => 1,
     ];
@@ -195,10 +196,30 @@ $factory->define(Orbiagro\Models\Provider::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Visit::class, function ($faker) {
+$factory->define(Orbiagro\Models\Visit::class, function () {
     return [
         'user_id'    => Orbiagro\Models\User::random()->first()->id,
         'total'      => rand(1, 100),
+        'created_by' => 1,
+        'updated_by' => 1,
+    ];
+});
+
+$factory->define(Orbiagro\Models\Category::class, function ($faker) {
+    return [
+        'description'    => $faker->sentence(3),
+        'info'    => $faker->sentence(3),
+        'slug'    => str_slug($faker->sentence(3)),
+        'created_by' => 1,
+        'updated_by' => 1,
+    ];
+});
+
+$factory->define(Orbiagro\Models\SubCategory::class, function ($faker) {
+    return [
+        'description'    => $faker->sentence(3),
+        'info'    => $faker->sentence(3),
+        'slug'    => str_slug($faker->sentence(3)),
         'created_by' => 1,
         'updated_by' => 1,
     ];

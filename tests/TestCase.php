@@ -1,5 +1,7 @@
 <?php namespace Tests;
 
+use Illuminate\Database\Eloquent\Model;
+
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
 
@@ -10,7 +12,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
     /**
     * El modelo a manipular.
-    * @var Illuminate\Database\Eloquent\Model
+    * @var Model
     */
     protected $tester;
 
