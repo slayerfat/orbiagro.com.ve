@@ -1,7 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\Town;
-use Orbiagro\Models\Direction;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
@@ -16,8 +14,8 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Orbiagro\Models\Town $town
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Direction[] $directions
+ * @property-read Town $town
+ * @property-read \Illuminate\Database\Eloquent\Collection|Direction[] $directions
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish whereTownId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish whereDescription($value)

@@ -1,12 +1,11 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Controllers\Controller;
-use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Auth;
 use Orbiagro\Models\User;
 use Orbiagro\Models\Profile;
 use Orbiagro\Models\UserConfirmation;
-use Illuminate\View\View as Response;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 
 class ConfirmationsController extends Controller
 {
@@ -15,7 +14,7 @@ class ConfirmationsController extends Controller
      * Comprueba la confirmacion del usuario para ser validado.
      *
      * @param  string $confirmation la cadena de texto a comparar.
-     * @return Response
+     * @return RedirectResponse
      */
     public function confirm($confirmation)
     {
@@ -23,7 +22,7 @@ class ConfirmationsController extends Controller
             return redirect('/');
         }
 
-        $confirmModel = UserConfirmation::where('data', $confirmation)->get();
+        $confirmModel = UserConfirmation::whereData($confirmation)->get();
 
         if (!$confirmation) {
             return redirect('/');
@@ -48,20 +47,22 @@ class ConfirmationsController extends Controller
             return redirect('/');
         }
 
-        $profile = Profile::where('description', 'Usuario')->first();
+        $profile = Profile::whereDescription('Usuario')->first();
         $user->profile_id = $profile->id;
         $user->save();
         $user->confirmation()->delete();
 
         Auth::logout();
+
         flash()->success('Ud. ha sido correctamente verificado, por favor ingrese en el sistema.');
+
         return redirect('auth/login');
     }
 
     /**
      * Genera una confirmacion y envia un correo electronico al usuario.
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function createConfirm()
     {
@@ -90,6 +91,7 @@ class ConfirmationsController extends Controller
         Email::enviarEmail($data, $emails);
 
         flash()->info('Nueva confirmación generada, por favor revise su correo electronico.');
+
         return redirect('/');
     }
 }

@@ -2,7 +2,6 @@
 
 use Storage;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**

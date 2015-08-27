@@ -14,26 +14,26 @@ class UserRoutes extends Routes
     protected $restfulOptions = [
         [
             'routerOptions' => [
-                    'prefix' => 'usuarios',
-                ],
+                'prefix' => 'usuarios',
+            ],
             'rtDetails' => [
-                    'uses'     => 'UsersController',
-                    'as'       => 'users',
-                    'resource' => '{users}'
-                ]
+                'uses'     => 'UsersController',
+                'as'       => 'users',
+                'resource' => '{users}'
+            ]
         ],
         /**
          * Datos Personales (Person)
          */
         [
             'routerOptions' => [
-                    'prefix' => 'usuarios/datos-personales',
-                ],
+                'prefix' => 'usuarios/datos-personales',
+            ],
             'rtDetails' => [
-                    'uses'     => 'PeopleController',
-                    'as'       => 'users.people',
-                    'resource' => '{users}'
-                ]
+                'uses'     => 'PeopleController',
+                'as'       => 'users.people',
+                'resource' => '{users}'
+            ]
         ],
     ];
 
@@ -41,6 +41,18 @@ class UserRoutes extends Routes
      * @var array
      */
     protected $nonRestfulOptions = [
+        /**
+         * Usuarios Eliminados
+         */
+        [
+            'method'   => 'get',
+            'url'      => 'usuarios/eliminados/{users}',
+            'data'     => [
+                'uses' => 'UsersController@showTrashed',
+                'as'   => 'users.trashed'
+            ]
+        ],
+
         /**
          * Productos de un usuario
          */
@@ -62,18 +74,6 @@ class UserRoutes extends Routes
             'data' => [
                 'uses' => 'UsersController@restore',
                 'as' => 'users.restore'
-            ]
-        ],
-
-        /**
-         * Usuarios Eliminados
-         */
-        [
-            'method' => 'get',
-            'url' => 'usuarios/eliminados/{users}',
-            'data' => [
-                'uses' => 'UsersController@showTrashed',
-                'as' => 'users.trashed'
             ]
         ],
 

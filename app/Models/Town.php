@@ -1,7 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\State;
-use Orbiagro\Models\Parish;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
@@ -15,8 +13,8 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Orbiagro\Models\State $state
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Parish[] $parishes
+ * @property-read State $state
+ * @property-read \Illuminate\Database\Eloquent\Collection|Parish[] $parishes
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereStateId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereDescription($value)

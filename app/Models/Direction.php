@@ -1,7 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\Parish;
-use Orbiagro\Models\MapDetail;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
@@ -20,8 +18,8 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property string $deleted_at
  * @property-read \ $directionable
- * @property-read \Orbiagro\Models\MapDetail $map
- * @property-read \Orbiagro\Models\Parish $parish
+ * @property-read MapDetail $map
+ * @property-read Parish $parish
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereDirectionableId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereDirectionableType($value)
