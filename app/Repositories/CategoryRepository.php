@@ -83,12 +83,12 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
     /**
      * @param $id
      *
-     * @return void
+     * @return bool|null
      */
     public function delete($id)
     {
-        $cat = $this->cat->findOrFail($id);
-
-        $cat->delete();
+        return $this->model
+            ->findOrFail($id)
+            ->delete();
     }
 }

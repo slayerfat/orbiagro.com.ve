@@ -27,7 +27,7 @@ abstract class AbstractRepository
      *
      * @return Model
      */
-    public function getNewInstance(array $data = [])
+    protected function getNewInstance(array $data = [])
     {
         return $this->model->newInstance($data);
     }
@@ -44,7 +44,7 @@ abstract class AbstractRepository
             ->first();
 
         if (!$model) {
-            $model = $this->model->findOrFail($id);
+            return $this->getById($id);
         }
 
         return $model;

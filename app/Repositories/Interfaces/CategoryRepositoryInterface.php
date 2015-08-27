@@ -49,13 +49,6 @@ interface CategoryRepositoryInterface
     public function delete($id);
 
     /**
-     * @param  array $data
-     *
-     * @return Model
-     */
-    public function getNewInstance(array $data = []);
-
-    /**
      * @param  mixed $id
      *
      * @return Model
