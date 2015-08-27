@@ -1,10 +1,6 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Log;
-use Exception;
-use Orbiagro\Models\Category;
 use Illuminate\View\View as Response;
-use Illuminate\Database\QueryException;
 use Orbiagro\Http\Requests\CategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -29,9 +25,11 @@ class CategoriesController extends Controller
      */
     public function __construct(CategoryRepositoryInterface $cat)
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $options = ['except' => ['index', 'show']];
 
-        $this->middleware('user.admin', ['except' => ['index', 'show']]);
+        $this->middleware('auth', $options);
+
+        $this->middleware('user.admin', $options);
 
         $this->cat = $cat;
     }
