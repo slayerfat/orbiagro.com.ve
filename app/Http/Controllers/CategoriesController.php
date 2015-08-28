@@ -16,7 +16,7 @@ class CategoriesController extends Controller
      *
      * @var CategoryRepositoryInterface
      */
-    protected $cat;
+    private $cat;
 
     /**
      * Create a new controller instance.
