@@ -26,11 +26,15 @@ class ConfirmationsController extends Controller
      */
     public function confirm($confirmation)
     {
-        if (!$confirmation) {
+        if (!$confirmation || trim($confirmation) == '') {
             return redirect('/');
         }
 
         $confirmModel = $this->confirm->getConfirmation($confirmation);
+
+        if (is_null($confirmModel)) {
+            return redirect('/');
+        }
 
         $user = $this->confirm->validateUser($confirmModel);
 

@@ -56,12 +56,14 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
             return $confirmModel->first();
 
         } elseif ($confirmModel->count() > 1) {
-            foreach ($confirmModel as $confirm) {
+            $confirmModel->each(function ($confirm) {
                 $confirm->delete();
-            }
+            });
+
+            throw new DuplicateConfirmationException('Existen Confirmacion Duplicadas en el sistema.');
         }
 
-        throw new DuplicateConfirmationException('Existen Confirmacion Duplicadas en el sistema.');
+        return null;
     }
 
     /**
