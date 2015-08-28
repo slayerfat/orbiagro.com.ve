@@ -1,7 +1,6 @@
 <?php namespace Orbiagro\Repositories;
 
 use LogicException;
-use Orbiagro\Models\Profile;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Repositories\Exceptions\DuplicateConfirmationException;
 use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;

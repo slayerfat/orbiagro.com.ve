@@ -4,9 +4,9 @@ interface ProfileRepositoryInterface
 {
 
     /**
-     * @param $desc
+     * @param string $desc
      *
-     * @return mixed|static
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function getByDescription($desc);
 }

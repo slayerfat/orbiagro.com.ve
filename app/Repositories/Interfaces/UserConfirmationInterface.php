@@ -1,9 +1,8 @@
 <?php namespace Orbiagro\Repositories\Interfaces;
 
-use Auth;
-use Illuminate\Database\Eloquent\Model;
+use Exception;
 use LogicException;
-use Orbiagro\Models\UserConfirmation;
+use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Repositories\Exceptions\DuplicateConfirmationException;
 
 interface UserConfirmationInterface
@@ -28,6 +27,8 @@ interface UserConfirmationInterface
      * @param Model $model
      *
      * @return null|\Orbiagro\Models\User
+     * @throws Exception
+     * @throws LogicException
      */
     public function validateUser(Model $model);
 }

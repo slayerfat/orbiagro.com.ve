@@ -37,14 +37,14 @@ interface CategoryRepositoryInterface
      * @param       $id
      * @param array $data
      *
-     *@return Model
+     * @return Model
      */
     public function update($id, array $data);
 
     /**
      * @param $id
      *
-     * @return void
+     * @return bool|null
      */
     public function delete($id);
 
