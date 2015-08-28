@@ -5,12 +5,9 @@ use Tests\TestCase;
 use Orbiagro\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
 use Orbiagro\Repositories\CategoryRepository;
-use Tests\Orbiagro\Traits\TearsDownMockery;
 
 class CategoryRepositoryTest extends TestCase
 {
-
-    use TearsDownMockery;
 
     public function testConstruct()
     {
@@ -143,54 +140,6 @@ class CategoryRepositoryTest extends TestCase
         $this->assertEquals(
             'mocked',
             $mockRepo->delete(1)
-        );
-    }
-
-    public function testGetBySlugOrIdWithSlug()
-    {
-        $mock = Mockery::mock(Category::class)
-                       ->makePartial();
-
-        $mock->shouldReceive('where')
-             ->once()
-             ->andReturnSelf();
-
-        $mock->shouldReceive('orWhere')
-            ->once()
-            ->andReturnSelf();
-
-        $mock->shouldReceive('firstOrFail')
-             ->once()
-             ->andReturn('mocked');
-
-        $mockRepo = Mockery::mock(CategoryRepository::class, [$mock])
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
-
-        $mockRepo->shouldReceive('checkId')
-            ->once()
-            ->andReturnNull();
-
-        $this->assertEquals(
-            'mocked',
-            $mockRepo->getBySlugOrId(1)
-        );
-    }
-
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
-     */
-    public function testGetBySlugOrIdShouldThrowHttpException()
-    {
-        $mock = Mockery::mock(Category::class);
-
-        $mockRepo = Mockery::mock(CategoryRepository::class, [$mock])
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
-
-        $this->assertEquals(
-            'mocked',
-            $mockRepo->getBySlugOrId('')
         );
     }
 
