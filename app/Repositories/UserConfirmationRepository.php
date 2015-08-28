@@ -1,6 +1,5 @@
 <?php namespace Orbiagro\Repositories;
 
-use Auth;
 use LogicException;
 use Orbiagro\Models\Profile;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +10,8 @@ use Orbiagro\Repositories\Interfaces\UserConfirmationInterface;
 
 class UserConfirmationRepository extends AbstractRepository implements UserConfirmationInterface
 {
+
+    protected $user;
 
     /**
      * @param UserRepositoryInterface $user
@@ -28,13 +29,13 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
      */
     public function create()
     {
-        $user = Auth::user();
+        $user = $this->getCurrentUser();
 
         if (is_null($user)) {
             throw new LogicException('Se necesita el usuario para crear Confirmacion.');
         }
 
-        $confirmation = new UserConfirmation(['data' => true]);
+        $confirmation = $this->getNewInstance(['data' => true]);
 
         $user->confirmation()->save($confirmation);
 
@@ -72,7 +73,7 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
      */
     public function validateUser(Model $model)
     {
-        $user = Auth::user();
+        $user = $this->getCurrentUser();
 
         if ($user->id != $model->user_id) {
             return null;

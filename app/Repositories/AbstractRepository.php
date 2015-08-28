@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Repositories;
 
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractRepository
@@ -58,5 +59,15 @@ abstract class AbstractRepository
     public function getById($id)
     {
         return $this->model->findOrFail($id);
+    }
+
+    /**
+     * @return null|\Orbiagro\Models\User
+     */
+    protected function getCurrentUser()
+    {
+        $user = Auth::user();
+
+        return $user;
     }
 }

@@ -15,12 +15,10 @@
 $faker = Faker\Factory::create('es_ES');
 
 $factory->define(Orbiagro\Models\User::class, function ($faker) {
-    $profileId = Orbiagro\Models\Profile::where('description', 'Usuario')
-        ->firstOrFail()->id;
     return [
         'name'           => $faker->name,
         'email'          => $faker->email,
-        'profile_id'     => $profileId,
+        'profile_id'     => 1,
         'password'       => bcrypt(str_random(10)),
         'remember_token' => str_random(10),
     ];
@@ -198,7 +196,7 @@ $factory->define(Orbiagro\Models\Provider::class, function ($faker) {
 
 $factory->define(Orbiagro\Models\Visit::class, function () {
     return [
-        'user_id'    => Orbiagro\Models\User::random()->first()->id,
+        'user_id'    => 1,
         'total'      => rand(1, 100),
         'created_by' => 1,
         'updated_by' => 1,
