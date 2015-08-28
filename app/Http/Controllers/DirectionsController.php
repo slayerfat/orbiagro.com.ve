@@ -1,10 +1,9 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Collection;
-use Orbiagro\Http\Controllers\Controller;
-use Orbiagro\Models\State;
 use Orbiagro\Models\Town;
+use Orbiagro\Models\State;
 use Orbiagro\Models\Parish;
+use Illuminate\Database\Eloquent\Collection;
 
 class DirectionsController extends Controller
 {

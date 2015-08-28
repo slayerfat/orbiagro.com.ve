@@ -6,12 +6,10 @@ use Tests\TestCase;
 use Orbiagro\Models\User;
 use Orbiagro\Models\UserConfirmation;
 use Orbiagro\Repositories\UserRepository;
-use Tests\Orbiagro\Traits\TearsDownMockery;
 use Orbiagro\Repositories\UserConfirmationRepository;
 
 class UserConfirmationRepositoryTest extends TestCase
 {
-    use TearsDownMockery;
 
     protected $profileMock;
 
