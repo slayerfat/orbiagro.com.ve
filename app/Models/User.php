@@ -222,7 +222,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function isOwnerOrAdmin($id)
     {
-        if ($this->profile->description === 'Administrador') {
+        if ($this->isAdmin()) {
             return true;
         }
 

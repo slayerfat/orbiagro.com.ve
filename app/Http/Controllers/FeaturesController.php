@@ -1,11 +1,14 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
-use Orbiagro\Http\Requests\FeatureRequest;
-use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Feature;
 use Illuminate\View\View as Response;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Http\Requests\FeatureRequest;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\FeatureRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 
 class FeaturesController extends Controller
 {
@@ -13,49 +16,56 @@ class FeaturesController extends Controller
     use CanSaveUploads;
 
     /**
-     * @var \Orbiagro\Models\User
+     * @var FeatureRepositoryInterface
      */
-    protected $user;
+    protected $featRepo;
 
     /**
-     * @var Feature
+     * @var ProductRepositoryInterface
      */
-    protected $feature;
+    protected $productRepo;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    protected $userRepo;
 
     /**
      * Create a new controller instance.
      *
-     * @param Feature $feature
-     * @param Guard   $auth
+     * @param FeatureRepositoryInterface $featureRepository
+     * @param ProductRepositoryInterface $productRepository
+     * @param UserRepositoryInterface    $userRepository
      */
-    public function __construct(Feature $feature, Guard $auth)
-    {
+    public function __construct(
+        FeatureRepositoryInterface $featureRepository,
+        ProductRepositoryInterface $productRepository,
+        UserRepositoryInterface $userRepository
+    ) {
         $this->middleware('auth');
 
-        $this->user = $auth->user();
-
-        $this->feature = $feature;
+        $this->featRepo = $featureRepository;
+        $this->productRepo = $productRepository;
+        $this->userRepo = $userRepository;
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @param  int  $id
-     * @return Response
+     * @param  int    $id
+     * @param Feature $feature
+     *
+     * @return RedirectResponse|Response
      */
-    public function create($id)
+    public function create($id, Feature $feature)
     {
-        $product = Product::findOrFail($id)->load('features', 'user');
+        $product = $this->productRepo->getById($id);
 
-        if ($product->features->count() < 5) {
-            if ($this->user->isOwnerOrAdmin($product->user->id)) {
-                return view('feature.create')->with([
-                    'product' => $product,
-                    'feature' => $this->feature
-                ]);
-            }
-
-            return $this->redirectToroute('products.show', $product->slug);
+        if ($this->featRepo->validateCreateRequest($id)) {
+            return view('feature.create')->with([
+                'product' => $product,
+                'feature' => $feature
+            ]);
         }
 
         return $this->redirectToRoute(
@@ -72,35 +82,32 @@ class FeaturesController extends Controller
      * @param  int            $id
      * @param  FeatureRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function store($id, FeatureRequest $request)
     {
-        $product = Product::findOrFail($id);
+        /** @var Product $product */
+        $product = $this->productRepo->getById($id);
 
         // el producto puede tener como maximo 5 features
-        if ($product->features->count() >= 5) {
+        if (!$this->featRepo->validateCreateRequest($id)) {
             return $this->redirectToRoute(
                 'products.show',
                 $product->slug,
-                'Este Producto ya posee 5 Distintivos, por favor actualice los existentes.'
+                'Este Producto ya posee 5 Distintivos, actualice los existentes.'
             );
         }
 
-        $this->feature->title       = $request->input('title');
-        $this->feature->description = $request->input('description');
-
-        $product->features()->save($this->feature);
+        $feature = $this->featRepo->create($request->all(), $product);
 
         /**
          * @see MakersController::create()
          */
         flash('Distintivo creado correctamente.');
 
-        $this->createFile($request, $this->feature);
+        $this->createFile($request, $feature);
 
-        $this->createImage($request, $this->feature);
-
+        $this->createImage($request, $feature);
 
         return redirect()->route('products.show', $product->slug);
     }
@@ -113,13 +120,21 @@ class FeaturesController extends Controller
      */
     public function edit($id)
     {
-        $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
+        $feature = $this->featRepo->getById($id);
 
-        if (!$this->user->isOwnerOrAdmin($this->feature->product->user->id)) {
-            return $this->redirectToroute('products.show', $this->feature->product->slug);
+        $feature->load('product', 'product.user');
+
+        $status = $this->userRepo
+            ->canUserManipulate($feature->product->user_id);
+
+        if (!$status) {
+            return $this->redirectToroute(
+                'products.show',
+                $feature->product->slug
+            );
         }
 
-        return view('feature.edit')->with(['feature' => $this->feature]);
+        return view('feature.edit', compact('feature'));
     }
 
     /**
@@ -133,20 +148,18 @@ class FeaturesController extends Controller
     public function update($id, FeatureRequest $request)
     {
         // se carga el producto para el redirect (id)
-        $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
-
-        $this->feature->update($request->all());
+        $feature = $this->featRepo->update($id, $request->all());
 
         /**
          * @see MakersController::create()
          */
         flash('El Distintivo ha sido actualizado correctamente.');
 
-        $this->updateFile($request, $this->feature);
+        $this->updateFile($request, $feature);
 
-        $this->updateImage($request, $this->feature);
+        $this->updateImage($request, $feature);
 
-        return redirect()->route('products.show', $this->feature->product->slug);
+        return redirect()->route('products.show', $feature->product->slug);
     }
 
     /**
@@ -157,17 +170,11 @@ class FeaturesController extends Controller
      */
     public function destroy($id)
     {
-        $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
-
-        if (!$this->user->isOwnerOrAdmin($this->feature->product->user->id)) {
-            return $this->redirectToroute('products.show', $this->feature->product->slug);
-        }
-
-        $this->feature->delete();
+        $feature = $this->featRepo->delete($id);
 
         return $this->redirectToRoute(
             'products.show',
-            $this->feature->product->slug,
+            $feature->product->slug,
             'El Distintivo ha sido eliminado correctamente.',
             'info'
         );

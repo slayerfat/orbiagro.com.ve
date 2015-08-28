@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-interface UserRepositoryInterface
+interface ProductRepositoryInterface
 {
+
     /**
      * @param  mixed $id
      *
@@ -17,11 +18,4 @@ interface UserRepositoryInterface
      * @return Model
      */
     public function getById($id);
-
-    /**
-     * @param $id
-     *
-     * @return bool
-     */
-    public function canUserManipulate($id);
 }

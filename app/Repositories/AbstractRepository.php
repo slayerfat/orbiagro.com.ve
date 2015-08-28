@@ -2,6 +2,7 @@
 
 use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 abstract class AbstractRepository
 {
@@ -40,13 +41,12 @@ abstract class AbstractRepository
      */
     public function getBySlugOrId($id)
     {
+        $this->checkId($id);
+
         $model = $this->model
             ->where('slug', $id)
-            ->first();
-
-        if (!$model) {
-            return $this->getById($id);
-        }
+            ->orWhere('id', $id)
+            ->firstOrFail();
 
         return $model;
     }
@@ -58,6 +58,8 @@ abstract class AbstractRepository
      */
     public function getById($id)
     {
+        $this->checkId($id);
+
         return $this->model->findOrFail($id);
     }
 
@@ -69,5 +71,37 @@ abstract class AbstractRepository
         $user = Auth::user();
 
         return $user;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return void
+     * @throws HttpException
+     */
+    protected function checkId($id)
+    {
+        if (is_null($id) || trim($id) == '') {
+            throw new HttpException(
+                '400',
+                'Es necesario un identificador para continuar con el proceso.'
+            );
+        }
+    }
+
+    /**
+     * @param $id
+     *
+     * @return bool
+     */
+    protected function canUserManipulate($id)
+    {
+        $user = $this->getCurrentUser();
+
+        if ($user->isOwnerOrAdmin($id)) {
+            return true;
+        }
+
+        return false;
     }
 }

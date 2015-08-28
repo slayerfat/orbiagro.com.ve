@@ -1,6 +1,8 @@
 <?php namespace Orbiagro\Repositories;
 
-class ProductRepository extends AbstractRepository
+use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
+
+class ProductRepository extends AbstractRepository implements ProductRepositoryInterface
 {
 
 }

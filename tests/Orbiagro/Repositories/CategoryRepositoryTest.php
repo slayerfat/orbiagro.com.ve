@@ -155,11 +155,21 @@ class CategoryRepositoryTest extends TestCase
              ->once()
              ->andReturnSelf();
 
-        $mock->shouldReceive('first')
+        $mock->shouldReceive('orWhere')
+            ->once()
+            ->andReturnSelf();
+
+        $mock->shouldReceive('firstOrFail')
              ->once()
              ->andReturn('mocked');
 
-        $mockRepo = new CategoryRepository($mock);
+        $mockRepo = Mockery::mock(CategoryRepository::class, [$mock])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $mockRepo->shouldReceive('checkId')
+            ->once()
+            ->andReturnNull();
 
         $this->assertEquals(
             'mocked',
@@ -167,28 +177,20 @@ class CategoryRepositoryTest extends TestCase
         );
     }
 
-    public function testGetBySlugOrIdWithId()
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
+     */
+    public function testGetBySlugOrIdShouldThrowHttpException()
     {
-        $mock = Mockery::mock(Category::class)
-                       ->makePartial();
+        $mock = Mockery::mock(Category::class);
 
-        $mock->shouldReceive('where')
-             ->once()
-             ->andReturnSelf();
-
-        $mock->shouldReceive('first')
-             ->once()
-             ->andReturnNull();
-
-        $mock->shouldReceive('findOrFail')
-             ->once()
-             ->andReturn('mocked');
-
-        $mockRepo = new CategoryRepository($mock);
+        $mockRepo = Mockery::mock(CategoryRepository::class, [$mock])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
 
         $this->assertEquals(
             'mocked',
-            $mockRepo->getBySlugOrId(1)
+            $mockRepo->getBySlugOrId('')
         );
     }
 
