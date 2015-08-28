@@ -1,6 +1,7 @@
 <?php namespace Tests\Orbiagro\Repositories;
 
 use Mockery;
+use Orbiagro\Repositories\ProfileRepository;
 use Tests\TestCase;
 use Orbiagro\Models\User;
 use Orbiagro\Models\UserConfirmation;
@@ -12,6 +13,15 @@ class UserConfirmationRepositoryTest extends TestCase
 {
     use TearsDownMockery;
 
+    protected $profileMock;
+
+    public function setUp()
+    {
+        $this->profileMock = Mockery::mock(ProfileRepository::class);
+
+        parent::setUp();
+    }
+
     public function testConstruct()
     {
         $model = Mockery::mock(UserConfirmation::class)
@@ -20,7 +30,7 @@ class UserConfirmationRepositoryTest extends TestCase
         $userRepoMock = Mockery::mock(UserRepository::class)
             ->makePartial();
 
-        $repo = new UserConfirmationRepository($userRepoMock, $model);
+        $repo = new UserConfirmationRepository($userRepoMock, $this->profileMock, $model);
 
         $this->assertSame(
             $model,
@@ -44,6 +54,7 @@ class UserConfirmationRepositoryTest extends TestCase
             UserConfirmationRepository::class,
             [
                 $userRepoMock,
+                $this->profileMock,
                 $model
             ]
         )->shouldAllowMockingProtectedMethods()
@@ -87,6 +98,7 @@ class UserConfirmationRepositoryTest extends TestCase
             UserConfirmationRepository::class,
             [
                 $userRepoMock,
+                $this->profileMock,
                 $mock
             ]
         )->shouldAllowMockingProtectedMethods()
@@ -123,7 +135,7 @@ class UserConfirmationRepositoryTest extends TestCase
         $userRepoMock = Mockery::mock(UserRepository::class)
             ->makePartial();
 
-        $repo = new UserConfirmationRepository($userRepoMock, $model);
+        $repo = new UserConfirmationRepository($userRepoMock, $this->profileMock, $model);
 
         $this->assertEquals(
             'mocked',
@@ -152,7 +164,7 @@ class UserConfirmationRepositoryTest extends TestCase
         $userRepoMock = Mockery::mock(UserRepository::class)
                                ->makePartial();
 
-        $repo = new UserConfirmationRepository($userRepoMock, $model);
+        $repo = new UserConfirmationRepository($userRepoMock, $this->profileMock, $model);
 
         $this->assertNull($repo->getConfirmation(''));
     }
@@ -185,7 +197,7 @@ class UserConfirmationRepositoryTest extends TestCase
         $userRepoMock = Mockery::mock(UserRepository::class)
                                ->makePartial();
 
-        $repo = new UserConfirmationRepository($userRepoMock, $model);
+        $repo = new UserConfirmationRepository($userRepoMock, $this->profileMock, $model);
 
         $this->assertEquals(
             'mocked',
@@ -193,5 +205,102 @@ class UserConfirmationRepositoryTest extends TestCase
         );
     }
 
+    public function testValidateUser()
+    {
+        $confirmModelMockery = Mockery::mock(UserConfirmation::class)
+            ->makePartial();
 
+        $userRepoMock = Mockery::mock(UserRepository::class)
+            ->makePartial();
+
+        $profileRepoMock = Mockery::mock(ProfileRepository::class)
+            ->makePartial();
+
+        $profileRepoMock->shouldReceive('getByDescription')
+            ->once()
+            ->andReturnSelf();
+
+        $profileRepoMock->id = 1;
+
+        $repoMock = Mockery::mock(
+            UserConfirmationRepository::class,
+            [
+                $userRepoMock,
+                $profileRepoMock,
+                $confirmModelMockery
+            ]
+        )->shouldAllowMockingProtectedMethods()
+                           ->makePartial();
+
+        $userMock = Mockery::mock(User::class)->makePartial();
+
+        $userMock->id = 1;
+        $userMock->confirmation = true;
+
+        $confirmModelMockery->user_id = 1;
+
+        $userMock->shouldReceive('save')
+                 ->once()
+                 ->andReturnNull();
+
+        $repoMock->shouldReceive('getCurrentUser')
+                 ->once()
+                 ->andReturn($userMock);
+
+        $userMock->shouldReceive('confirmation')
+                 ->once()
+                 ->andReturnSelf();
+
+        $userMock->shouldReceive('delete')
+                 ->once()
+                 ->andReturnNull();
+
+        $this->assertSame(
+            $userMock,
+            $repoMock->validateUser($confirmModelMockery)
+        );
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testValidateUserShouldThrowExceptionWhenUserHasNoConfirmations()
+    {
+        $confirmModelMockery = Mockery::mock(UserConfirmation::class)
+                                      ->makePartial();
+
+        $userRepoMock = Mockery::mock(UserRepository::class)
+                               ->makePartial();
+
+        $profileRepoMock = Mockery::mock(ProfileRepository::class)
+                                  ->makePartial();
+
+        $profileRepoMock->id = 1;
+
+        $repoMock = Mockery::mock(
+            UserConfirmationRepository::class,
+            [
+                $userRepoMock,
+                $profileRepoMock,
+                $confirmModelMockery
+            ]
+        )->shouldAllowMockingProtectedMethods()
+                           ->makePartial();
+
+        $userMock = Mockery::mock(User::class)->makePartial();
+
+        $userMock->id = 1;
+        $userMock->confirmation = null;
+
+        $confirmModelMockery->user_id = 1;
+
+        $repoMock->shouldReceive('getCurrentUser')
+                 ->once()
+                 ->andReturn($userMock);
+
+        $this->assertSame(
+            $userMock,
+            $repoMock->validateUser($confirmModelMockery)
+        );
+    }
 }

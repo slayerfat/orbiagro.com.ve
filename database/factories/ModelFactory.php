@@ -24,6 +24,13 @@ $factory->define(Orbiagro\Models\User::class, function ($faker) {
     ];
 });
 
+$factory->define(Orbiagro\Models\UserConfirmation::class, function ($faker) {
+    return [
+        'data'           => $faker->text,
+        'user_id'        => 1,
+    ];
+});
+
 $factory->define(Orbiagro\Models\Profile::class, function ($faker) {
     return [
         'description' => $faker->text,

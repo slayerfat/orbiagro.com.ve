@@ -11,11 +11,13 @@ interface UserConfirmationInterface
 
     /**
      * @return Model
+     *
+     * @throws LogicException
      */
     public function create();
 
     /**
-     * @param string $data
+     * @param $data
      *
      * @return Model|null
      * @throws DuplicateConfirmationException
@@ -26,8 +28,6 @@ interface UserConfirmationInterface
      * @param Model $model
      *
      * @return null|\Orbiagro\Models\User
-     * @throws \Exception
-     * @throws \LogicException
      */
     public function validateUser(Model $model);
 }

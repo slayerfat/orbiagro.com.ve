@@ -3,29 +3,45 @@
 use LogicException;
 use Orbiagro\Models\Profile;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Models\UserConfirmation;
 use Orbiagro\Repositories\Exceptions\DuplicateConfirmationException;
+use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\UserConfirmationInterface;
 
 class UserConfirmationRepository extends AbstractRepository implements UserConfirmationInterface
 {
 
-    protected $user;
+    /**
+     * @var ProfileRepositoryInterface
+     */
+    private $profile;
 
     /**
-     * @param UserRepositoryInterface $user
-     * @param Model                   $model
+     * @var UserRepositoryInterface
      */
-    public function __construct(UserRepositoryInterface $user, Model $model)
-    {
-        parent::__construct($model);
+    private $user;
 
+    /**
+     * @param UserRepositoryInterface    $user
+     * @param ProfileRepositoryInterface $profile
+     * @param Model                      $model
+     */
+    public function __construct(
+        UserRepositoryInterface $user,
+        ProfileRepositoryInterface $profile,
+        Model $model
+    ) {
         $this->user = $user;
+
+        $this->profile = $profile;
+
+        parent::__construct($model);
     }
 
     /**
      * @return Model
+     *
+     * @throws LogicException
      */
     public function create()
     {
@@ -43,7 +59,7 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
     }
 
     /**
-     * @param string $data
+     * @param $data
      *
      * @return Model|null
      * @throws DuplicateConfirmationException
@@ -81,13 +97,18 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
             return null;
         }
 
-        if (!$user->confirmation) {
+        if (is_null($user->confirmation)) {
             $model->delete();
 
-            throw new LogicException('El usuario '.$user.' no posee confirmacion Confirmacion.');
+            throw new LogicException(
+                'El usuario '
+                .$user->name
+                .'Correo: '.$user->email
+                .' no posee Confirmacion.'
+            );
         }
 
-        $profile = Profile::whereDescription('Usuario')->first();
+        $profile = $this->profile->getByDescription('Usuario');
 
         $user->profile_id = $profile->id;
 
