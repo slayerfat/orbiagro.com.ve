@@ -165,6 +165,7 @@ return [
         Orbiagro\Providers\CategoriesRepositoriesServiceProvider::class,
         Orbiagro\Providers\UserRepositoriesServiceProvider::class,
         Orbiagro\Providers\ProductRepositoriesServiceProvider::class,
+        Orbiagro\Providers\MiscRepositoriesServiceProvider::class,
 
         /**
         * Vendor

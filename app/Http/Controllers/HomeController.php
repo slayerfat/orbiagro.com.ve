@@ -1,30 +1,48 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
-
-use Orbiagro\Models\Category;
-use Orbiagro\Models\SubCategory;
-use Orbiagro\Models\Promotion;
-use Orbiagro\Models\PromoType;
-
+use Illuminate\View\View;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\PromotionRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
-/**
- * Class HomeController
- * @package Orbiagro\Http\Controllers
- */
 class HomeController extends Controller
 {
 
     use SEOToolsTrait;
 
     /**
-     * Create a new controller instance.
+     * @var CategoryRepositoryInterface
      */
-    public function __construct()
-    {
+    protected $catRepo;
+
+    /**
+     * @var SubCategoryRepositoryInterface
+     */
+    protected $subCatRepo;
+
+    /**
+     * @var PromotionRepositoryInterface
+     */
+    protected $promoRepo;
+
+    /**
+     * Create a new controller instance.
+     * @param CategoryRepositoryInterface    $catRepo
+     * @param SubCategoryRepositoryInterface $subCatRepo
+     * @param PromotionRepositoryInterface   $promoRepo
+     */
+    public function __construct(
+        CategoryRepositoryInterface $catRepo,
+        SubCategoryRepositoryInterface $subCatRepo,
+        PromotionRepositoryInterface $promoRepo
+    ) {
         $this->middleware('auth', ['except' => 'index']);
+
+        $this->catRepo = $catRepo;
+        $this->subCatRepo = $subCatRepo;
+        $this->promoRepo = $promoRepo;
     }
 
     /**
@@ -33,25 +51,15 @@ class HomeController extends Controller
      * @todo mejorar logica de seleccion de tipos de promociones,
      *       abstraer a una clase o incluirlo dentro de la clase Promotion
      *
-     * @return Response
+     * @return View
      */
     public function index()
     {
-        $subCategory = SubCategory::has('products')->random()->first();
+        $subCategory = $this->subCatRepo->getRandom();
 
-        $cats = Category::all();
+        $cats = $this->catRepo->getAll();
 
-        // selecciona los tipos especificos
-        $typesId = PromoType::whereIn(
-            'description',
-            ['primavera', 'verano', 'otoño', 'invierno']
-        )->lists('id');
-
-        // selecciona las promociones existentes segun el tipo ya seleccionado
-        $promotions = Promotion::whereIn('promo_type_id', $typesId)
-            ->random()
-            ->take(3)
-            ->get();
+        $promotions = $this->promoRepo->getHomeRelated();
 
         $this->seo()->opengraph()->setUrl(action('HomeController@index'));
 
@@ -62,7 +70,7 @@ class HomeController extends Controller
      * Muestra la vista para el usuario no verificado.
      *
      * @param  Guard    $auth
-     * @return Response
+     * @return View
      */
     public function unverified(Guard $auth)
     {

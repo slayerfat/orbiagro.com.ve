@@ -23,18 +23,6 @@ abstract class AbstractRepository
     }
 
     /**
-     * Devuelve una nueva instancia del modelo (Products, User, etc).
-     *
-     * @param  array $data
-     *
-     * @return Model
-     */
-    protected function getNewInstance(array $data = [])
-    {
-        return $this->model->newInstance($data);
-    }
-
-    /**
      * @param  mixed $id
      *
      * @return Model
@@ -61,6 +49,18 @@ abstract class AbstractRepository
         $this->checkId($id);
 
         return $this->model->findOrFail($id);
+    }
+
+    /**
+     * Devuelve una nueva instancia del modelo (Products, User, etc).
+     *
+     * @param  array $data
+     *
+     * @return Model
+     */
+    protected function getNewInstance(array $data = [])
+    {
+        return $this->model->newInstance($data);
     }
 
     /**
