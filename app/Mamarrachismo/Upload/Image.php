@@ -1,16 +1,16 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
-use Exception;
 use Log;
-use LogicException;
-use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
-use Orbiagro\Repositories\Exceptions\DefaultImageFileNotFoundException;
-use Validator;
 use Storage;
+use Exception;
+use Validator;
 use Intervention;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use LogicException;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Models\Image as ImageModel;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
+use Orbiagro\Repositories\Exceptions\DefaultImageFileNotFoundException;
 
 class Image extends Upload
 {
@@ -21,7 +21,7 @@ class Image extends Upload
      * @param Model $model El modelo a relacionar con la imagen.
      * @param array $array El array con los objetos UploadedFiles.
      * @return \Illuminate\Support\Collection
-     * @throws Exception
+     * @throws LogicException
      */
     public function createImages(Model $model, array $array = null)
     {
@@ -51,7 +51,7 @@ class Image extends Upload
 
                 $this->errors = $validator->errors()->all();
 
-                throw new Exception('Imagenes no validas.');
+                throw new LogicException('Imagenes no validas.');
             }
 
             // se crea la imagen en el HD.
@@ -86,11 +86,12 @@ class Image extends Upload
     }
 
     /**
-     * crea la imagen por defecto relacionada con algun modelo.
+     * Crea la imagen por defecto relacionada con algun modelo.
      *
-     * @param Model $model El modelo relacionado para ser asociado.
-     * @param string $modelPath La direccion a donde se guardara
+     * @param Model $model
+     * @param null $modelPath
      * @return Model
+     * @throws DefaultImageFileNotFoundException
      * @throws Exception
      */
     public function createDefaultImage(Model $model, $modelPath = null)
@@ -126,18 +127,27 @@ class Image extends Upload
     }
 
     /**
-     * actualiza la imagen relacionada con algun modelo.
+     * Actualiza la imagen relacionada con algun modelo.
      *
-     * @param Model $model El modelo de la imagen.
-     * @param UploadedFile $file Objeto UploadedFiles con la imagen.
-     * @param array $options las opcions relacionadas con Intervention.
+     * @param Model $model El modelo Eloquent.
+     * @param UploadedFile $file Objeto UploadedFiles con el archivo.
+     * @param array $options Las opcions relacionadas la operacion.
      * @return Model
+     * @throws DefaultImageFileNotFoundException
      * @throws Exception
+     * @throws OrphanImageException
      */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
         if (!$model instanceof ImageModel) {
             $this->checkModelImage($model);
+
+            Log::alert(
+                'Posible manipulacion de archivos en carpeta publica.',
+                ['self' => $this, 'mode' => $model, 'user' => \Auth::user()]
+            );
+
+            flash()->warning('Problemas inesperados en el servidor.');
 
             return $this->createDefaultImage($model);
         }
@@ -237,7 +247,8 @@ class Image extends Upload
                         'image_id'       => $imageModel->id,
                         'imageable_id'   => $imageModel->imageable_id,
                         'imageable_type' => $imageModel->imageable_type,
-                        'user' => \Auth::user()
+                        'path'           => $path,
+                        'user'           => \Auth::user()
                     ]
                 );
 
@@ -412,13 +423,15 @@ class Image extends Upload
      */
     private function getModelPath(Model $model, $modelPath)
     {
-        if ($modelPath === null && isset($this->path)) {
-            return $this->path;
-        } elseif (!isset($this->path)) {
+        if ($modelPath === null) {
+            if (isset($this->path)) {
+                return $this->path;
+            }
+
             return $this->path = $this->generatePathFromModel($model);
         }
 
-        throw new LogicException('No se puede obtener path para generar Imagen.');
+        return $modelPath;
     }
 
     /**

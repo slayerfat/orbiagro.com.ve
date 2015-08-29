@@ -82,6 +82,8 @@ class ImageRepository extends AbstractRepository implements ImageRepositoryInter
         /** @var Model $parentModel */
         $parentModel = $image->imageable;
 
+        $this->upload->deleteImageFiles($image, true);
+
         $image->delete();
 
         $this->checkModelClass($parentModel);
