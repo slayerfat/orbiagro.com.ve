@@ -7,7 +7,7 @@ use Orbiagro\Models\Category;
 use Orbiagro\Models\Maker;
 use Orbiagro\Models\SubCategory;
 
-class DelitingWithImageServiceProvider extends ServiceProvider
+class DeletingWithImageServiceProvider extends ServiceProvider
 {
 
     use ModelEventsTrait;

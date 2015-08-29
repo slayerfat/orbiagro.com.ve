@@ -157,7 +157,7 @@ return [
         Orbiagro\Providers\RouteServiceProvider::class,
         Orbiagro\Providers\ViewServiceProvider::class,
         Orbiagro\Providers\Internal\CreateAndUpdateModelServiceProvider::class,
-        Orbiagro\Providers\Internal\DelitingWithImageServiceProvider::class,
+        Orbiagro\Providers\Internal\DeletingWithImageServiceProvider::class,
 
         /**
         * App
