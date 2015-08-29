@@ -1,8 +1,9 @@
 <?php namespace Orbiagro\Mamarrachismo\Traits\Controllers;
 
+use Log;
+use Orbiagro\Http\Requests\Request;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Orbiagro\Http\Requests\Request;
 // el abstracto de ImageUpload y FileUpload
 use Orbiagro\Mamarrachismo\Upload\Upload;
 use Orbiagro\Mamarrachismo\Upload\Image as ImageUpload;
@@ -72,6 +73,7 @@ trait CanSaveUploads
             $uploader->create($model, $file);
         } catch (\Exception $e) {
             flash()->warning('Algunos Archivos no fueron guardados.');
+            Log::debug($e);
         }
     }
 
@@ -115,11 +117,7 @@ trait CanSaveUploads
     private function updatePrototype(Model $model, Upload $uploader, UploadedFile $file = null)
     {
         if ($file) {
-            try {
-                $uploader->update($model, $file);
-            } catch (\Exception $e) {
-                flash()->warning('Algunos Archivos no fueron actualizados.');
-            }
+            $uploader->update($model, $file);
         }
     }
 }

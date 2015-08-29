@@ -4,6 +4,7 @@ use Exception;
 use Log;
 use LogicException;
 use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
+use Orbiagro\Repositories\Exceptions\DefaultImageFileNotFoundException;
 use Validator;
 use Storage;
 use Intervention;
@@ -94,9 +95,9 @@ class Image extends Upload
      */
     public function createDefaultImage(Model $model, $modelPath = null)
     {
-        if ($modelPath === null && isset($this->path)) {
-            $modelPath = $this->path;
-        }
+        $modelPath = $this->getModelPath($model, $modelPath);
+
+        $this->checkModelImage($model);
 
         // el nombre del archivo
         $name = date('Ymdhmmss-').str_random(20);
@@ -104,7 +105,7 @@ class Image extends Upload
 
         // se copia el archivo
         if (!Storage::disk('public')->copy('sin_imagen.gif', $path)) {
-            throw new Exception('Imagen por defecto no puede ser creada.');
+            throw new DefaultImageFileNotFoundException('Imagen por defecto no puede ser creada.');
         }
 
         // la data necesaria para crear el modelo de imagen.
@@ -135,13 +136,20 @@ class Image extends Upload
      */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
+        if (!$model instanceof ImageModel) {
+            $this->checkModelImage($model);
+
+            return $this->createDefaultImage($model);
+        }
+
         /** @var Model $parentModel */
         $parentModel = $model->imageable;
 
         if ($parentModel == null) {
             throw new OrphanImageException(
                 'La imagen con id: '.$model->id
-                .'no posee padre.'
+                .' no posee padre.',
+                $model->id
             );
         }
 
@@ -393,6 +401,34 @@ class Image extends Upload
                     .get_class($model)
                     .'desconocido, no se puede guardar imagen.'
                 );
+        }
+    }
+
+    /**
+     * Obtiene la direccion para generar alguna imagen.
+     * @param Model $model
+     * @param $modelPath
+     * @return string
+     */
+    private function getModelPath(Model $model, $modelPath)
+    {
+        if ($modelPath === null && isset($this->path)) {
+            return $this->path;
+        } elseif (!isset($this->path)) {
+            return $this->path = $this->generatePathFromModel($model);
+        }
+
+        throw new LogicException('No se puede obtener path para generar Imagen.');
+    }
+
+    /**
+     * Elimina la imagen en la base de datos.
+     * @param Model $model
+     */
+    private function checkModelImage(Model $model)
+    {
+        if ($model->image) {
+            $model->image()->delete();
         }
     }
 }

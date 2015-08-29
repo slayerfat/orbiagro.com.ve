@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Orbiagro\Models\Image;
+use Orbiagro\Repositories\Exceptions;
 
 interface ImageRepositoryInterface
 {
@@ -27,4 +28,11 @@ interface ImageRepositoryInterface
      * @throws \Exception
      */
     public function delete($id);
+
+    /**
+     * @param Model $parentModel
+     * @return Model
+     * @throws Exceptions\DefaultImageFileNotFoundException
+     */
+    public function createDefault(Model $parentModel);
 }
