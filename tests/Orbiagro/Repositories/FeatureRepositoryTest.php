@@ -99,7 +99,8 @@ class FeatureRepositoryTest extends TestCase
 
     public function testUpdate()
     {
-        $mock = Mockery::mock(Feature::class);
+        $mock = Mockery::mock(Feature::class)
+            ->makePartial();
 
         $repo = Mockery::mock(FeatureRepository::class, [$mock])
             ->shouldAllowMockingProtectedMethods()
@@ -107,20 +108,18 @@ class FeatureRepositoryTest extends TestCase
 
         $repo->shouldReceive('getById')
             ->once()
-            ->with(1)
-            ->andReturnSelf();
+            ->andReturn($mock);
 
-        $repo->shouldReceive('update')
+        $mock->shouldReceive('update')
             ->once()
             ->andReturnNull();
 
-        $repo->shouldReceive('load')
+        $mock->shouldReceive('load')
             ->once()
             ->andReturnNull();
 
-        $this->markTestIncomplete('Lluvia seria, pushing antes que se vaya la luz, lol');
-
-        $this->assertNull(
+        $this->assertSame(
+            $mock,
             $repo->update(1, [])
         );
     }
