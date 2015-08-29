@@ -23,8 +23,7 @@ class ProductTableSeeder extends Seeder
         // crear algunos productos con sus caracteristicas particulares.
         Orbiagro\Models\User::all()->each(function ($user) {
             // es necesario hacer esto por cada producto.
-            factory(Orbiagro\Models\Product::class, 20)->make()->each(function ($product) use ($user) {
-
+            factory(Orbiagro\Models\Product::class, 'realRelations', 20)->make()->each(function ($product) use ($user) {
                 // se guarda el producto en la base de datos.
                 $user->products()->save($product);
                 $this->command->info("--- guardado producto {$product->title} ---");
