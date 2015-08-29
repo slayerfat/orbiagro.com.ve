@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
+use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
 use Validator;
 use Storage;
 use Intervention;
@@ -132,17 +133,17 @@ class Image extends Upload
      */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
-        // si no hay algun modelo relacionado, se crea uno de cero.
-        if ($model->image == null) {
-            // create devuelve una coleccion
-            $results = $this->create($model, $file);
+        /** @var Model $parentModel */
+        $parentModel = $model->imageable;
 
-            return $results->first();
+        if ($parentModel == null) {
+            throw new OrphanImageException(
+                'La imagen con id: '.$model->id
+                .'no posee padre.'
+            );
         }
 
-        $imageModel = $model->image;
-
-        $this->path = $this->generatePathFromModel($model);
+        $this->path = $this->generatePathFromModel($parentModel);
 
         // el validador
         $validator = Validator::make(['image' => $file], $this->imageRules);
@@ -154,24 +155,27 @@ class Image extends Upload
         }
 
         // verdadero porque se eliminan TODOS los archivos
-        $this->deleteImageFiles($imageModel, true);
+        $this->deleteImageFiles($model, true);
 
         // se crea la imagen en el HD y se actualiza el modelo.
         if (!$result = $this->makeImageFile($file, $this->path, $options)) {
-            return $this->createDefaultImage($model, $this->path);
+            return $this->createDefaultImage($parentModel, $this->path);
         }
 
-        return $imageModel->update($result);
+        $model->update($result);
+
+        return $model;
     }
 
     /**
+     * Cropea la imagen y la persiste en la BD.
      * @param  Model $image  la imagen.
      * @param  int   $width
      * @param  int   $height
      * @param  int   $posX
      * @param  int   $posY
      *
-     * @return Model
+     * @return bool
      */
     public function cropImage(Model $image, $width, $height, $posX = null, $posY = null)
     {

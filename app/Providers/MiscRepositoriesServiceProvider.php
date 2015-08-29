@@ -1,12 +1,14 @@
-<?php
+<?php namespace Orbiagro\Providers;
 
-namespace Orbiagro\Providers;
-
-use Illuminate\Support\ServiceProvider;
+use Orbiagro\Models\Image;
 use Orbiagro\Models\Promotion;
 use Orbiagro\Models\PromoType;
-use Orbiagro\Repositories\Interfaces\PromotionRepositoryInterface;
+use Illuminate\Support\ServiceProvider;
+use Orbiagro\Repositories\ImageRepository;
 use Orbiagro\Repositories\PromotionRepository;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\PromotionRepositoryInterface;
 
 class MiscRepositoriesServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,10 @@ class MiscRepositoriesServiceProvider extends ServiceProvider
     {
         $this->app->bind(PromotionRepositoryInterface::class, function ($app) {
             return new PromotionRepository($app[PromoType::class], $app[Promotion::class]);
+        });
+
+        $this->app->bind(ImageRepositoryInterface::class, function ($app) {
+            return new ImageRepository($app[Image::class], $app[Upload::class]);
         });
     }
 }

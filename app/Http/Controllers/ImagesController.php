@@ -1,29 +1,30 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
 use Exception;
 use Orbiagro\Models\Image;
-use Intervention;
 use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-use Orbiagro\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 use Illuminate\View\View as Response;
+use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
 
-/**
- * Class ImagesController
- * @package Orbiagro\Http\Controllers
- */
 class ImagesController extends Controller
 {
 
     /**
-     * Create a new controller instance.
+     * @var ImageRepositoryInterface
      */
-    public function __construct()
+    private $imageRepo;
+
+    /**
+     * Create a new controller instance.
+     * @param ImageRepositoryInterface $imageRepo
+     */
+    public function __construct(ImageRepositoryInterface $imageRepo)
     {
         $this->middleware('user.admin');
+
+        $this->imageRepo = $imageRepo;
     }
 
     /**
@@ -34,45 +35,27 @@ class ImagesController extends Controller
      */
     public function edit($id)
     {
-        $image = Image::findOrFail($id);
+        $image = $this->imageRepo->getById($id);
 
         return view('images.edit', compact('image'));
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  int     $id
+     * @param  int $id
      * @param  Request $request
-     * @param  Upload  $upload
-     *
      * @return Response
      */
-    public function update($id, Request $request, Upload $upload)
+    public function update($id, Request $request)
     {
-        $upload->userId = Auth::id();
+        $image = $this->imageRepo->update($id, $request);
 
-        $image = Image::with('imageable')->findOrFail($id);
+        /** @var Model $model */
+        $model = $image->imageable;
 
-        $data = $this->getControllerNameFromModel($image->imageable);
+        $data = $this->getControllerNameFromModel($model);
 
         flash()->success('Imagen Actualizada exitosamente.');
-
-        if ($request->file('image')) {
-            $upload->update($image, $request->file('image'));
-
-            return redirect()->action($data['controller'], $data['id']);
-        }
-
-        // http://image.intervention.io/api/crop
-        // se ajusta segun estos valores:
-        $upload->cropImage(
-            $image,
-            $request->input('dataWidth'),
-            $request->input('dataHeight'),
-            $request->input('dataX'),
-            $request->input('dataY')
-        );
 
         return redirect()->action($data['controller'], $data['id']);
     }

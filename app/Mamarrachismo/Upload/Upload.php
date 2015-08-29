@@ -1,8 +1,6 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
-use Validator;
-use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 
@@ -125,7 +123,7 @@ abstract class Upload
                 return "promos/{$model->id}";
 
             default:
-                throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".gettype($model), 2);
+                throw new Exception('Modelo desconocido, no se puede crear ruta, modelo '.get_class($model));
 
         }
     }

@@ -5,12 +5,6 @@ use Orbiagro\Models\Promotion;
 
 interface PromotionRepositoryInterface
 {
-    /**
-     * @param  mixed $id
-     *
-     * @return Promotion
-     */
-    public function getBySlugOrId($id);
 
     /**
      * @param  mixed $id

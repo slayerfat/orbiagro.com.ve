@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Repositories;
 
 use Auth;
+use Orbiagro\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -13,6 +14,13 @@ abstract class AbstractRepository
      * @var Model
      */
     protected $model;
+
+    /**
+     * El usuario en linea.
+     *
+     * @var User
+     */
+    protected $currentUser;
 
     /**
      * @param Model $model
@@ -68,9 +76,13 @@ abstract class AbstractRepository
      */
     protected function getCurrentUser()
     {
-        $user = Auth::user();
+        if (!isset($this->currentUser) || is_null($this->currentUser)) {
+            $this->currentUser = Auth::user();
+        }
 
-        return $user;
+        $this->currentUser = Auth::user();
+
+        return $this->currentUser;
     }
 
     /**
@@ -96,12 +108,14 @@ abstract class AbstractRepository
      */
     protected function canUserManipulate($id)
     {
-        $user = $this->getCurrentUser();
-
-        if ($user->isOwnerOrAdmin($id)) {
-            return true;
+        if (!isset($this->currentUser)) {
+            $this->getCurrentUser();
         }
 
-        return false;
+        if (is_null($this->currentUser)) {
+            return false;
+        }
+
+        return $this->currentUser->isOwnerOrAdmin($id);
     }
 }
