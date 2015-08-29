@@ -1,7 +1,6 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Exception;
-use Orbiagro\Models\Image;
+use LogicException;
 use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\View\View as Response;
@@ -68,12 +67,18 @@ class ImagesController extends Controller
      */
     public function destroy($id)
     {
-        $image = Image::with('imageable')->findOrFail($id);
-
-        $product = $image->imageable;
+        $parentModel = $this->imageRepo->delete($id);
 
         flash()->success('Imagen Eliminada exitosamente.');
-        return redirect()->action('ProductsController@show', $product->id);
+
+        $data = $this->getControllerNameFromModel($parentModel);
+
+        return $this->redirectToRoute(
+            $data['route'],
+            $data['id'],
+            'Imagen eliminada exitosamente',
+            'success'
+        );
     }
 
     /**
@@ -82,41 +87,51 @@ class ImagesController extends Controller
      *
      * @param  Model $model el modelo a manipular.
      * @return array
-     * @throws Exception
+     * @throws LogicException
      */
     protected function getControllerNameFromModel(Model $model)
     {
-        $array = ['controller' => '', 'id' => null];
+        $array = [
+            'controller' => '',
+            'route' => '',
+            'id' => null
+        ];
 
         switch (get_class($model)) {
             case 'Orbiagro\Models\Product':
                 $array['controller'] = 'ProductsController@show';
+                $array['route'] = 'products.';
                 break;
 
             case 'Orbiagro\Models\Feature':
                 $array['controller'] = 'ProductsController@show';
+                $array['route'] = 'products.';
 
                 $array['id'] = $model->product->id;
                 break;
 
             case 'Orbiagro\Models\Category':
                 $array['controller'] = 'CategoriesController@show';
+                $array['route'] = 'cats.';
                 break;
 
             case 'Orbiagro\Models\SubCategory':
                 $array['controller'] = 'SubCategoriesController@show';
+                $array['route'] = 'subCats.';
                 break;
 
             case 'Orbiagro\Models\Maker':
                 $array['controller'] = 'MakersController@show';
+                $array['route'] = 'makers.';
                 break;
 
             case 'Orbiagro\Models\Promotion':
                 $array['controller'] = 'PromotionsController@show';
+                $array['route'] = 'promotions.';
                 break;
 
             default:
-                throw new Exception('modelo desconocido, no se puede crear ruta de '.get_class($model));
+                throw new LogicException('modelo desconocido, no se puede crear ruta de '.get_class($model));
 
         }
 

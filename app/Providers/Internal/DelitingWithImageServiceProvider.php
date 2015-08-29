@@ -1,8 +1,11 @@
-<?php namespace Orbiagro\Providers;
+<?php namespace Orbiagro\Providers\Internal;
 
 use Illuminate\Support\ServiceProvider;
 
 use Orbiagro\Mamarrachismo\Traits\Providers\ModelEventsTrait;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\Maker;
+use Orbiagro\Models\SubCategory;
 
 class DelitingWithImageServiceProvider extends ServiceProvider
 {
@@ -17,9 +20,9 @@ class DelitingWithImageServiceProvider extends ServiceProvider
     public function boot()
     {
         $models = [
-            Orbiagro\Models\Category::class,
-            Orbiagro\Models\Maker::class,
-            Orbiagro\Models\SubCategory::class,
+            Category::class,
+            Maker::class,
+            SubCategory::class,
         ];
 
         foreach ($models as $namespace) {

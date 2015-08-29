@@ -14,9 +14,13 @@ class PromotionTableSeeder extends Seeder
         // upload necesita el ID del usuario a asociar.
         $this->upload = new Upload(1);
 
+        $dir = class_basename(Orbiagro\Models\Promotion::class);
+
+        $dir = strtolower($dir);
+
         // se elimina el directorio de todos los archivos
-        Storage::disk('public')->deleteDirectory('promos');
-        Storage::disk('public')->makeDirectory('promos');
+        Storage::disk('public')->deleteDirectory($dir);
+        Storage::disk('public')->makeDirectory($dir);
 
         $product = Orbiagro\Models\Product::first();
 

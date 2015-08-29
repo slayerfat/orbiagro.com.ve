@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Repositories\Interfaces;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Orbiagro\Models\Image;
 
@@ -19,4 +20,11 @@ interface ImageRepositoryInterface
      * @return Image
      */
     public function update($id, Request $request);
+
+    /**
+     * @param $id
+     * @return Model
+     * @throws \Exception
+     */
+    public function delete($id);
 }

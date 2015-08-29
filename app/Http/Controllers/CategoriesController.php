@@ -60,7 +60,7 @@ class CategoriesController extends Controller
     public function create()
     {
         return view('category.create')->with([
-            'cat' => $this->cat->getNewInstance()
+            'cat' => $this->cat->getEmptyInstance()
         ]);
     }
 

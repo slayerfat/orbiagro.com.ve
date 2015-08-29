@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Models\Category;
 
 interface CategoryRepositoryInterface
 {
@@ -61,4 +62,9 @@ interface CategoryRepositoryInterface
      * @return Model
      */
     public function getById($id);
+
+    /**
+     * @return Category
+     */
+    public function getEmptyInstance();
 }

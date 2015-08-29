@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Repositories;
 
+use Orbiagro\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
@@ -8,11 +9,19 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 {
 
     /**
-     * @return Collection;
+     * @return Collection
      */
     public function getAll()
     {
         return $this->model->all()->load('subCategories');
+    }
+
+    /**
+     * @return Category
+     */
+    public function getEmptyInstance()
+    {
+        return $this->getNewInstance();
     }
 
     /**
@@ -45,7 +54,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
      *
      * @return Model
      */
-    public function create(array $data)
+    public function create(array $data = [])
     {
         $cat = $this->getNewInstance($data);
 

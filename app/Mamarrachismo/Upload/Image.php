@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
+use LogicException;
 use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
 use Validator;
 use Storage;
@@ -277,12 +278,12 @@ class Image extends Upload
      *
      * @param  array $data la informacion relacionada con la imagen a crear.
      * @return array
-     * @throws Exception
+     * @throws LogicException
      */
     private function makeOriginalFile(array $data)
     {
         if (!Storage::disk('public')->exists($data['path'])) {
-            throw new Exception('No existe archivo asociado en el disco.');
+            throw new LogicException('No existe archivo asociado en el disco.');
         }
 
         $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];

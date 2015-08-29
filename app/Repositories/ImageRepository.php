@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Repositories;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Orbiagro\Models\Image;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
@@ -56,5 +57,22 @@ class ImageRepository extends AbstractRepository implements ImageRepositoryInter
         );
 
         return $image;
+    }
+
+    /**
+     * @param $id
+     * @return Model
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        $image = $this->getById($id);
+
+        /** @var Model $parentModel */
+        $parentModel = $image->imageable;
+
+        $image->delete();
+
+        return $parentModel;
     }
 }
