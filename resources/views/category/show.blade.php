@@ -14,27 +14,7 @@
           {!! Form::close() !!}
         </div>
         @if($cat->image)
-          <div class="col-xs-2">
-            <span>
-              <a href="{{ action('ImagesController@edit', $cat->image->id) }}">
-                <button
-                  type="button"
-                  name="image-edit"
-                  class="btn btn-default btn-block">Editar Imagen</button>
-              </a>
-            </span>
-          </div>
-          <div class="col-xs-2">
-            {!! Form::open(['method' => 'DELETE', 'route' => ['images.destroy', $cat->image->id]]) !!}
-            {!! Form::submit('Eliminar Imagen', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
-            {!! Form::close() !!}
-          </div>
-          <div>
-            <img
-              src="{!! asset($cat->image->small) !!}"
-              alt="{{ $cat->image->alt }}"
-              class="img-responsive"/>
-          </div>
+          @include('partials.images.image-admin-buttons', ['image' => $cat->image])
         @endif
       </div>
     </div>
