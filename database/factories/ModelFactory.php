@@ -137,12 +137,9 @@ $factory->define(Orbiagro\Models\Direction::class, function ($faker) {
 });
 
 $factory->define(Orbiagro\Models\Product::class, function ($faker) {
-    $maker  = Orbiagro\Models\Maker::random()->first();
-    $subCat = Orbiagro\Models\SubCategory::random()->first();
-
     return [
-        'maker_id'        => $maker->id,
-        'sub_category_id' => $subCat->id,
+        'maker_id'        => 1,
+        'sub_category_id' => 1,
         'title'           => $faker->sentence(5),
         'description'     => $faker->text(),
         'heroDetails'     => $faker->text(),

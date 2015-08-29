@@ -123,4 +123,70 @@ class FeatureRepositoryTest extends TestCase
             $repo->update(1, [])
         );
     }
+
+    public function testDelete()
+    {
+        $mock = Mockery::mock(Feature::class)
+            ->makePartial();
+
+        $mock->product = factory(Product::class)->make();
+
+        $repo = Mockery::mock(FeatureRepository::class, [$mock])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $repo->shouldReceive('getById')
+            ->once()
+            ->andReturn($mock);
+
+        $repo->shouldReceive('canUserManipulate')
+            ->once()
+            ->andReturn(true);
+
+        $mock->shouldReceive('delete')
+            ->once()
+            ->andReturnNull();
+
+        $mock->shouldReceive('load')
+            ->once()
+            ->andReturnNull();
+
+        $this->assertSame(
+            $mock,
+            $repo->delete(1)
+        );
+    }
+
+    public function testDeleteShouldReturnFalseWhenUserCantManipulate()
+    {
+        $mock = Mockery::mock(Feature::class)
+            ->makePartial();
+
+        $mock->product = factory(Product::class)->make();
+
+        $repo = Mockery::mock(FeatureRepository::class, [$mock])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $repo->shouldReceive('getById')
+            ->once()
+            ->andReturn($mock);
+
+        $repo->shouldReceive('canUserManipulate')
+            ->once()
+            ->andReturn(true);
+
+        $mock->shouldReceive('delete')
+            ->once()
+            ->andReturnNull();
+
+        $mock->shouldReceive('load')
+            ->once()
+            ->andReturnNull();
+
+        $this->assertSame(
+            $mock,
+            $repo->delete(1)
+        );
+    }
 }
