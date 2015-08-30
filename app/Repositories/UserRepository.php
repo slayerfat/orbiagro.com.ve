@@ -32,14 +32,14 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      */
     public function getEmptyPersonInstance()
     {
-        return $this->getNewInstance();
+        return new Person;
     }
 
     /**
      * @param int $id
      * @return User|bool
      */
-    public function createPersonModel($id)
+    public function validateCreatePersonRequest($id)
     {
         $user = $this->getCurrentUser();
 
@@ -47,6 +47,50 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             return false;
         }
 
-        return $this->getByNameOrId($id);
+        if ($this->canUserManipulate($user->id)) {
+            return $this->getByNameOrId($id);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $id
+     * @param array $data
+     * @return User
+     */
+    public function storePerson($id, array $data)
+    {
+        $user = $this->getById($id);
+
+        $person = $this->getEmptyPersonInstance();
+
+        $person->fill($data);
+
+        $person->gender_id = $data['gender_id'];
+        $person->nationality_id = $data['nationality_id'];
+
+        $user->person()->save($person);
+
+        return $user;
+    }
+
+    /**
+     * @param $id
+     * @param array $data
+     * @return User
+     */
+    public function updatePerson($id, array $data)
+    {
+        $user = $this->getById($id);
+
+        $user->person->fill($data);
+
+        $user->person->gender_id = $data['gender_id'];
+        $user->person->nationality_id = $data['nationality_id'];
+
+        $user->person->update();
+
+        return $user;
     }
 }

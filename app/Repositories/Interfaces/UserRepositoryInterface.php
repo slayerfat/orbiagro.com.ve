@@ -43,10 +43,24 @@ interface UserRepositoryInterface
      * @param int $id
      * @return User|bool
      */
-    public function createPersonModel($id);
+    public function validateCreatePersonRequest($id);
 
     /**
      * @return Person
      */
     public function getEmptyPersonInstance();
+
+    /**
+     * @param $id
+     * @param array $data
+     * @return User
+     */
+    public function storePerson($id, array $data);
+
+    /**
+     * @param $id
+     * @param array $data
+     * @return User
+     */
+    public function updatePerson($id, array $data);
 }
