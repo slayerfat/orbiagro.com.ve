@@ -37,14 +37,17 @@ abstract class AbstractRepository
      */
     public function getBySlugOrId($id)
     {
-        $this->checkId($id);
+        return $this->getByIdOrAnother($id, 'slug');
+    }
 
-        $model = $this->model
-            ->where('slug', $id)
-            ->orWhere('id', $id)
-            ->firstOrFail();
-
-        return $model;
+    /**
+     * @param  mixed $id
+     *
+     * @return Model
+     */
+    public function getByNameOrId($id)
+    {
+        return $this->getByIdOrAnother($id, 'name');
     }
 
     /**
@@ -117,5 +120,22 @@ abstract class AbstractRepository
         }
 
         return $this->currentUser->isOwnerOrAdmin($id);
+    }
+
+    /**
+     * @param $id
+     * @param string $column
+     * @return mixed
+     */
+    protected function getByIdOrAnother($id, $column)
+    {
+        $this->checkId($id);
+
+        $model = $this->model
+            ->where($column, $id)
+            ->orWhere('id', $id)
+            ->firstOrFail();
+
+        return $model;
     }
 }

@@ -1,14 +1,12 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\Request;
 use Orbiagro\Http\Requests\PeopleRequest;
-use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Models\User;
-use Orbiagro\Models\Person;
 use Orbiagro\Models\Gender;
 use Orbiagro\Models\Nationality;
 use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 /**
  * Class PeopleController
@@ -18,49 +16,54 @@ class PeopleController extends Controller
 {
 
     /**
-     * @var Person
+     * @var UserRepositoryInterface
      */
-    protected $person;
+    private $userRepo;
 
     /**
      * Create a new controller instance.
-     * @param Person $person
+     * @param UserRepositoryInterface $userRepo
      */
-    public function __construct(Person $person)
+    public function __construct(UserRepositoryInterface $userRepo)
     {
         $this->middleware('auth');
+
+        // TODO ver si se implementa o no esto
         // $this->middleware('user.admin');
-        $this->person = $person;
+
+        $this->userRepo = $userRepo;
     }
 
     /**
      * Show the form for creating a new resource.
      *
      * @param int   $id
-     * @param Guard $auth
      *
      * @return Response
      */
-    public function create($id, Guard $auth)
+    public function create($id)
     {
-        if (!$user = User::where('name', $id)->first()) {
-            $user = User::findOrFail($id);
-        }
+        $user = $this->userRepo->createPersonModel($id);
 
-        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
+        if (is_null($user)) {
             return $this->redirectToRoute('usuarios.show', $$user->name);
         }
 
+        $person = $this->userRepo->getEmptyPersonInstance();
+
+        /**
+         * @todo Repos de estos modelos
+         */
         $genders = Gender::lists('description', 'id');
 
         $nationalities = Nationality::lists('description', 'id');
 
-        return view('people.create')->with([
-            'person'        => $this->person,
-            'user'          => $user,
-            'genders'       => $genders,
-            'nationalities' => $nationalities,
-        ]);
+        return view('people.create', compact(
+            'person',
+            'user',
+            'genders',
+            'nationalities'
+        ));
     }
 
     /**

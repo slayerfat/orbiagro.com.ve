@@ -22,6 +22,7 @@ class UserRoutes extends Routes
                 'resource' => '{users}'
             ]
         ],
+
         /**
          * Datos Personales (Person)
          */
@@ -32,7 +33,8 @@ class UserRoutes extends Routes
             'rtDetails' => [
                 'uses'     => 'PeopleController',
                 'as'       => 'users.people',
-                'resource' => '{users}'
+                'resource' => '{people}',
+                'ignore' => ['create', 'edit', 'store']
             ]
         ],
     ];
@@ -50,6 +52,34 @@ class UserRoutes extends Routes
             'data'     => [
                 'uses' => 'UsersController@showTrashed',
                 'as'   => 'users.trashed'
+            ]
+        ],
+
+        /**
+         * El resto de datos personales
+         */
+        [
+            'method'   => 'get',
+            'url'      => 'usuarios/datos-personales/{usuarios}/crear',
+            'data'     => [
+                'uses' => 'PeopleController@create',
+                'as'   => 'users.people.create'
+            ]
+        ],
+        [
+            'method'   => 'get',
+            'url'      => 'usuarios/datos-personales/{usuarios}/editar',
+            'data'     => [
+                'uses' => 'PeopleController@edit',
+                'as'   => 'users.people.edit'
+            ]
+        ],
+        [
+            'method'   => 'post',
+            'url'      => 'usuarios/datos-personales/{usuarios}',
+            'data'     => [
+                'uses' => 'PeopleController@store',
+                'as'   => 'users.people.store'
             ]
         ],
 
