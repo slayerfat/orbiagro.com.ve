@@ -40,7 +40,6 @@ class MakerRequest extends Request
 
             default:
                 return [];
-                break;
         }
     }
 }

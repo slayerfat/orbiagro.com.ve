@@ -1,35 +1,34 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Exception;
-use Orbiagro\Models\Maker;
-use Orbiagro\Http\Requests\MakerRequest;
-use Orbiagro\Http\Controllers\Controller;
 use Illuminate\View\View as Response;
-use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Http\Requests\MakerRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
 
-/**
- * Class MakersController
- * @package Orbiagro\Http\Controllers
- */
 class MakersController extends Controller
 {
 
     use SEOToolsTrait, CanSaveUploads;
 
     /**
-     * Create a new controller instance.
-     * @param  Maker $maker
+     * @var MakerRepositoryInterface
      */
-    public function __construct(Maker $maker)
+    private $makerRepo;
+
+    /**
+     * Create a new controller instance.
+     * @param MakerRepositoryInterface $makerRepo
+     */
+    public function __construct(MakerRepositoryInterface $makerRepo)
     {
         $rules = ['except' => ['show']];
 
         $this->middleware('auth', $rules);
-
         $this->middleware('user.admin', $rules);
 
-        $this->maker = $maker;
+        $this->makerRepo = $makerRepo;
     }
 
     /**
@@ -39,11 +38,11 @@ class MakersController extends Controller
      */
     public function index()
     {
-        $makers = Maker::with('products')->get();
+        $makers = $this->makerRepo->getAll();
 
         $this->seo()->setTitle('Fabricantes en orbiagro.com.ve');
         $this->seo()->setDescription('Fabricantes existentes en orbiagro.com.ve');
-        $this->seo()->opengraph()->setUrl(action('MakersController@index'));
+        $this->seo()->opengraph()->setUrl(route('makers.index'));
 
         return view('maker.index', compact('makers'));
     }
@@ -55,7 +54,9 @@ class MakersController extends Controller
      */
     public function create()
     {
-        return view('maker.create')->with(['maker' => $this->maker]);
+        $maker = $this->makerRepo->getEmptyInstance();
+
+        return view('maker.create', compact('maker'));
     }
 
     /**
@@ -67,9 +68,7 @@ class MakersController extends Controller
      */
     public function store(MakerRequest $request)
     {
-        $this->maker->fill($request->all());
-
-        $this->maker->save();
+        $maker = $this->makerRepo->create($request->all());
 
         /**
          * se flashea antes de crear la imagen para que los
@@ -78,9 +77,9 @@ class MakersController extends Controller
          */
         flash()->success('Fabricante creado exitosamente.');
 
-        $this->createImage($request, $this->maker);
+        $this->createImage($request, $maker);
 
-        return redirect()->action('MakersController@show', $this->maker->slug);
+        return redirect()->action('MakersController@show', $maker->slug);
     }
 
     /**
@@ -91,15 +90,13 @@ class MakersController extends Controller
      */
     public function show($id)
     {
-        if (!$this->maker = Maker::with('products')->where('slug', $id)->first()) {
-            $this->maker = Maker::with('products')->findOrFail($id);
-        }
+        $maker = $this->makerRepo->getBySlugOrId($id);
 
-        $this->seo()->setTitle("{$this->maker->name} y sus articulos en orbiagro.com.ve");
-        $this->seo()->setDescription("{$this->maker->name} y sus productos relacionados en orbiagro.com.ve");
+        $this->seo()->setTitle("{$maker->name} y sus articulos en orbiagro.com.ve");
+        $this->seo()->setDescription("{$maker->name} y sus productos relacionados en orbiagro.com.ve");
         $this->seo()->opengraph()->setUrl(action('MakersController@show', $id));
 
-        return view('maker.show')->with(['maker' => $this->maker]);
+        return view('maker.show', compact('maker'));
     }
 
     /**
@@ -110,9 +107,9 @@ class MakersController extends Controller
      */
     public function edit($id)
     {
-        $this->maker = Maker::findOrFail($id);
+        $maker = $this->makerRepo->getBySlugOrId($id);
 
-        return view('maker.edit')->with(['maker' => $this->maker]);
+        return view('maker.edit', compact('maker'));
     }
 
     /**
@@ -125,18 +122,16 @@ class MakersController extends Controller
      */
     public function update($id, MakerRequest $request)
     {
-        $this->maker = Maker::findOrFail($id)->load('image');
-
-        $this->maker->update($request->all());
+        $maker = $this->makerRepo->update($id, $request->all());
 
         /**
          * @see self::create()
          */
         flash()->success('Fabricante Actualizado exitosamente.');
 
-        $this->updateImage($request, $this->maker);
+        $this->updateImage($request, $maker);
 
-        return redirect()->action('MakersController@show', $this->maker->slug);
+        return redirect()->action('MakersController@show', $maker->slug);
     }
 
     /**
@@ -147,21 +142,8 @@ class MakersController extends Controller
      */
     public function destroy($id)
     {
-        $this->maker = Maker::findOrFail($id);
+        $this->makerRepo->delete($id);
 
-        try {
-            $this->maker->delete();
-        } catch (Exception $e) {
-            if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000) {
-                flash()->error('No deben haber productos asociados.');
-
-                return redirect()->action('MakersController@show', $this->maker->slug);
-            }
-            \Log::error($e);
-            abort(500);
-        }
-
-        flash()->success('El Fabricante ha sido eliminado correctamente.');
         return redirect()->action('MakersController@index');
     }
 }
