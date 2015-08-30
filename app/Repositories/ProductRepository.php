@@ -1,8 +1,6 @@
 <?php namespace Orbiagro\Repositories;
 
-use Orbiagro\Models\Category;
 use Orbiagro\Models\Product;
-use Orbiagro\Models\SubCategory;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
@@ -38,16 +36,30 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
     }
 
     /**
-     * @return array
+     * @return Product
      */
-    public function getIndexData()
+    public function getEmptyInstance()
     {
-        $data = [
-            'products' => Product::paginate(20),
-            'cats'     => Category::all(),
-            'subCats'  => SubCategory::all(),
-        ];
+        return $this->getNewInstance();
+    }
 
-        return $data;
+
+    /**
+     * @param int $perPage el numero por pagina
+     * @return mixed
+     */
+    public function getPaginated($perPage)
+    {
+        return Product::paginate($perPage);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCurrentUserDisabled()
+    {
+        $user = $this->getCurrentUser();
+
+        return $user->isDisabled();
     }
 }

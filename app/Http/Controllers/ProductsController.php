@@ -15,7 +15,9 @@ use Orbiagro\Models\Maker;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
 class ProductsController extends Controller
 {
@@ -28,11 +30,26 @@ class ProductsController extends Controller
     private $productRepo;
 
     /**
+     * @var CategoryRepositoryInterface
+     */
+    private $catRepo;
+
+    /**
+     * @var SubCategoryRepositoryInterface
+     */
+    private $subCatRepo;
+
+    /**
      * Create a new controller instance.
      * @param ProductRepositoryInterface $productRepo
+     * @param CategoryRepositoryInterface $catRepo
+     * @param SubCategoryRepositoryInterface $subCatRepo
      */
-    public function __construct(ProductRepositoryInterface $productRepo)
-    {
+    public function __construct(
+        ProductRepositoryInterface $productRepo,
+        CategoryRepositoryInterface $catRepo,
+        SubCategoryRepositoryInterface $subCatRepo
+    ) {
         $rules = ['except' =>
             [
                 'index',
@@ -45,6 +62,8 @@ class ProductsController extends Controller
         $this->middleware('auth', $rules);
         $this->middleware('user.unverified', $rules);
 
+        $this->catRepo     = $catRepo;
+        $this->subCatRepo  = $subCatRepo;
         $this->productRepo = $productRepo;
     }
 
@@ -56,11 +75,9 @@ class ProductsController extends Controller
      */
     public function index(VisitsService $visits)
     {
-        $results = $this->productRepo->getIndexData();
-
-        $products = $results['products'];
-        $cats     = $results['cats'];
-        $subCats  = $results['subCats'];
+        $products = $this->productRepo->getPaginated(20);
+        $cats     = $this->catRepo->getAll();
+        $subCats  = $this->subCatRepo->getAll();
 
         $visitedProducts = $visits->getVisitedResources(Product::class);
 
@@ -156,18 +173,20 @@ class ProductsController extends Controller
      *
      * @return Response
      */
-    public function create(Product $product)
+    public function create()
     {
-        if ($this->user->isDisabled()) {
+        if ($this->productRepo->isCurrentUserDisabled()) {
             flash()->error('Ud. no tiene permisos para esta accion.');
 
             return redirect()->back();
         }
 
-        $makers    = Maker::lists('name', 'id');
-        $catModels = Category::with('subCategories')->get();
+        // TODO repo
+        $makers = Maker::lists('name', 'id');
 
-        $cats = $this->toAsocArray($catModels);
+        $product = $this->productRepo->getEmptyInstance();
+
+        $cats = $this->catRepo->getArraySortedWithSubCategories();
 
         return view('product.create', compact('product', 'makers', 'cats'));
     }
@@ -404,32 +423,5 @@ class ProductsController extends Controller
         $product->save();
 
         return ['status' => true];
-    }
-
-    /**
-     * devuelve un array asociativo con los elementos
-     * y sus subelementos.
-     *
-     * @todo abstraer a un metodo generico.
-     *
-     * @param Collection $models
-     *
-     * @return array
-     */
-    private function toAsocArray(Collection $models)
-    {
-        $cats = [];
-
-        if (!$models) {
-            return null;
-        }
-
-        foreach ($models as $cat) {
-            foreach ($cat->subCategories as $subCat) {
-                $cats[$cat->description][$subCat->id] = $subCat->description;
-            }
-        }
-
-        return $cats;
     }
 }

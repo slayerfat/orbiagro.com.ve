@@ -67,4 +67,11 @@ interface CategoryRepositoryInterface
      * @return Category
      */
     public function getEmptyInstance();
+
+    /**
+     * Gets an associative array with
+     * categories and subcategories.
+     * @return array
+     */
+    public function getArraySortedWithSubCategories();
 }

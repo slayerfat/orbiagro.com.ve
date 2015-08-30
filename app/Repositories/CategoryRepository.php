@@ -13,7 +13,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
      */
     public function getAll()
     {
-        return $this->model->all()->load('subCategories');
+        return $this->model->has('subCategories')->with('subCategories')->get();
     }
 
     /**
@@ -99,5 +99,42 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
         return $this->model
             ->findOrFail($id)
             ->delete();
+    }
+
+    /**
+     * @return array
+     */
+    public function getArraySortedWithSubCategories()
+    {
+        $catModels = $this->getAll();
+
+        return $this->toAsocArray($catModels);
+    }
+
+    /**
+     * devuelve un array asociativo con los elementos
+     * y sus subelementos.
+     *
+     * @todo abstraer a un metodo generico.
+     *
+     * @param Collection $models
+     *
+     * @return array
+     */
+    private function toAsocArray(Collection $models)
+    {
+        $cats = [];
+
+        if (!$models) {
+            return null;
+        }
+
+        foreach ($models as $cat) {
+            foreach ($cat->subCategories as $subCat) {
+                $cats[$cat->description][$subCat->id] = $subCat->description;
+            }
+        }
+
+        return $cats;
     }
 }
