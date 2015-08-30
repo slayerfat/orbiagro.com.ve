@@ -24,13 +24,7 @@ class CategoryTableSeeder extends BaseSeeder
 
         $this->upload = new Upload(1);
 
-        $dir = class_basename(Orbiagro\Models\Category::class);
-
-        $dir = strtolower($dir);
-
-        // se elimina el directorio de todos los archivos
-        Storage::disk('public')->deleteDirectory($dir);
-        Storage::disk('public')->makeDirectory($dir);
+        $this->createDirectory(Orbiagro\Models\Category::class);
 
         foreach ($types as $category) {
             $category = Orbiagro\Models\Category::create([

@@ -17,13 +17,7 @@ class MakerTableSeeder extends BaseSeeder
         // upload necesita el ID del usuario a asociar.
         $upload = new Upload(1);
 
-        $dir = class_basename(Orbiagro\Models\Maker::class);
-
-        $dir = strtolower($dir);
-
-        // se elimina el directorio de todos los archivos
-        Storage::disk('public')->deleteDirectory($dir);
-        Storage::disk('public')->makeDirectory($dir);
+        $this->createDirectory(Orbiagro\Models\Maker::class);
 
         factory(Orbiagro\Models\Maker::class, 2)->create()->each(function ($model) use ($upload) {
             $upload->create($model);

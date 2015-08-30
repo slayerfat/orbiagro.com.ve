@@ -3,6 +3,7 @@
 use Log;
 use Orbiagro\Http\Requests\Request;
 use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Models\Image;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 // el abstracto de ImageUpload y FileUpload
 use Orbiagro\Mamarrachismo\Upload\Upload;
@@ -87,6 +88,15 @@ trait CanSaveUploads
     protected function updateImage(Request $request, Model $model)
     {
         $uploader = new ImageUpload($request->user()->id);
+
+        // se chequea que el modelo sea una imagen
+        // de no serlo, se busca el modelo relacionadado de la imagen
+        // para ser mandado a que se actualice.
+        if (!$model instanceof Image) {
+            $imageModel = $model->image;
+
+            $model = $imageModel ? $imageModel : $model;
+        }
 
         $this->updatePrototype($model, $uploader, $request->file('image'));
     }

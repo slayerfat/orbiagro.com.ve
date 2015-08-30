@@ -1,6 +1,5 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Exception;
 use Illuminate\View\View as Response;
 use Orbiagro\Http\Requests\MakerRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;

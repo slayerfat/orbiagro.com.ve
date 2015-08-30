@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
@@ -34,13 +33,7 @@ class SubCategoryTableSeeder extends BaseSeeder
 
         $this->upload = new Upload(1);
 
-        $dir = class_basename(Orbiagro\Models\SubCategory::class);
-
-        $dir = strtolower($dir);
-
-        // se elimina el directorio de todos los archivos
-        Storage::disk('public')->deleteDirectory($dir);
-        Storage::disk('public')->makeDirectory($dir);
+        $this->createDirectory(Orbiagro\Models\SubCategory::class);
 
         foreach ($types as $category => $values) {
             $this->command->info("$category");

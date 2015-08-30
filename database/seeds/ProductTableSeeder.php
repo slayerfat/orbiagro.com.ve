@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
-class ProductTableSeeder extends Seeder
+class ProductTableSeeder extends BaseSeeder
 {
 
     /**
@@ -18,6 +16,8 @@ class ProductTableSeeder extends Seeder
 
         // upload necesita el ID del usuario a asociar.
         $this->upload = new Upload(1);
+
+        $this->createDirectory(Orbiagro\Models\Product::class);
 
         // por cada usuario en el sistema, se pretende
         // crear algunos productos con sus caracteristicas particulares.

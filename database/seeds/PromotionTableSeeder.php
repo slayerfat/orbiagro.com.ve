@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
-class PromotionTableSeeder extends Seeder
+class PromotionTableSeeder extends BaseSeeder
 {
 
     public function run()
@@ -14,13 +12,7 @@ class PromotionTableSeeder extends Seeder
         // upload necesita el ID del usuario a asociar.
         $this->upload = new Upload(1);
 
-        $dir = class_basename(Orbiagro\Models\Promotion::class);
-
-        $dir = strtolower($dir);
-
-        // se elimina el directorio de todos los archivos
-        Storage::disk('public')->deleteDirectory($dir);
-        Storage::disk('public')->makeDirectory($dir);
+        $this->createDirectory(Orbiagro\Models\Promotion::class);
 
         $product = Orbiagro\Models\Product::first();
 
