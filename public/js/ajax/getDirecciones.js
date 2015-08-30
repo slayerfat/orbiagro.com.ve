@@ -2,7 +2,7 @@ $("document").ready(function(){
   $.ajax({
     type: 'GET',
     dataType: "json",
-    url: '/estados',
+    url: '/direcciones/estados',
     data: null,
     success: function (datos){
       // se chequea entre los datos recibidos (json)
@@ -20,7 +20,7 @@ $("document").ready(function(){
     $.ajax({
       type: 'GET',
       dataType: "json",
-      url: '/municipios/'+id,
+      url: '/direcciones/municipios/'+id,
       data: null,
       success: function (datos){
         // se borran los municipios existentes
@@ -43,7 +43,7 @@ $("document").ready(function(){
     $.ajax({
       type: 'GET',
       dataType: "json",
-      url: '/parroquias/'+id,
+      url: '/direcciones/parroquias/'+id,
       data: null,
       success: function (datos){
         $('#parish_id').empty();

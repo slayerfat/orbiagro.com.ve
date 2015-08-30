@@ -1,20 +1,13 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Orbiagro\Http\Requests\ProductRequest;
-use Orbiagro\Mamarrachismo\VisitsService;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Category;
-use Orbiagro\Models\SubCategory;
-use Orbiagro\Models\MapDetail;
-use Orbiagro\Models\Direction;
 use Orbiagro\Models\Maker;
-
-use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Http\Request;
+use Orbiagro\Models\Product;
 use Illuminate\View\View as Response;
+use Orbiagro\Mamarrachismo\VisitsService;
+use Orbiagro\Http\Requests\ProductRequest;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
@@ -103,7 +96,7 @@ class ProductsController extends Controller
      */
     public function indexByCategory($categoryId, VisitsService $visits)
     {
-        return $this->indexByParent(new Category, $categoryId, $visits);
+        return $this->indexByParent('category', $categoryId, $visits);
     }
 
     /**
@@ -116,13 +109,13 @@ class ProductsController extends Controller
      */
     public function indexBySubCategory($subCategoryId, VisitsService $visits)
     {
-        return $this->indexByParent(new SubCategory, $subCategoryId, $visits);
+        return $this->indexByParent('subCategory', $subCategoryId, $visits);
     }
 
     /**
      * Muestra el index segun la Categoria, Rubro, etc.
      *
-     * @param  Model         $parent
+     * @param  string         $parent
      * @param  int           $parentId
      * @param  VisitsService $visits
      *
@@ -130,21 +123,23 @@ class ProductsController extends Controller
      */
     private function indexByParent($parent, $parentId, VisitsService $visits)
     {
-        if (!$products = $parent::where('slug', $parentId)->first()->products()->paginate(20)) {
-            $products = $parent::findOrFail($parentId)->products()->paginate(20);
-        }
+        $products = $this->productRepo->getByParentSlugOrId($parent, $parentId);
 
         $visitedProducts = $visits->getVisitedResources(Product::class);
 
-        $cats = Category::all();
+        $cats = $this->catRepo->getAll();
 
         $description = '';
 
-        if ($parent instanceof Category) {
-            $subCats     = Category::where('slug', $parentId)->first()->subCategories;
-            $description = $subCats->first()->category->description;
-        } elseif ($parent instanceof SubCategory) {
-            $subCats     = SubCategory::all();
+        if ($parent == 'category') {
+            $cat = $this->catRepo->getBySlugOrId($parentId);
+
+            $subCats = $cat->subCategories;
+
+            $description = $cat->description;
+        } elseif ($parent == 'subCategory') {
+            $subCats     = $this->subCatRepo->getAll();
+
             $description = $products->first()->subCategory->description;
         }
 
@@ -168,8 +163,6 @@ class ProductsController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @param  Product  $product
      *
      * @return Response
      */
@@ -199,16 +192,7 @@ class ProductsController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $data       = $request->all();
-        $product    = new Product($data);
-        $dir        = new Direction($data);
-        $map        = new MapDetail($data);
-
-        // se guardan los modelos
-        $this->user->products()->save($product);
-        $product->direction()->save($dir);
-        $product->direction->map()->save($map);
-
+        $product = $this->productRepo->store($request->all());
         flash()->success('El Producto ha sido creado con exito.');
 
         // se iteran las imagenes y se guardan los modelos
@@ -226,21 +210,13 @@ class ProductsController extends Controller
      */
     public function show($id, VisitsService $visits)
     {
-        if (!$product = Product::with('user', 'subCategory')->where('slug', $id)->first()) {
-            $product = Product::with('user', 'subCategory')->findOrFail($id);
-        }
+        $product = $this->productRepo->getBySlugOrId($id);
 
         $visits->setNewVisit($product);
 
         $visitedProducts = $visits->getVisitedResources(Product::class);
 
-        if ($this->user) {
-            $isUserValid = $this->user->isOwnerOrAdmin($product->user_id);
-        }
-
-        if (!isset($isUserValid)) {
-            $isUserValid = false;
-        }
+        $isUserValid = $this->productRepo->canUserManipulate($product->user_id);
 
         $this->seo()->setTitle(
             "{$product->title} - {$product->priceBs()}"
@@ -249,7 +225,7 @@ class ProductsController extends Controller
             .', consigue mas en '.$product->subCategory->category->description
             .' dentro de orbiagro.com.ve'
         );
-        $this->seo()->opengraph()->setUrl(action('ProductsController@show', $id));
+        $this->seo()->opengraph()->setUrl(route('products.show', $id));
 
         return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
     }
@@ -262,19 +238,16 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        if (!$product = Product::with('user')->where('slug', $id)->first()) {
-            $product = Product::with('user')->findOrFail($id);
-        }
+        $product = $this->productRepo->getBySlugOrId($id);
 
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
+        if (!$this->productRepo->canUserManipulate($product->user_id)) {
             return $this->redirectToroute('products.show', $id);
         }
 
+        // TODO repo
         $makers = Maker::lists('name', 'id');
 
-        $catModels = Category::with('subCategories')->get();
-
-        $cats = $this->toAsocArray($catModels);
+        $cats = $this->catRepo->getArraySortedWithSubCategories();
 
         return view('product.edit', compact('product', 'makers', 'cats'));
     }
@@ -288,27 +261,7 @@ class ProductsController extends Controller
      */
     public function update($id, ProductRequest $request)
     {
-        $product = Product::with('direction', 'user')->findOrFail($id);
-
-        $product->update($request->all());
-
-        // modificado porque el modelo no queria
-        // quedarse guardado correctamente en BD.
-        $direction = $product->direction;
-        $direction->parish_id = $request->input('parish_id');
-        $direction->details = $request->input('details');
-
-        $direction->save();
-
-        if (!$map = $direction->map) {
-            $map = new MapDetail;
-            $map->direction_id = $direction->id;
-        }
-
-        $map->latitude = $request->input('latitude');
-        $map->longitude = $request->input('longitude');
-        $map->zoom = $request->input('zoom');
-        $map->save();
+        $product = $this->productRepo->update($id, $request->all());
 
         flash('El Producto ha sido actualizado con exito.');
         return redirect()->action('ProductsController@show', $product->slug);
@@ -322,7 +275,7 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->productRepo->getById($id);
 
         return $this->destroyDeleteRestorePrototype(
             $product,
@@ -339,7 +292,7 @@ class ProductsController extends Controller
      */
     public function forceDestroy($id)
     {
-        $product = Product::withTrashed()->findOrFail($id);
+        $product = $this->productRepo->getByIdWithTrashed($id);
 
         return $this->destroyDeleteRestorePrototype(
             $product,
@@ -356,7 +309,7 @@ class ProductsController extends Controller
      */
     public function restore($id)
     {
-        $product = Product::withTrashed()->findOrFail($id);
+        $product = $this->productRepo->getByIdWithTrashed($id);
 
         return $this->destroyDeleteRestorePrototype(
             $product,
@@ -386,7 +339,7 @@ class ProductsController extends Controller
         $severity = 'info',
         $route = 'products.index'
     ) {
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
+        if (!$this->productRepo->canUserManipulate($product->user_id)) {
             return $this->redirectToroute('products.show', $product->user_id);
         }
 
@@ -412,10 +365,10 @@ class ProductsController extends Controller
            'heroDetails' => 'required|string',
         ]);
 
-        $product = Product::findOrFail($id);
+        $product = $this->productRepo->getById($id);
 
-        if (!$this->user->isOwnerOrAdmin($product->user_id)) {
-            return abort(403);
+        if (!$this->productRepo->canUserManipulate($product->user_id)) {
+            abort(403);
         }
 
         $product->heroDetails = $request->heroDetails;

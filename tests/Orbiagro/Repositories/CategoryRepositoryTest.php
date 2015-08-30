@@ -27,13 +27,18 @@ class CategoryRepositoryTest extends TestCase
         $cat = Mockery::mock(Category::class)
                               ->makePartial();
 
-        $cat->shouldReceive('all')
-            ->once()
-            ->andReturnSelf();
-
-        $cat->shouldReceive('load')
+        $cat->shouldReceive('has')
             ->once()
             ->with('subCategories')
+            ->andReturnSelf();
+
+        $cat->shouldReceive('with')
+            ->once()
+            ->with('subCategories')
+            ->andReturnSelf();
+
+        $cat->shouldReceive('get')
+            ->once()
             ->andReturn('mocked collection');
 
         $catRepo = new CategoryRepository($cat);

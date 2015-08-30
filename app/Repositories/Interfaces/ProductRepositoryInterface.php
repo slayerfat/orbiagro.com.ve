@@ -1,10 +1,18 @@
 <?php namespace Orbiagro\Repositories\Interfaces;
 
 use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Models\MapDetail;
 use Orbiagro\Models\Product;
 
 interface ProductRepositoryInterface
 {
+
+    /**
+     * @param $id
+     *
+     * @return bool
+     */
+    public function canUserManipulate($id);
 
     /**
      * @param  mixed $id
@@ -22,7 +30,7 @@ interface ProductRepositoryInterface
      * Regresa una coleccion paginada de productos.
      *
      * @param int $perPage el numero por pagina
-     * @return mixed
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getPaginated($perPage);
 
@@ -36,4 +44,30 @@ interface ProductRepositoryInterface
      * @return Product
      */
     public function getEmptyInstance();
+
+    /**
+     * @param array $data
+     * @return Product
+     */
+    public function store(array $data);
+
+    /**
+     * @param $id
+     * @param array $data
+     * @return Product
+     */
+    public function update($id, array $data);
+
+    /**
+     * @param $id
+     * @return Product
+     */
+    public function getByIdWithTrashed($id);
+
+    /**
+     * @param $parent
+     * @param $id
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getByParentSlugOrId($parent, $id);
 }

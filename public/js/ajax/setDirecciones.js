@@ -9,7 +9,7 @@ $("document").ready(function(){
   $.ajax({
     type: 'GET',
     dataType: "json",
-    url: '/parroquia/'+id,
+    url: '/direcciones/parroquias/'+id,
     data: null,
     success: function (datos){
       municipioId = datos[0].town_id;
@@ -29,7 +29,7 @@ $("document").ready(function(){
       $.ajax({
         type: 'GET',
         dataType: "json",
-        url: '/municipio/'+municipioId,
+        url: '/direcciones/municipios/'+municipioId,
         data: null,
         success: function (datos){
           estadoId = datos[0].state_id;
@@ -48,7 +48,7 @@ $("document").ready(function(){
           $.ajax({
             type: 'GET',
             dataType: "json",
-            url: '/estados',
+            url: '/direcciones/estados',
             data: null,
             success: function (datos){
               $('#state_id').empty();
@@ -77,7 +77,7 @@ $("document").ready(function(){
     $.ajax({
       type: 'GET',
       dataType: "json",
-      url: '/municipios/'+id,
+      url: '/direcciones/municipios/'+id,
       data: null,
       success: function (datos){
         // se borran los municipios existentes
@@ -100,7 +100,7 @@ $("document").ready(function(){
     $.ajax({
       type: 'GET',
       dataType: "json",
-      url: '/parroquias/'+id,
+      url: '/direcciones/parroquias/'+id,
       data: null,
       success: function (datos){
         $('#parish_id').empty();

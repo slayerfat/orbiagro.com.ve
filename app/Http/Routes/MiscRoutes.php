@@ -150,7 +150,7 @@ class MiscRoutes extends Routes
         ],
         [
             'method'         => 'get',
-            'url'            => 'direcciones/parroquia/{parishes}',
+            'url'            => 'direcciones/parroquias/{parishes}',
             'data'           => [
                 'uses'       => 'DirectionsController@parish',
                 'as'         => 'api.parishes.show',
