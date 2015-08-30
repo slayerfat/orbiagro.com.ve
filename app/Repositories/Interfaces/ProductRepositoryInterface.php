@@ -1,6 +1,9 @@
 <?php namespace Orbiagro\Repositories\Interfaces;
 
 use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\SubCategory;
 
 interface ProductRepositoryInterface
 {
@@ -18,4 +21,9 @@ interface ProductRepositoryInterface
      * @return Model
      */
     public function getById($id);
+
+    /**
+     * @return array
+     */
+    public function getIndexData();
 }

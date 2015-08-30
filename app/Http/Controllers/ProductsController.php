@@ -1,11 +1,9 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Orbiagro\Http\Requests\ProductRequest;
-use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Category;
@@ -17,6 +15,7 @@ use Orbiagro\Models\Maker;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 
 class ProductsController extends Controller
 {
@@ -24,16 +23,15 @@ class ProductsController extends Controller
     use SEOToolsTrait, CanSaveUploads;
 
     /**
-     * @var \Orbiagro\Models\User
+     * @var ProductRepositoryInterface
      */
-    protected $user;
+    private $productRepo;
 
     /**
      * Create a new controller instance.
-     *
-     * @param Guard $auth
+     * @param ProductRepositoryInterface $productRepo
      */
-    public function __construct(Guard $auth)
+    public function __construct(ProductRepositoryInterface $productRepo)
     {
         $rules = ['except' =>
             [
@@ -45,10 +43,9 @@ class ProductsController extends Controller
         ];
 
         $this->middleware('auth', $rules);
-
         $this->middleware('user.unverified', $rules);
 
-        $this->user = $auth->user();
+        $this->productRepo = $productRepo;
     }
 
     /**
@@ -59,15 +56,17 @@ class ProductsController extends Controller
      */
     public function index(VisitsService $visits)
     {
-        $products = Product::paginate(20);
-        $cats     = Category::all();
-        $subCats  = SubCategory::all();
+        $results = $this->productRepo->getIndexData();
+
+        $products = $results['products'];
+        $cats     = $results['cats'];
+        $subCats  = $results['subCats'];
 
         $visitedProducts = $visits->getVisitedResources(Product::class);
 
         $this->seo()->setTitle('Productos en orbiagro.com.ve');
         $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
-        $this->seo()->opengraph()->setUrl(action('ProductsController@index'));
+        $this->seo()->opengraph()->setUrl(route('products.index'));
 
         return view('product.index', compact(
             'products',
