@@ -1,6 +1,7 @@
 <?php namespace Tests;
 
 use Illuminate\Database\Eloquent\Model;
+use Mockery;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
@@ -17,8 +18,9 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     protected $tester;
 
     /**
-    * la instancia del Mockery a manipular
-    */
+     * la instancia del Mockery a manipular
+     * @var Mockery
+     */
     protected $mock;
 
     /**
