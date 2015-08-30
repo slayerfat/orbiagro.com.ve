@@ -45,7 +45,9 @@ class ImageRepository extends AbstractRepository implements ImageRepositoryInter
     {
         $image = $this->getById($id);
 
-        if (!$this->canUserManipulate($image->imageable->user_id)) {
+        $userId = $this->getImageableOwnerId($image);
+
+        if (!$this->canUserManipulate($userId)) {
             return false;
         }
 
@@ -77,6 +79,8 @@ class ImageRepository extends AbstractRepository implements ImageRepositoryInter
      */
     public function delete($id)
     {
+
+        /** @var Image $image */
         $image = $this->getById($id);
 
         /** @var Model $parentModel */
@@ -104,5 +108,14 @@ class ImageRepository extends AbstractRepository implements ImageRepositoryInter
         } elseif (is_null($parentModel->image)) {
             $this->upload->createDefaultImage($parentModel);
         }
+    }
+
+    /**
+     * @param Image $image
+     * @return int
+     */
+    protected function getImageableOwnerId(Image $image)
+    {
+        return $image->imageable->user_id;
     }
 }
