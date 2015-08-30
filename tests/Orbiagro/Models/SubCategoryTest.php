@@ -1,14 +1,15 @@
-<?php namespace Tests\Orbiagro;
+<?php namespace Tests\Orbiagro\Models;
 
 use \Mockery;
 use Tests\TestCase;
 use Orbiagro\Models\Image;
+use Orbiagro\Models\Visit;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Category;
 use Orbiagro\Models\SubCategory;
 use Tests\Orbiagro\Traits\TearsDownMockery;
 
-class CategoryTest extends TestCase
+class SubCategoryTest extends TestCase
 {
 
     use TearsDownMockery;
@@ -21,19 +22,31 @@ class CategoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->tester = new Category;
-        $this->mock = Mockery::mock(Category::class)->makePartial();
+        $this->tester = new SubCategory;
+
+        $this->mock = Mockery::mock(SubCategory::class)->makePartial();
     }
 
-    public function testSubCategoriesRelationship()
+    public function testCategoryRelationship()
+    {
+        $this->mock
+            ->shouldReceive('belongsTo')
+            ->once()
+            ->with(Category::class)
+            ->andReturn('mocked');
+
+        $this->assertEquals('mocked', $this->mock->category());
+    }
+
+    public function testProductsRelationship()
     {
         $this->mock
             ->shouldReceive('hasMany')
             ->once()
-            ->with(SubCategory::class)
+            ->with(Product::class)
             ->andReturn('mocked');
 
-        $this->assertEquals('mocked', $this->mock->subCategories());
+        $this->assertEquals('mocked', $this->mock->products());
     }
 
     public function testImageRelationship()
@@ -47,18 +60,18 @@ class CategoryTest extends TestCase
         $this->assertEquals('mocked', $this->mock->image());
     }
 
-    public function testProductsRelationship()
+    public function testVisitsRelationship()
     {
         $this->mock
-            ->shouldReceive('hasManyThrough')
+            ->shouldReceive('morphMany')
             ->once()
-            ->with(Product::class, SubCategory::class)
+            ->with(Visit::class, 'visitable')
             ->andReturn('mocked');
 
-        $this->assertEquals('mocked', $this->mock->products());
+        $this->assertEquals('mocked', $this->mock->visits());
     }
 
-    public function testCorrectDescriptionFormat()
+    public function testCorrectFormattedDescription()
     {
         $this->tester->description = 'tetsuo kaneda tetsuo kaneda';
         $this->assertEquals('Tetsuo kaneda tetsuo kaneda', $this->tester->description);
@@ -71,12 +84,10 @@ class CategoryTest extends TestCase
     public function testIncorrectDescriptionValueShouldBeNull($data)
     {
         $this->tester->description = $data;
-
         $this->assertNull($this->tester->description);
-        $this->assertNull($this->tester->slug);
     }
 
-    public function testCorrectSlugFormat()
+    public function testCorrectFormattedSlug()
     {
         $this->tester->slug = 'tetsuo kaneda tetsuo kaneda';
         $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
@@ -88,11 +99,10 @@ class CategoryTest extends TestCase
     public function testIncorrectSlugValueShouldBeNull($data)
     {
         $this->tester->slug = $data;
-
         $this->assertNull($this->tester->slug);
     }
 
-    public function testCorrectInfoFormat()
+    public function testCorrectFormattedInfo()
     {
         $this->tester->info = 'tetsuo kaneda tetsuo kaneda';
         $this->assertEquals('Tetsuo kaneda tetsuo kaneda.', $this->tester->info);
@@ -106,7 +116,6 @@ class CategoryTest extends TestCase
     public function testIncorrectInfoValueShouldBeNull($data)
     {
         $this->tester->info = $data;
-
         $this->assertNull($this->tester->info);
     }
 }

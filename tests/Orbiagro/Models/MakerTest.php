@@ -1,12 +1,11 @@
-<?php namespace Tests\Orbiagro;
+<?php namespace Tests\Orbiagro\Models;
 
 use \Mockery;
-use Tests\TestCase;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Provider;
 use Tests\Orbiagro\Traits\TearsDownMockery;
+use Orbiagro\Models\Maker;
+use Tests\TestCase;
 
-class ProviderTest extends TestCase
+class MakerTest extends TestCase
 {
 
     use TearsDownMockery;
@@ -19,32 +18,36 @@ class ProviderTest extends TestCase
     {
         parent::setUp();
 
-        $this->tester = new Provider;
-        $this->mock = Mockery::mock(Provider::class)->makePartial();
+        $this->tester = new Maker;
+        $this->mock = Mockery::mock('Orbiagro\Models\Maker')->makePartial();
     }
 
     public function testProductsRelationship()
     {
         $this->mock
-            ->shouldReceive('belongsToMany')
+            ->shouldReceive('hasMany')
             ->once()
-            ->with(Product::class)
-            ->andReturn(Mockery::self());
-
-        $this->mock
-            ->shouldReceive('withPivot')
-            ->once()
-            ->with('sku')
+            ->with('Orbiagro\Models\Product')
             ->andReturn('mocked');
 
         $this->assertEquals('mocked', $this->mock->products());
     }
 
+    public function testImageRelationship()
+    {
+        $this->mock
+            ->shouldReceive('morphOne')
+            ->once()
+            ->with('Orbiagro\Models\Image', 'imageable')
+            ->andReturn('mocked');
+
+        $this->assertEquals('mocked', $this->mock->image());
+    }
+
     public function testCorrectFormattedName()
     {
-        $this->tester->name = 'tetsuo kaneda';
-        $this->assertEquals('Tetsuo kaneda', $this->tester->name);
-        $this->assertEquals('tetsuo-kaneda', $this->tester->slug);
+        $this->tester->name = 'akira corp.';
+        $this->assertEquals('Akira corp.', $this->tester->name);
     }
 
     /**
@@ -58,8 +61,10 @@ class ProviderTest extends TestCase
 
     public function testCorrectFormattedSlug()
     {
-        $this->tester->slug = 'Tetsuo kaneda tetsuo kaneda';
-        $this->assertEquals('tetsuo-kaneda-tetsuo-kaneda', $this->tester->slug);
+        $this->tester->name = 'Tetsuo kaneda tetsuo';
+        $this->assertEquals('tetsuo-kaneda-tetsuo', $this->tester->slug);
+        $this->tester->slug = 'a b c d';
+        $this->assertEquals('a-b-c-d', $this->tester->slug);
     }
 
     /**

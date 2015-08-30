@@ -1,4 +1,4 @@
-<?php namespace Tests\Orbiagro;
+<?php namespace Tests\Orbiagro\Models;
 
 use \Mockery;
 use Tests\TestCase;

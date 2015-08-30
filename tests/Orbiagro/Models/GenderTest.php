@@ -1,11 +1,11 @@
-<?php namespace Tests\Orbiagro;
+<?php namespace Tests\Orbiagro\Models;
 
 use \Mockery;
 use Tests\Orbiagro\Traits\TearsDownMockery;
-use Orbiagro\Models\Nationality;
+use Orbiagro\Models\Gender;
 use Tests\TestCase;
 
-class NationalityTest extends TestCase
+class GenderTest extends TestCase
 {
 
     use TearsDownMockery;
@@ -18,8 +18,8 @@ class NationalityTest extends TestCase
     {
         parent::setUp();
 
-        $this->tester = new Nationality;
-        $this->mock = Mockery::mock('Orbiagro\Models\Nationality')->makePartial();
+        $this->tester = new Gender;
+        $this->mock = Mockery::mock('Orbiagro\Models\Gender')->makePartial();
     }
 
     public function testPeopleRelationship()

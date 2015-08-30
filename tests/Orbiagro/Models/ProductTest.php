@@ -1,4 +1,4 @@
-<?php namespace Tests\Orbiagro;
+<?php namespace Tests\Orbiagro\Models;
 
 use \Mockery;
 use Tests\TestCase;
@@ -11,11 +11,9 @@ use Orbiagro\Models\Product;
 use Orbiagro\Models\Feature;
 use Orbiagro\Models\Provider;
 use Orbiagro\Models\Direction;
-use Orbiagro\Models\Promotion;
 use Orbiagro\Models\SubCategory;
 use Orbiagro\Models\Nutritional;
 use Orbiagro\Models\Characteristic;
-use Orbiagro\Models\MechanicalInfo;
 use Orbiagro\Mamarrachismo\CheckDollar;
 use Tests\Orbiagro\Traits\TearsDownMockery;
 
