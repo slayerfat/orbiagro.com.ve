@@ -1,8 +1,10 @@
 <?php namespace Tests\Orbiagro\Repositories;
 
 use Mockery;
+use Orbiagro\Models\Feature;
 use Orbiagro\Models\Image;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Models\Product;
 use Orbiagro\Repositories\ImageRepository;
 use Illuminate\Http\Request;
 use stdClass;
@@ -191,6 +193,80 @@ class ImageRepositoryTest extends TestCase
         $this->assertSame(
             $imageMock,
             $repoMock->update(1, $requestMock)
+        );
+    }
+
+    public function testDeleteWithProductModel()
+    {
+        $imageMock = Mockery::mock(Image::class)
+                            ->makePartial();
+
+        $imageMock->shouldReceive('delete')
+            ->once();
+
+        $imagesCollection = collect();
+        $parentModelMock = factory(Product::class)->make(['images' => $imagesCollection]);
+        $imageMock->imageable = $parentModelMock;
+
+        $uploadMock = Mockery::mock(Upload::class)
+                             ->makePartial();
+
+        $uploadMock->shouldReceive('deleteImageFiles')
+                   ->once();
+
+        $uploadMock->shouldReceive('createDefaultImage')
+                   ->once();
+
+        $repoMock = Mockery::mock(
+            ImageRepository::class,
+            [$imageMock, $uploadMock]
+        )->shouldAllowMockingProtectedMethods()
+                           ->makePartial();
+
+        $repoMock->shouldReceive('getById')
+                 ->once()
+                 ->andReturn($imageMock);
+
+        $this->assertSame(
+            $parentModelMock,
+            $repoMock->delete(1)
+        );
+    }
+
+    public function testDeleteWithoutProductModel()
+    {
+        $imageMock = Mockery::mock(Image::class)
+                            ->makePartial();
+
+        $imageMock->shouldReceive('delete')
+                  ->once();
+
+        $parentModelMock = factory(Feature::class)->make(['image' => null]);
+
+        $imageMock->imageable = $parentModelMock;
+
+        $uploadMock = Mockery::mock(Upload::class)
+                             ->makePartial();
+
+        $uploadMock->shouldReceive('deleteImageFiles')
+                   ->once();
+
+        $uploadMock->shouldReceive('createDefaultImage')
+                   ->once();
+
+        $repoMock = Mockery::mock(
+            ImageRepository::class,
+            [$imageMock, $uploadMock]
+        )->shouldAllowMockingProtectedMethods()
+                           ->makePartial();
+
+        $repoMock->shouldReceive('getById')
+                 ->once()
+                 ->andReturn($imageMock);
+
+        $this->assertSame(
+            $parentModelMock,
+            $repoMock->delete(1)
         );
     }
 }

@@ -101,7 +101,7 @@ class ImageRepository extends AbstractRepository implements ImageRepositoryInter
      */
     private function checkModelClass($parentModel)
     {
-        if (get_class($parentModel) === Product::class) {
+        if (get_class($parentModel) == Product::class) {
             if ($parentModel->images->isEmpty()) {
                 $this->upload->createDefaultImage($parentModel);
             }
