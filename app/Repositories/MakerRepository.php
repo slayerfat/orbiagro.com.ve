@@ -16,7 +16,7 @@ class MakerRepository extends AbstractRepository implements MakerRepositoryInter
      */
     public function getAll()
     {
-        return Maker::with('products')->get();
+        return $this->model->with('products')->get();
     }
 
     /**
