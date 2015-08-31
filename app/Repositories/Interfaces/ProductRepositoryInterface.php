@@ -1,7 +1,6 @@
 <?php namespace Orbiagro\Repositories\Interfaces;
 
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Models\MapDetail;
 use Orbiagro\Models\Product;
 
 interface ProductRepositoryInterface

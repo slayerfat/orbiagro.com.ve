@@ -11,6 +11,11 @@ interface ProductProviderRepositoryInterface
     public function getLists();
 
     /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll();
+
+    /**
      * @param  mixed $id
      *
      * @return Provider
@@ -28,4 +33,23 @@ interface ProductProviderRepositoryInterface
      * @return Provider
      */
     public function getEmptyInstance();
+
+    /**
+     * @param array $data
+     * @return provider
+     */
+    public function store(array $data);
+
+    /**
+     * @param $id
+     * @param array $data
+     * @return provider
+     */
+    public function update($id, array $data);
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function destroy($id);
 }

@@ -1,19 +1,26 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Requests\ProviderRequest;
-use Orbiagro\Http\Controllers\Controller;
 use Illuminate\View\View as Response;
-use Orbiagro\Models\Provider;
+use Orbiagro\Http\Requests\ProviderRequest;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
 
 class ProvidersController extends Controller
 {
 
     /**
-     * Create a new controller instance.
+     * @var ProductProviderRepositoryInterface
      */
-    public function __construct()
+    private $providerRepo;
+
+    /**
+     * Create a new controller instance.
+     * @param ProductProviderRepositoryInterface $providerRepo
+     */
+    public function __construct(ProductProviderRepositoryInterface $providerRepo)
     {
         $this->middleware('user.admin');
+        $this->providerRepo = $providerRepo;
     }
 
     /**
@@ -23,7 +30,7 @@ class ProvidersController extends Controller
      */
     public function index()
     {
-        $providers = Provider::with('products')->get();
+        $providers = $this->providerRepo->getAll();
 
         return view('provider.index', compact('providers'));
     }
@@ -35,7 +42,7 @@ class ProvidersController extends Controller
      */
     public function create()
     {
-        $provider = new Provider;
+        $provider = $this->providerRepo->getEmptyInstance();
 
         return view('provider.create', compact('provider'));
     }
@@ -44,17 +51,15 @@ class ProvidersController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  ProviderRequest $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function store(ProviderRequest $request)
     {
-        $provider = new Provider($request->all());
-
-        $provider->save();
+        $provider = $this->providerRepo->store($request->all());
 
         flash()->success('Proveedor creado exitosamente.');
 
-        return redirect()->action('ProvidersController@show', $provider->id);
+        return redirect()->route('providers.show', $provider->id);
     }
 
     /**
@@ -65,7 +70,7 @@ class ProvidersController extends Controller
      */
     public function show($id)
     {
-        $provider = Provider::with('products')->findOrFail($id);
+        $provider = $this->providerRepo->getById($id);
 
         return view('provider.show', compact('provider'));
     }
@@ -78,7 +83,7 @@ class ProvidersController extends Controller
      */
     public function edit($id)
     {
-        $provider = Provider::findOrFail($id);
+        $provider = $this->providerRepo->getById($id);
 
         return view('provider.edit', compact('provider'));
     }
@@ -89,46 +94,34 @@ class ProvidersController extends Controller
      * @param  int  $id
      * @param  ProviderRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, ProviderRequest $request)
     {
-        $provider = Provider::findOrFail($id);
-
-        $provider->update($request->all());
+        $provider = $this->providerRepo->update($id, $request->all());
 
         flash()->success('Proveedor actualizado exitosamente.');
 
-        return redirect()->action('ProvidersController@show', $provider->id);
+        return redirect()->route('providers.show', $provider->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
-        $provider = Provider::findOrFail($id);
-
-        try {
-            $provider->delete();
-        } catch (\Exception $e) {
-            if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000) {
-                return $this->redirectToRoute(
-                    'proveedores.show',
-                    $id,
-                    'No deben haber elementos asociados.'
-                );
-            }
-            \Log::error($e);
-
-            abort(500);
+        if (!$this->providerRepo->destroy($id)) {
+            return $this->redirectToRoute(
+                'providers.show',
+                $id,
+                'No deben haber elementos asociados.'
+            );
         }
-
         flash()->success('El Proveedor ha sido eliminado correctamente.');
 
-        return redirect()->action('ProvidersController@index');
+        return redirect()->route('providers.index');
     }
 }
