@@ -1,14 +1,10 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
 use Orbiagro\Http\Requests;
-use Orbiagro\Http\Requests\UserRequest;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\User;
-use Orbiagro\Models\Profile;
 use Illuminate\View\View as Response;
-use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
+use Orbiagro\Http\Requests\UserRequest;
 use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
 
 /**
  * Class UsersController
@@ -220,9 +216,13 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $this->userRepo->delete($id);
+        $result = $this->userRepo->delete($id);
 
-        return redirect()->action('UsersController@showTrashed', $this->user->id);
+        if ($result === true) {
+            return redirect()->route('users.index');
+        }
+
+        return redirect()->route('users.trashed', $result->id);
     }
 
     /**
@@ -233,23 +233,13 @@ class UsersController extends Controller
      */
     public function forceDestroy($id)
     {
-        $user = User::where('id', $id)->withTrashed()->firstOrFail();
+        $result = $this->userRepo->forceDelete($id);
 
-        try {
-            $user->forceDelete();
-        } catch (\Exception $e) {
-            if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000) {
-                flash()->error('Para poder eliminar este Usuario, no deben haber recursos asociados.');
-                return redirect()->action('UsersController@show', $user->name);
-            }
-            \Log::error($e);
-
-            abort(500);
+        if ($result === true) {
+            return redirect()->route('users.index');
         }
 
-        flash()->success('El Usuario ha sido eliminado correctamente.');
-
-        return redirect()->action('UsersController@index');
+        return redirect()->route('users.show', $result->name);
     }
 
     /**
@@ -260,9 +250,7 @@ class UsersController extends Controller
      */
     public function preDestroy($id)
     {
-        if (!$user = User::where('name', $id)->first()) {
-            $user = User::findOrFail($id);
-        }
+        $user = $this->userRepo->getByNameOrId($id);
 
         return view('user.destroy', compact('user'));
     }
@@ -275,11 +263,9 @@ class UsersController extends Controller
      */
     public function restore($id)
     {
-        $user = User::where('id', $id)->withTrashed()->firstOrFail();
-
-        $user->restore();
+        $user = $this->userRepo->restore($id);
 
         flash()->success('El Usuario ha sido restaurado exitosamente.');
-        return redirect()->action('UsersController@show', $user->name);
+        return redirect()->route('users.show', $user->name);
     }
 }

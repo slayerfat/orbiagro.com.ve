@@ -97,6 +97,19 @@ interface UserRepositoryInterface
 
     /**
      * @param $id
+     * @return bool|User
      */
     public function delete($id);
+
+    /**
+     * @param $id
+     * @return User
+     */
+    public function restore($id);
+
+    /**
+     * @param $id
+     * @return bool|User
+     */
+    public function forceDelete($id);
 }

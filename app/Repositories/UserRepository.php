@@ -159,9 +159,37 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
 
     /**
      * @param $id
+     * @return bool|User
      */
     public function delete($id)
     {
-        $this->executeDelete($id, 'Usuario');
+        return $this->executeDelete($id, 'Usuario');
+    }
+
+    /**
+     * @param $id
+     * @return bool|User
+     */
+    public function forceDelete($id)
+    {
+        return $this->executeForceDestroy($id, 'Usuario');
+    }
+
+    /**
+     * @param $id
+     * @return User
+     */
+    public function restore($id)
+    {
+        $this->checkId($id);
+
+        /** @var User $user */
+        $user = $this->model->where('id', $id)
+                            ->withTrashed()
+                            ->firstOrFail();
+
+        $user->restore();
+
+        return $user;
     }
 }

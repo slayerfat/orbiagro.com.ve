@@ -142,31 +142,63 @@ abstract class AbstractRepository
     }
 
     /**
-     * Elimina del sistema algun recurso
+     * Elimina del sistema (soft) algun recurso
      * y genera un flash de exito o fracaso.
      * adicionalmente ataja error de tabla con
      * hijos o genera exception cuando sea otro.
      * @param int $id
      * @param string $resource
      * @param string $child
-     * @throws \Exception
+     * @return bool|Model
      */
     protected function executeDelete($id, $resource = 'Recurso', $child = 'Recursos')
     {
-        $subCat = $this->getById($id);
+        $model = $this->getById($id);
 
+        return $this->deleteDestroyPrototype($model, $resource, $child, 'delete');
+    }
+
+    /**
+     * Elimina del sistema (forceful) algun recurso
+     * y genera un flash de exito o fracaso.
+     * adicionalmente ataja error de tabla con
+     * hijos o genera exception cuando sea otro.
+     * @param int $id
+     * @param string $resource
+     * @param string $child
+     * @return bool|Model
+     */
+    protected function executeForceDestroy($id, $resource = 'Recurso', $child = 'Recursos')
+    {
+        $model = $this->model->withTrashed()->findOrFail($id);
+
+        return $this->deleteDestroyPrototype($model, $resource, $child, 'forceDelete');
+    }
+
+    /**
+     * @param Model $model
+     * @param $resource
+     * @param $child
+     * @param $method
+     * @return bool|Model
+     * @internal param $id
+     */
+    private function deleteDestroyPrototype(Model $model, $resource, $child, $method)
+    {
         try {
-            $subCat->delete();
+            $model->$method();
         } catch (Exception $e) {
             if ($e instanceof QueryException || $e->getCode() == 23000) {
                 flash()->error("No deben haber {$child} asociados.");
 
-                return;
+                return $model;
             }
 
             throw new HttpException(500, "o se pudo eliminar al {$resource}, error inesperado.", $e);
         }
 
         flash()->success("El {$resource} ha sido eliminado correctamente.");
+
+        return true;
     }
 }

@@ -1,27 +1,33 @@
 <?php
-switch ($active)
-{
-  case 'resumen':
-    $resumen = 'class=active';
-    break;
-  case 'person':
-    $person = 'class=active';
-    break;
-  case 'products':
-    $products = 'class=active';
-    break;
-  case 'productsVisits':
-    $productsVisits = 'class=active';
-    break;
-  case 'billing':
-    $billing = 'class=active';
-    break;
-  case 'userDestroy':
-    $userDestroy = 'active';
-    break;
-  default:
-    Log::warning('user.addon.sidebar: no se pudo identificar el vinculo activo');
-    break;}?>
+switch ($active) {
+    case 'resumen':
+        $resumen = 'class=active';
+        break;
+
+    case 'person':
+        $person = 'class=active';
+        break;
+
+    case 'products':
+        $products = 'class=active';
+        break;
+    case 'productsVisits':
+        $productsVisits = 'class=active';
+        break;
+
+    case 'billing':
+        $billing = 'class=active';
+        break;
+
+    case 'userDestroy':
+        $userDestroy = 'active';
+        break;
+
+    default:
+        Log::warning('user.addon.sidebar: no se pudo identificar el vinculo activo');
+        break;
+}
+?>
 
 <div class="col-sm-2 sidebar">
   <ul class="nav nav-sidebar">
