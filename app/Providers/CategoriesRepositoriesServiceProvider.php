@@ -23,7 +23,10 @@ class CategoriesRepositoriesServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(SubCategoryRepositoryInterface::class, function ($app) {
-            return new SubCategoryRepository($app[SubCategory::class]);
+            return new SubCategoryRepository(
+                $app[SubCategory::class],
+                $app[CategoryRepositoryInterface::class]
+            );
         });
     }
 }

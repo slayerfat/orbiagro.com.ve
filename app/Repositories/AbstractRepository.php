@@ -1,6 +1,8 @@
 <?php namespace Orbiagro\Repositories;
 
 use Auth;
+use Exception;
+use Illuminate\Database\QueryException;
 use Orbiagro\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -137,5 +139,34 @@ abstract class AbstractRepository
             ->firstOrFail();
 
         return $model;
+    }
+
+    /**
+     * Elimina del sistema algun recurso
+     * y genera un flash de exito o fracaso.
+     * adicionalmente ataja error de tabla con
+     * hijos o genera exception cuando sea otro.
+     * @param int $id
+     * @param string $resource
+     * @param string $child
+     * @throws \Exception
+     */
+    protected function executeDelete($id, $resource = 'Recurso', $child = 'Recursos')
+    {
+        $subCat = $this->getById($id);
+
+        try {
+            $subCat->delete();
+        } catch (Exception $e) {
+            if ($e instanceof QueryException || $e->getCode() == 23000) {
+                flash()->error("No deben haber {$child} asociados.");
+
+                return;
+            }
+
+            throw new HttpException(500, "o se pudo eliminar al {$resource}, error inesperado.", $e);
+        }
+
+        flash()->success("El {$resource} ha sido eliminado correctamente.");
     }
 }

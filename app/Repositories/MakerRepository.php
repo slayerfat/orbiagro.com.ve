@@ -75,20 +75,6 @@ class MakerRepository extends AbstractRepository implements MakerRepositoryInter
      */
     public function delete($id)
     {
-        $maker = $this->getById($id);
-
-        try {
-            $maker->delete();
-        } catch (Exception $e) {
-            if ($e instanceof QueryException || $e->getCode() == 23000) {
-                flash()->error('No deben haber productos asociados.');
-
-                return;
-            }
-
-            throw new HttpException(500, 'No se pudo eliminar al fabricante, error inesperado.', $e);
-        }
-
-        flash()->success('El Fabricante ha sido eliminado correctamente.');
+        $this->executeDelete($id, 'Fabricante', 'Productos');
     }
 }

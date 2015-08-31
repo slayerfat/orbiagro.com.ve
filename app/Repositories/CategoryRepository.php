@@ -17,6 +17,14 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
     }
 
     /**
+     * @return array
+     */
+    public function getLists()
+    {
+        return $this->model->lists('description', 'id');
+    }
+
+    /**
      * @return Category
      */
     public function getEmptyInstance()

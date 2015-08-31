@@ -23,7 +23,7 @@ interface CategoryRepositoryInterface
     /**
      * @param array $data
      *
-     * @return Model
+     * @return Category
      */
     public function create(array $data);
 
@@ -38,7 +38,7 @@ interface CategoryRepositoryInterface
      * @param       $id
      * @param array $data
      *
-     * @return Model
+     * @return Category
      */
     public function update($id, array $data);
 
@@ -52,14 +52,14 @@ interface CategoryRepositoryInterface
     /**
      * @param  mixed $id
      *
-     * @return Model
+     * @return Category
      */
     public function getBySlugOrId($id);
 
     /**
      * @param  mixed $id
      *
-     * @return Model
+     * @return Category
      */
     public function getById($id);
 
@@ -74,4 +74,9 @@ interface CategoryRepositoryInterface
      * @return array
      */
     public function getArraySortedWithSubCategories();
+
+    /**
+     * @return array
+     */
+    public function getLists();
 }

@@ -1,14 +1,12 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Orbiagro\Http\Requests;
-use Orbiagro\Http\Requests\SubCategoryRequest;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Category;
-use Orbiagro\Models\SubCategory;
-use Orbiagro\Mamarrachismo\VisitsService;
-use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\View\View as Response;
+use Orbiagro\Mamarrachismo\VisitsService;
+use Orbiagro\Http\Requests\SubCategoryRequest;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
 class SubCategoriesController extends Controller
@@ -22,16 +20,26 @@ class SubCategoriesController extends Controller
     private $subCatRepo;
 
     /**
-     * @param SubCategoryRepositoryInterface $subCatRepo
+     * @var CategoryRepositoryInterface
      */
-    public function __construct(SubCategoryRepositoryInterface $subCatRepo)
-    {
+    private $catRepo;
+
+    /**
+     * @param SubCategoryRepositoryInterface $subCatRepo
+     * @param CategoryRepositoryInterface $catRepo
+     */
+    public function __construct(
+        SubCategoryRepositoryInterface $subCatRepo,
+        CategoryRepositoryInterface $catRepo
+    ) {
         $rules = ['except' => ['index', 'show', 'indexByCategory']];
 
         $this->middleware('auth', $rules);
 
         $this->middleware('user.admin', $rules);
+
         $this->subCatRepo = $subCatRepo;
+        $this->catRepo    = $catRepo;
     }
 
     /**
@@ -60,15 +68,13 @@ class SubCategoriesController extends Controller
      */
     public function indexByCategory($id)
     {
-        if (!$subCats = Category::where('slug', $id)->first()->subCategories) {
-            $subCats = Category::findOrFail($id)->subCategories;
-        }
+        $subCats = $this->subCatRepo->getIndexByParent($id);
 
         $productsCollection = $this->getProductsInSubCat($subCats);
 
         $this->seo()->setTitle('Rubros en orbiagro.com.ve');
         $this->seo()->setDescription('Rubros en existencia en orbiagro.com.ve');
-        $this->seo()->opengraph()->setUrl(action('SubCategoriesController@index'));
+        $this->seo()->opengraph()->setUrl(route('subCats.index'));
 
         return view('sub-category.index', compact('subCats', 'productsCollection'));
     }
@@ -80,12 +86,11 @@ class SubCategoriesController extends Controller
      */
     public function create()
     {
-        $cats = Category::lists('description', 'id');
+        $cats = $this->catRepo->getLists();
 
-        return view('sub-category.create')->with([
-            'cats' => $cats,
-            'subCat' => $this->subCat
-        ]);
+        $subCat = $this->subCatRepo->getEmptyInstance();
+
+        return view('sub-category.create', compact('cats', 'subCat'));
     }
 
     /**
@@ -96,20 +101,22 @@ class SubCategoriesController extends Controller
      */
     public function store(SubCategoryRequest $request)
     {
-        $cat = Category::findOrFail($request->input('category_id'));
+        $cat = $this->catRepo->getById($request->input('category_id'));
 
-        $this->subCat->fill($request->all());
+        $subCat = $this->subCatRepo->getEmptyInstance();
 
-        $cat->subCategories()->save($this->subCat);
+        $subCat->fill($request->all());
+
+        $cat->subCategories()->save($subCat);
 
         /**
          * @see MakersController::store()
          */
         flash()->success('Rubro creado exitosamente.');
 
-        $this->createImage($request, $this->subCat);
+        $this->createImage($request, $subCat);
 
-        return redirect()->action('SubCategoriesController@index');
+        return redirect()->route('subCats.index');
     }
 
     /**
@@ -121,13 +128,11 @@ class SubCategoriesController extends Controller
      */
     public function show($id, VisitsService $visits)
     {
-        if (!$subCat = SubCategory::where('slug', $id)->first()) {
-            $subCat = SubCategory::findOrFail($id);
-        }
+        $subCat = $this->subCatRepo->getBySlugOrId($id);
 
-        $subCats = $subCat->category->subCategories()->get();
+        $subCats = $this->subCatRepo->getSibblings($subCat);
 
-        $products = Product::where('sub_category_id', $subCat->id)->paginate(20);
+        $products = $this->subCatRepo->getProductsPaginated($subCat->id);
 
         $visits->setNewVisit($subCat);
 
@@ -149,14 +154,11 @@ class SubCategoriesController extends Controller
      */
     public function edit($id)
     {
-        $this->subCat = SubCategory::findOrFail($id);
+        $subCat = $this->subCatRepo->getById($id);
 
-        $cats = Category::lists('description', 'id');
+        $cats = $this->catRepo->getLists();
 
-        return view('sub-category.edit')->with([
-            'cats' => $cats,
-            'subCat' => $this->subCat
-        ]);
+        return view('sub-category.edit', compact('cats', 'subCat'));
     }
 
     /**
@@ -169,18 +171,20 @@ class SubCategoriesController extends Controller
      */
     public function update($id, SubCategoryRequest $request)
     {
-        $this->subCat = SubCategory::findOrFail($id)->load('image');
+        $subCat = $this->subCatRepo->getById($id);
 
-        $this->subCat->update($request->all());
+        $subCat->fill($request->all());
+
+        $subCat->update();
 
         /**
          * @see MakersController::store()
          */
         flash()->success('El Rubro ha sido actualizado correctamente.');
 
-        $this->updateImage($request, $this->subCat);
+        $this->updateImage($request, $subCat);
 
-        return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
+        return redirect()->route('subCats.show', $subCat->slug);
     }
 
     /**
@@ -191,22 +195,8 @@ class SubCategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $this->subCat = SubCategory::findOrFail($id);
+        $this->subCatRepo->delete($id);
 
-        try {
-            $this->subCat->delete();
-        } catch (\Exception $e) {
-            if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000) {
-                flash()->error('Para poder eliminar este Rubro, no deben haber productos asociados.');
-
-                return redirect()->action('SubCategoriesController@show', $this->subCat->slug);
-            }
-            \Log::error($e);
-
-            abort(500);
-        }
-
-        flash()->success('El Rubro ha sido eliminado correctamente.');
         return redirect()->action('SubCategoriesController@index');
     }
 
