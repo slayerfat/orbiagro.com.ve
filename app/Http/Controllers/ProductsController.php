@@ -1,15 +1,14 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Models\Maker;
 use Illuminate\Http\Request;
-use Orbiagro\Models\Product;
 use Illuminate\View\View as Response;
 use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Http\Requests\ProductRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
 class ProductsController extends Controller
@@ -72,7 +71,9 @@ class ProductsController extends Controller
         $cats     = $this->catRepo->getAll();
         $subCats  = $this->subCatRepo->getAll();
 
-        $visitedProducts = $visits->getVisitedResources(Product::class);
+        $visitedProducts = $visits->getVisitedResources(
+            $this->productRepo->getEmptyInstance()
+        );
 
         $this->seo()->setTitle('Productos en orbiagro.com.ve');
         $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
@@ -125,7 +126,9 @@ class ProductsController extends Controller
     {
         $products = $this->productRepo->getByParentSlugOrId($parent, $parentId);
 
-        $visitedProducts = $visits->getVisitedResources(Product::class);
+        $visitedProducts = $visits->getVisitedResources(
+            $this->productRepo->getEmptyInstance()
+        );
 
         $cats = $this->catRepo->getAll();
 
@@ -163,10 +166,10 @@ class ProductsController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
+     * @param MakerRepositoryInterface $maker
      * @return Response
      */
-    public function create()
+    public function create(MakerRepositoryInterface $maker)
     {
         if ($this->productRepo->isCurrentUserDisabled()) {
             flash()->error('Ud. no tiene permisos para esta accion.');
@@ -174,8 +177,7 @@ class ProductsController extends Controller
             return redirect()->back();
         }
 
-        // TODO repo
-        $makers = Maker::lists('name', 'id');
+        $makers = $maker->getLists();
 
         $product = $this->productRepo->getEmptyInstance();
 
@@ -214,7 +216,9 @@ class ProductsController extends Controller
 
         $visits->setNewVisit($product);
 
-        $visitedProducts = $visits->getVisitedResources(Product::class);
+        $visitedProducts = $visits->getVisitedResources(
+            $this->productRepo->getEmptyInstance()
+        );
 
         $isUserValid = $this->productRepo->canUserManipulate($product->user_id);
 
@@ -232,11 +236,11 @@ class ProductsController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
+     * @param  int $id
+     * @param MakerRepositoryInterface $maker
      * @return Response
      */
-    public function edit($id)
+    public function edit($id, MakerRepositoryInterface $maker)
     {
         $product = $this->productRepo->getBySlugOrId($id);
 
@@ -244,8 +248,7 @@ class ProductsController extends Controller
             return $this->redirectToroute('products.show', $id);
         }
 
-        // TODO repo
-        $makers = Maker::lists('name', 'id');
+        $makers = $maker->getLists();
 
         $cats = $this->catRepo->getArraySortedWithSubCategories();
 
@@ -324,7 +327,7 @@ class ProductsController extends Controller
      * Ejecuta la operacion segun los paramentros. Este metodo sirve
      * para deshabilitar, eliminar y restaurar productos.
      *
-     * @param  Product $product
+     * @param  $product
      * @param  string $method
      * @param  string $message
      * @param  string $severity
@@ -333,7 +336,7 @@ class ProductsController extends Controller
      * @return Response
      */
     protected function destroyDeleteRestorePrototype(
-        Product $product,
+        $product,
         $method,
         $message,
         $severity = 'info',

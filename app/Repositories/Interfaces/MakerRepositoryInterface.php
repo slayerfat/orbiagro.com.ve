@@ -46,4 +46,9 @@ interface MakerRepositoryInterface
      * @return Maker
      */
     public function getEmptyInstance();
+
+    /**
+     * @return array
+     */
+    public function getLists();
 }

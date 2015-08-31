@@ -2,22 +2,38 @@
 
 use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-use Orbiagro\Http\Controllers\Controller;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Provider;
 use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 
 class ProductsProvidersController extends Controller
 {
 
     /**
-     * Create a new controller instance.
+     * @var ProductRepositoryInterface
      */
-    public function __construct()
-    {
+    private $productRepo;
+
+    /**
+     * @var ProductProviderRepositoryInterface
+     */
+    private $providerRepo;
+
+    /**
+     * Create a new controller instance.
+     * @param ProductRepositoryInterface $productRepo
+     * @param ProductProviderRepositoryInterface $providerRepo
+     */
+    public function __construct(
+        ProductRepositoryInterface $productRepo,
+        ProductProviderRepositoryInterface $providerRepo
+    ) {
         $this->middleware('auth');
 
         $this->middleware('user.admin');
+
+        $this->productRepo = $productRepo;
+        $this->providerRepo = $providerRepo;
     }
 
     /**
@@ -28,13 +44,12 @@ class ProductsProvidersController extends Controller
      */
     public function create($productId)
     {
-        if (!$product = Product::where('slug', $productId)->first()) {
-            $product = Product::findOrFail($productId);
-        }
+        $product = $this->productRepo->getBySlugOrId($productId);
 
-        $providers = Provider::lists('name', 'id');
+        $providers = $this->providerRepo->getLists();
 
-        $provider = new Provider;
+        $provider = $this->providerRepo->getEmptyInstance();
+
         $providerId = null;
 
         $product->sku = null;
@@ -60,11 +75,12 @@ class ProductsProvidersController extends Controller
             'provider_id' => 'required|numeric'
         ]);
 
-        if (!$product = Product::with('user')->where('slug', $productId)->first()) {
-            $product = Product::with('user')->findOrFail($productId);
-        }
+        $product = $this->productRepo->getBySlugOrId($productId);
 
-        $product->providers()->attach($request->input('provider_id'), ['sku' => $request->input('sku')]);
+        $product->providers()->attach(
+            $request->input('provider_id'),
+            ['sku' => $request->input('sku')]
+        );
 
         flash()->success('El Proveedor fue asociado con exito.');
         return redirect()->action('ProductsController@show', $product->slug);
@@ -79,11 +95,10 @@ class ProductsProvidersController extends Controller
      */
     public function edit($productId, $providerId)
     {
-        if (!$product = Product::where('slug', $productId)->first()) {
-            $product = Product::findOrFail($productId);
-        }
+        $product = $this->productRepo->getBySlugOrId($productId);
 
-        $providers = Provider::lists('name', 'id');
+        $providers = $this->providerRepo->getLists();
+
         $provider  = $product->providers()->where('provider_id', $providerId)->first();
 
         $product->sku = $provider->pivot->sku;
@@ -106,9 +121,7 @@ class ProductsProvidersController extends Controller
             'provider_id' => 'required|numeric'
         ]);
 
-        if (!$product = Product::where('slug', $productId)->first()) {
-            $product = Product::findOrFail($productId);
-        }
+        $product = $this->productRepo->getBySlugOrId($productId);
 
         $product->providers()->updateExistingPivot(
             $providerId,
@@ -132,11 +145,9 @@ class ProductsProvidersController extends Controller
      */
     public function destroy($productId, $providerId)
     {
-        if (!$product = Product::where('slug', $productId)->first()) {
-            $product = Product::findOrFail($productId);
-        }
+        $product = $this->productRepo->getBySlugOrId($productId);
 
-        $provider = Provider::findOrFail($providerId);
+        $provider = $this->providerRepo->getById($providerId);
 
         $product->providers()->detach($provider);
 

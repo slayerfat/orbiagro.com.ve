@@ -3,11 +3,14 @@
 use Illuminate\Support\ServiceProvider;
 use Orbiagro\Models\Feature;
 use Orbiagro\Models\Product;
+use Orbiagro\Models\Provider;
 use Orbiagro\Repositories\FeatureRepository;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\FeatureRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
+use Orbiagro\Repositories\ProductProviderRepository;
 use Orbiagro\Repositories\ProductRepository;
 
 class ProductRepositoriesServiceProvider extends ServiceProvider
@@ -21,6 +24,10 @@ class ProductRepositoriesServiceProvider extends ServiceProvider
     {
         $this->app->bind(FeatureRepositoryInterface::class, function ($app) {
             return new FeatureRepository($app[Feature::class]);
+        });
+
+        $this->app->bind(ProductProviderRepositoryInterface::class, function ($app) {
+            return new ProductProviderRepository($app[Provider::class]);
         });
 
         $this->app->bind(ProductRepositoryInterface::class, function ($app) {

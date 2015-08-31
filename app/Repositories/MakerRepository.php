@@ -20,6 +20,14 @@ class MakerRepository extends AbstractRepository implements MakerRepositoryInter
     }
 
     /**
+     * @return array
+     */
+    public function getLists()
+    {
+        return $this->model->lists('name', 'id');
+    }
+
+    /**
      * @return Maker
      */
     public function getEmptyInstance()
