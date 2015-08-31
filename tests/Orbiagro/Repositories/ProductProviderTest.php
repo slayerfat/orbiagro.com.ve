@@ -16,7 +16,7 @@ class ProductProviderTest extends TestCase
         $catRepoMock    = Mockery::mock(CategoryRepository::class);
         $subCatRepoMock = Mockery::mock(SubCategoryRepository::class);
 
-        $providerRepo = new ProductRepository(
+        $productRepo = new ProductRepository(
             $productMock,
             $catRepoMock,
             $subCatRepoMock
@@ -24,17 +24,17 @@ class ProductProviderTest extends TestCase
 
         $this->assertSame(
             $productMock,
-            $this->readAttribute($providerRepo, 'model')
+            $this->readAttribute($productRepo, 'model')
         );
 
         $this->assertSame(
             $catRepoMock,
-            $this->readAttribute($providerRepo, 'catRepo')
+            $this->readAttribute($productRepo, 'catRepo')
         );
 
         $this->assertSame(
             $subCatRepoMock,
-            $this->readAttribute($providerRepo, 'subCatRepo')
+            $this->readAttribute($productRepo, 'subCatRepo')
         );
     }
 
@@ -49,7 +49,7 @@ class ProductProviderTest extends TestCase
             ->with(1)
             ->andReturnSelf();
 
-        $providerRepo = new ProductRepository(
+        $productRepo = new ProductRepository(
             $productMock,
             $catRepoMock,
             $subCatRepoMock
@@ -57,7 +57,70 @@ class ProductProviderTest extends TestCase
 
         $this->assertSame(
             $productMock,
-            $providerRepo->getPaginated(1)
+            $productRepo->getPaginated(1)
+        );
+    }
+
+    public function testGetByIdWithTrashed()
+    {
+        $productMock    = Mockery::mock(Product::class)->makePartial();
+        $catRepoMock    = Mockery::mock(CategoryRepository::class);
+        $subCatRepoMock = Mockery::mock(SubCategoryRepository::class);
+
+        $productMock->shouldReceive('withTrashed')
+                    ->once()
+                    ->andReturnSelf();
+
+        $productMock->shouldReceive('findOrFail')
+                    ->once()
+                    ->with(1)
+                    ->andReturn('mocked');
+
+        $productRepo = new ProductRepository(
+            $productMock,
+            $catRepoMock,
+            $subCatRepoMock
+        );
+
+        $this->assertEquals(
+            'mocked',
+            $productRepo->getByIdWithTrashed(1)
+        );
+    }
+
+    public function testStore()
+    {
+        $productMock = Mockery::mock(Product::class)
+                              ->shouldAllowMockingProtectedMethods()
+                              ->makePartial();
+
+        $productMock->shouldReceive('fill')
+                    ->once()
+                    ->andReturnNull();
+
+        $catRepoMock    = Mockery::mock(CategoryRepository::class);
+        $subCatRepoMock = Mockery::mock(SubCategoryRepository::class);
+
+        $productRepo = Mockery::mock(
+            ProductRepository::class,
+            [
+                $productMock,
+                $catRepoMock,
+                $subCatRepoMock
+            ]
+        )->shouldAllowMockingProtectedMethods()->makePartial();
+
+        $productRepo->shouldReceive('getEmptyInstance')
+            ->once()
+            ->andReturn($productMock);
+
+        $productRepo->shouldReceive('storeModels')
+                    ->once()
+                    ->andReturn('mocked');
+
+        $this->assertEquals(
+            'mocked',
+            $productRepo->store([1])
         );
     }
 }

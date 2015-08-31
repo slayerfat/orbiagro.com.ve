@@ -1,10 +1,11 @@
 <?php namespace Orbiagro\Repositories;
 
+use LogicException;
+use Orbiagro\Models\Product;
 use Orbiagro\Models\Direction;
 use Orbiagro\Models\MapDetail;
-use Orbiagro\Models\Product;
-use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
 class ProductRepository extends AbstractRepository implements ProductRepositoryInterface
@@ -83,6 +84,10 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
     {
         $user = $this->getCurrentUser();
 
+        if (is_null($user)) {
+            return false;
+        }
+
         return $user->isDisabled();
     }
 
@@ -93,18 +98,16 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
     public function store(array $data)
     {
         /** @var Product $product */
-        $product    = $this->model->newInstance($data);
-        $dir        = new Direction($data);
-        $map        = new MapDetail($data);
+        $product = $this->getEmptyInstance();
 
-        $user = $this->getCurrentUser();
+        $product->fill($data);
 
-        // se guardan los modelos
-        $user->products()->save($product);
-        $product->direction()->save($dir);
-        $product->direction->map()->save($map);
+        $dir = $this->getDirectionModel($data);
+        $map = $this->getMapModel($data);
 
-        return $product;
+        $results = $this->storeModels($product, $dir, $map);
+
+        return $results;
     }
 
     /**
@@ -172,9 +175,49 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
                 break;
 
             default:
-                throw new \LogicException('No se puede determinar el repositorio adecuado para buscar los productos asociados.');
+                throw new LogicException('No se puede determinar el repositorio adecuado para buscar los productos asociados.');
         }
 
         return $repo;
+    }
+
+    /**
+     * @param array $data
+     * @return Direction
+     */
+    protected function getDirectionModel(array $data)
+    {
+        $dir = new Direction($data);
+
+        return $dir;
+    }
+
+    /**
+     * @param array $data
+     * @return MapDetail
+     */
+    protected function getMapModel(array $data)
+    {
+        $map = new MapDetail($data);
+
+        return $map;
+    }
+
+    /**
+     * @param Product $product
+     * @param $dir
+     * @param $map
+     * @return mixed
+     */
+    protected function storeModels(Product $product, $dir, $map)
+    {
+        $user = $this->getCurrentUser();
+
+        // se guardan los modelos
+        $user->products()->save($product);
+        $product->direction()->save($dir);
+        $product->direction()->first()->map()->save($map);
+
+        return $product;
     }
 }
