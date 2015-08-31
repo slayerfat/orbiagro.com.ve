@@ -19,6 +19,11 @@ use Orbiagro\Mamarrachismo\ModelValidation;
 class Profile extends Model
 {
 
+    /**
+     * @var array
+     */
+    protected $fillable = ['description'];
+
     // --------------------------------------------------------------------------
     // Mutators
     // --------------------------------------------------------------------------

@@ -1,28 +1,27 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Orbiagro\Http\Requests;
-use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Orbiagro\Models\Profile;
 use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
 
 class ProfilesController extends Controller
 {
 
     /**
-     * @var Profile
+     * @var ProfileRepositoryInterface
      */
-    protected $profile;
+    private $profileRepo;
 
     /**
-     * @param Profile $profile
+     * @param ProfileRepositoryInterface $profileRepo
      */
-    public function __construct(Profile $profile)
+    public function __construct(ProfileRepositoryInterface $profileRepo)
     {
         $this->middleware('auth');
         $this->middleware('user.admin');
 
-        $this->profile = $profile;
+        $this->profileRepo = $profileRepo;
     }
 
     /**
@@ -32,7 +31,7 @@ class ProfilesController extends Controller
      */
     public function index()
     {
-        $profiles = Profile::with('users')->paginate(5);
+        $profiles = $this->profileRepo->getPaginated(5);
 
         return view('profile.index', compact('profiles'));
     }
@@ -44,7 +43,9 @@ class ProfilesController extends Controller
      */
     public function create()
     {
-        return view('profile.create')->with(['profile' => $this->profile]);
+        $profile = $this->profileRepo->getEmptyInstance();
+
+        return view('profile.create', compact('profile'));
     }
 
     /**
@@ -59,12 +60,11 @@ class ProfilesController extends Controller
             'description' => 'required|unique:profiles|max:40|min:5'
         ]);
 
-        $this->profile->description = $request->input('description');
-        $this->profile->save();
+        $profile = $this->profileRepo->store($request->all());
 
         flash()->success('El Perfil ha sido creado con exito.');
 
-        return redirect()->action('ProfilesController@show', $this->profile->id);
+        return redirect()->route('profiles.show', $profile->id);
     }
 
     /**
@@ -75,11 +75,9 @@ class ProfilesController extends Controller
      */
     public function show($id)
     {
-        if (!$this->profile = Profile::with('users')->where('description', $id)->first()) {
-            $this->profile = Profile::with('users')->findOrFail($id);
-        }
+        $profile = $this->profileRepo->getByDescription($id);
 
-        return view('profile.show')->with(['profile' => $this->profile]);
+        return view('profile.show', compact('profile'));
     }
 
     /**
@@ -90,9 +88,9 @@ class ProfilesController extends Controller
      */
     public function edit($id)
     {
-        $this->profile = Profile::findOrFail($id);
+        $profile = $this->profileRepo->getById($id);
 
-        return view('profile.edit')->with(['profile' => $this->profile]);
+        return view('profile.edit', compact('profile'));
     }
 
     /**
@@ -107,14 +105,12 @@ class ProfilesController extends Controller
         $this->validate($request, [
             'description' => 'required|max:40|min:5|unique:profiles,description,'.$id
         ]);
-        $this->profile = Profile::findOrFail($id);
 
-        $this->profile->description = $request->input('description');
-        $this->profile->save();
+        $profile = $this->profileRepo->update($id, $request->all());
 
         flash()->success('El Perfil ha sido actualizado con exito.');
 
-        return redirect()->action('ProfilesController@show', $this->profile->id);
+        return redirect()->route('profiles.show', $profile->id);
     }
 
     /**
@@ -125,18 +121,12 @@ class ProfilesController extends Controller
      */
     public function destroy($id)
     {
-        $this->profile = Profile::findOrFail($id);
-
-        if (!$this->profile->users->isEmpty()) {
-            flash()->error('Para poder eliminar este perfil, debe estar vacio.');
-
-            return redirect()->action('ProfilesController@show', $this->profile->id);
-        }
-
-        $this->profile->delete();
-
         flash()->info('El Perfil ha sido eliminado correctamente.');
 
-        return redirect()->action('ProfilesController@index');
+        if (!$this->profileRepo->destroy($id)) {
+            flash()->error('Para poder eliminar este perfil, debe estar vacio.');
+        }
+
+        return redirect()->route('profiles.index');
     }
 }

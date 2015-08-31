@@ -2,12 +2,15 @@
 
 use Orbiagro\Models\Image;
 use Orbiagro\Models\Maker;
+use Orbiagro\Models\Profile;
 use Orbiagro\Models\Promotion;
 use Orbiagro\Models\PromoType;
 use Illuminate\Support\ServiceProvider;
 use Orbiagro\Repositories\ImageRepository;
 use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
 use Orbiagro\Repositories\MakerRepository;
+use Orbiagro\Repositories\ProfileRepository;
 use Orbiagro\Repositories\PromotionRepository;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
@@ -33,6 +36,10 @@ class MiscRepositoriesServiceProvider extends ServiceProvider
 
         $this->app->bind(MakerRepositoryInterface::class, function ($app) {
             return new MakerRepository($app[Maker::class]);
+        });
+
+        $this->app->bind(ProfileRepositoryInterface::class, function ($app) {
+            return new ProfileRepository($app[Profile::class]);
         });
     }
 }
