@@ -1,9 +1,7 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Orbiagro\Http\Requests;
-use Illuminate\Http\Request;
 use Orbiagro\Http\Requests\SubCategoryRequest;
-use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Category;
 use Orbiagro\Models\SubCategory;
@@ -11,6 +9,7 @@ use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
 class SubCategoriesController extends Controller
 {
@@ -18,24 +17,21 @@ class SubCategoriesController extends Controller
     use SEOToolsTrait, CanSaveUploads;
 
     /**
-     * @var SubCategory
+     * @var SubCategoryRepositoryInterface
      */
-    protected $subCat;
+    private $subCatRepo;
 
     /**
-     * Create a new controller instance.
-     *
-     * @param SubCategory $subCat
+     * @param SubCategoryRepositoryInterface $subCatRepo
      */
-    public function __construct(SubCategory $subCat)
+    public function __construct(SubCategoryRepositoryInterface $subCatRepo)
     {
         $rules = ['except' => ['index', 'show', 'indexByCategory']];
 
         $this->middleware('auth', $rules);
 
         $this->middleware('user.admin', $rules);
-
-        $this->subCat = $subCat;
+        $this->subCatRepo = $subCatRepo;
     }
 
     /**
@@ -45,13 +41,13 @@ class SubCategoriesController extends Controller
      */
     public function index()
     {
-        $subCats = SubCategory::all();
+        $subCats = $this->subCatRepo->getAll();
 
         $productsCollection = $this->getProductsInSubCat($subCats);
 
         $this->seo()->setTitle('Rubros en orbiagro.com.ve');
         $this->seo()->setDescription('Rubros en existencia en orbiagro.com.ve');
-        $this->seo()->opengraph()->setUrl(action('SubCategoriesController@index'));
+        $this->seo()->opengraph()->setUrl(route('subCats.index'));
 
         return view('sub-category.index', compact('subCats', 'productsCollection'));
     }
