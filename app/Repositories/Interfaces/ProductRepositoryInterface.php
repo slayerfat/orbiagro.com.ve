@@ -64,8 +64,8 @@ interface ProductRepositoryInterface
     public function getByIdWithTrashed($id);
 
     /**
-     * @param $parent
-     * @param $id
+     * @param string $parent
+     * @param int $id
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getByParentSlugOrId($parent, $id);

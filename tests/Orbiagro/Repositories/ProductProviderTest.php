@@ -123,4 +123,101 @@ class ProductProviderTest extends TestCase
             $productRepo->store([1])
         );
     }
+
+    public function testUpdate()
+    {
+        $productMock = Mockery::mock(Product::class)
+                              ->shouldAllowMockingProtectedMethods()
+                              ->makePartial();
+
+        $productMock->shouldReceive('update')
+                    ->once()
+                    ->andReturnNull();
+
+        $catRepoMock    = Mockery::mock(CategoryRepository::class);
+        $subCatRepoMock = Mockery::mock(SubCategoryRepository::class);
+
+        $productRepo = Mockery::mock(
+            ProductRepository::class,
+            [
+                $productMock,
+                $catRepoMock,
+                $subCatRepoMock
+            ]
+        )->shouldAllowMockingProtectedMethods()->makePartial();
+
+        $productRepo->shouldReceive('getById')
+                    ->once()
+                    ->andReturn($productMock);
+
+        $productRepo->shouldReceive('updateRelatedModels')
+                    ->once()
+                    ->andReturn('mocked');
+
+        $this->assertSame(
+            $productMock,
+            $productRepo->update(1, [])
+        );
+    }
+
+    public function testGetByParentSlugOrId()
+    {
+        $productMock = Mockery::mock(Product::class);
+
+        $catRepoMock = Mockery::mock(CategoryRepository::class)
+            ->makePartial();
+
+        $catRepoMock->shouldReceive('getBySlugOrId')
+                    ->once()
+                    ->andReturnSelf();
+
+        $catRepoMock->shouldReceive('products')
+                    ->once()
+                    ->andReturnSelf();
+
+        $catRepoMock->shouldReceive('paginate')
+                    ->once()
+                    ->andReturn($productMock);
+
+
+        $subCatRepoMock = Mockery::mock(SubCategoryRepository::class);
+
+        $productRepo = Mockery::mock(
+            ProductRepository::class,
+            [
+                $productMock,
+                $catRepoMock,
+                $subCatRepoMock
+            ]
+        )->shouldAllowMockingProtectedMethods()->makePartial();
+
+        $this->assertSame(
+            $productMock,
+            $productRepo->getByParentSlugOrId('category', 1)
+        );
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testGetByParentSlugOrIdShouldThrowException()
+    {
+        $productMock    = Mockery::mock(Product::class);
+        $catRepoMock    = Mockery::mock(CategoryRepository::class);
+        $subCatRepoMock = Mockery::mock(SubCategoryRepository::class);
+
+        $productRepo = Mockery::mock(
+            ProductRepository::class,
+            [
+                $productMock,
+                $catRepoMock,
+                $subCatRepoMock
+            ]
+        )->shouldAllowMockingProtectedMethods()->makePartial();
+
+        $this->assertSame(
+            $productMock,
+            $productRepo->getByParentSlugOrId('hello boxxy', 1)
+        );
+    }
 }

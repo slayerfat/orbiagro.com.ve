@@ -117,35 +117,19 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
      */
     public function update($id, array $data)
     {
+        /** @var Product $product */
         $product = $this->getById($id);
 
         $product->update($data);
 
-        $direction = $product->direction;
-
-        $direction->parish_id = $data['parish_id'];
-        $direction->details = $data['details'];
-
-        $direction->save();
-
-        $map = $direction->map;
-
-        if (!$map) {
-            $map = new MapDetail;
-            $map->direction_id = $direction->id;
-        }
-
-        $map->latitude = $data['latitude'];
-        $map->longitude = $data['longitude'];
-        $map->zoom = $data['zoom'];
-        $map->save();
+        $this->updateRelatedModels($data, $product);
 
         return $product;
     }
 
     /**
-     * @param $parent
-     * @param $id
+     * @param string $parent
+     * @param int $id
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getByParentSlugOrId($parent, $id)
@@ -219,5 +203,31 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
         $product->direction()->first()->map()->save($map);
 
         return $product;
+    }
+
+    /**
+     * @param array $data
+     * @param Product $product
+     */
+    protected function updateRelatedModels(array $data, Product $product)
+    {
+        $direction = $product->direction;
+
+        $direction->parish_id = $data['parish_id'];
+        $direction->details   = $data['details'];
+
+        $direction->save();
+
+        $map = $direction->map;
+
+        if (!$map) {
+            $map               = new MapDetail;
+            $map->direction_id = $direction->id;
+        }
+
+        $map->latitude  = $data['latitude'];
+        $map->longitude = $data['longitude'];
+        $map->zoom      = $data['zoom'];
+        $map->save();
     }
 }
