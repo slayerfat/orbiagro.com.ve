@@ -1,6 +1,5 @@
 <?php namespace Orbiagro\Repositories;
 
-use Illuminate\Database\QueryException;
 use Orbiagro\Models\Provider;
 use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
 

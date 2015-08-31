@@ -4,7 +4,6 @@ use Mockery;
 use Orbiagro\Models\Provider;
 use Orbiagro\Repositories\ProductProviderRepository;
 use Tests\TestCase;
-use Illuminate\Database\Eloquent\Collection;
 
 class ProductProviderRepositoryTest extends TestCase
 {
