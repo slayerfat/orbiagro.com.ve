@@ -1,7 +1,8 @@
 <?php namespace Orbiagro\Repositories\Interfaces;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 use Orbiagro\Models\Person;
+use Orbiagro\Models\Product;
 use Orbiagro\Models\User;
 
 interface UserRepositoryInterface
@@ -9,21 +10,21 @@ interface UserRepositoryInterface
     /**
      * @param  mixed $id
      *
-     * @return Model
+     * @return User
      */
     public function getBySlugOrId($id);
 
     /**
      * @param  mixed $id
      *
-     * @return Model
+     * @return User
      */
     public function getByNameOrId($id);
 
     /**
      * @param  mixed $id
      *
-     * @return Model
+     * @return User
      */
     public function getById($id);
 
@@ -63,4 +64,39 @@ interface UserRepositoryInterface
      * @return User
      */
     public function updatePerson($id, array $data);
+
+    /**
+     * @return Collection
+     */
+    public function getAllWithTrashed();
+
+    /**
+     * @param $id
+     * @return User
+     */
+    public function getWithProductVisits($id);
+
+    /**
+     * @param int $id
+     * @return User
+     */
+    public function getWithChildrens($id);
+
+    /**
+     * @param $userId
+     * @param int $paginatorAmount
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getProducts($userId, $paginatorAmount = 4);
+
+    /**
+     * @param $id
+     * @return User
+     */
+    public function getSingleWithTrashed($id);
+
+    /**
+     * @param $id
+     */
+    public function delete($id);
 }

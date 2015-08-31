@@ -7,13 +7,12 @@ class ProfileRepository extends AbstractRepository implements ProfileRepositoryI
 {
 
     /**
-     * @param string $desc
-     *
+     * @param string $id
      * @return Profile
      */
-    public function getByDescription($desc)
+    public function getByDescription($id)
     {
-        return $this->getByIdOrAnother($desc, 'description');
+        return $this->getByIdOrAnother($id, 'description');
     }
 
     /**
@@ -23,6 +22,14 @@ class ProfileRepository extends AbstractRepository implements ProfileRepositoryI
     public function getPaginated($perPage)
     {
         return $this->model->with('users')->paginate($perPage);
+    }
+
+    /**
+     * @return array
+     */
+    public function getLists()
+    {
+        return $this->model->lists('description', 'id');
     }
 
     /**

@@ -6,11 +6,11 @@ interface ProfileRepositoryInterface
 {
 
     /**
-     * @param string $desc
-     *
+     * @param string $id
+
      * @return Profile
      */
-    public function getByDescription($desc);
+    public function getByDescription($id);
 
     /**
      * @param  int $id
@@ -50,4 +50,9 @@ interface ProfileRepositoryInterface
      * @throws \Exception
      */
     public function destroy($id);
+
+    /**
+     * @return array
+     */
+    public function getLists();
 }

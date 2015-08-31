@@ -20,20 +20,34 @@ class ProfileRepositoryTest extends TestCase
         );
     }
 
-    public function testGetByDescription()
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
+     */
+    public function testGetByDescriptionShouldThrowExceptionWhenNoIdGiven()
     {
         $model = Mockery::mock(Profile::class)
             ->makePartial();
 
-        $model->shouldReceive('whereDescription')
-            ->once()
-            ->andReturnSelf();
+        $repo = new ProfileRepository($model);
 
-        $model->shouldReceive('first')
+        $this->assertEquals(
+            'mocked',
+            $repo->getByDescription('')
+        );
+    }
+
+    public function testGetByDescription()
+    {
+        $model = Mockery::mock(Profile::class)
+                        ->makePartial();
+
+        $repo = Mockery::mock(ProfileRepository::class, [$model])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $repo->shouldReceive('getByIdOrAnother')
             ->once()
             ->andReturn('mocked');
-
-        $repo = new ProfileRepository($model);
 
         $this->assertEquals(
             'mocked',

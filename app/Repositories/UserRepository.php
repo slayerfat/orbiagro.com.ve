@@ -1,11 +1,74 @@
 <?php namespace Orbiagro\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
 use Orbiagro\Models\Person;
+use Orbiagro\Models\Product;
 use Orbiagro\Models\User;
 use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
+
+    /**
+     * @return Collection
+     */
+    public function getAllWithTrashed()
+    {
+        return $this->model->with('person')->withTrashed()->get();
+    }
+
+    /**
+     * @param $id
+     * @return User
+     */
+    public function getSingleWithTrashed($id)
+    {
+        $user = User::with('person', 'products', 'profile')
+                    ->where('name', $id)
+                    ->orWhere('id', $id)
+                    ->withTrashed()
+                    ->firstOrFail();
+
+        return $user;
+    }
+
+    /**
+     * @param int $id
+     * @return User
+     */
+    public function getWithChildrens($id)
+    {
+        $user = $this->model->with('person', 'products', 'profile')
+            ->where('name', $id)
+            ->orWhere('id', $id)
+            ->firstOrFail();
+
+        return $user;
+    }
+
+    /**
+     * @param $id
+     * @return User
+     */
+    public function getWithProductVisits($id)
+    {
+        $user = User::with(['visits' => function ($query) {
+            $query->where('visitable_type', Product::class)
+                  ->orderBy('updated_at', 'desc');
+        }])->where('name', $id)->orWhere('id', $id)->firstOrFail();
+
+        return $user;
+    }
+
+    /**
+     * @param $userId
+     * @param int $paginatorAmount
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getProducts($userId, $paginatorAmount = 4)
+    {
+        return Product::where('user_id', $userId)->paginate($paginatorAmount);
+    }
 
     /**
      * @param $id
@@ -92,5 +155,13 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
         $user->person->update();
 
         return $user;
+    }
+
+    /**
+     * @param $id
+     */
+    public function delete($id)
+    {
+        $this->executeDelete($id, 'Usuario');
     }
 }

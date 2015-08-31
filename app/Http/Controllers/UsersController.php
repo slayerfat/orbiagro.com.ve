@@ -3,11 +3,12 @@
 use Illuminate\Contracts\Auth\Guard;
 use Orbiagro\Http\Requests;
 use Orbiagro\Http\Requests\UserRequest;
-use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\User;
 use Orbiagro\Models\Profile;
 use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 /**
  * Class UsersController
@@ -17,16 +18,14 @@ class UsersController extends Controller
 {
 
     /**
-     * @var User
+     * @var UserRepositoryInterface
      */
-    protected $user;
+    private $userRepo;
 
     /**
-     * Create a new controller instance.
-     *
-     * @param User $user
+     * @param UserRepositoryInterface $userRepo
      */
-    public function __construct(User $user)
+    public function __construct(UserRepositoryInterface $userRepo)
     {
         $this->middleware('auth');
 
@@ -35,7 +34,7 @@ class UsersController extends Controller
             ['only' => 'index', 'forceDestroy', 'restore']
         );
 
-        $this->user = $user;
+        $this->userRepo = $userRepo;
     }
 
     /**
@@ -45,7 +44,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::with('person')->withTrashed()->get();
+        $users = $this->userRepo->getAllWithTrashed();
 
         return view('user.index', compact('users'));
     }
@@ -58,9 +57,7 @@ class UsersController extends Controller
      */
     public function products($id)
     {
-        if (!$user = User::with('products')->where('name', $id)->first()) {
-            $user = User::with('products')->findOrFail($id);
-        }
+        $user = $this->userRepo->getByNameOrId($id);
 
         $productsBag = $user->products->groupBy('sub_category_id');
 
@@ -71,24 +68,13 @@ class UsersController extends Controller
      * Display a listing of the resource.
      *
      * @param  int    $id
-     * @param  Guard  $auth
      * @return Response
      */
-    public function productVisits($id, Guard $auth)
+    public function productVisits($id)
     {
-        $user = User::with(['visits' => function ($query) {
-            $query->where('visitable_type', Product::class)
-                ->orderBy('updated_at', 'desc');
-        }])->where('name', $id)->first();
+        $user = $this->userRepo->getWithProductVisits($id);
 
-        if (!$user) {
-            $user = User::with(['visits' => function ($query) {
-                $query->where('visitable_type', Product::class)
-                    ->orderBy('updated_at', 'desc');
-            }])->findOrFail($id);
-        }
-
-        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
+        if (!$this->userRepo->canUserManipulate($user->id)) {
             flash()->error('Ud. no tiene permisos para esta accion.');
 
             return redirect()->back();
@@ -111,38 +97,38 @@ class UsersController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
+     * @param ProfileRepositoryInterface $profileRepo
      * @return Response
      */
-    public function create()
+    public function create(ProfileRepositoryInterface $profileRepo)
     {
-        $profiles = Profile::lists('description', 'id');
+        $profiles = $profileRepo->getLists();
 
-        return view('user.create')->with([
-            'user'     => $this->user,
-            'profiles' => $profiles,
-        ]);
+        $user = $this->userRepo->getEmptyUserInstance();
+
+        return view('user.create', compact('user', 'profiles'));
     }
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param UserRequest $request
-     *
+     * @param ProfileRepositoryInterface $profileRepo
      * @return Response
      */
-    public function store(UserRequest $request)
+    public function store(UserRequest $request, ProfileRepositoryInterface $profileRepo)
     {
-        $profile = Profile::findOrFail($request->input('profile_id'));
+        $profile = $profileRepo->getById($request->input('profile_id'));
 
-        $this->user->name     = $request->input('name');
-        $this->user->email    = $request->input('email');
-        $this->user->password = bcrypt($request->input('password'));
+        $user = $this->userRepo->getEmptyUserInstance();
 
-        $profile->users()->save($this->user);
+        $user->name     = $request->input('name');
+        $user->email    = $request->input('email');
+        $user->password = bcrypt($request->input('password'));
+
+        $profile->users()->save($user);
 
         flash()->success('El Usuario ha sido creado exitosamente');
-        return redirect()->action('UsersController@show', $this->user->name);
+        return redirect()->route('users.show', $user->name);
     }
 
     /**
@@ -153,11 +139,9 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        if (!$user = User::with('person', 'products', 'profile')->where('name', $id)->first()) {
-            $user = User::with('person', 'products', 'profile')->findOrFail($id);
-        }
+        $user = $this->userRepo->getWithChildrens($id);
 
-        $products = Product::where('user_id', $user->id)->paginate(4);
+        $products = $this->userRepo->getProducts($id);
 
         return view('user.show', compact('user', 'products'));
     }
@@ -170,41 +154,29 @@ class UsersController extends Controller
      */
     public function showTrashed($id)
     {
-        $user = User::with('person', 'products', 'profile')
-            ->where('name', $id)
-            ->withTrashed()
-            ->first();
+        $user = $this->userRepo->getSingleWithTrashed($id);
 
-        if (!$user) {
-            $user = User::with('person', 'products', 'profile')
-                ->withTrashed()
-                ->findOrFail($id);
-        }
-
-        $products = Product::where('user_id', $user->id)->paginate(4);
+        $products = $this->userRepo->getProducts($id);
 
         return view('user.show', compact('user', 'products'));
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int   $id
-     * @param  Guard $auth
+     * @param  int $id
+     * @param ProfileRepositoryInterface $profileRepo
      * @return Response
      */
-    public function edit($id, Guard $auth)
+    public function edit($id, ProfileRepositoryInterface $profileRepo)
     {
-        if (!$user = User::with('profile')->where('name', $id)->first()) {
-            $user = User::with('profile')->findOrFail($id);
-        }
+        $user = $this->userRepo->getByNameOrId($id);
 
-        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
+        if (!$this->userRepo->canUserManipulate($user->id)) {
             flash()->error('Ud. no tiene permisos para esta accion.');
             return redirect()->back();
         }
 
-        $profiles = Profile::lists('description', 'id');
+        $profiles = $profileRepo->getLists();
 
         return view('user.edit', compact('user', 'profiles'));
     }
@@ -219,20 +191,25 @@ class UsersController extends Controller
      */
     public function update($id, UserRequest $request)
     {
-        $user = User::findOrFail($id);
+        if (trim($request->input('password')) == '') {
+            flash()->warning('La contraseña no puede estar vacia.');
+
+            return redirect()
+                ->back()
+                ->exceptInput($request->input('password'));
+        }
+
+        $user = $this->userRepo->getById($id);
 
         $user->name       = $request->input('name');
         $user->email      = $request->input('email');
         $user->profile_id = $request->input('profile_id');
-
-        if (trim($request->input('password')) != '') {
-            $user->password = bcrypt($request->input('password'));
-        }
+        $user->password   = bcrypt($request->input('password'));
 
         $user->save();
 
         flash()->success('El Usuario ha sido actualizado correctamente.');
-        return redirect()->action('UsersController@show', $user->name);
+        return redirect()->route('users.show', $user->name);
     }
 
     /**
@@ -243,17 +220,7 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $this->user = User::findOrFail($id);
-
-        try {
-            $this->user->delete();
-        } catch (\Exception $e) {
-            \Log::error($e);
-
-            abort(500);
-        }
-
-        flash()->success('El Usuario ha sido eliminado correctamente.');
+        $this->userRepo->delete($id);
 
         return redirect()->action('UsersController@showTrashed', $this->user->id);
     }
