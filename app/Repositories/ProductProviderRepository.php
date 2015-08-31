@@ -76,19 +76,6 @@ class ProductProviderRepository extends AbstractRepository implements ProductPro
      */
     public function destroy($id)
     {
-        $provider = $this->getById($id);
-
-        try {
-            $provider->delete();
-        } catch (\Exception $e) {
-            if ($e instanceof QueryException || (int)$e->errorInfo[0] == 23000) {
-                return false;
-            }
-            \Log::error($e);
-
-            abort(500);
-        }
-
-        return true;
+        return $this->executeDelete($id, 'Proveedor');
     }
 }

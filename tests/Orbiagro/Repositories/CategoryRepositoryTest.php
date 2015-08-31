@@ -22,6 +22,42 @@ class CategoryRepositoryTest extends TestCase
         );
     }
 
+    public function testGetLists()
+    {
+        $mock = Mockery::mock(Category::class)
+                       ->makePartial();
+
+        $mock->shouldReceive('lists')
+            ->once()
+            ->with('description', 'id')
+            ->andReturn('mocked');
+
+        $catRepo = new CategoryRepository($mock);
+
+        $this->assertEquals(
+            'mocked',
+            $catRepo->getLists()
+        );
+    }
+
+    public function testGetEmptyInstance()
+    {
+        $mock = Mockery::mock(Category::class);
+
+        $catRepo = Mockery::mock(CategoryRepository::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $catRepo->shouldReceive('getNewInstance')
+            ->once()
+            ->andReturn('mocked');
+
+        $this->assertEquals(
+            'mocked',
+            $catRepo->getEmptyInstance()
+        );
+    }
+
     public function testGetAll()
     {
         $cat = Mockery::mock(Category::class)

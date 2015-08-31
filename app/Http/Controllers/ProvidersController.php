@@ -113,15 +113,17 @@ class ProvidersController extends Controller
      */
     public function destroy($id)
     {
-        if (!$this->providerRepo->destroy($id)) {
-            return $this->redirectToRoute(
-                'providers.show',
-                $id,
-                'No deben haber elementos asociados.'
-            );
-        }
-        flash()->success('El Proveedor ha sido eliminado correctamente.');
+        $result = $this->providerRepo->destroy($id);
 
-        return redirect()->route('providers.index');
+        if ($result === true) {
+            return redirect()->route('providers.index');
+
+        }
+
+        return $this->redirectToRoute(
+            'providers.show',
+            $id,
+            'No deben haber elementos asociados.'
+        );
     }
 }
