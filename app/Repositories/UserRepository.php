@@ -184,12 +184,23 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     {
         $this->checkId($id);
 
-        /** @var User $user */
-        $user = $this->model->where('id', $id)
-                            ->withTrashed()
-                            ->firstOrFail();
+        $user = $this->findTrashedUser($id);
 
         $user->restore();
+
+        return $user;
+    }
+
+    /**
+     * @param $id
+     * @return User
+     */
+    protected function findTrashedUser($id)
+    {
+        /** @var User $user */
+        $user = $this->model->where('id', $id)
+            ->withTrashed()
+            ->firstOrFail();
 
         return $user;
     }

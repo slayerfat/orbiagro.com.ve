@@ -71,4 +71,27 @@ class ProfileRepositoryTest extends TestCase
             $repoMock->getById(1)
         );
     }
+
+    public function testGetPaginated()
+    {
+        $model = Mockery::mock(Profile::class)
+            ->makePartial();
+
+        $model->shouldReceive('with')
+            ->once()
+            ->with('users')
+            ->andReturnSelf();
+
+        $model->shouldReceive('paginate')
+            ->once()
+            ->with(1)
+            ->andReturn('mocked');
+
+        $repoMock = new ProfileRepository($model);
+
+        $this->assertEquals(
+            'mocked',
+            $repoMock->getPaginated(1)
+        );
+    }
 }

@@ -118,4 +118,113 @@ class UserRepositoryTest extends TestCase
 
         $this->assertFalse($userRepo->validateCreatePersonRequest(1));
     }
+
+    public function testStorePerson()
+    {
+        $userMock = Mockery::mock(User::class)->makePartial();
+
+        // por alguna razon mockery no quiere duplicar save correctamente
+        // asi que se hizo un mock del metodo por medio de esta clase
+        $saveMock = Mockery::mock(StdClass::class)->makePartial();
+        $saveMock->shouldReceive('save')
+            ->once()
+            ->withAnyArgs();
+
+        $userMock->shouldReceive('person')
+            ->once()
+            ->andReturn($saveMock);
+
+        $userRepo = Mockery::mock(UserRepository::class, [$userMock])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $userRepo->shouldReceive('getById')
+            ->once()
+            ->andReturn($userMock);
+
+        $userRepo->shouldReceive('getEmptyPersonInstance')
+            ->once()
+            ->andReturnSelf();
+
+        $userRepo->shouldReceive('fill')
+            ->once();
+
+        $this->assertSame(
+            $userMock,
+            $userRepo->storePerson(
+                1,
+                [
+                    'gender_id' => 'infinity',
+                    'nationality_id' => '2 * infinity',
+                ]
+            )
+        );
+    }
+
+    public function testUpdatePerson()
+    {
+        $userMock = Mockery::mock(User::class)->makePartial();
+
+        // mismo problema, esta vez con Eloquent.
+        $personMock = Mockery::mock(StdClass::class);
+
+        $personMock->gender_id = 1;
+        $personMock->nationality_id = 1;
+
+
+        $personMock->shouldReceive('fill')
+            ->once()
+            ->withAnyArgs()
+            ->andReturnNull();
+
+        $personMock->shouldReceive('update')
+            ->once()
+            ->withAnyArgs()
+            ->andReturnNull();
+
+        $userMock->person = $personMock;
+
+        $userRepo = Mockery::mock(UserRepository::class, [$userMock])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $userRepo->shouldReceive('getById')
+            ->once()
+            ->andReturn($userMock);
+
+        $this->assertSame(
+            $userMock,
+            $userRepo->updatePerson(
+                1,
+                [
+                    'gender_id' => 'infinity',
+                    'nationality_id' => '2 * infinity',
+                ]
+            )
+        );
+    }
+
+    public function testRestore()
+    {
+        $userMock = Mockery::mock(User::class)->makePartial();
+
+        $userMock->shouldReceive('restore')
+            ->once();
+
+        $userRepo = Mockery::mock(UserRepository::class, [$userMock])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $userRepo->shouldReceive('checkId')
+            ->once();
+
+        $userRepo->shouldReceive('findTrashedUser')
+            ->once()
+            ->andReturn($userMock);
+
+        $this->assertSame(
+            $userMock,
+            $userRepo->restore(1)
+        );
+    }
 }
