@@ -7,11 +7,13 @@
   @include('category.addons.cat-list')
   @include('promotion.addons.4-4-4-gallerie')
 
-  @if($sub_category)
-    @include('sub-category.addons.relatedProducts', [$sub_category, 'title' => link_to_action('SubCategoriesController@show', $sub_category->description.' y sus productos en Orbiagro', $sub_category->slug)])
+  @if($subCategory)
+    @include('sub-category.addons.relatedProducts', [$subCategory, 'title' => link_to_route('subCats.show', $subCategory->description.' y sus productos en Orbiagro', $subCategory->slug)])
   @endif
 
   @include('visit.addons.relatedProducts')
+  {{-- ads --}}
+  @include('partials.ads.full-12')
   @include('sub-category.addons.visited')
   @include('sub-category.addons.popular', ['title' => 'Visite los Rubros Populares'])
 @stop

@@ -15,7 +15,7 @@
           @include('errors.bag')
           {!! Form::open([
             'method' => 'PATCH',
-            'action' => ['ImagesController@update', $image->id],
+            'route' => ['images.update', $image->id],
             'class' => 'form-horizontal',
             'files' => true
             ]) !!}
@@ -49,7 +49,7 @@
     $("#image").cropper({
       aspectRatio: 1,
       crop: function(e) {
-        $('input[name="dataX"').val(Math.round(e.x));
+        $('input[name="dataX"]').val(Math.round(e.x));
         $('input[name="dataY"]').val(Math.round(e.y));
         $('input[name="dataHeight"]').val(Math.round(e.height));
         $('input[name="dataWidth"]').val(Math.round(e.width));

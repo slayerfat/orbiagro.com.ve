@@ -10,7 +10,7 @@
     </div>
     @foreach($visitedProducts as $visited)
       <div class="row related-subcategory-product" id="products-visits-{{ $visited->subCategory->id }}">
-        <?php $products = App\SubCategory::find($visited->subCategory->id)->products->take(6); ?>
+        <?php $products = Orbiagro\Models\SubCategory::find($visited->subCategory->id)->products->take(6); ?>
         <div class="col-xs-12">
           <h3>Recomendaciones por visitar la Categoria {{ $visited->subCategory->description }}</h3>
         </div>

@@ -1,58 +1,63 @@
 <?php namespace Tests;
 
-class TestCase extends \Illuminate\Foundation\Testing\TestCase {
+use Illuminate\Database\Eloquent\Model;
+use Mockery;
 
-  /**
-   * Laravel 5.1
-   */
-  protected $baseUrl = 'http://localhost';
+class TestCase extends \Illuminate\Foundation\Testing\TestCase
+{
 
-  /**
-   * El modelo a manipular.
-   * @var Illuminate\Database\Eloquent\Model
-   */
-  protected $tester;
+    /**
+    * Laravel 5.1
+    */
+    protected $baseUrl = 'http://localhost';
 
-  /**
-   * la instancia del Mockery a manipular
-   */
-  protected $mock;
+    /**
+    * El modelo a manipular.
+    * @var Model
+    */
+    protected $tester;
 
-  /**
-   * Creates the application.
-   *
-   * @return \Illuminate\Foundation\Application
-   */
-  public function createApplication()
-  {
-    $app = require __DIR__.'/../bootstrap/app.php';
+    /**
+     * la instancia del Mockery a manipular
+     * @var Mockery
+     */
+    protected $mock;
 
-    $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+    /**
+    * Creates the application.
+    *
+    * @return \Illuminate\Foundation\Application
+    */
+    public function createApplication()
+    {
+        $app = require __DIR__.'/../bootstrap/app.php';
 
-    return $app;
-  }
+        $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
-  /**
-   * la informacion necesaria para hacer las pruebas,
-   * este arreglo posee datos basicos, si es necesario
-   * otros datos se deberia crear un metodo mas especializado en el test.
-   *
-   * @see Tests\AppFileTest::dataProvider()
-   *
-   * @method defaultDataProvider
-   * @return array
-   */
-  public function defaultDataProvider()
-  {
-    return [
-      [''],
-      ['a'],
-      [-1]
-    ];
-  }
+        return $app;
+    }
 
-  public function testBasicExample()
-  {
-    $this->assertTrue(true);
-  }
+    /**
+    * la informacion necesaria para hacer las pruebas,
+    * este arreglo posee datos basicos, si es necesario
+    * otros datos se deberia crear un metodo mas especializado en el test.
+    *
+    * @see Tests\AppFileTest::dataProvider()
+    *
+    * @method defaultDataProvider
+    * @return array
+    */
+    public function defaultDataProvider()
+    {
+        return [
+            [''],
+            ['a'],
+            [-1]
+        ];
+    }
+
+    public function testBasicExample()
+    {
+        $this->assertTrue(true);
+    }
 }

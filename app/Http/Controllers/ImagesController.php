@@ -1,144 +1,143 @@
-<?php
+<?php namespace Orbiagro\Http\Controllers;
 
-namespace App\Http\Controllers;
-
+use LogicException;
+use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-
-use Auth;
-use Intervention;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Mamarrachismo\Upload\Image as Upload;
-
-use App\Image;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
 
 class ImagesController extends Controller
 {
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-    $this->middleware('user.admin');
-  }
+    /**
+     * @var ImageRepositoryInterface
+     */
+    private $imageRepo;
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    $image = Image::findOrFail($id);
-
-    return view('images.edit', compact('image'));
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  Request  $request
-   * @param  int  $id
-   * @return Response
-   */
-  public function update(Request $request, $id, Upload $upload)
-  {
-    $upload->userId = Auth::id();
-
-    $image = Image::with('imageable')->findOrFail($id);
-
-    $data = $this->getControllerNameFromModel($image->imageable);
-
-    flash()->success('Imagen Actualizada exitosamente.');
-
-    if ($request->file('image'))
+    /**
+     * Create a new controller instance.
+     * @param ImageRepositoryInterface $imageRepo
+     */
+    public function __construct(ImageRepositoryInterface $imageRepo)
     {
-      // se iteran las imagenes y se guardan los modelos
-      $upload->updateImage($request->file('image'), $image);
+        $this->middleware('user.admin');
 
-      return redirect()->action($data['controller'], $data['id']);
+        $this->imageRepo = $imageRepo;
     }
 
-    // http://image.intervention.io/api/crop
-    // se ajusta segun estos valores:
-    $upload->cropImage(
-      $image,
-      $request->input('dataWidth'),
-      $request->input('dataHeight'),
-      $request->input('dataX'),
-      $request->input('dataY')
-    );
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return View
+     */
+    public function edit($id)
+    {
+        $image = $this->imageRepo->getById($id);
 
-    return redirect()->action($data['controller'], $data['id']);
-  }
+        return view('images.edit', compact('image'));
+    }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    $image = Image::with('imageable')->findOrFail($id);
+    /**
+     * Update the specified resource in storage.
+     * @param  int $id
+     * @param  Request $request
+     * @return RedirectResponse
+     */
+    public function update($id, Request $request)
+    {
+        $image = $this->imageRepo->update($id, $request);
 
-    $product = $image->imageable;
+        /** @var Model $model */
+        $model = $image->imageable;
 
-    flash()->success('Imagen Eliminada exitosamente.');
-    return redirect()->action('ProductsController@show', $product->id);
-  }
+        $data = $this->getControllerNameFromModel($model);
 
-  /**
-   * Utilizado para generar el nombre del controlador y
-   * el identificador necesario para encontrar el recurso.
-   *
-   * @param \Illuminate\Database\Eloquent\Model $model el modelo a manipular.
-   *
-   * @return array
-   */
-  protected function getControllerNameFromModel($model)
-  {
-    $array = ['controller' => '', 'id' => null];
+        flash()->success('Imagen Actualizada exitosamente.');
 
-    switch (get_class($model)) :
+        return redirect()->action($data['controller'], $data['id']);
+    }
 
-      case 'App\Product':
-        $array['controller'] = 'ProductsController@show';
-        break;
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return RedirectResponse
+     */
+    public function destroy($id)
+    {
+        $parentModel = $this->imageRepo->delete($id);
 
-      case 'App\Feature':
-        $array['controller'] = 'ProductsController@show';
+        flash()->success('Imagen Eliminada exitosamente.');
 
-        $array['id'] = $model->product->id;
-        break;
+        $data = $this->getControllerNameFromModel($parentModel);
 
-      case 'App\Category':
-        $array['controller'] = 'CategoriesController@show';
-        break;
+        return $this->redirectToRoute(
+            $data['route'],
+            $data['id'],
+            'Imagen eliminada exitosamente',
+            'success'
+        );
+    }
 
-      case 'App\SubCategory':
-        $array['controller'] = 'SubCategoriesController@show';
-        break;
+    /**
+     * Utilizado para generar el nombre del controlador y
+     * el identificador necesario para encontrar el recurso.
+     *
+     * @param  Model $model el modelo a manipular.
+     * @return array
+     * @throws LogicException
+     */
+    protected function getControllerNameFromModel(Model $model)
+    {
+        $array = [
+            'controller' => '',
+            'route' => '',
+            'id' => null
+        ];
 
-      case 'App\Maker':
-        $array['controller'] = 'MakersController@show';
-        break;
+        switch (get_class($model)) {
+            case 'Orbiagro\Models\Product':
+                $array['controller'] = 'ProductsController@show';
+                $array['route'] = 'products.show';
+                break;
 
-      case 'App\Promotion':
-        $array['controller'] = 'PromotionsController@show';
-        break;
+            case 'Orbiagro\Models\Feature':
+                $array['controller'] = 'ProductsController@show';
+                $array['route'] = 'products.show';
 
-      default:
-        throw new \Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".get_class($model), 2);
+                $array['id'] = $model->product->id;
+                break;
 
-    endswitch;
+            case 'Orbiagro\Models\Category':
+                $array['controller'] = 'CategoriesController@show';
+                $array['route'] = 'cats.show';
+                break;
 
-    $array['id'] = $array['id'] ? $array['id'] : $model->slug;
+            case 'Orbiagro\Models\SubCategory':
+                $array['controller'] = 'SubCategoriesController@show';
+                $array['route'] = 'subCats.show';
+                break;
 
-    return $array;
-  }
+            case 'Orbiagro\Models\Maker':
+                $array['controller'] = 'MakersController@show';
+                $array['route'] = 'makers.show';
+                break;
+
+            case 'Orbiagro\Models\Promotion':
+                $array['controller'] = 'PromotionsController@show';
+                $array['route'] = 'promotions.show';
+                break;
+
+            default:
+                throw new LogicException('modelo desconocido, no se puede crear ruta de '.get_class($model));
+
+        }
+
+        $array['id'] = $array['id'] ? $array['id'] : $model->slug;
+
+        return $array;
+    }
 }

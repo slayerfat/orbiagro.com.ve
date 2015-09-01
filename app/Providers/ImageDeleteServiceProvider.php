@@ -1,45 +1,43 @@
-<?php namespace App\Providers;
+<?php namespace Orbiagro\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
-// use Auth;
-use App\Image;
+use Orbiagro\Models\Image;
 use File;
 
-class ImageDeleteServiceProvider extends ServiceProvider {
+class ImageDeleteServiceProvider extends ServiceProvider
+{
 
-  /**
-   * Bootstrap the application services.
-   *
-   * @return void
-   */
-  public function boot()
-  {
-    // if (!$id = Auth::id()) return;
-    //
-    // Image::creating(function($model) use($id){
-    //   $model->created_by = $id;
-    //   $model->updated_by = $id;
-    // });
-    //
-    // Image::updating(function($model) use($id){
-    //   $model->updated_by = $id;
-    // });
+    /**
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Image::deleted(function ($image) {
+            $paths = [
+                $image->path,
+                $image->original,
+                $image->small,
+                $image->medium,
+                $image->large,
+            ];
 
-    Image::deleting(function($image){
-      if(File::isFile($image->path))
-        return File::delete($image->path);
-    });
-  }
+            foreach ($paths as $path) {
+                if (File::isFile($path)) {
+                    return File::delete($path);
+                }
+            }
+        });
+    }
 
-  /**
-   * Register the application services.
-   *
-   * @return void
-   */
-  public function register()
-  {
-    //
-  }
-
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
 }

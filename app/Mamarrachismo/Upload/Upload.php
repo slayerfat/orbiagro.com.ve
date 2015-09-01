@@ -1,109 +1,146 @@
-<?php namespace App\Mamarrachismo\Upload;
+<?php namespace Orbiagro\Mamarrachismo\Upload;
 
-use Exception;
-use Validator;
-use Storage;
+use LogicException;
+use Orbiagro\Models\Product;
+use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class Upload {
+abstract class Upload
+{
 
-  /**
-   * @var mixed
-   */
-  public $errors;
+    /**
+     * @var mixed
+     */
+    public $errors;
 
-  /**
-   * @var int
-   */
-  public $userId;
+    /**
+     * @var int
+     */
+    public $userId;
 
-  /**
-   * el modelo a ser manipulado
-   *
-   * @var Object
-   */
-  public $model;
+    /**
+     * el modelo a ser manipulado
+     *
+     * @var Object
+     */
+    public $model;
 
-  /**
-   * la direccion para guardar el archivo relacionado al modelo.
-   * @var string
-   */
-  protected $path;
+    /**
+     * la direccion para guardar el archivo relacionado al modelo.
+     * @var string
+     */
+    protected $path;
 
-  /**
-   * reglas para el validador.
-   * @var array
-   */
-  protected $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
+    /**
+     * reglas para el validador.
+     * @var array
+     */
+    protected $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
 
-  /**
-   * reglas para el validador.
-   * @var array
-   */
-  protected $fileRules = ['file' => 'mimes:pdf|max:10000'];
+    /**
+     * reglas para el validador.
+     * @var array
+     */
+    protected $fileRules = ['file' => 'mimes:pdf|max:10000'];
 
-  public function __construct($userID = null)
-  {
-    if ($userID !== null)
+    /**
+     * Para Utilizar esta clase es casi siempre necesario el uso del ID
+     * de algun usuario (para asociarlo al created_by o updated_by).
+     *
+     * @param int $userID
+     */
+    public function __construct($userID = null)
     {
-      $this->userId = $userID;
+        if ($userID !== null) {
+            $this->userId = $userID;
+        }
     }
-  }
 
-  /**
-   * usado para crear en el disco duro el archivo relacionado a un producto.
-   *
-   * @param  UploadedFile $file
-   * @param  string $path la direccion a donde se guardara el archivo.
-   *
-   * @return array  $data la carpeta, nombre y extension del archivo guardado.
-   */
-  protected function makeFile(UploadedFile $file, $path = null)
-  {
-    // el nombre del archivo
-    $name = date('Ymdhms-').str_random(16);
+    /**
+     * @param Model        $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    abstract public function create(Model $model, UploadedFile $file = null);
 
-    $ext = $file->getClientOriginalExtension();
+    /**
+     * @param Model        $model   El modelo Eloquent.
+     * @param UploadedFile $file    Objeto UploadedFiles con el archivo.
+     * @param array        $options Las opcions relacionadas la operacion.
+     *
+     * @return Model
+     */
+    abstract public function update(Model $model, UploadedFile $file = null, array $options = null);
 
-    $file->move($path, "{$name}.{$ext}");
+    /**
+     * usado para crear en el disco duro el archivo relacionado a un producto.
+     *
+     * @param  UploadedFile $file
+     * @param  string $path la direccion a donde se guardara el archivo.
+     *
+     * @return array  $data la carpeta, nombre y extension del archivo guardado.
+     */
+    protected function makeFile(UploadedFile $file, $path = null)
+    {
+        // el nombre del archivo
+        $name = date('Ymdhms-').str_random(16);
 
-    // la data necesaria para crear el modelo de imagen.
-    $data = [
-      'name' => $name,
-      'ext'  => $ext,
-      'dir'  => $path,
-      'path' => "$path/{$name}.{$ext}",
-      'mime' => $file->getClientMimeType()
-    ];
+        $ext = $file->getClientOriginalExtension();
 
-    return $data;
-  }
+        $file->move($path, "{$name}.{$ext}");
 
-  protected function generatePathFromModel($model)
-  {
-    switch (get_class($model)) :
+        // la data necesaria para crear el modelo de imagen.
+        $data = [
+            'name' => $name,
+            'ext'  => $ext,
+            'dir'  => $path,
+            'path' => "$path/{$name}.{$ext}",
+            'mime' => $file->getClientMimeType()
+        ];
 
-      case 'App\Product':
-        return "products/{$model->id}";
+        return $data;
+    }
 
-      case 'App\Feature':
-        return "products/{$model->product->id}";
+    /**
+     * Determina cuales son los datos correctos para
+     * crear un directorio adecuado en el sistema.
+     *
+     * @param $model
+     * @return string
+     * @throws LogicException
+     */
+    protected function generatePathFromModel($model)
+    {
+        $dir = class_basename($model);
 
-      case 'App\Category':
-        return "category/{$model->id}";
+        $dir = strtolower($dir);
 
-      case 'App\SubCategory':
-        return "sub-category/{$model->id}";
+        switch (get_class($model)) {
+            case 'Orbiagro\Models\Product':
+                return "{$dir}/{$model->id}";
 
-      case 'App\Maker':
-        return "makers/{$model->id}";
+            case 'Orbiagro\Models\Feature':
+                $productDir = class_basename(Product::class);
 
-      case 'App\Promotion':
-        return "promos/{$model->id}";
+                $productDir = strtolower($productDir);
+                return "{$productDir}/{$model->product->id}/{$dir}";
 
-      default:
-        throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".gettype($model), 2);
+            case 'Orbiagro\Models\Category':
+                return "{$dir}/{$model->id}";
 
-    endswitch;
-  }
+            case 'Orbiagro\Models\SubCategory':
+                return "{$dir}/{$model->id}";
+
+            case 'Orbiagro\Models\Maker':
+                return "{$dir}/{$model->id}";
+
+            case 'Orbiagro\Models\Promotion':
+                return "{$dir}/{$model->id}";
+
+            default:
+                throw new LogicException('Modelo desconocido, no se puede crear ruta, modelo '.get_class($model));
+
+        }
+    }
 }

@@ -4,7 +4,7 @@
     @if($isUserValid)
       <tr>
         <td colspan="2">
-          {!! link_to_action('MechanicalInfoController@edit', 'Actualizar Informacion Mecanica', $product->mechanical->id) !!}
+          {!! link_to_route('products.mechanicals.edit', 'Actualizar Informacion Mecanica', $product->mechanical->id) !!}
         </td>
       </tr>
     @endif
@@ -21,7 +21,7 @@
         Kilometraje
       </td>
       <td>
-        {{ $product->mechanical->mileage_km() }}
+        {{ $product->mechanical->mileageKm() }}
       </td>
     </tr>
     <tr>
@@ -53,7 +53,7 @@
         Caballaje
       </td>
       <td>
-        {{ $product->mechanical->horsepower_hp() }}
+        {{ $product->mechanical->horsepowerHP() }}
       </td>
     </tr>
     <tr>
@@ -76,6 +76,6 @@
 </table>
 @else
   @if($isUserValid)
-    {!! link_to_action('MechanicalInfoController@create', 'Crear Informacion Mecanica', $product->id) !!}
+    {!! link_to_route('products.mechanicals.create', 'Crear Informacion Mecanica', $product->id) !!}
   @endif
 @endif

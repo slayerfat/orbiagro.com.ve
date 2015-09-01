@@ -1,21 +1,21 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\User;
-use App\Product;
+use Orbiagro\Models\Product;
 
-class PurchaseTableSeeder extends Seeder {
+class PurchaseTableSeeder extends BaseSeeder
+{
 
-  public function run()
-  {
-    $this->command->info("*** Empezando creacion de Purchases! ***");
-    $user    = User::first();
-    $products = Product::all();
+    public function run()
+    {
+        $this->command->info("*** Empezando creacion de Purchases! ***");
 
-    foreach($products as $product):
-      $user->purchases()->attach($product->id, ['quantity' => rand(1, 5)]);
-    endforeach;
-    $this->command->info('Creado compras.');
-  }
+        $products = Product::all();
 
+        foreach ($products as $product) {
+            $this->user->purchases()->attach($product->id, ['quantity' => rand(1, 5)]);
+        }
+
+        $this->command->info('Creado compras.');
+    }
 }

@@ -1,103 +1,124 @@
-<?php namespace App\Mamarrachismo\Upload;
+<?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
 use Validator;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Models\File as FileModel;
 
-use App\Mamarrachismo\Upload\Upload;
-use App\File as Model;
+class File extends Upload
+{
 
-class File extends Upload {
-
-  /**
-   * crea la imagen relacionada con algun modelo.
-   *
-   * @param UploadedFile  $file  Objeto UploadedFiles con la imagen.
-   * @param object        $model El modelo relacionado para ser asociado.
-   *
-   * @return boolean
-   */
-  public function createFile(UploadedFile $file = null, $model)
-  {
-    $this->path = $this->generatePathFromModel($model);
-
-    // el validador
-    $validator = Validator::make(['file' => $file], $this->fileRules);
-    if (!$file || $validator->fails())
+    /**
+     * Crea el archivo relacionado con algun modelo.
+     *
+     * @param Model $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file Objeto UploadedFiles con la imagen.
+     * @return bool
+     * @throws Exception
+     */
+    public function create(Model $model, UploadedFile $file = null)
     {
-      $this->errors = $validator->errors()->all();
-      throw new Exception("Error, archivo no valido", 3);
+        $collection = collect();
+
+        if ($file === null) {
+            return $collection;
+        }
+
+        // el validador
+        $validator = Validator::make(['file' => $file], $this->fileRules);
+
+        if ($validator->fails()) {
+            $this->errors = $validator->errors()->all();
+            throw new Exception('Archivo no valido.');
+        }
+
+        $this->path = $this->generatePathFromModel($model);
+
+        // se crea el archivo en el HD.
+        if (!$result = $this->makeFile($file, $this->path)) {
+            return $collection;
+        }
+
+        // se crea el modelo.
+        $collection->push($this->createFileModel($result, $model));
+
+        return $collection;
     }
 
-    // se crea el archivo en el HD.
-    if (!$result = $this->makeFile($file, $this->path)) return false;
-
-    // se crea el modelo.
-    $this->createFileModel($result, $model);
-
-    return true;
-  }
-
-  /**
-   * actualiza el archivo relacionado con algun modelo.
-   *
-   * @param UploadedFile  $file         Objeto UploadedFiles con la imagen.
-   * @param object        $parentModel  El modelo a actualizar.
-   * @param App\File      $fileModel    El modelo del archivo.
-   *
-   * @return boolean
-   */
-  public function updateFile(UploadedFile $file = null, $parentModel = null, Model $fileModel = null)
-  {
-    if ($fileModel == null) return $this->createFile($file, $parentModel);
-
-    $this->path = $this->generatePathFromModel($parentModel);
-
-    // el validador
-    $validator = Validator::make(['file' => $file], $this->fileRules);
-    if (!$file || $validator->fails())
+    /**
+     * Actualiza el archivo relacionado con algun modelo.
+     *
+     * @param  Model $model Eloquen Model del padre asociado.
+     * @param  UploadedFile $file El modelo del archivo.
+     * @param  array $options Las opcions relacionadas, no implementado.
+     * @return Model
+     * @throws Exception
+     * @internal $options no implementadas.
+     *
+     */
+    public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
-      $this->errors = $validator;
-      throw new Exception("Error, archivo no valido", 3);
+        if ($model->file == null) {
+            // create devuelve una coleccion
+            $result = $this->create($model, $file);
+
+            return $result->first();
+        }
+
+        $fileModel = $model->file;
+
+        $this->path = $this->generatePathFromModel($model);
+
+        // el validador
+        $validator = Validator::make(['file' => $file], $this->fileRules);
+
+        if (!$file || $validator->fails()) {
+            $this->errors = $validator;
+            throw new Exception('Archivo no valido.');
+        }
+
+        // se chequea si existe el archivo y se elimina
+        if (Storage::disk('public')->exists($fileModel->path)) {
+            Storage::disk('public')->delete($fileModel->path);
+        }
+
+        // se crea la imagen en el HD y se actualiza el modelo.
+        $result = $this->makeFile($file, $this->path, $options = null);
+
+        if ($result) {
+            return $fileModel->update($result);
+        }
+
+        return $fileModel;
     }
 
-    // se chequea si existe el archivo y se elimina
-    if (Storage::disk('public')->exists($fileModel->path))
-      Storage::disk('public')->delete($fileModel->path);
+    // --------------------------------------------------------------------------
+    // Funciones Privadas
+    // --------------------------------------------------------------------------
 
-    // se crea la imagen en el HD y se actualiza el modelo.
-    if ($result = $this->makeFile($file, $this->path))
-      return $fileModel->update($result);
-  }
+    /**
+     * crea el modelo nuevo de alguna imagen relacionada con algun producto.
+     *
+     * @param array $array el array que contiene los datos para la imagen.
+     * @param Model $model el modelo a asociar.
+     * @return bool
+     * @throws Exception
+     */
+    private function createFileModel(array $array, $model)
+    {
+        $file = new FileModel($array);
 
-  // --------------------------------------------------------------------------
-  // Funciones Privadas
-  // --------------------------------------------------------------------------
+        switch (get_class($model)) {
+            case 'Orbiagro\Models\Product':
+                return $model->files()->save($file);
 
-  /**
-   * crea el modelo nuevo de alguna imagen relacionada con algun producto.
-   *
-   * @param array  $array el array que contiene los datos para la imagen.
-   * @param Object $model el modelo a asociar.
-   *
-   * @return boolean
-   */
-  private function createFileModel(array $array, $model)
-  {
-    $file = new Model($array);
+            case 'Orbiagro\Models\Feature':
+                return $model->file()->save($file);
 
-    switch (get_class($model)) :
-
-      case 'App\Product':
-        return $model->files()->save($file);
-
-      case 'App\Feature':
-        return $model->file()->save($file);
-
-      default:
-        throw new Exception("Error: modelo desconocido, no se puede guardar archivo relacionado", 1);
-
-    endswitch;
-  }
+            default:
+                throw new Exception('Modelo desconocido, no se puede guardar archivo.');
+        }
+    }
 }

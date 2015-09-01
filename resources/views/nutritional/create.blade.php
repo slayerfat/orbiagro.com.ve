@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($nutritional, [
-              'action' => ['NutritionalsController@store', $product->id],
+              'route' => ['products.nutritionals.store', $product->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('nutritional.forms.body', ['textoBotonSubmit' => 'Añadir Valores Nutricionales'])
@@ -23,4 +23,20 @@
       </div>
     </div>
   </div>
+@stop
+
+{{-- se mete directamente aqui porque ambas formas poseen el mismo codigo --}}
+@section('css')
+  <link href="{!! asset('css/vendor/datepicker.css') !!}" rel="stylesheet">
+@endsection
+
+@section('js')
+  <script type="text/javascript" src="{!! asset('js/vendor/bootstrap-datepicker.js') !!}"></script>
+  <script type="text/javascript" src="{!! asset('js/vendor/bootstrap-datepicker.es.js') !!}"></script>
+  <script type="text/javascript">
+    $('#due').datepicker({
+      language: 'es',
+      format: 'yyyy-mm-dd'
+    });
+  </script>
 @stop

@@ -1,238 +1,182 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
-use App\Http\Requests\FeatureRequest;
-use App\Http\Controllers\Controller;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Feature;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Http\Requests\FeatureRequest;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\FeatureRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 
-use Illuminate\Http\Request;
+class FeaturesController extends Controller
+{
 
-use App\Product;
-use App\Feature;
+    use CanSaveUploads;
 
-use App\Mamarrachismo\Upload\File as UploadFile;
-use App\Mamarrachismo\Upload\Image as UploadImage;
+    /**
+     * @var FeatureRepositoryInterface
+     */
+    protected $featRepo;
 
-class FeaturesController extends Controller {
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepo;
 
-  private $user;
+    /**
+     * @var UserRepositoryInterface
+     */
+    protected $userRepo;
 
-  private $userId;
+    /**
+     * Create a new controller instance.
+     *
+     * @param FeatureRepositoryInterface $featureRepository
+     * @param ProductRepositoryInterface $productRepository
+     * @param UserRepositoryInterface    $userRepository
+     */
+    public function __construct(
+        FeatureRepositoryInterface $featureRepository,
+        ProductRepositoryInterface $productRepository,
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->middleware('auth');
 
-  private $feature;
-
-  /**
-   * Create a new controller instance.
-   *
-   * @method __construct
-   * @param  Feature     $feature
-   *
-   * @return void
-   */
-  public function __construct(Feature $feature)
-  {
-    $this->middleware('auth');
-
-    $this->user   = Auth::user();
-    $this->userId = Auth::id();
-
-    $this->feature = $feature;
-  }
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create($id)
-  {
-    $product = Product::findOrFail($id)->load('features', 'user');
-
-    if ($product->features->count() < 5)
-    {
-      if($this->user->isOwnerOrAdmin($product->user->id))
-      {
-        return view('feature.create')->with([
-          'product' => $product,
-          'feature' => $this->feature
-        ]);
-      }
-
-      return $this->redirectToController('ProductsController@show', $product->slug);
+        $this->featRepo = $featureRepository;
+        $this->productRepo = $productRepository;
+        $this->userRepo = $userRepository;
     }
 
-    return $this->redirectToController(
-      'ProductsController@show',
-      $product->slug,
-      'Este Producto ya posee 5 Distintivos, por favor actualice los existentes.'
-    );
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @method store
-   * @param  int            $id
-   * @param  FeatureRequest $request
-   * @param  UploadImage    $uploadImage clase para subir imagenes.
-   * @param  UploadFile     $uploadFile  clase para subir archivos.
-   *
-   * @return Response
-   */
-  public function store($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
-  {
-    $product = Product::findOrFail($id);
-
-    // para los archivos del feature
-    $uploadImage->userId = $this->userId;
-    $uploadFile->userId  = $this->userId;
-
-    // el producto puede tener como maximo 5 features
-    if ($product->features->count() >= 5)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param  int    $id
+     * @param Feature $feature
+     *
+     * @return RedirectResponse|View
+     */
+    public function create($id, Feature $feature)
     {
-      return $this->redirectToController(
-        'ProductsController@show',
-        $product->slug,
-        'Este Producto ya posee 5 Distintivos, por favor actualice los existentes.'
-      );
+        $product = $this->productRepo->getById($id);
+
+        if ($this->featRepo->validateCreateRequest($id)) {
+            return view('feature.create')->with([
+                'product' => $product,
+                'feature' => $feature
+            ]);
+        }
+
+        return $this->redirectToRoute(
+            'products.show',
+            $product->slug,
+            'Este Producto ya posee 5 Distintivos, por favor actualice los existentes.'
+        );
     }
 
-    if(!$this->user->isOwnerOrAdmin($product->user->id))
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @method store
+     * @param  int            $id
+     * @param  FeatureRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function store($id, FeatureRequest $request)
     {
-      return $this->redirectToController('ProductsController@show', $product->slug);
+        /** @var Product $product */
+        $product = $this->productRepo->getById($id);
+
+        // el producto puede tener como maximo 5 features
+        if (!$this->featRepo->validateCreateRequest($id)) {
+            return $this->redirectToRoute(
+                'products.show',
+                $product->slug,
+                'Este Producto ya posee 5 Distintivos, actualice los existentes.'
+            );
+        }
+
+        $feature = $this->featRepo->create($request->all(), $product);
+
+        /**
+         * @see MakersController::create()
+         */
+        flash('Distintivo creado correctamente.');
+
+        $this->createFile($request, $feature);
+
+        $this->createImage($request, $feature);
+
+        return redirect()->route('products.show', $product->slug);
     }
 
-    $this->feature->title       = $request->input('title');
-    $this->feature->description = $request->input('description');
-
-    $product->features()->save($this->feature);
-
-    flash('Distintivo creado correctamente.');
-
-    // para guardar la imagen y modelo
-    try
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return RedirectResponse|View
+     */
+    public function edit($id)
     {
-      $uploadImage->createImage($request->file('image'), $this->feature);
-    }
-    catch (\Exception $e)
-    {
-      flash()->warning('Distintivo creado, pero la imagen asociada no pudo ser creada.');
-    }
+        $feature = $this->featRepo->getById($id);
 
-    if ($request->file('file'))
-    {
-      try
-      {
-        $uploadFile->createFile($request->file('file'), $this->feature);
-      }
-      catch (\Exception $e)
-      {
-        flash()->warning('Distintivo creado, pero el archivo no pudo ser procesado.');
-      }
+        $feature->load('product', 'product.user');
+
+        $status = $this->userRepo
+            ->canUserManipulate($feature->product->user_id);
+
+        if (!$status) {
+            return $this->redirectToroute(
+                'products.show',
+                $feature->product->slug
+            );
+        }
+
+        return view('feature.edit', compact('feature'));
     }
 
-    return redirect()->action('ProductsController@show', $product->slug);
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
-
-    if(!$this->user->isOwnerOrAdmin($this->feature->product->user->id))
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int            $id
+     * @param  FeatureRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function update($id, FeatureRequest $request)
     {
-      return $this->redirectToController('ProductsController@show', $this->feature->product->slug);
+        // se carga el producto para el redirect (id)
+        $feature = $this->featRepo->update($id, $request->all());
+
+        /**
+         * @see MakersController::create()
+         */
+        flash('El Distintivo ha sido actualizado correctamente.');
+
+        $this->updateFile($request, $feature);
+
+        $this->updateImage($request, $feature);
+
+        return redirect()->route('products.show', $feature->product->slug);
     }
 
-    return view('feature.edit')->with(['feature' => $this->feature]);
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int            $id
-   * @param  FeatureRequest $request
-   * @param  UploadImage    $uploadImage clase para subir imagenes.
-   * @param  UploadFile     $uploadFile  clase para subir archivos.
-   *
-   * @return Response
-   */
-  public function update($id, FeatureRequest $request, UploadImage $uploadImage, UploadFile $uploadFile)
-  {
-    // se carga el producto para el redirect (id)
-    $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
-
-    // para dates
-    // para los archivos del feature
-    $uploadImage->userId = $this->userId;
-    $uploadFile->userId  = $this->userId;
-
-    if(!$this->user->isOwnerOrAdmin($this->feature->product->user->id))
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return RedirectResponse
+     */
+    public function destroy($id)
     {
-      return $this->redirectToController('ProductsController@show', $this->feature->product->slug);
+        $feature = $this->featRepo->delete($id);
+
+        return $this->redirectToRoute(
+            'products.show',
+            $feature->product->slug,
+            'El Distintivo ha sido eliminado correctamente.',
+            'info'
+        );
     }
-
-    $this->feature->update($request->all());
-
-    flash('El Distintivo ha sido actualizado correctamente.');
-
-    // TODO: mejorar?
-    // para guardar la imagen y modelo
-    if ($request->hasFile('image'))
-    {
-      try
-      {
-        $uploadImage->updateImage($request->file('image'), $this->feature->image);
-      }
-      catch (\Exception $e)
-      {
-        flash()->warning('El Distintivo ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-      }
-    }
-
-    if ($request->hasFile('file'))
-    {
-      try
-      {
-        $uploadFile->updateFile($request->file('file'), $this->feature, $this->feature->file);
-      }
-      catch (\Exception $e)
-      {
-        flash()->warning('Distintivo actualizado, pero el archivo no pudo ser actualizado.');
-      }
-    }
-
-    return redirect()->action('ProductsController@show', $this->feature->product->slug);
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    $this->feature = Feature::findOrFail($id)->load('product', 'product.user');
-
-    if(!$this->user->isOwnerOrAdmin($this->feature->product->user->id))
-    {
-      return $this->redirectToController('ProductsController@show', $this->feature->product->slug);
-    }
-
-    $this->feature->delete();
-
-    return $this->redirectToController(
-      'ProductsController@show',
-      $this->feature->product->slug,
-      'El Distintivo ha sido eliminado correctamente.',
-      'info'
-    );
-  }
-
 }

@@ -4,7 +4,7 @@
     @if($isUserValid)
       <tr>
         <td colspan="2">
-          {!! link_to_action('CharacteristicsController@edit', 'Actualizar Caracteristicas', $product->characteristics->id) !!}
+          {!! link_to_route('products.characteristics.edit', 'Actualizar Caracteristicas', $product->characteristics->id) !!}
         </td>
       </tr>
     @endif
@@ -13,7 +13,7 @@
         Alto
       </td>
       <td>
-        {{ $product->characteristics->height_cm() }}
+        {{ $product->characteristics->heightCm() }}
       </td>
     </tr>
     <tr>
@@ -21,7 +21,7 @@
         Ancho
       </td>
       <td>
-        {{ $product->characteristics->width_cm() }}
+        {{ $product->characteristics->widthCm() }}
       </td>
     </tr>
     <tr>
@@ -29,7 +29,7 @@
         Profundidad
       </td>
       <td>
-        {{ $product->characteristics->depth_cm() }}
+        {{ $product->characteristics->depthCm() }}
       </td>
     </tr>
     <tr>
@@ -37,7 +37,7 @@
         Peso
       </td>
       <td>
-        {{ $product->characteristics->weight_kg() }}
+        {{ $product->characteristics->weightKg() }}
       </td>
     </tr>
     <tr>
@@ -52,6 +52,6 @@
 </table>
 @else
   @if($isUserValid)
-    {!! link_to_action('CharacteristicsController@create', 'Crear Caracteristicas del Producto', $product->id) !!}
+    {!! link_to_route('products.characteristics.create', 'Crear Caracteristicas del Producto', $product->id) !!}
   @endif
 @endif

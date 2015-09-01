@@ -4,11 +4,11 @@
   </p>
 
   <p class="footer-enlaces">
-    {!! link_to_action('HomeController@index', 'Inicio') !!}
-    {!! link_to_action('MakersController@index', 'Fabricantes') !!}
-    {!! link_to_action('CategoriesController@index', 'Categorias') !!}
-    {!! link_to_action('SubCategoriesController@index', 'Rubros') !!}
-    {!! link_to_action('ProductsController@index', 'Productos') !!}
+    {!! link_to_route('home', 'Inicio') !!}
+    {!! link_to_route('makers.index', 'Fabricantes') !!}
+    {!! link_to_route('cats.index', 'Categorias') !!}
+    {!! link_to_route('subCats.index', 'Rubros') !!}
+    {!! link_to_route('products.index', 'Productos') !!}
   </p>
 
   <p class="footer-orbiagro">slayerfat © 2015</p>

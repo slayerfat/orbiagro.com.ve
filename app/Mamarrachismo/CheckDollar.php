@@ -1,164 +1,186 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace Orbiagro\Mamarrachismo;
 
 use Storage;
 use Carbon\Carbon;
 
-class CheckDollar {
+class CheckDollar
+{
 
-  /**
-   * el dolar segun el dia/semana
-   * @var stdClass object
-   */
-  public $dollar;
+    /**
+     * el dolar segun el dia/semana
+     * @var stdClass object
+     */
+    public $dollar;
 
-  /**
-   * el euro segun el dia/semana
-   * @var stdClass object
-   */
-  public $euro;
+    /**
+     * el euro segun el dia/semana
+     * @var stdClass object
+     */
+    public $euro;
 
-  /**
-   * El promedio del dolar
-   * @var stdClass object
-   */
-  public $promedio;
+    /**
+     * El promedio del dolar
+     * @var stdClass object
+     */
+    public $promedio;
 
-  /**
-   * los datos de los APIs
-   * @var stdClass object
-   */
-  private $data;
+    /**
+     * los datos de los APIs
+     * @var stdClass object
+     */
+    private $data;
 
-  /**
-   * El objeto storage para manipular algun archivo
-   * @var \Illuminate\Contracts\Filesystem\Factory
-   */
-  private $storage;
+    /**
+     * El objeto storage para manipular algun archivo
+     * @var \Illuminate\Contracts\Filesystem\Factory
+     */
+    private $storage;
 
-  /**
-   * El objeto Carbon con el timestamp
-   * @var \Carbon\Carbon
-   */
-  private $time;
+    /**
+     * El objeto Carbon con el timestamp
+     * @var \Carbon\Carbon
+     */
+    private $time;
 
-  /**
-   * la direccion del 'API' de dollarToday
-   * @var string
-   */
-  private $dollarTodayUrl = 'https://s3.amazonaws.com/dolartoday/data.json';
+    /**
+     * la direccion del 'API' de dollarToday
+     * @var string
+     */
+    private $dollarTodayUrl = 'https://s3.amazonaws.com/dolartoday/data.json';
 
-  public function __construct()
-  {
-    $this->time = new Carbon;
-
-    if (app()->environment() == 'testing')
+    /**
+     * @param Carbon  $carbon
+     * @param Storage $storage
+     */
+    public function __construct(Carbon $carbon, Storage $storage)
     {
-      return;
+        $this->time = $carbon;
+
+        if (app()->environment() == 'testing') {
+            return;
+        }
+
+        $this->storage = $storage;
+
+        if ($this->fileExists()) {
+            $this->parseDollarTodayJson();
+
+        } elseif ($this->makeFile()) {
+            self::__construct();
+        }
+
+        return;
     }
 
-    $this->storage = new Storage;
+    // --------------------------------------------------------------------------
+    // Metodos Publicos
+    // --------------------------------------------------------------------------
 
-    if($this->fileExists())
+    /**
+     * chequea si el objeto tiene data parseada de algun api.
+     *
+     * @return boolean
+     */
+    public function isValid()
     {
-      $this->parseDollarTodayJson();
+        if (isset($this->data)) {
+            return true;
+        }
+
+        return false;
     }
-    elseif($this->makeFile())
+
+    /**
+     * invoca a checkDollar y regresa mamarrachamente dollar
+     *
+     * @todo MEJORAR ESTE METODO.
+     *
+     * @return stdClass
+     */
+    public function getDollar()
     {
-      self::__construct();
+        $this->checkDollar();
+
+        return $this->dollar;
     }
 
-    return;
-  }
+    /**
+     * chequea si esta el archivo o no para ajustar el objeto
+     * y sus atributos.
+     *
+     * @return boolean
+     */
+    private function parseDollarTodayJson()
+    {
+        $storage = $this->storage;
 
-  // --------------------------------------------------------------------------
-  // Metodos Publicos
-  // --------------------------------------------------------------------------
+        if (!$this->fileExists()) {
+            return $this->makeFile();
+        }
 
-  /**
-   * chequea si el objeto tiene data parseada de algun api.
-   */
-  public function isValid()
-  {
-    if(isset($this->data)) return true;
-    return false;
-  }
+        $this->data = json_decode($storage::get('dollar.json'));
+        $this->dollar = $this->data->USD;
+        $this->euro = $this->data->EUR;
 
-  /**
-   * invoca a checkDollar y regresa mamarrachamente regresa dollar
-   *
-   * @todo MEJORAR ESTE METODO.
-   */
-  public function getDollar()
-  {
-    $this->checkDollar();
-    return $this->dollar;
-  }
-
-  /**
-   * chequea si esta el archivo o no para ajustar el objeto
-   * y sus atributos.
-   *
-   * @return boolean
-   */
-  private function parseDollarTodayJson()
-  {
-    $storage = $this->storage;
-
-    if(!$this->fileExists()):
-      return $this->makeFile();
-    endif;
-
-    $this->data = json_decode($storage::get('dollar.json'));
-    $this->dollar = $this->data->USD;
-    $this->euro = $this->data->EUR;
-    return true;
-  }
-
-  /**
-   * chequea que el data en el objeto exista y devuelve el dolar
-   */
-  private function checkDollar()
-  {
-    if($this->data):
-      $this->dollar = $this->data->USD;
-      return true;
-    endif;
-    return $this->parseDollarTodayJson();
-  }
-
-  /**
-   * chequea que el archivo como tal exista.
-   */
-  private function fileExists()
-  {
-    $storage = $this->storage;
-
-    if($storage::exists('dollar.json')) :
-      if ($storage::size('dollar.json') > 0) :
         return true;
-      endif;
-      $storage::delete('dollar.json');
-      return false;
-    endif;
+    }
 
-    return false;
-  }
+    /**
+     * chequea que el data en el objeto exista y devuelve el dolar
+     *
+     * @return boolean
+     */
+    private function checkDollar()
+    {
+        if ($this->data) {
+            $this->dollar = $this->data->USD;
+            return true;
+        }
 
-  /**
-   * crea el archivo en el sistema y añade el timestamp local.
-   */
-  private function makeFile()
-  {
-    $storage = $this->storage;
-    $data = file_get_contents($this->dollarTodayUrl);
+        return $this->parseDollarTodayJson();
+    }
 
-    if(!$data) return null;
+    /**
+     * chequea que el archivo como tal exista.
+     *
+     * @return boolean
+     */
+    private function fileExists()
+    {
+        $storage = $this->storage;
 
-    $data = json_decode(utf8_decode($data));
-    $data->local_timestamps = $this->time;
-    $this->data = $data;
-    $data = json_encode((array)$data);
+        if ($storage::exists('dollar.json')) {
+            if ($storage::size('dollar.json') > 0) {
+                return true;
+            }
 
-    return $storage::put('dollar.json', $data);
-  }
+            $storage::delete('dollar.json');
+
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * crea el archivo en el sistema y añade el timestamp local.
+     *
+     * @return boolean
+     */
+    private function makeFile()
+    {
+        $storage = $this->storage;
+
+        $data = file_get_contents($this->dollarTodayUrl);
+
+        if (!$data) {
+            return null;
+        }
+
+        $data = json_decode(utf8_decode($data));
+        $data->local_timestamps = $this->time;
+        $this->data = $data;
+        $data = json_encode((array)$data);
+
+        return $storage::put('dollar.json', $data);
+    }
 }

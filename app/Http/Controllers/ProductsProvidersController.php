@@ -1,111 +1,157 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
+use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 
-use App\Product;
-use App\Provider;
+class ProductsProvidersController extends Controller
+{
 
-class ProductsProvidersController extends Controller {
+    /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepo;
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create($productId)
-  {
-    if(!$product = Product::where('slug', $productId)->first())
-      $product = Product::findOrFail($productId);
+    /**
+     * @var ProductProviderRepositoryInterface
+     */
+    private $providerRepo;
 
-    $providers = Provider::lists('name', 'id');
+    /**
+     * Create a new controller instance.
+     * @param ProductRepositoryInterface $productRepo
+     * @param ProductProviderRepositoryInterface $providerRepo
+     */
+    public function __construct(
+        ProductRepositoryInterface $productRepo,
+        ProductProviderRepositoryInterface $providerRepo
+    ) {
+        $this->middleware('auth');
 
-    $provider = new Provider;
-    $providerId = null;
+        $this->middleware('user.admin');
 
-    $product->sku = null;
+        $this->productRepo = $productRepo;
+        $this->providerRepo = $providerRepo;
+    }
 
-    return view('product.provider.create', compact('product', 'providers', 'provider', 'providerId'));
-  }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param  int      $productId
+     * @return View
+     */
+    public function create($productId)
+    {
+        $product = $this->productRepo->getBySlugOrId($productId);
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store($productId, Request $request)
-  {
-    $this->validate($request, [
-      'provider_id' => 'required|numeric'
-    ]);
+        $providers = $this->providerRepo->getLists();
 
-    if(!$product = Product::with('user')->where('slug', $productId)->first())
-      $product = Product::with('user')->findOrFail($productId);
+        $provider = $this->providerRepo->getEmptyInstance();
 
-    $product->providers()->attach($request->input('provider_id'), ['sku' => $request->input('sku')]);
+        $providerId = null;
 
-    flash()->success('El Proveedor fue asociado con exito.');
-    return redirect()->action('ProductsController@show', $product->slug);
-  }
+        $product->sku = null;
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($productId, $providerId)
-  {
-    if(!$product = Product::where('slug', $productId)->first())
-      $product = Product::findOrFail($productId);
+        return view('product.provider.create', compact(
+            'product',
+            'providers',
+            'provider',
+            'providerId'
+        ));
+    }
 
-    $providers = Provider::lists('name', 'id');
-    $provider  = $product->providers()->where('provider_id', $providerId)->first();
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  int     $productId
+     * @param  Request $request
+     * @return RedirectResponse
+     */
+    public function store($productId, Request $request)
+    {
+        $this->validate($request, [
+            'provider_id' => 'required|numeric'
+        ]);
 
-    $product->sku = $provider->pivot->sku;
+        $product = $this->productRepo->getBySlugOrId($productId);
 
-    return view('product.provider.edit', compact('product', 'providers', 'providerId'));
-  }
+        $product->providers()->attach(
+            $request->input('provider_id'),
+            ['sku' => $request->input('sku')]
+        );
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($productId, $providerId, Request $request)
-  {
-    $this->validate($request, [
-      'provider_id' => 'required|numeric'
-    ]);
+        flash()->success('El Proveedor fue asociado con exito.');
+        return redirect()->route('products.show', $product->slug);
+    }
 
-    if(!$product = Product::where('slug', $productId)->first())
-      $product = Product::findOrFail($productId);
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $productId
+     * @param  int $providerId
+     * @return View
+     */
+    public function edit($productId, $providerId)
+    {
+        $product = $this->productRepo->getBySlugOrId($productId);
 
-    $product->providers()->updateExistingPivot($providerId, ['sku' => $request->input('sku'), 'provider_id' => $request->input('provider_id')]);
+        $providers = $this->providerRepo->getLists();
 
-    flash()->success('El Proveedor fue asociado con exito.');
-    return redirect()->action('ProductsController@show', $product->slug);
-  }
+        $provider  = $product->providers()->where('provider_id', $providerId)->first();
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($productId, $providerId)
-  {
-    if(!$product = Product::where('slug', $productId)->first())
-      $product = Product::findOrFail($productId);
+        $product->sku = $provider->pivot->sku;
 
-    $provider = Provider::findOrFail($providerId);
+        return view('product.provider.edit', compact('product', 'providers', 'providerId'));
+    }
 
-    $product->providers()->detach($provider);
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $productId
+     * @param  int $providerId
+     * @param  Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function update($productId, $providerId, Request $request)
+    {
+        $this->validate($request, [
+            'provider_id' => 'required|numeric'
+        ]);
 
-    return response()->json(['success']);
-  }
+        $product = $this->productRepo->getBySlugOrId($productId);
 
+        $product->providers()->updateExistingPivot(
+            $providerId,
+            [
+                'sku' => $request->input('sku'),
+                'provider_id' => $request->input('provider_id')
+            ]
+        );
+
+        flash()->success('El Proveedor fue asociado con exito.');
+
+        return redirect()->route('products.show', $product->slug);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $productId
+     * @param  int $providerId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($productId, $providerId)
+    {
+        $product = $this->productRepo->getBySlugOrId($productId);
+
+        $provider = $this->providerRepo->getById($providerId);
+
+        $product->providers()->detach($provider);
+
+        return response()->json(['success']);
+    }
 }

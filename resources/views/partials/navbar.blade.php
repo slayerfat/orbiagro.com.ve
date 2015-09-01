@@ -22,9 +22,9 @@
             <span class="caret"></span>
           </a> --}}
           {{-- <ul class="dropdown-menu" role="menu"> --}}
-            {{-- <li>{!! link_to_action('CategoriesController@index', 'Consultar') !!}</li> --}}
+            {{-- <li>{!! link_to_route('cats.index', 'Consultar') !!}</li> --}}
           {{-- </ul> --}}
-          {!! link_to_action('CategoriesController@index', 'Categorias') !!}
+          {!! link_to_route('cats.index', 'Categorias') !!}
         </li>
         {{-- <li class="dropdown"> --}}
         <li>
@@ -33,9 +33,9 @@
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li>{!! link_to_action('SubCategoriesController@index', 'Consultar') !!}</li>
+            <li>{!! link_to_route('subCats.index', 'Consultar') !!}</li>
           </ul> --}}
-          {!! link_to_action('SubCategoriesController@index', 'Rubros') !!}
+          {!! link_to_route('subCats.index', 'Rubros') !!}
         </li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -44,9 +44,9 @@
           </a>
           <ul class="dropdown-menu" role="menu">
             @unless(Auth::guest())
-              <li>{!! link_to_action('ProductsController@create', 'Crear') !!}</li>
+              <li>{!! link_to_route('products.create', 'Crear') !!}</li>
             @endunless
-            <li>{!! link_to_action('ProductsController@index', 'Consultar') !!}</li>
+            <li>{!! link_to_route('products.index', 'Consultar') !!}</li>
           </ul>
         </li>
         @unless (Auth::guest())
@@ -57,20 +57,20 @@
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                <li>{!! link_to_action('UsersController@create', 'Crear Usuario') !!}</li>
-                <li>{!! link_to_action('UsersController@index', 'Consultar Usuarios') !!}</li>
+                <li>{!! link_to_route('users.create', 'Crear Usuario') !!}</li>
+                <li>{!! link_to_route('users.index', 'Consultar Usuarios') !!}</li>
                 <li class="divider"></li>
-                <li>{!! link_to_action('ProfilesController@create', 'Crear Perfil') !!}</li>
-                <li>{!! link_to_action('ProfilesController@index', 'Consultar Perfiles') !!}</li>
+                <li>{!! link_to_route('profiles.create', 'Crear Perfil') !!}</li>
+                <li>{!! link_to_route('profiles.index', 'Consultar Perfiles') !!}</li>
                 <li class="divider"></li>
-                <li>{!! link_to_action('SubCategoriesController@create', 'Crear Rubro') !!}</li>
-                <li>{!! link_to_action('CategoriesController@create', 'Crear Categoria') !!}</li>
+                <li>{!! link_to_route('subCats.create', 'Crear Rubro') !!}</li>
+                <li>{!! link_to_route('cats.create', 'Crear Categoria') !!}</li>
                 <li class="divider"></li>
-                <li>{!! link_to_action('MakersController@create', 'Crear Fabricante') !!}</li>
-                <li>{!! link_to_action('MakersController@index', 'Consultar Fabricante') !!}</li>
+                <li>{!! link_to_route('makers.create', 'Crear Fabricante') !!}</li>
+                <li>{!! link_to_route('makers.index', 'Consultar Fabricante') !!}</li>
                 <li class="divider"></li>
-                <li>{!! link_to_action('ProvidersController@create', 'Crear Proveedor') !!}</li>
-                <li>{!! link_to_action('ProvidersController@index', 'Consultar Proveedor') !!}</li>
+                <li>{!! link_to_route('providers.create', 'Crear Proveedor') !!}</li>
+                <li>{!! link_to_route('providers.index', 'Consultar Proveedor') !!}</li>
               </ul>
             </li>
           @endif
@@ -87,7 +87,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->username }} <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
               <li>
-                {!! link_to_action('UsersController@show', 'Perfil', Auth::user()->name) !!}
+                {!! link_to_route('users.show', 'Perfil', Auth::user()->name) !!}
               </li>
               <li><a href="/auth/logout">Salir</a></li>
             </ul>

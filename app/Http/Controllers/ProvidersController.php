@@ -1,131 +1,129 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests\ProviderRequest;
-use App\Http\Controllers\Controller;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Http\Requests\ProviderRequest;
+use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
 
-use App\Provider;
+class ProvidersController extends Controller
+{
 
-class ProvidersController extends Controller {
+    /**
+     * @var ProductProviderRepositoryInterface
+     */
+    private $providerRepo;
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-    $this->middleware('user.admin');
-  }
-
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
-  public function index()
-  {
-    $providers = Provider::with('products')->get();
-
-    return view('provider.index', compact('providers'));
-  }
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-    $provider = new Provider;
-
-    return view('provider.create', compact('provider'));
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store(ProviderRequest $request)
-  {
-    $provider = new Provider($request->all());
-
-    $provider->save();
-
-    flash()->success('Proveedor creado exitosamente.');
-    return redirect()->action('ProvidersController@show', $provider->id);
-  }
-
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id)
-  {
-    $provider = Provider::with('products')->findOrFail($id);
-
-    return view('provider.show', compact('provider'));
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    $provider = Provider::findOrFail($id);
-
-    return view('provider.edit', compact('provider'));
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id, ProviderRequest $request)
-  {
-    $provider = Provider::findOrFail($id);
-
-    $provider->update($request->all());
-
-    flash()->success('Proveedor actualizado exitosamente.');
-    return redirect()->action('ProvidersController@show', $provider->id);
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    $provider = Provider::findOrFail($id);
-
-    try
+    /**
+     * Create a new controller instance.
+     * @param ProductProviderRepositoryInterface $providerRepo
+     */
+    public function __construct(ProductProviderRepositoryInterface $providerRepo)
     {
-      $provider->delete();
-    }
-    catch (\Exception $e)
-    {
-      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
-      {
-        flash()->error('Para poder eliminar este Proveedor, no deben haber elementos asociados.');
-        return redirect()->action('ProvidersController@show', $id);
-      }
-      \Log::error($e);
-      abort(500);
+        $this->middleware('user.admin');
+        $this->providerRepo = $providerRepo;
     }
 
-    flash()->success('El Proveedor ha sido eliminado correctamente.');
-    return redirect()->action('ProvidersController@index');
-  }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return View
+     */
+    public function index()
+    {
+        $providers = $this->providerRepo->getAll();
 
+        return view('provider.index', compact('providers'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return View
+     */
+    public function create()
+    {
+        $provider = $this->providerRepo->getEmptyInstance();
+
+        return view('provider.create', compact('provider'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  ProviderRequest $request
+     * @return RedirectResponse
+     */
+    public function store(ProviderRequest $request)
+    {
+        $provider = $this->providerRepo->store($request->all());
+
+        flash()->success('Proveedor creado exitosamente.');
+
+        return redirect()->route('providers.show', $provider->id);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return View
+     */
+    public function show($id)
+    {
+        $provider = $this->providerRepo->getById($id);
+
+        return view('provider.show', compact('provider'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return View
+     */
+    public function edit($id)
+    {
+        $provider = $this->providerRepo->getById($id);
+
+        return view('provider.edit', compact('provider'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @param  ProviderRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function update($id, ProviderRequest $request)
+    {
+        $provider = $this->providerRepo->update($id, $request->all());
+
+        flash()->success('Proveedor actualizado exitosamente.');
+
+        return redirect()->route('providers.show', $provider->id);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return RedirectResponse
+     */
+    public function destroy($id)
+    {
+        $result = $this->providerRepo->destroy($id);
+
+        if ($result === true) {
+            return redirect()->route('providers.index');
+
+        }
+
+        return $this->redirectToRoute(
+            'providers.show',
+            $id,
+            'No deben haber elementos asociados.'
+        );
+    }
 }

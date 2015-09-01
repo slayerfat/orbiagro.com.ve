@@ -2,6 +2,7 @@
 @import 'variables';
 
 @import '404';
+@import 'header';
 @import 'footer';
 @import 'home/main';
 @import 'feature/main';
@@ -9,6 +10,7 @@
 @import 'category/main';
 @import 'user/main';
 @import 'breadcrumbs';
+@import 'ads';
 
 @import 'vendor/bower_components/slick.js/slick/slick';
 @import 'vendor/bower_components/slick.js/slick/slick-theme';

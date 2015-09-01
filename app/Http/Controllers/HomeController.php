@@ -1,55 +1,81 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Category;
-use App\SubCategory;
-use App\Promotion;
-use App\PromoType;
-use App\Mamarrachismo\VisitsService;
-
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\View\View;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\PromotionRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
-class HomeController extends Controller {
+class HomeController extends Controller
+{
 
-  use SEOToolsTrait;
+    use SEOToolsTrait;
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-    $this->middleware('auth', ['except' => 'index']);
-  }
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    protected $catRepo;
 
-  /**
-   * Show the application dashboard to the user.
-   *
-   * @return Response
-   */
-  public function index()
-  {
-    $sub_category = SubCategory::has('products')->random()->first();
+    /**
+     * @var SubCategoryRepositoryInterface
+     */
+    protected $subCatRepo;
 
-    $cats = Category::all();
+    /**
+     * @var PromotionRepositoryInterface
+     */
+    protected $promoRepo;
 
-    // TODO: mejorar logica de seleccion de tipos de promociones
-    // TODO: abstraer a una clase o incluirlo dentro de la clase Promotion
-    // selecciona los tipos especificos
-    $typesId = PromoType::whereIn('description', ['primavera', 'verano', 'otoño', 'invierno'])->lists('id');
-    // selecciona las promociones existentes segun el tipo ya seleccionado
-    $promotions = Promotion::whereIn('promo_type_id', $typesId)->random()->take(3)->get();
+    /**
+     * Create a new controller instance.
+     * @param CategoryRepositoryInterface    $catRepo
+     * @param SubCategoryRepositoryInterface $subCatRepo
+     * @param PromotionRepositoryInterface   $promoRepo
+     */
+    public function __construct(
+        CategoryRepositoryInterface $catRepo,
+        SubCategoryRepositoryInterface $subCatRepo,
+        PromotionRepositoryInterface $promoRepo
+    ) {
+        $this->middleware('auth', ['except' => 'index']);
 
-    $this->seo()->opengraph()->setUrl(action('HomeController@index'));
+        $this->catRepo = $catRepo;
+        $this->subCatRepo = $subCatRepo;
+        $this->promoRepo = $promoRepo;
+    }
 
-    return view('home.index', compact('sub_category', 'promotions', 'cats'));
-  }
+    /**
+     * Show the application index to the user.
+     *
+     * @todo mejorar logica de seleccion de tipos de promociones,
+     *       abstraer a una clase o incluirlo dentro de la clase Promotion
+     *
+     * @return View
+     */
+    public function index()
+    {
+        $subCategory = $this->subCatRepo->getRandom();
 
-  public function unverified()
-  {
-    $user  = \Auth::user();
+        $cats = $this->catRepo->getAll();
 
-    return view('auth.verification', compact('user'));
-  }
+        $promotions = $this->promoRepo->getHomeRelated();
 
+        $this->seo()->opengraph()->setUrl(route('home'));
+
+        return view('home.index', compact('subCategory', 'promotions', 'cats'));
+    }
+
+    /**
+     * Muestra la vista para el usuario no verificado.
+     *
+     * @param  Guard    $auth
+     * @return View
+     */
+    public function unverified(Guard $auth)
+    {
+        $user  = $auth->user();
+
+        return view('auth.verification', compact('user'));
+    }
 }

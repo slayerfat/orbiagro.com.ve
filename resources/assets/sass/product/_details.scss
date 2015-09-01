@@ -1,0 +1,9 @@
+.product-hero-details-message {
+
+  @include make-xs-column(2);
+  @include make-xs-column-offset(6);
+  bottom: 0;
+  float: right;
+  position: fixed;
+  z-index: 1;
+}

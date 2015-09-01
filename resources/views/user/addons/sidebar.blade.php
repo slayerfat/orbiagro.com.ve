@@ -1,32 +1,38 @@
 <?php
-switch ($active)
-{
-  case 'resumen':
-    $resumen = 'class=active';
-    break;
-  case 'person':
-    $person = 'class=active';
-    break;
-  case 'products':
-    $products = 'class=active';
-    break;
-  case 'productsVisits':
-    $productsVisits = 'class=active';
-    break;
-  case 'billing':
-    $billing = 'class=active';
-    break;
-  case 'userDestroy':
-    $userDestroy = 'active';
-    break;
-  default:
-    Log::warning('user.addon.sidebar: no se pudo identificar el vinculo activo');
-    break;}?>
+switch ($active) {
+    case 'resumen':
+        $resumen = 'class=active';
+        break;
+
+    case 'person':
+        $person = 'class=active';
+        break;
+
+    case 'products':
+        $products = 'class=active';
+        break;
+    case 'productsVisits':
+        $productsVisits = 'class=active';
+        break;
+
+    case 'billing':
+        $billing = 'class=active';
+        break;
+
+    case 'userDestroy':
+        $userDestroy = 'active';
+        break;
+
+    default:
+        Log::warning('user.addon.sidebar: no se pudo identificar el vinculo activo');
+        break;
+}
+?>
 
 <div class="col-sm-2 sidebar">
   <ul class="nav nav-sidebar">
     <li {{isset($resumen) ? $resumen:null}}>
-      {!! link_to_action('UsersController@show', 'Resumen', $user->name) !!}
+      {!! link_to_route('users.show', 'Resumen', $user->name) !!}
     </li>
     <li {{isset($products) ? $products:null}}>
       {!! link_to_action('UsersController@products', 'Productos', $user->name) !!}
@@ -46,7 +52,7 @@ switch ($active)
         Editar
       </li>
       <li>
-        {!! link_to_action('UsersController@edit', 'Cuenta', $user->name) !!}
+        {!! link_to_route('users.edit', 'Cuenta', $user->name) !!}
       </li>
       <li>
         {!! link_to_action($user->person ? 'PeopleController@edit':'PeopleController@create', 'Información Personal', $user->name) !!}
@@ -61,7 +67,7 @@ switch ($active)
         </li>
         {!! Form::open([
           'method' => 'POST',
-          'action' => ['UsersController@restore', $user->id],
+          'route' => ['<users class=""></users>restore', $user->id],
           'class' => 'hidden',
           'id' => "restore-user-{$user->id}"]) !!}
         {!! Form::close() !!}
@@ -70,7 +76,7 @@ switch ($active)
         </li>
         {!! Form::open([
           'method' => 'DELETE',
-          'action' => ['UsersController@forceDestroy', $user->id],
+          'route' => ['users.destroy.forced', $user->id],
           'class' => 'hidden',
           'id' => "forceDestroy-user-{$user->id}"]) !!}
         {!! Form::close() !!}

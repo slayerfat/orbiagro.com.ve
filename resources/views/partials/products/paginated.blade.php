@@ -19,7 +19,7 @@
                 <h4 class="media-heading product-title">{{ $product->title }}</h4>
               </a>
               <div class="col-md-3 product-price">
-                {{ $product->price_bs() }}
+                {{ $product->priceBs() }}
               </div>
               <div class="col-md-9 product-features">
                 @if($product->features)
@@ -47,7 +47,7 @@
           </h3>
         @else
           <h3>
-            {!! link_to_action('ProductsController@create', 'Crea un nuevo Producto') !!}
+            {!! link_to_route('products.create', 'Crea un nuevo Producto') !!}
           </h3>
         @endif
       </div>

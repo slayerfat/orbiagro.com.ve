@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($subCat, [
-              'action' => 'SubCategoriesController@store',
+              'route' => 'subCats.store',
               'class'  => 'form-horizontal',
               'files'  => true
               ]) !!}

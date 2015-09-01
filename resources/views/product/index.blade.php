@@ -43,6 +43,9 @@
     </div>
   </div>
 
+  {{-- ads --}}
+  @include('partials.ads.full-12')
+  @include('sub-category.addons.popular', ['title' => 'Visite los Rubros Populares'])
   @include('visit.addons.relatedProducts')
 @stop
 

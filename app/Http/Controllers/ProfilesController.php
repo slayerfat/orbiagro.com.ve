@@ -1,135 +1,133 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
+use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
 
-use App\Profile;
+class ProfilesController extends Controller
+{
 
-class ProfilesController extends Controller {
+    /**
+     * @var ProfileRepositoryInterface
+     */
+    private $profileRepo;
 
-  public $profile;
+    /**
+     * @param ProfileRepositoryInterface $profileRepo
+     */
+    public function __construct(ProfileRepositoryInterface $profileRepo)
+    {
+        $this->middleware('auth');
+        $this->middleware('user.admin');
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct(Profile $profile)
-  {
-    $this->middleware('auth');
-    $this->middleware('user.admin');
-    $this->profile = $profile;
-  }
+        $this->profileRepo = $profileRepo;
+    }
 
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
-  public function index()
-  {
-    $profiles = Profile::with('users')->paginate(5);
+    /**
+     * Display a listing of the resource.
+     *
+     * @return View
+     */
+    public function index()
+    {
+        $profiles = $this->profileRepo->getPaginated(5);
 
-    return view('profile.index', compact('profiles'));
-  }
+        return view('profile.index', compact('profiles'));
+    }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-    return view('profile.create')->with(['profile' => $this->profile]);
-  }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return View
+     */
+    public function create()
+    {
+        $profile = $this->profileRepo->getEmptyInstance();
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store(Request $request)
-  {
-    $this->validate($request, [
-      'description' => 'required|unique:profiles|max:40|min:5'
-    ]);
+        return view('profile.create', compact('profile'));
+    }
 
-    $this->profile->description = $request->input('description');
-    $this->profile->save();
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'description' => 'required|unique:profiles|max:40|min:5'
+        ]);
 
-    flash()->success('El Perfil ha sido creado con exito.');
-    return redirect()->action('ProfilesController@show', $this->profile->id);
-  }
+        $profile = $this->profileRepo->store($request->all());
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id)
-  {
-    if(!$this->profile = Profile::with('users')->where('description', $id)->first())
-      $this->profile = Profile::with('users')->findOrFail($id);
+        flash()->success('El Perfil ha sido creado con exito.');
 
-    return view('profile.show')->with(['profile' => $this->profile]);
-  }
+        return redirect()->route('profiles.show', $profile->id);
+    }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    $this->profile = Profile::findOrFail($id);
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return View
+     */
+    public function show($id)
+    {
+        $profile = $this->profileRepo->getByDescription($id);
 
-    return view('profile.edit')->with(['profile' => $this->profile]);
-  }
+        return view('profile.show', compact('profile'));
+    }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id, Request $request)
-  {
-    $this->validate($request, [
-      'description' => 'required|max:40|min:5|unique:profiles,description,'.$id
-    ]);
-    $this->profile = Profile::findOrFail($id);
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return View
+     */
+    public function edit($id)
+    {
+        $profile = $this->profileRepo->getById($id);
 
-    $this->profile->description = $request->input('description');
-    $this->profile->save();
+        return view('profile.edit', compact('profile'));
+    }
 
-    flash()->success('El Perfil ha sido actualizado con exito.');
-    return redirect()->action('ProfilesController@show', $this->profile->id);
-  }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int      $id
+     * @param  Request  $request
+     * @return RedirectResponse
+     */
+    public function update($id, Request $request)
+    {
+        $this->validate($request, [
+            'description' => 'required|max:40|min:5|unique:profiles,description,'.$id
+        ]);
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    $this->profile = Profile::findOrFail($id);
+        $profile = $this->profileRepo->update($id, $request->all());
 
-    if(!$this->profile->users->isEmpty()) :
-      flash()->error('Para poder eliminar este perfil, debe estar vacio.');
-      return redirect()->action('ProfilesController@show', $this->profile->id);
-    endif;
+        flash()->success('El Perfil ha sido actualizado con exito.');
 
-    $this->profile->delete();
+        return redirect()->route('profiles.show', $profile->id);
+    }
 
-    flash()->info('El Perfil ha sido eliminado correctamente.');
-    return redirect()->action('ProfilesController@index');
-  }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return RedirectResponse
+     */
+    public function destroy($id)
+    {
+        flash()->info('El Perfil ha sido eliminado correctamente.');
 
+        if (!$this->profileRepo->destroy($id)) {
+            flash()->error('Para poder eliminar este perfil, debe estar vacio.');
+        }
+
+        return redirect()->route('profiles.index');
+    }
 }

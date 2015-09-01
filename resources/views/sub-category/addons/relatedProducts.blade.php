@@ -6,7 +6,7 @@
   </div>
   <div class="row">
     @include('partials.products.gallerie-thumbnail-products', [
-      'products' => $sub_category->products->take(3),
+      'products' => $subCategory->products->take(3),
       'size' => 'col-sm-4'
     ])
   </div>

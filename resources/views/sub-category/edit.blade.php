@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($subCat, [
               'method' => 'PATCH',
-              'action' => ['SubCategoriesController@update', $subCat->id],
+              'route' => ['subCats.update', $subCat->id],
               'class'  => 'form-horizontal',
               'files'  => true
               ]) !!}

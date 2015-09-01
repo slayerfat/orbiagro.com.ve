@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($mech, [
-              'action' => ['MechanicalInfoController@store', $product->id],
+              'route' => ['products.mechanicals.store', $product->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('mechanicalInfo.forms.body', ['textoBotonSubmit' => 'Añadir Información Mecanica'])

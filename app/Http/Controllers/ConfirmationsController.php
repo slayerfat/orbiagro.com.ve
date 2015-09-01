@@ -1,78 +1,80 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Mamarrachismo\EnviarEmail as Email;
 use Auth;
-use App\User;
-use App\Profile;
-use App\UserConfirmation;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Mamarrachismo\EnviarEmail as Email;
+use Orbiagro\Repositories\Interfaces\UserConfirmationInterface;
 
-class ConfirmationsController extends Controller {
+class ConfirmationsController extends Controller
+{
 
-  public function confirm($confirmation)
-  {
-    if ( !$confirmation ) :
-      return redirect('/');
-    endif;
+    private $confirm;
 
-    $confirmModel = UserConfirmation::where('data', $confirmation)->get();
-    if ( !$confirmModel ) :
-      return redirect('/');
-    endif;
+    /**
+     * @param UserConfirmationInterface $confirm
+     */
+    public function __construct(UserConfirmationInterface $confirm)
+    {
+        $this->confirm = $confirm;
+    }
 
-    if ( $confirmModel->count() !== 1 ) :
-      foreach($confirmModel as $confirm):
-        $confirm->delete();
-      endforeach;
-      return redirect('/');
-    else:
-      $confirmModel = $confirmModel->first();
-    endif;
+    /**
+     * Comprueba la confirmacion del usuario para ser validado.
+     *
+     * @param  string $confirmation la cadena de texto a comparar.
+     * @return RedirectResponse
+     */
+    public function confirm($confirmation)
+    {
+        if (!$confirmation || trim($confirmation) == '') {
+            return redirect('/');
+        }
 
-    $user = User::findOrFail($confirmModel->user_id);
-    if (!$user->confirmation) :
-      $confirmModel->delete();
-      return redirect('/');
-    endif;
+        $confirmModel = $this->confirm->getConfirmation($confirmation);
 
-    $profile = Profile::where('description', 'Usuario')->first();
-    $user->profile_id = $profile->id;
-    $user->save();
-    $user->confirmation()->delete();
+        if (is_null($confirmModel)) {
+            return redirect('/');
+        }
 
-    Auth::logout();
-    flash()->success('Ud. ha sido correctamente verificado, por favor ingrese en el sistema.');
-    return redirect('auth/login');
-  }
+        $user = $this->confirm->validateUser($confirmModel);
 
-  public function generateConfirm()
-  {
-    $user = Auth::user();
-    if (!$user->confirmation):
-      return redirect('/');
-    endif;
+        if (is_null($user)) {
+            return redirect('/');
+        }
 
-    $confirmation = new UserConfirmation(['data' => true]);
-    $user->confirmation()->update(['data' => $confirmation->data]);
+        Auth::logout();
 
-    // por alguna razon la confirmacion no se actualiza en el modelo
-    // asi que tengo que traermelo otra vez
-    $user = User::find(Auth::user()->id);
+        flash()->success('Ud. ha sido correctamente verificado, por favor ingrese en el sistema.');
 
-    // datos usados para enviar el email
-    $data = [
-      'vista'   => ['emails.confirmation', 'emails.confirmationPlain'],
-      'subject' => 'Confirmacion de cuenta en Orbiagro',
-      'user' => $user,
-    ];
+        return redirect('auth/login');
+    }
 
-    // array de destinatarios
-    $emails = (array)$user->email;
-    Email::enviarEmail($data, $emails);
+    /**
+     * Genera una confirmacion y envia un correo electronico al usuario.
+     *
+     * @return RedirectResponse
+     */
+    public function createConfirm()
+    {
+        $user = $this->confirm->create();
 
-    flash()->info('Nueva confirmación generada, por favor revise su correo electronico.');
-    return redirect('/');
-  }
+        // datos usados para enviar el email
+        $data = [
+            'vista'   => ['emails.confirmation', 'emails.confirmationPlain'],
+            'subject' => 'Confirmacion de cuenta en Orbiagro',
+            'user'    => $user,
+        ];
+
+        // array de destinatarios
+        $emails = (array)$user->email;
+        Email::enviarEmail($data, $emails);
+
+        flash()->info(
+            'Nueva confirmación generada y enviada a '
+            .$user->email
+            .', por favor revise su correo electronico.'
+        );
+
+        return redirect('/');
+    }
 }

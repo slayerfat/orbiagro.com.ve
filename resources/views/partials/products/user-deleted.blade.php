@@ -24,7 +24,7 @@
             <h4 class="media-heading product-title">{{ $product->title }}</h4>
           </a>
           <div class="col-md-3 product-price">
-            {{ $product->price_bs() }}
+            {{ $product->priceBs() }}
           </div>
           <div class="col-md-6 product-info">
             <p>
@@ -41,10 +41,10 @@
             </p>
           </div>
           <div class="col-xs-3">
-            {!! Form::open(['method' => 'POST', 'action' => ['ProductsController@restore', $product->id]]) !!}
+            {!! Form::open(['method' => 'POST', 'route' => ['products.restore', $product->id]]) !!}
             {!! Form::submit('Restaurar', ['class' => 'btn btn-info btn-block']) !!}
             {!! Form::close() !!}
-            {!! Form::open(['method' => 'DELETE', 'action' => ['ProductsController@forceDestroy', $product->id]]) !!}
+            {!! Form::open(['method' => 'DELETE', 'route' => ['products.destroy.force', $product->id]]) !!}
             {!! Form::submit('Olvidar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
             {!! Form::close() !!}
           </div>

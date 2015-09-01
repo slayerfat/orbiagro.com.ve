@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($user, [
               'method' => 'PATCH',
-              'action' => ['UsersController@update', $user->id],
+              'route' => ['users.update', $user->id],
               'class'  => 'form-horizontal',
               ]) !!}
               @include('user.forms.body', ['textoBotonSubmit' => 'Actualizar Usuario'])

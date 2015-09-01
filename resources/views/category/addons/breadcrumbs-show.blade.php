@@ -2,10 +2,10 @@
   <div class="row">
     <ol class="breadcrumb">
       <li>
-        {!! link_to_action('HomeController@index', 'Inicio') !!}
+        {!! link_to_route('home', 'Inicio') !!}
       </li>
       <li>
-        {!! link_to_action('CategoriesController@index', 'Categorias') !!}
+        {!! link_to_route('cats.index', 'Categorias') !!}
       </li>
       <li class="active">
         <em>
@@ -13,10 +13,10 @@
         </em>
       </li>
       <li>
-        {!! link_to_action('SubCategoriesController@indexByCategory', 'Rubros', $cat->slug) !!}
+        {!! link_to_route('cats.subCats.index', 'Rubros', $cat->slug) !!}
       </li>
       <li>
-        {!! link_to_action('ProductsController@indexByCategory', 'Productos', $cat->slug) !!}
+        {!! link_to_route('products.cats.index', 'Productos', $cat->slug) !!}
       </li>
     </ol>
   </div>

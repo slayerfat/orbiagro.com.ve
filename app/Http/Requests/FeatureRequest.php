@@ -1,40 +1,59 @@
-<?php namespace App\Http\Requests;
+<?php namespace Orbiagro\Http\Requests;
 
-use Auth;
-use App\Http\Requests\Request;
+use Orbiagro\Models\Feature;
+use Orbiagro\Models\Product;
 
-use App\Product;
+use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
 
-class FeatureRequest extends Request {
+/**
+ * Class FeatureRequest
+ * @package Orbiagro\Http\Requests
+ */
+class FeatureRequest extends Request
+{
+    use CanSearchIDs;
 
-  /**
-   * Determine if the user is authorized to make this request.
-   *
-   * @return bool
-   */
-  public function authorize()
-  {
-    // si ruta es nula entonces se esta creado un nuevo recurso
-    if (!$this->route('productos'))
-      return Auth::user()->isVerified();
-
-    // si ruta no es nula entonces se esta manipulando un recurso
-    $producto = Product::find($this->route('productos'));
-    return Auth::user()->isOwnerOrAdmin($producto->user_id);
-  }
-
-  /**
-   * Get the validation rules that apply to the request.
-   *
-   * @return array
-   */
-  public function rules()
-  {
-    return [
-      'title'           => 'required|string|between:5,40',
-      'description'     => 'required|string|min:10',
-      'images'          => 'image',
+    /**
+     * @var array
+     */
+    protected $resourcesData = [
+        [
+            'methodType' => 'POST',
+            'class'      => Product::class,
+            'routeParam' => 'products'
+        ],
+        [
+            'methodType' => 'PATCH',
+            'class'      => Feature::class,
+            'routeParam' => 'features'
+        ]
     ];
-  }
 
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        if ($this->isUserAdmin()) {
+            return true;
+        }
+
+        return $this->isUserOwner($this->resourcesData);
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'title'           => 'required|string|between:5,40',
+            'description'     => 'required|string|min:10',
+            'images'          => 'image ',
+        ];
+    }
 }

@@ -1,7 +1,7 @@
-<?php namespace App\Commands;
+<?php namespace Orbiagro\Commands;
 
-abstract class Command {
+abstract class Command
+{
 
-	//
-
+    //
 }

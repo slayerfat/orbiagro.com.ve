@@ -1,171 +1,149 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests\MakerRequest;
-use App\Http\Controllers\Controller;
-
-use App\Maker;
-
-use App\Mamarrachismo\Upload\Image as Upload;
-
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Http\Requests\MakerRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
 
-class MakersController extends Controller {
+class MakersController extends Controller
+{
 
-  use SEOToolsTrait;
+    use SEOToolsTrait, CanSaveUploads;
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct(Maker $maker)
-  {
-    $this->middleware('auth', ['except' => ['show']]);
-    $this->middleware('user.admin', ['except' => ['show']]);
-    $this->user   = Auth::user();
-    $this->userId = Auth::id();
-    $this->maker = $maker;
-  }
+    /**
+     * @var MakerRepositoryInterface
+     */
+    private $makerRepo;
 
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
-  public function index()
-  {
-    $makers = Maker::with('products')->get();
-
-    $this->seo()->setTitle('Fabricantes en orbiagro.com.ve');
-    $this->seo()->setDescription('Fabricantes existentes es orbiagro.com.ve');
-    // $this->seo()->setKeywords(); taxonomias
-    $this->seo()->opengraph()->setUrl(action('MakersController@index'));
-
-    return view('maker.index', compact('makers'));
-  }
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-    return view('maker.create')->with(['maker' => $this->maker]);
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store(MakerRequest $request, Upload $upload)
-  {
-    $this->maker->fill($request->all());
-
-    $this->maker->save();
-
-    // para los archivos
-    $upload->userId = $this->userId;
-
-    $upload->createImage($request->file('image'), $this->maker);
-
-    flash()->success('Fabricante creado exitosamente.');
-    return redirect()->action('MakersController@show', $this->maker->slug);
-  }
-
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id)
-  {
-    if(!$this->maker = Maker::with('products')->where('slug', $id)->first())
-      $this->maker = Maker::with('products')->findOrFail($id);
-
-    $this->seo()->setTitle("{$this->maker->name} y sus articulos en orbiagro.com.ve");
-    $this->seo()->setDescription("{$this->maker->name} y sus productos relacionados en orbiagro.com.ve");
-    // $this->seo()->setKeywords(); taxonomias
-    $this->seo()->opengraph()->setUrl(action('MakersController@show', $id));
-
-    return view('maker.show')->with(['maker' => $this->maker]);
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    $this->maker = Maker::findOrFail($id);
-
-    return view('maker.edit')->with(['maker' => $this->maker]);
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id, MakerRequest $request, Upload $upload)
-  {
-    $this->maker = Maker::findOrFail($id)->load('image');
-    $this->maker->update($request->all());
-
-    flash()->success('Fabricante Actualizado exitosamente.');
-
-    // de FeatureController...
-    // TODO: mejorar?
-    // para guardar la imagen y modelo
-    if ($request->hasFile('image'))
-      try
-      {
-        $upload->updateImage($request->file('image'), $this->maker->image);
-      }
-      catch (\Exception $e)
-      {
-        flash()->warning('El Fabricante ha sido actualizado, pero la imagen asociada no pudo ser actualizada.');
-        return redirect()
-          ->action('MakersController@show', $this->maker->slug)
-          ->withErrors($upload->errors);
-      }
-
-    return redirect()->action('MakersController@show', $this->maker->slug);
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    $this->maker = Maker::findOrFail($id);
-
-    try
+    /**
+     * Create a new controller instance.
+     * @param MakerRepositoryInterface $makerRepo
+     */
+    public function __construct(MakerRepositoryInterface $makerRepo)
     {
-      $this->maker->delete();
-    }
-    catch (\Exception $e)
-    {
-      if ($e instanceof \QueryException || (int)$e->errorInfo[0] == 23000)
-      {
-        flash()->error('Para poder eliminar este Fabricante, no deben haber productos asociados.');
-        return redirect()->action('MakersController@show', $this->maker->slug);
-      }
-      \Log::error($e);
-      abort(500);
+        $rules = ['except' => ['show']];
+
+        $this->middleware('auth', $rules);
+        $this->middleware('user.admin', $rules);
+
+        $this->makerRepo = $makerRepo;
     }
 
-    flash()->success('El Fabricante ha sido eliminado correctamente.');
-    return redirect()->action('MakersController@index');
-  }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return RedirectResponse
+     */
+    public function index()
+    {
+        $makers = $this->makerRepo->getAll();
 
+        $this->seo()->setTitle('Fabricantes en orbiagro.com.ve');
+        $this->seo()->setDescription('Fabricantes existentes en orbiagro.com.ve');
+        $this->seo()->opengraph()->setUrl(route('makers.index'));
+
+        return view('maker.index', compact('makers'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return View
+     */
+    public function create()
+    {
+        $maker = $this->makerRepo->getEmptyInstance();
+
+        return view('maker.create', compact('maker'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  MakerRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function store(MakerRequest $request)
+    {
+        $maker = $this->makerRepo->create($request->all());
+
+        /**
+         * se flashea antes de crear la imagen para que los
+         * errores (si ocurren) de la creacion de imagen
+         * no sean descartados por este flash.
+         */
+        flash()->success('Fabricante creado exitosamente.');
+
+        $this->createImage($request, $maker);
+
+        return redirect()->route('makers.show', $maker->slug);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return View
+     */
+    public function show($id)
+    {
+        $maker = $this->makerRepo->getBySlugOrId($id);
+
+        $this->seo()->setTitle("{$maker->name} y sus articulos en orbiagro.com.ve");
+        $this->seo()->setDescription("{$maker->name} y sus productos relacionados en orbiagro.com.ve");
+        $this->seo()->opengraph()->setUrl(route('makers.show', $id));
+
+        return view('maker.show', compact('maker'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return View
+     */
+    public function edit($id)
+    {
+        $maker = $this->makerRepo->getBySlugOrId($id);
+
+        return view('maker.edit', compact('maker'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @param  MakerRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function update($id, MakerRequest $request)
+    {
+        $maker = $this->makerRepo->update($id, $request->all());
+
+        /**
+         * @see self::create()
+         */
+        flash()->success('Fabricante Actualizado exitosamente.');
+
+        $this->updateImage($request, $maker);
+
+        return redirect()->route('makers.show', $maker->slug);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return RedirectResponse
+     */
+    public function destroy($id)
+    {
+        $this->makerRepo->delete($id);
+
+        return redirect()->route('makers.index');
+    }
 }

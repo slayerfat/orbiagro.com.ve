@@ -5,7 +5,8 @@
   background-size: 140%;
   transition: background-size 40s linear;
 }
-div.404 {
+
+.404 {
   @include make-row();
 }
 

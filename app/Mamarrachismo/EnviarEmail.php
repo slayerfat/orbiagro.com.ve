@@ -1,100 +1,114 @@
-<?php namespace App\Mamarrachismo;
+<?php namespace Orbiagro\Mamarrachismo;
 
 use Auth;
 use Mail;
-use App\User;
+use Orbiagro\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php
  */
-class EnviarEmail {
+class EnviarEmail
+{
 
-  /**
-   * la bolsa de correos a ser enviados.
-   * @var array
-   */
-  protected $emails = [];
+    /**
+    * la bolsa de correos a ser enviados.
+    * @var array
+    */
+    protected $emails = [];
 
-  // --------------------------------------------------------------------------
-  // Funciones Publicas
-  // --------------------------------------------------------------------------
+    /**
+     * @var User
+     */
+    private $users;
 
-  public function getAdministratorsEmail()
-  {
-    // se buscan los administradores
-    $models = User::admins()->get();
-    $this->iterateModels($models);
+    /**
+     * Genera una instancia de EnviarEmail
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->users = $user;
+    }
 
-    return $this->emails;
-  }
+    // --------------------------------------------------------------------------
+    // Funciones Publicas
+    // --------------------------------------------------------------------------
 
-  public function getAllUsersEmail()
-  {
-    // se buscan los administradores
-    $models = User::admins()->get();
-    $this->iterateModels($models);
+    /**
+     * @return array
+     */
+    public function getAdministratorsEmail()
+    {
+        return $this->iterateModels($this->getAdmins());
+    }
 
-    return $this->emails;
-  }
+    /**
+     * @return array
+     */
+    public function getAllUsersEmail()
+    {
+        return $this->iterateModels($this->getAdmins());
+    }
 
-  // --------------------------------------------------------------------------
-  // Funciones Privadas
-  // --------------------------------------------------------------------------
-  private function iterateModels($models)
-  {
-    // logica simplificada por ahora.
-    // ver: https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php#L27
-    foreach ($models as $model) :
-      if ($model->email){ $this->emails[] = $model->email; }
-    endforeach;
+    // --------------------------------------------------------------------------
+    // Funciones Privadas
+    // --------------------------------------------------------------------------
 
-    return $this->emails;
-  }
+    /**
+     * Devuelve una coleccion de los administradores en el sistema.
+     *
+     * @return Collection
+     */
+    private function getAdmins()
+    {
+        return $this->users->admins()->get();
+    }
 
-  // --------------------------------------------------------------------------
-  // Funciones Estaticas
-  // --------------------------------------------------------------------------
+    /**
+     * Itera los modelos y revulve un array con sus correos.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection $models
+     *
+     * @return array
+     */
+    private function iterateModels(Collection $models)
+    {
+        // logica simplificada por ahora.
+        // ver: https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php#L27
+        foreach ($models as $model) {
+            if ($model->email) {
+                $this->emails[] = $model->email;
+            }
+        }
 
-  /**
-   * version simplificada
-   *
-   * @return array
-   */
-  public static function getAdminsEmail()
-  {
-    $obj = new self;
+        return $this->emails;
+    }
 
-    return $obj->getAdministratorsEmail();
-  }
+    // --------------------------------------------------------------------------
+    // Funciones Estaticas
+    // --------------------------------------------------------------------------
 
-  /**
-   * version simplificada
-   *
-   * @return array
-   */
-  public static function getUsersEmail()
-  {
-    $obj = new self;
+    /**
+     * Se envia los correos deseados. TEP.
+     *
+     * @todo ajustarlo a este app.
+     *
+     * @param  array    $data   el array con los datos relacionados
+     * @param  array    $emails
+     *
+     * @return boolean
+     */
+    public static function enviarEmail($data, $emails)
+    {
+        // por si acaso...
+        if (!isset($data) && !isset($emails)) {
+            return null;
+        }
 
-    return $obj->getAdministratorsEmail();
-  }
-  /**
-   * Se envia los correos deseados. TEP.
-   *
-   * @todo ajustarlo a este app.
-   *
-   * @param  array    $data  el array con los datos relacionados
-   * @return boolean
-   */
-  public static function enviarEmail($data, $emails)
-  {
-    // por si acaso...
-    if (!isset($data) && !isset($emails)) return null;
-
-    Mail::send($data['vista'], $data, function($message) use ($emails, $data){
-      $message->to($emails)->subject($data['subject']);
-    });
-
-    return true;
-  }
+        return Mail::send($data['vista'], $data, function ($message) use ($emails, $data) {
+            $message->to($emails)->subject($data['subject']);
+        });
+    }
 }

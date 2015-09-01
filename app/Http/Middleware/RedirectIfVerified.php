@@ -1,23 +1,26 @@
-<?php namespace App\Http\Middleware;
+<?php namespace Orbiagro\Http\Middleware;
 
 use Closure;
 
-class RedirectIfVerified {
+/**
+ * Class RedirectIfVerified
+ * @package Orbiagro\Http\Middleware
+ */
+class RedirectIfVerified
+{
 
-  /**
-   * Handle an incoming request.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  \Closure  $next
-   * @return mixed
-   */
-  public function handle($request, Closure $next)
-  {
-    if ( $request->user && $request->user()->isVerified() )
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
     {
-      return redirect('/');
+        if ($request->user() && $request->user()->isVerified()) {
+            return redirect('/');
+        }
+        return $next($request);
     }
-    return $next($request);
-  }
-
 }

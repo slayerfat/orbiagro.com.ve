@@ -2,11 +2,11 @@ css/vendor
 css/app.css
 css/app.css.map
 js/vendor
-products
-promos
-makers
+product
+promotion
+maker
 category
-sub-category
+subcategory
 ajax-loader.gif
 sin_imagen.gif
 1500x1500.gif

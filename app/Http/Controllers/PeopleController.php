@@ -1,120 +1,127 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Orbiagro\Http\Controllers;
 
-use Auth;
-use App\Http\Requests\PeopleRequest;
-use App\Http\Controllers\Controller;
+use Orbiagro\Http\Requests\PeopleRequest;
+use Orbiagro\Models\Gender;
+use Orbiagro\Models\Nationality;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
-use Illuminate\Http\Request;
+/**
+ * Class PeopleController
+ * @package Orbiagro\Http\Controllers
+ */
+class PeopleController extends Controller
+{
 
-use App\User;
-use App\Person;
-use App\Gender;
-use App\Nationality;
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepo;
 
-class PeopleController extends Controller {
+    /**
+     * Create a new controller instance.
+     * @param UserRepositoryInterface $userRepo
+     */
+    public function __construct(UserRepositoryInterface $userRepo)
+    {
+        $this->middleware('auth');
 
-  public $person;
+        // TODO ver si se implementa o no esto
+        // $this->middleware('user.admin');
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct(Person $person)
-  {
-    $this->middleware('auth');
-    // $this->middleware('user.admin');
-    $this->person = $person;
-    $this->user = Auth::user();
-  }
+        $this->userRepo = $userRepo;
+    }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create($id)
-  {
-    if(!$user = User::where('name', $id)->first())
-      $user = User::findOrFail($id);
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param int   $id
+     *
+     * @return View|RedirectResponse
+     */
+    public function create($id)
+    {
+        $user = $this->userRepo->validateCreatePersonRequest($id);
 
-    if(!$this->user->isOwnerOrAdmin($user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->back();
-    endif;
+        if (is_null($user)) {
+            return $this->redirectToRoute('users.show', $$user->name);
+        }
 
-    $genders = Gender::lists('description', 'id');
-    $nationalities = Nationality::lists('description', 'id');
+        $person = $this->userRepo->getEmptyPersonInstance();
 
-    return view('people.create')->with([
-      'person'        => $this->person,
-      'user'          => $user,
-      'genders'       => $genders,
-      'nationalities' => $nationalities,
-    ]);
-  }
+        /**
+         * @todo Repos de estos modelos
+         */
+        $genders = Gender::lists('description', 'id');
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store($id, PeopleRequest $request)
-  {
-    $user = User::findOrFail($id);
-    $this->person->fill($request->all());
+        $nationalities = Nationality::lists('description', 'id');
 
-    $this->person->gender_id = $request->input('gender_id');
-    $this->person->nationality_id = $request->input('nationality_id');
-    $user->person()->save($this->person);
+        return view('people.create', compact(
+            'person',
+            'user',
+            'genders',
+            'nationalities'
+        ));
+    }
 
-    flash()->success('Los datos personales han sido actualizados con exito.');
-    return redirect()->action('UsersController@show', $user->name);
-  }
+    /**
+     * Store a newly created resource in storage.
+     * @param  int           $id
+     * @param  PeopleRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function store($id, PeopleRequest $request)
+    {
+        $user = $this->userRepo->storePerson($id, $request->all());
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    if(!$user = User::where('name', $id)->first())
-      $user = User::findOrFail($id);
+        flash()->success('Los datos personales han sido actualizados con exito.');
 
-    if(!$this->user->isOwnerOrAdmin($user->id)) :
-      flash()->error('Ud. no tiene permisos para esta accion.');
-      return redirect()->action('UsersController@show', $user->name);
-    endif;
+        return redirect()->route('users.show', $user->name);
+    }
 
-    $genders = Gender::lists('description', 'id');
-    $nationalities = Nationality::lists('description', 'id');
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int      $id
+     * @return View|RedirectResponse
+     */
+    public function edit($id)
+    {
+        $user = $this->userRepo->validateCreatePersonRequest($id);
 
-    return view('people.edit')->with([
-      'person'        => $user->person,
-      'user'          => $user,
-      'genders'       => $genders,
-      'nationalities' => $nationalities,
-    ]);
-  }
+        if (is_null($user)) {
+            return $this->redirectToRoute('users.show', $$user->name);
+        }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id, PeopleRequest $request)
-  {
-    $user = User::with('person')->findOrFail($id);
-    $user->person->fill($request->all());
-    $user->person->gender_id = $request->input('gender_id');
-    $user->person->nationality_id = $request->input('nationality_id');
+        $person = $user->person;
 
-    $user->person->update();
-    flash()->success('Los datos personales han sido actualizados con exito.');
-    return redirect()->action('UsersController@show', $user->name);
-  }
+        $genders = Gender::lists('description', 'id');
 
+        $nationalities = Nationality::lists('description', 'id');
+
+        return view('people.edit', compact(
+            'person',
+            'user',
+            'genders',
+            'nationalities'
+        ));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param  int           $id
+     * @param  PeopleRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function update($id, PeopleRequest $request)
+    {
+        $user = $this->userRepo->updatePerson($id, $request->all());
+
+        flash()->success('Los datos personales han sido actualizados con exito.');
+
+        return redirect()->route('users.show', $user->name);
+    }
 }

@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($product, [
                   'method' => 'PATCH',
-                  'action' => ['ProductsController@update', $product->id],
+                  'route' => ['products.update', $product->id],
                   'class'  => 'form-horizontal'
                 ]) !!}
               @include('product.forms.edit', ['textoBotonSubmit' => 'Editar Producto'])

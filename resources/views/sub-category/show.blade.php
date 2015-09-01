@@ -6,24 +6,15 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-2">
-          {!! link_to_action('SubCategoriesController@edit', 'Editar', $subCat->id, ['class' => 'btn btn-default btn-block']) !!}
+          {!! link_to_route('subCats.edit', 'Editar', $subCat->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
         <div class="col-xs-2">
-          {!! Form::open(['method' => 'DELETE', 'action' => ['SubCategoriesController@destroy', $subCat->id]]) !!}
+          {!! Form::open(['method' => 'DELETE', 'route' => ['subCats.destroy', $subCat->id]]) !!}
           {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
           {!! Form::close() !!}
         </div>
         @if($subCat->image)
-          <div class="col-xs-2">
-            <span>
-              <a href="{{ action('ImagesController@edit', $subCat->image->id) }}">
-                <button
-                  type="button"
-                  name="image-edit"
-                  class="btn btn-default">Editar Imagen</button>
-              </a>
-            </span>
-          </div>
+          @include('partials.images.image-admin-buttons', ['image' => $subCat->image])
         @endif
       </div>
     </div>

@@ -1,14 +1,14 @@
 <div class="container">
   <div class="row">
-    <ol class="breadcrumb">
+    <ol class="breadcrumb no-margin">
       <li>
-        {!! link_to_action('HomeController@index', 'Inicio') !!}
+        {!! link_to_route('home', 'Inicio') !!}
       </li>
       <li>
-        {!! link_to_action('CategoriesController@show', $subCat->category->description, $subCat->category->slug) !!}
+        {!! link_to_route('cats.show', $subCat->category->description, $subCat->category->slug) !!}
       </li>
       <li>
-        {!! link_to_action('SubCategoriesController@show', $subCat->description, $subCat->slug) !!}
+        {!! link_to_route('subCats.show', $subCat->description, $subCat->slug) !!}
       </li>
       <li class="active">
         Productos
