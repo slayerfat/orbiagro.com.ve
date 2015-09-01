@@ -2,7 +2,8 @@
 
 use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 
@@ -40,7 +41,7 @@ class ProductsProvidersController extends Controller
      * Show the form for creating a new resource.
      *
      * @param  int      $productId
-     * @return Response
+     * @return View
      */
     public function create($productId)
     {
@@ -67,7 +68,7 @@ class ProductsProvidersController extends Controller
      *
      * @param  int     $productId
      * @param  Request $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function store($productId, Request $request)
     {
@@ -83,7 +84,7 @@ class ProductsProvidersController extends Controller
         );
 
         flash()->success('El Proveedor fue asociado con exito.');
-        return redirect()->action('ProductsController@show', $product->slug);
+        return redirect()->route('products.show', $product->slug);
     }
 
     /**
@@ -91,7 +92,7 @@ class ProductsProvidersController extends Controller
      *
      * @param  int $productId
      * @param  int $providerId
-     * @return Response
+     * @return View
      */
     public function edit($productId, $providerId)
     {
@@ -113,7 +114,7 @@ class ProductsProvidersController extends Controller
      * @param  int $providerId
      * @param  Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($productId, $providerId, Request $request)
     {
@@ -133,7 +134,7 @@ class ProductsProvidersController extends Controller
 
         flash()->success('El Proveedor fue asociado con exito.');
 
-        return redirect()->action('ProductsController@show', $product->slug);
+        return redirect()->route('products.show', $product->slug);
     }
 
     /**
@@ -141,7 +142,7 @@ class ProductsProvidersController extends Controller
      *
      * @param  int $productId
      * @param  int $providerId
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($productId, $providerId)
     {

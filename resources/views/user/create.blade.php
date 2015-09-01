@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($user, [
-              'action' => 'UsersController@store',
+              'route' => 'users.store',
               'class'  => 'form-horizontal',
               ]) !!}
               @include('user.forms.body', ['textoBotonSubmit' => 'Añadir nuevo Usuario'])

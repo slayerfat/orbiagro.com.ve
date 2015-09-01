@@ -47,7 +47,7 @@
           </h3>
         @else
           <h3>
-            {!! link_to_action('ProductsController@create', 'Crea un nuevo Producto') !!}
+            {!! link_to_route('products.create', 'Crea un nuevo Producto') !!}
           </h3>
         @endif
       </div>

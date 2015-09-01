@@ -2,7 +2,7 @@
 
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Feature;
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Orbiagro\Http\Requests\FeatureRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
@@ -55,7 +55,7 @@ class FeaturesController extends Controller
      * @param  int    $id
      * @param Feature $feature
      *
-     * @return RedirectResponse|Response
+     * @return RedirectResponse|View
      */
     public function create($id, Feature $feature)
     {
@@ -116,7 +116,7 @@ class FeaturesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse|View
      */
     public function edit($id)
     {
@@ -143,7 +143,7 @@ class FeaturesController extends Controller
      * @param  int            $id
      * @param  FeatureRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, FeatureRequest $request)
     {
@@ -166,7 +166,7 @@ class FeaturesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {

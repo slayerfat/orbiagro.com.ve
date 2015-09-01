@@ -10,10 +10,10 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-2">
-          {!! link_to_action('ProvidersController@edit', 'Editar', $provider->id, ['class' => 'btn btn-default btn-block']) !!}
+          {!! link_to_route('providers.edit', 'Editar', $provider->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
         <div class="col-xs-2">
-          {!! Form::open(['method' => 'DELETE', 'action' => ['ProvidersController@destroy', $provider->id]]) !!}
+          {!! Form::open(['method' => 'DELETE', 'route' => ['providers.destroy', $provider->id]]) !!}
           {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
           {!! Form::close() !!}
         </div>

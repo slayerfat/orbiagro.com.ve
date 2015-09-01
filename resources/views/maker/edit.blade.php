@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($maker, [
               'method' => 'PATCH',
-              'action' => ['MakersController@update', $maker->id],
+              'route' => ['makers.update', $maker->id],
               'class'  => 'form-horizontal',
               'files'  => true
               ]) !!}

@@ -1,6 +1,5 @@
 <?php namespace Orbiagro\Repositories\Interfaces;
 
-use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Models\Product;
 
 interface ProductRepositoryInterface
@@ -15,13 +14,13 @@ interface ProductRepositoryInterface
 
     /**
      * @param  mixed $id
-     * @return Model
+     * @return Product
      */
     public function getBySlugOrId($id);
 
     /**
      * @param  mixed $id
-     * @return Model
+     * @return Product
      */
     public function getById($id);
 

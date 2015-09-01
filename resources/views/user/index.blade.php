@@ -87,7 +87,7 @@
   <script src="{!! asset('js/show/bootstrap-table.js') !!}"></script>
   <script type="text/javascript">
     initBootstrapTable(
-      "{!! action('UsersController@show', 'no-data') !!}",
+      "{!! route('users.show', 'no-data') !!}",
       "{!! action('UsersController@showTrashed', 'no-data') !!}"
     )
   </script>

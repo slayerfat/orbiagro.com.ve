@@ -1,7 +1,8 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Orbiagro\Http\Requests;
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Http\Requests\UserRequest;
 use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
@@ -36,7 +37,7 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return View
      */
     public function index()
     {
@@ -49,7 +50,7 @@ class UsersController extends Controller
      * Display a listing of the resource.
      *
      * @param $id
-     * @return Response
+     * @return View
      */
     public function products($id)
     {
@@ -64,7 +65,7 @@ class UsersController extends Controller
      * Display a listing of the resource.
      *
      * @param  int    $id
-     * @return Response
+     * @return View|RedirectResponse
      */
     public function productVisits($id)
     {
@@ -94,7 +95,7 @@ class UsersController extends Controller
     /**
      * Show the form for creating a new resource.
      * @param ProfileRepositoryInterface $profileRepo
-     * @return Response
+     * @return View
      */
     public function create(ProfileRepositoryInterface $profileRepo)
     {
@@ -109,7 +110,7 @@ class UsersController extends Controller
      * Store a newly created resource in storage.
      * @param UserRequest $request
      * @param ProfileRepositoryInterface $profileRepo
-     * @return Response
+     * @return RedirectResponse
      */
     public function store(UserRequest $request, ProfileRepositoryInterface $profileRepo)
     {
@@ -131,7 +132,7 @@ class UsersController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function show($id)
     {
@@ -146,7 +147,7 @@ class UsersController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function showTrashed($id)
     {
@@ -161,7 +162,7 @@ class UsersController extends Controller
      * Show the form for editing the specified resource.
      * @param  int $id
      * @param ProfileRepositoryInterface $profileRepo
-     * @return Response
+     * @return View
      */
     public function edit($id, ProfileRepositoryInterface $profileRepo)
     {
@@ -183,7 +184,7 @@ class UsersController extends Controller
      * @param  int         $id
      * @param  UserRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, UserRequest $request)
     {
@@ -212,7 +213,7 @@ class UsersController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
@@ -229,7 +230,7 @@ class UsersController extends Controller
      * Elimina forzadamente de la base de datos.
      *
      * @param  int $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function forceDestroy($id)
     {
@@ -246,7 +247,7 @@ class UsersController extends Controller
      * UX del usuario que vaya a eliminar su cuenta.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function preDestroy($id)
     {
@@ -259,7 +260,7 @@ class UsersController extends Controller
      * Restores the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function restore($id)
     {

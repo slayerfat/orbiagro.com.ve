@@ -99,8 +99,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 
     /**
      * @param $id
-     *
-     * @return bool|null
+     * @return bool|Model
      */
     public function delete($id)
     {

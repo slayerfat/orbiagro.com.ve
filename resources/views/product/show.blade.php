@@ -6,10 +6,10 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-2">
-          {!! link_to_action('ProductsController@edit', 'Editar', $product->id, ['class' => 'btn btn-default btn-block']) !!}
+          {!! link_to_route('products.edit', 'Editar', $product->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
         <div class="col-xs-2">
-          {!! Form::open(['method' => 'DELETE', 'action' => ['ProductsController@destroy', $product->id]]) !!}
+          {!! Form::open(['method' => 'DELETE', 'route' => ['products.destroy', $product->id]]) !!}
           {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
           {!! Form::close() !!}
         </div>
@@ -24,7 +24,7 @@
       <div class="col-md-7">
         <h1>{{ $product->title }}</h1>
         <p>
-          Por: {!! link_to_action('MakersController@show', $product->maker->name, $product->maker->slug) !!}
+          Por: {!! link_to_route('makers.show', $product->maker->name, $product->maker->slug) !!}
         </p>
         <p id="product-description">
           {!! $product->description !!}
@@ -60,7 +60,7 @@
           @endunless
         </p>
         <p>
-          {!! link_to_action('SubCategoriesController@show', 'Producto en el Rubro '.$product->subCategory->description,$product->subCategory->slug ) !!}
+          {!! link_to_route('subCats.show', 'Producto en el Rubro '.$product->subCategory->description,$product->subCategory->slug ) !!}
         </p>
       </div>
     </div>

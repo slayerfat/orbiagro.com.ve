@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($provider, [
               'method' => 'PATCH',
-              'action' => ['ProvidersController@update', $provider->id],
+              'route' => ['providers.update', $provider->id],
               'class'  => 'form-horizontal'
               ]) !!}
               @include('provider.forms.body', ['textoBotonSubmit' => 'Actualizar Fabricante'])

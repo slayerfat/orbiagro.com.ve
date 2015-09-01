@@ -8,7 +8,7 @@
   @include('promotion.addons.4-4-4-gallerie')
 
   @if($subCategory)
-    @include('sub-category.addons.relatedProducts', [$subCategory, 'title' => link_to_action('SubCategoriesController@show', $subCategory->description.' y sus productos en Orbiagro', $subCategory->slug)])
+    @include('sub-category.addons.relatedProducts', [$subCategory, 'title' => link_to_route('subCats.show', $subCategory->description.' y sus productos en Orbiagro', $subCategory->slug)])
   @endif
 
   @include('visit.addons.relatedProducts')

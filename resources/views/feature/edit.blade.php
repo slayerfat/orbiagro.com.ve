@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($feature, [
               'method' => 'PATCH',
-              'action' => ['FeaturesController@update', $feature->id],
+              'route' => ['products.features.update', $feature->id],
               'class' => 'form-horizontal',
               'files' => true,
               ]) !!}

@@ -61,7 +61,7 @@ class HomeController extends Controller
 
         $promotions = $this->promoRepo->getHomeRelated();
 
-        $this->seo()->opengraph()->setUrl(action('HomeController@index'));
+        $this->seo()->opengraph()->setUrl(route('home'));
 
         return view('home.index', compact('subCategory', 'promotions', 'cats'));
     }

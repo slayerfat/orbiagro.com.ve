@@ -92,6 +92,6 @@
   {{-- añade iconos en la tabla con actividades genericas --}}
   <script src="{!! asset('js/show/bootstrap-table.js') !!}"></script>
   <script type="text/javascript">
-    initBootstrapTable("{!! action('ProvidersController@show', 'no-data') !!}")
+    initBootstrapTable("{!! route('providers.show', 'no-data') !!}")
   </script>
 @stop

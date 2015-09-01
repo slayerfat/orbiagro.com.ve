@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($maker, [
-              'action' => 'MakersController@store',
+              'route'  => ['makers.store',
               'class'  => 'form-horizontal',
               'files'  => true
               ]) !!}
