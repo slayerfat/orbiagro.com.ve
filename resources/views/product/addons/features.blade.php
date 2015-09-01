@@ -14,7 +14,7 @@
               {{ $feature->title }}
             </a>
             @if($isUserValid)
-              {!! link_to_route('features.edit', '| Actualizar', $feature->id) !!}
+              {!! link_to_route('products.features.edit', '| Actualizar', $feature->id) !!}
             @endif
             @if($isUserValid)
             <a
@@ -24,7 +24,7 @@
             </a>
             {!! Form::open([
               'method' => 'DELETE',
-              'action' => ['FeaturesController@destroy', $feature->id],
+              'route' => ['products.features.destroy', $feature->id],
               'class' => 'hidden',
               'id' => "delete-feature-{$feature->id}"]) !!}
             {!! Form::close() !!}
@@ -70,13 +70,13 @@
       </div>
     @endforeach
     @if($isUserValid && $product->features->count() < 5)
-      {!! link_to_route('features.create', 'Crear nuevo Distintivo', $product->id) !!}
+      {!! link_to_route('products.features.create', 'Crear nuevo Distintivo', $product->id) !!}
     @endif
   </div>
 @else
   @if(Auth::user())
     @if(Auth::user()->isOwnerOrAdmin($product->user_id))
-      {!! link_to_route('features.create', 'Crear nuevo Distintivo', $product->id) !!}
+      {!! link_to_route('products.features.create', 'Crear nuevo Distintivo', $product->id) !!}
     @endif
   @else
     Sin información detallada

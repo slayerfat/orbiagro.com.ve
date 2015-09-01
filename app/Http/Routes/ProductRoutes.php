@@ -35,7 +35,7 @@ class ProductRoutes extends Routes
             ],
             'rtDetails' => [
                 'uses'     => 'FeaturesController',
-                'as'       => 'features',
+                'as'       => 'products.features',
                 'resource' => '{features}',
                 'ignore'   => ['index', 'show', 'create', 'store']
             ]

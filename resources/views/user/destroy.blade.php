@@ -13,7 +13,7 @@
         <h1>UX</h1>
         <h2>DESEA ELIMINAR CUENTA??</h2>
         <p>
-          {!! Form::open(['method' => 'DELETE', 'action' => ['UsersController@destroy', $user->id]]) !!}
+          {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id]]) !!}
           {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
           {!! Form::close() !!}
         </p>

@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::open([
-              'action' => ['ProductsProvidersController@store', $product->id],
+              'route' => ['products.providers.store', $product->id],
               'class'  => 'form-horizontal'
               ]) !!}
               @include('product.provider.forms.body', ['textoBotonSubmit' => 'Añadir Proveedor'])

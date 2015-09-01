@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($person, [
               'method' => 'PATCH',
-              'action' => ['PeopleController@update', $user->id],
+              'route' => ['users.people.update', $user->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('people.forms.body', ['textoBotonSubmit' => 'Actualizar Información Personal'])

@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($person, [
-              'action' => ['PeopleController@store', $user->id],
+              'route' => ['users.people.store', $user->id],
               'class' => 'form-horizontal',
               ]) !!}
               @include('people.forms.body', ['textoBotonSubmit' => 'Añadir Información Personal'])

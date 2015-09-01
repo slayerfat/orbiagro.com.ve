@@ -67,7 +67,7 @@ switch ($active) {
         </li>
         {!! Form::open([
           'method' => 'POST',
-          'action' => ['UsersController@restore', $user->id],
+          'route' => ['<users class=""></users>restore', $user->id],
           'class' => 'hidden',
           'id' => "restore-user-{$user->id}"]) !!}
         {!! Form::close() !!}
@@ -76,7 +76,7 @@ switch ($active) {
         </li>
         {!! Form::open([
           'method' => 'DELETE',
-          'action' => ['UsersController@forceDestroy', $user->id],
+          'route' => ['users.destroy.forced', $user->id],
           'class' => 'hidden',
           'id' => "forceDestroy-user-{$user->id}"]) !!}
         {!! Form::close() !!}

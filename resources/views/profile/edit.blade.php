@@ -14,7 +14,7 @@
             @include('errors.bag')
             {!! Form::model($profile, [
               'method' => 'PATCH',
-              'action' => ['ProfilesController@update', $profile->id],
+              'route' => ['profiles.@update', $profile->id],
               'class'  => 'form-horizontal',
               ]) !!}
               @include('profile.forms.body', ['textoBotonSubmit' => 'Actualizar Perfil'])

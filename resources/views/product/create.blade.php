@@ -16,7 +16,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($product, [
-              'action' => 'ProductsController@store',
+              'route' => 'products.store',
               'class' => 'form-horizontal',
               'files' => true
               ]) !!}

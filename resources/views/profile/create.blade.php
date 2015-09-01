@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($profile, [
-              'action' => 'ProfilesController@store',
+              'route' => 'profiles.store',
               'class'  => 'form-horizontal',
               ]) !!}
               @include('profile.forms.body', ['textoBotonSubmit' => 'Añadir nuevo Perfil'])
