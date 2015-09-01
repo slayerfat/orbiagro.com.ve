@@ -23,11 +23,12 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      */
     public function getSingleWithTrashed($id)
     {
-        $user = User::with('person', 'products', 'profile')
-                    ->where('name', $id)
-                    ->orWhere('id', $id)
-                    ->withTrashed()
-                    ->firstOrFail();
+        $user = $this->model
+            ->with('person', 'products', 'profile')
+            ->where('name', $id)
+            ->orWhere('id', $id)
+            ->withTrashed()
+            ->firstOrFail();
 
         return $user;
     }
@@ -52,7 +53,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      */
     public function getWithProductVisits($id)
     {
-        $user = User::with(['visits' => function ($query) {
+        $user = $this->model->with(['visits' => function ($query) {
             $query->where('visitable_type', Product::class)
                   ->orderBy('updated_at', 'desc');
         }])->where('name', $id)->orWhere('id', $id)->firstOrFail();
