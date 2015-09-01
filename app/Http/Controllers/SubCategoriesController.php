@@ -1,7 +1,8 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Orbiagro\Http\Requests;
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Http\Requests\SubCategoryRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -45,7 +46,7 @@ class SubCategoriesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return View
      */
     public function index()
     {
@@ -64,7 +65,7 @@ class SubCategoriesController extends Controller
      * Display a listing of the resource.
      *
      * @param  int $id
-     * @return Response
+     * @return View
      */
     public function indexByCategory($id)
     {
@@ -82,7 +83,7 @@ class SubCategoriesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
     public function create()
     {
@@ -97,7 +98,7 @@ class SubCategoriesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  SubCategoryRequest $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function store(SubCategoryRequest $request)
     {
@@ -124,7 +125,7 @@ class SubCategoriesController extends Controller
      *
      * @param  int  $id
      * @param  VisitsService $visits
-     * @return Response
+     * @return View
      */
     public function show($id, VisitsService $visits)
     {
@@ -141,7 +142,7 @@ class SubCategoriesController extends Controller
         );
 
         // $this->seo()->setKeywords(); taxonomias
-        $this->seo()->opengraph()->setUrl(action('SubCategoriesController@show', $id));
+        $this->seo()->opengraph()->setUrl(route('subCats.show', $id));
 
         return view('sub-category.show', compact('products', 'subCat', 'subCats'));
     }
@@ -150,7 +151,7 @@ class SubCategoriesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function edit($id)
     {
@@ -167,7 +168,7 @@ class SubCategoriesController extends Controller
      * @param  int                $id
      * @param  SubCategoryRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, SubCategoryRequest $request)
     {
@@ -191,13 +192,13 @@ class SubCategoriesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
         $this->subCatRepo->delete($id);
 
-        return redirect()->action('SubCategoriesController@index');
+        return redirect()->route('subCats.index');
     }
 
     /**

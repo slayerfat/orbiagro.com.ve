@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Http\Requests\ProviderRequest;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
 
 class ProvidersController extends Controller
@@ -26,7 +26,7 @@ class ProvidersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return View
      */
     public function index()
     {
@@ -38,7 +38,7 @@ class ProvidersController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
     public function create()
     {
@@ -66,7 +66,7 @@ class ProvidersController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function show($id)
     {
@@ -79,7 +79,7 @@ class ProvidersController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function edit($id)
     {

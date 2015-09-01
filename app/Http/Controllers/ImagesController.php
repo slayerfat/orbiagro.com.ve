@@ -3,7 +3,8 @@
 use LogicException;
 use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
 
@@ -30,7 +31,7 @@ class ImagesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function edit($id)
     {
@@ -43,7 +44,7 @@ class ImagesController extends Controller
      * Update the specified resource in storage.
      * @param  int $id
      * @param  Request $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, Request $request)
     {
@@ -63,7 +64,7 @@ class ImagesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {

@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Http\Requests\MakerRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
@@ -33,7 +34,7 @@ class MakersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function index()
     {
@@ -49,7 +50,7 @@ class MakersController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
     public function create()
     {
@@ -63,7 +64,7 @@ class MakersController extends Controller
      *
      * @param  MakerRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function store(MakerRequest $request)
     {
@@ -78,14 +79,14 @@ class MakersController extends Controller
 
         $this->createImage($request, $maker);
 
-        return redirect()->action('MakersController@show', $maker->slug);
+        return redirect()->route('makers.show', $maker->slug);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int $id
-     * @return Response
+     * @return View
      */
     public function show($id)
     {
@@ -93,7 +94,7 @@ class MakersController extends Controller
 
         $this->seo()->setTitle("{$maker->name} y sus articulos en orbiagro.com.ve");
         $this->seo()->setDescription("{$maker->name} y sus productos relacionados en orbiagro.com.ve");
-        $this->seo()->opengraph()->setUrl(action('MakersController@show', $id));
+        $this->seo()->opengraph()->setUrl(route('makers.show', $id));
 
         return view('maker.show', compact('maker'));
     }
@@ -102,7 +103,7 @@ class MakersController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     * @return Response
+     * @return View
      */
     public function edit($id)
     {
@@ -117,7 +118,7 @@ class MakersController extends Controller
      * @param  int $id
      * @param  MakerRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, MakerRequest $request)
     {
@@ -130,19 +131,19 @@ class MakersController extends Controller
 
         $this->updateImage($request, $maker);
 
-        return redirect()->action('MakersController@show', $maker->slug);
+        return redirect()->route('makers.show', $maker->slug);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
         $this->makerRepo->delete($id);
 
-        return redirect()->action('MakersController@index');
+        return redirect()->route('makers.index');
     }
 }

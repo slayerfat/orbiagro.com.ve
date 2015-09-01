@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Http\Requests\CategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -37,7 +38,7 @@ class CategoriesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return View
      */
     public function index()
     {
@@ -55,7 +56,7 @@ class CategoriesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return view
      */
     public function create()
     {
@@ -69,7 +70,7 @@ class CategoriesController extends Controller
      *
      * @param  CategoryRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function store(CategoryRequest $request)
     {
@@ -89,7 +90,7 @@ class CategoriesController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function show($id)
     {
@@ -108,7 +109,7 @@ class CategoriesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function edit($id)
     {
@@ -123,7 +124,7 @@ class CategoriesController extends Controller
      * @param  int             $id
      * @param  CategoryRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, CategoryRequest $request)
     {
@@ -143,7 +144,7 @@ class CategoriesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {

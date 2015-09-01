@@ -2,7 +2,8 @@
 
 use Orbiagro\Http\Requests;
 use Illuminate\Http\Request;
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
 
 class ProfilesController extends Controller
@@ -27,7 +28,7 @@ class ProfilesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return View
      */
     public function index()
     {
@@ -39,7 +40,7 @@ class ProfilesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
     public function create()
     {
@@ -52,7 +53,7 @@ class ProfilesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -71,7 +72,7 @@ class ProfilesController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function show($id)
     {
@@ -84,7 +85,7 @@ class ProfilesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return View
      */
     public function edit($id)
     {
@@ -98,7 +99,7 @@ class ProfilesController extends Controller
      *
      * @param  int      $id
      * @param  Request  $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, Request $request)
     {
@@ -117,7 +118,7 @@ class ProfilesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {

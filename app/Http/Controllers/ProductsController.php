@@ -1,7 +1,8 @@
 <?php namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Http\Requests\ProductRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -63,7 +64,7 @@ class ProductsController extends Controller
      * Display a listing of the resource.
      *
      * @param  VisitsService $visits
-     * @return Response
+     * @return View
      */
     public function index(VisitsService $visits)
     {
@@ -93,7 +94,7 @@ class ProductsController extends Controller
      * @param  int           $categoryId
      * @param  VisitsService $visits
      *
-     * @return Response
+     * @return View
      */
     public function indexByCategory($categoryId, VisitsService $visits)
     {
@@ -106,7 +107,7 @@ class ProductsController extends Controller
      * @param  int           $subCategoryId
      * @param  VisitsService $visits
      *
-     * @return Response
+     * @return View
      */
     public function indexBySubCategory($subCategoryId, VisitsService $visits)
     {
@@ -120,7 +121,7 @@ class ProductsController extends Controller
      * @param  int           $parentId
      * @param  VisitsService $visits
      *
-     * @return Response
+     * @return View
      */
     private function indexByParent($parent, $parentId, VisitsService $visits)
     {
@@ -167,7 +168,7 @@ class ProductsController extends Controller
     /**
      * Show the form for creating a new resource.
      * @param MakerRepositoryInterface $maker
-     * @return Response
+     * @return View|RedirectResponse
      */
     public function create(MakerRepositoryInterface $maker)
     {
@@ -190,7 +191,7 @@ class ProductsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  ProductRequest $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function store(ProductRequest $request)
     {
@@ -200,7 +201,7 @@ class ProductsController extends Controller
         // se iteran las imagenes y se guardan los modelos
         $this->createImages($request, $product);
 
-        return redirect()->action('ProductsController@show', $product->slug);
+        return redirect()->route('products.show', $product->slug);
     }
 
     /**
@@ -208,7 +209,7 @@ class ProductsController extends Controller
      *
      * @param  int           $id
      * @param  VisitsService $visits
-     * @return Response
+     * @return View
      */
     public function show($id, VisitsService $visits)
     {
@@ -229,6 +230,7 @@ class ProductsController extends Controller
             .', consigue mas en '.$product->subCategory->category->description
             .' dentro de orbiagro.com.ve'
         );
+
         $this->seo()->opengraph()->setUrl(route('products.show', $id));
 
         return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
@@ -238,7 +240,7 @@ class ProductsController extends Controller
      * Show the form for editing the specified resource.
      * @param  int $id
      * @param MakerRepositoryInterface $maker
-     * @return Response
+     * @return View
      */
     public function edit($id, MakerRepositoryInterface $maker)
     {
@@ -260,21 +262,21 @@ class ProductsController extends Controller
      *
      * @param  int            $id
      * @param  ProductRequest $request
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, ProductRequest $request)
     {
         $product = $this->productRepo->update($id, $request->all());
 
         flash('El Producto ha sido actualizado con exito.');
-        return redirect()->action('ProductsController@show', $product->slug);
+        return redirect()->route('products.show', $product->slug);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
@@ -291,7 +293,7 @@ class ProductsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function forceDestroy($id)
     {
@@ -308,7 +310,7 @@ class ProductsController extends Controller
      * Restores the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function restore($id)
     {
@@ -333,7 +335,7 @@ class ProductsController extends Controller
      * @param  string $severity
      * @param  string $route
      *
-     * @return Response
+     * @return RedirectResponse
      */
     protected function destroyDeleteRestorePrototype(
         $product,
@@ -360,7 +362,8 @@ class ProductsController extends Controller
      *
      * @param  int     $id
      * @param  Request $request
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      */
     public function heroDetails($id, Request $request)
     {
@@ -374,7 +377,7 @@ class ProductsController extends Controller
             abort(403);
         }
 
-        $product->heroDetails = $request->heroDetails;
+        $product->heroDetails = $request->input('heroDetails');
 
         $product->save();
 

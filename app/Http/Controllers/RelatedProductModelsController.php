@@ -4,12 +4,13 @@ use Orbiagro\Http\Requests\CharacteristicRequest;
 use Orbiagro\Http\Requests\MechanicalInfoRequest;
 use Orbiagro\Http\Requests\NutritionalRequest;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\View\View as Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Auth\Guard;
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Models\Characteristic;
 use Orbiagro\Models\MechanicalInfo;
 use Orbiagro\Models\Nutritional;
+use Illuminate\View\View;
 use Orbiagro\Models\Product;
 
 class RelatedProductModelsController extends Controller
@@ -29,7 +30,7 @@ class RelatedProductModelsController extends Controller
      * @param  int $id
      * @param MechanicalInfo $mech
      * @param  Guard $auth
-     * @return Response
+     * @return RedirectResponse
      */
     public function createMechInfo($id, MechanicalInfo $mech, Guard $auth)
     {
@@ -41,7 +42,7 @@ class RelatedProductModelsController extends Controller
      * @param  Nutritional $nuts  an instance of Deez Nuts.
      * @param  Guard       $auth
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function createNutritional($id, Nutritional $nuts, Guard $auth)
     {
@@ -53,7 +54,7 @@ class RelatedProductModelsController extends Controller
      * @param  Characteristic $char
      * @param  Guard          $auth
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function createCharacteristic($id, Characteristic $char, Guard $auth)
     {
@@ -65,7 +66,7 @@ class RelatedProductModelsController extends Controller
      * @param  Model    $model
      * @param  Guard    $auth
      *
-     * @return Response
+     * @return RedirectResponse
      */
     protected function createPrototype($id, Model $model, Guard $auth)
     {
@@ -110,7 +111,7 @@ class RelatedProductModelsController extends Controller
      * @param  Characteristic        $char
      * @param  CharacteristicRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function storeCharacteristic($id, Characteristic $char, CharacteristicRequest $request)
     {
@@ -122,7 +123,7 @@ class RelatedProductModelsController extends Controller
      * @param  MechanicalInfo        $mech
      * @param  MechanicalInfoRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function storeMechInfo($id, MechanicalInfo $mech, MechanicalInfoRequest $request)
     {
@@ -134,7 +135,7 @@ class RelatedProductModelsController extends Controller
      * @param  Nutritional        $nuts    Instance of DEEZ NUTS...
      * @param  NutritionalRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function storeNutritional($id, Nutritional $nuts, NutritionalRequest $request)
     {
@@ -146,7 +147,7 @@ class RelatedProductModelsController extends Controller
      * @param  Model    $model
      * @param  Request  $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     protected function storePrototype($id, Model $model, Request $request)
     {
@@ -167,7 +168,7 @@ class RelatedProductModelsController extends Controller
         $product->$relation()->save($model);
 
         flash('Recurso asociado creado exitosamente.');
-        return redirect()->action('ProductsController@show', $product->slug);
+        return redirect()->route('products.show', $product->slug);
     }
 
     /**
@@ -175,7 +176,7 @@ class RelatedProductModelsController extends Controller
      * @param  Characteristic $char
      * @param  Guard          $auth
      *
-     * @return Response
+     * @return View
      */
     public function editCharacteristic($id, Characteristic $char, Guard $auth)
     {
@@ -187,7 +188,7 @@ class RelatedProductModelsController extends Controller
      * @param  MechanicalInfo  $mech
      * @param  Guard           $auth
      *
-     * @return Response
+     * @return View
      */
     public function editMechInfo($id, MechanicalInfo $mech, Guard $auth)
     {
@@ -199,7 +200,7 @@ class RelatedProductModelsController extends Controller
      * @param  Nutritional $nuts Instance of DEEZ NUTS...
      * @param  Guard       $auth
      *
-     * @return Response
+     * @return View
      */
     public function editNutritional($id, Nutritional $nuts, Guard $auth)
     {
@@ -212,7 +213,7 @@ class RelatedProductModelsController extends Controller
      * @param  Model $model
      * @param  Guard $auth
      *
-     * @return Response
+     * @return View
      */
     protected function editPrototype($id, Model $model, Guard $auth)
     {
@@ -236,7 +237,7 @@ class RelatedProductModelsController extends Controller
      * @param  Characteristic        $char
      * @param  CharacteristicRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function updateCharacteristic($id, Characteristic $char, CharacteristicRequest $request)
     {
@@ -248,7 +249,7 @@ class RelatedProductModelsController extends Controller
      * @param  MechanicalInfo        $mech
      * @param  MechanicalInfoRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function updateMechInfo($id, MechanicalInfo $mech, MechanicalInfoRequest $request)
     {
@@ -260,7 +261,7 @@ class RelatedProductModelsController extends Controller
      * @param  Nutritional        $nuts Instance of DEEZ NUTS...
      * @param  NutritionalRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function updateNutritional($id, Nutritional $nuts, NutritionalRequest $request)
     {
@@ -272,7 +273,7 @@ class RelatedProductModelsController extends Controller
      * @param  Model   $model
      * @param  Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function updatePrototype($id, Model $model, Request $request)
     {
@@ -281,14 +282,14 @@ class RelatedProductModelsController extends Controller
         $model->update($request->all());
 
         flash('Recurso Actualizado exitosamente.');
-        return redirect()->action('ProductsController@show', $model->product->slug);
+        return redirect()->route('products.show', $model->product->slug);
     }
 
     /**
      * Regresa el nombre del metodo relacionado con el modelo.
      *
      * @param Model $model
-     * @return string|void
+     * @return string
      */
     protected function getRelatedMethod(Model $model)
     {
@@ -303,7 +304,7 @@ class RelatedProductModelsController extends Controller
                 return 'characteristics';
 
             default:
-                return abort(500, 'No se encontro modelo relacionado');
+                abort(500, 'No se encontro modelo relacionado');
         }
     }
 
@@ -337,7 +338,7 @@ class RelatedProductModelsController extends Controller
                 ];
 
             default:
-                return abort(500, 'No se pudieron generar variables');
+                abort(500, 'No se pudieron generar variables');
         }
     }
 }

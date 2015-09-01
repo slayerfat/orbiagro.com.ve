@@ -3,7 +3,8 @@
 use Orbiagro\Http\Requests\PeopleRequest;
 use Orbiagro\Models\Gender;
 use Orbiagro\Models\Nationality;
-use Illuminate\View\View as Response;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 /**
@@ -37,14 +38,14 @@ class PeopleController extends Controller
      *
      * @param int   $id
      *
-     * @return Response
+     * @return View|RedirectResponse
      */
     public function create($id)
     {
         $user = $this->userRepo->validateCreatePersonRequest($id);
 
         if (is_null($user)) {
-            return $this->redirectToRoute('usuarios.show', $$user->name);
+            return $this->redirectToRoute('users.show', $$user->name);
         }
 
         $person = $this->userRepo->getEmptyPersonInstance();
@@ -69,7 +70,7 @@ class PeopleController extends Controller
      * @param  int           $id
      * @param  PeopleRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function store($id, PeopleRequest $request)
     {
@@ -77,21 +78,21 @@ class PeopleController extends Controller
 
         flash()->success('Los datos personales han sido actualizados con exito.');
 
-        return redirect()->action('UsersController@show', $user->name);
+        return redirect()->route('users.show', $user->name);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int      $id
-     * @return Response
+     * @return View|RedirectResponse
      */
     public function edit($id)
     {
         $user = $this->userRepo->validateCreatePersonRequest($id);
 
         if (is_null($user)) {
-            return $this->redirectToRoute('usuarios.show', $$user->name);
+            return $this->redirectToRoute('users.show', $$user->name);
         }
 
         $person = $user->person;
@@ -113,7 +114,7 @@ class PeopleController extends Controller
      * @param  int           $id
      * @param  PeopleRequest $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function update($id, PeopleRequest $request)
     {
@@ -121,6 +122,6 @@ class PeopleController extends Controller
 
         flash()->success('Los datos personales han sido actualizados con exito.');
 
-        return redirect()->action('UsersController@show', $user->name);
+        return redirect()->route('users.show', $user->name);
     }
 }

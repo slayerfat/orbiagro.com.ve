@@ -44,8 +44,7 @@ interface CategoryRepositoryInterface
 
     /**
      * @param $id
-     *
-     * @return bool|null
+     * @return bool|Model
      */
     public function delete($id);
 
