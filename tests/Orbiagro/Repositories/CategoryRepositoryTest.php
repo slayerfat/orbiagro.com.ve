@@ -1,5 +1,7 @@
 <?php namespace Tests\Orbiagro\Repositories;
 
+use Exception;
+use Illuminate\Database\QueryException;
 use Mockery;
 use Tests\TestCase;
 use Orbiagro\Models\Category;
@@ -42,8 +44,6 @@ class CategoryRepositoryTest extends TestCase
 
     public function testGetEmptyInstance()
     {
-        $mock = Mockery::mock(Category::class);
-
         $catRepo = Mockery::mock(CategoryRepository::class)
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
@@ -160,27 +160,6 @@ class CategoryRepositoryTest extends TestCase
         $this->assertSame(
             $mock,
             $mockRepo->update(1, [])
-        );
-    }
-
-    public function testDelete()
-    {
-        $mock = Mockery::mock(Category::class)
-                       ->makePartial();
-
-        $mock->shouldReceive('findOrFail')
-             ->once()
-             ->andReturnSelf();
-
-        $mock->shouldReceive('delete')
-             ->once()
-             ->andReturn('mocked');
-
-        $mockRepo = new CategoryRepository($mock);
-
-        $this->assertEquals(
-            'mocked',
-            $mockRepo->delete(1)
         );
     }
 
