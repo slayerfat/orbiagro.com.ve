@@ -104,9 +104,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
      */
     public function delete($id)
     {
-        return $this->model
-            ->findOrFail($id)
-            ->delete();
+        return $this->executeDelete($id, 'Categoria');
     }
 
     /**

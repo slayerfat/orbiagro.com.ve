@@ -147,10 +147,12 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $this->cat->delete($id);
+        $deleted = $this->cat->delete($id);
 
-        flash()->success('La Categoria ha sido eliminada correctamente.');
+        if ($deleted === true) {
+            return redirect()->route('cats.index');
+        }
 
-        return redirect()->route('cats.index');
+        return redirect()->route('cats.show', $deleted->slug);
     }
 }

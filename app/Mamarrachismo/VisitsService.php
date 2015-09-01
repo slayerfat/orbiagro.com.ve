@@ -193,7 +193,7 @@ class VisitsService
      */
     private function createVisitModel(array $array, $name, $model)
     {
-        if (gettype($model) !== 'string') {
+        if (gettype($model) !== 'string' && gettype($model) !== 'object') {
             throw new Exception('El modelo especificado no es del tipo adecuado');
         }
 
