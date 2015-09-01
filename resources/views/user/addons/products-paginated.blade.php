@@ -3,7 +3,7 @@
       <div class="row">
         <div class="col-xs-12">
           <h1>
-            {!! link_to_action('UsersController@show', "Productos relacionados con {$user->name}", $user->name) !!}
+            {!! link_to_route('users.show', "Productos relacionados con {$user->name}", $user->name) !!}
           </h1>
         </div>
       </div>
@@ -12,7 +12,7 @@
         <?php $products = collect($products) ?>
         <div class="row">
           <div class="col-sm-12">
-            <h1>{!! link_to_action('SubCategoriesController@show', $products[0]->subCategory->description, $products[0]->subCategory->slug) !!}</h1>
+            <h1>{!! link_to_route('subCats.show', $products[0]->subCategory->description, $products[0]->subCategory->slug) !!}</h1>
             <h2><em>{!! sizeof($products) !!} Productos</em></h2>
           </div>
         </div>

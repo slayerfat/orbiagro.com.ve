@@ -1,7 +1,7 @@
 @if(isset($image))
   <div class="col-xs-2">
   <span>
-    <a href="{{ action('ImagesController@edit', $image->id) }}">
+    <a href="{{ route('images.edit', $image->id) }}">
       <button
         type="button"
         name="image-edit"

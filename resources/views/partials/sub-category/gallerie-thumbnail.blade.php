@@ -10,7 +10,7 @@
       @endif
       <div class="caption" data-related-subCat="{{ $subCat->id }}">
         <h3>
-          {!! link_to_action('SubCategoriesController@show', $subCat->description, $subCat->slug) !!}
+          {!! link_to_route('subCats.show', $subCat->description, $subCat->slug) !!}
         </h3>
       </div>
     </div>

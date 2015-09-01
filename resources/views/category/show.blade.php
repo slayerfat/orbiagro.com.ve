@@ -6,10 +6,10 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-2">
-          {!! link_to_action('CategoriesController@edit', 'Editar', $cat->id, ['class' => 'btn btn-default btn-block']) !!}
+          {!! link_to_route('cats.edit', 'Editar', $cat->id, ['class' => 'btn btn-default btn-block']) !!}
         </div>
         <div class="col-xs-2">
-          {!! Form::open(['method' => 'DELETE', 'action' => ['CategoriesController@destroy', $cat->id]]) !!}
+          {!! Form::open(['method' => 'DELETE', 'route' => ['cats.destroy', $cat->id]]) !!}
           {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
           {!! Form::close() !!}
         </div>

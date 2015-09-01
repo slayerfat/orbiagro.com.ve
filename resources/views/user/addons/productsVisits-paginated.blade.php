@@ -13,7 +13,7 @@
         <div class="col-xs-12">
           <h1>
             Parece ser que este usuario no ha visitado ningun
-            {!! link_to_action('ProductsController@index', 'Producto') !!}!
+            {!! link_to_route('products.index', 'Producto') !!}!
           </h1>
         </div>
       </div>

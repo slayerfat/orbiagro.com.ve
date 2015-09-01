@@ -31,7 +31,7 @@
             <tbody>
               <tr>
                 <td>
-                  {!! link_to_action('ProvidersController@show', $provider->name, $provider->id) !!}
+                  {!! link_to_route('providers.show', $provider->name, $provider->id) !!}
                 </td>
                 <td>
                   {{$provider->phone_1}}
