@@ -1,82 +1,62 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Controllers\Controller;
-use Orbiagro\Mamarrachismo\EnviarEmail as Email;
 use Auth;
-use Orbiagro\Models\User;
-use Orbiagro\Models\Profile;
-use Orbiagro\Models\UserConfirmation;
-use Illuminate\View\View as Response;
+use Illuminate\Http\RedirectResponse;
+use Orbiagro\Mamarrachismo\EnviarEmail as Email;
+use Orbiagro\Repositories\Interfaces\UserConfirmationInterface;
 
 class ConfirmationsController extends Controller
 {
+
+    private $confirm;
+
+    /**
+     * @param UserConfirmationInterface $confirm
+     */
+    public function __construct(UserConfirmationInterface $confirm)
+    {
+        $this->confirm = $confirm;
+    }
 
     /**
      * Comprueba la confirmacion del usuario para ser validado.
      *
      * @param  string $confirmation la cadena de texto a comparar.
-     * @return Response
+     * @return RedirectResponse
      */
     public function confirm($confirmation)
     {
-        if (!$confirmation) {
+        if (!$confirmation || trim($confirmation) == '') {
             return redirect('/');
         }
 
-        $confirmModel = UserConfirmation::where('data', $confirmation)->get();
+        $confirmModel = $this->confirm->getConfirmation($confirmation);
 
-        if (!$confirmation) {
+        if (is_null($confirmModel)) {
             return redirect('/');
         }
 
-        if ($confirmModel->count() !== 1) {
-            foreach ($confirmModel as $confirm) {
-                $confirm->delete();
-            }
+        $user = $this->confirm->validateUser($confirmModel);
 
-            return redirect('/');
-
-        } elseif ($confirmModel->count() === 1) {
-            $confirmModel = $confirmModel->first();
-        }
-
-        $user = User::findOrFail($confirmModel->user_id);
-
-        if (!$user->confirmation) {
-            $confirmModel->delete();
-
+        if (is_null($user)) {
             return redirect('/');
         }
-
-        $profile = Profile::where('description', 'Usuario')->first();
-        $user->profile_id = $profile->id;
-        $user->save();
-        $user->confirmation()->delete();
 
         Auth::logout();
+
         flash()->success('Ud. ha sido correctamente verificado, por favor ingrese en el sistema.');
+
         return redirect('auth/login');
     }
 
     /**
      * Genera una confirmacion y envia un correo electronico al usuario.
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function createConfirm()
     {
-        $user = Auth::user();
-
-        if (!$user->confirmation) {
-            return redirect('/');
-        }
-
-        $confirmation = new UserConfirmation(['data' => true]);
-        $user->confirmation()->update(['data' => $confirmation->data]);
-
-        // por alguna razon la confirmacion no se actualiza en el modelo
-        // asi que tengo que traermelo otra vez
-        $user = User::find(Auth::user()->id);
+        $user = $this->confirm->create();
 
         // datos usados para enviar el email
         $data = [
@@ -89,7 +69,12 @@ class ConfirmationsController extends Controller
         $emails = (array)$user->email;
         Email::enviarEmail($data, $emails);
 
-        flash()->info('Nueva confirmación generada, por favor revise su correo electronico.');
+        flash()->info(
+            'Nueva confirmación generada y enviada a '
+            .$user->email
+            .', por favor revise su correo electronico.'
+        );
+
         return redirect('/');
     }
 }

@@ -1,8 +1,6 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\Promotion;
 use Illuminate\Database\Eloquent\Model;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -14,7 +12,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Promotion[] $promotions
+ * @property-read \Illuminate\Database\Eloquent\Collection|Promotion[] $promotions
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\PromoType whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\PromoType whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\PromoType whereCreatedBy($value)

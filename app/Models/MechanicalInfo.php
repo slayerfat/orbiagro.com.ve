@@ -1,6 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Transformer;
@@ -25,7 +24,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $created_by
  * @property integer $updated_by
  * @property-write mixed $horse_power
- * @property-read \Orbiagro\Models\Product $product
+ * @property-read Product $product
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereProductId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereMotor($value)

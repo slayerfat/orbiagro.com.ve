@@ -14,26 +14,28 @@ class UserRoutes extends Routes
     protected $restfulOptions = [
         [
             'routerOptions' => [
-                    'prefix' => 'usuarios',
-                ],
+                'prefix' => 'usuarios',
+            ],
             'rtDetails' => [
-                    'uses'     => 'UsersController',
-                    'as'       => 'users',
-                    'resource' => '{users}'
-                ]
+                'uses'     => 'UsersController',
+                'as'       => 'users',
+                'resource' => '{users}'
+            ]
         ],
+
         /**
          * Datos Personales (Person)
          */
         [
             'routerOptions' => [
-                    'prefix' => 'usuarios/datos-personales',
-                ],
+                'prefix' => 'usuarios/datos-personales',
+            ],
             'rtDetails' => [
-                    'uses'     => 'PeopleController',
-                    'as'       => 'users.people',
-                    'resource' => '{users}'
-                ]
+                'uses'     => 'PeopleController',
+                'as'       => 'users.people',
+                'resource' => '{people}',
+                'ignore' => ['create', 'edit', 'store']
+            ]
         ],
     ];
 
@@ -41,6 +43,46 @@ class UserRoutes extends Routes
      * @var array
      */
     protected $nonRestfulOptions = [
+        /**
+         * Usuarios Eliminados
+         */
+        [
+            'method'   => 'get',
+            'url'      => 'usuarios/eliminados/{users}',
+            'data'     => [
+                'uses' => 'UsersController@showTrashed',
+                'as'   => 'users.trashed'
+            ]
+        ],
+
+        /**
+         * El resto de datos personales
+         */
+        [
+            'method'   => 'get',
+            'url'      => 'usuarios/datos-personales/{usuarios}/crear',
+            'data'     => [
+                'uses' => 'PeopleController@create',
+                'as'   => 'users.people.create'
+            ]
+        ],
+        [
+            'method'   => 'get',
+            'url'      => 'usuarios/datos-personales/{usuarios}/editar',
+            'data'     => [
+                'uses' => 'PeopleController@edit',
+                'as'   => 'users.people.edit'
+            ]
+        ],
+        [
+            'method'   => 'post',
+            'url'      => 'usuarios/datos-personales/{usuarios}',
+            'data'     => [
+                'uses' => 'PeopleController@store',
+                'as'   => 'users.people.store'
+            ]
+        ],
+
         /**
          * Productos de un usuario
          */
@@ -62,18 +104,6 @@ class UserRoutes extends Routes
             'data' => [
                 'uses' => 'UsersController@restore',
                 'as' => 'users.restore'
-            ]
-        ],
-
-        /**
-         * Usuarios Eliminados
-         */
-        [
-            'method' => 'get',
-            'url' => 'usuarios/eliminados/{users}',
-            'data' => [
-                'uses' => 'UsersController@showTrashed',
-                'as' => 'users.trashed'
             ]
         ],
 

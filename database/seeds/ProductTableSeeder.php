@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 
-class ProductTableSeeder extends Seeder
+class ProductTableSeeder extends BaseSeeder
 {
 
     /**
@@ -19,12 +17,13 @@ class ProductTableSeeder extends Seeder
         // upload necesita el ID del usuario a asociar.
         $this->upload = new Upload(1);
 
+        $this->createDirectory(Orbiagro\Models\Product::class);
+
         // por cada usuario en el sistema, se pretende
         // crear algunos productos con sus caracteristicas particulares.
         Orbiagro\Models\User::all()->each(function ($user) {
             // es necesario hacer esto por cada producto.
-            factory(Orbiagro\Models\Product::class, 20)->make()->each(function ($product) use ($user) {
-
+            factory(Orbiagro\Models\Product::class, 'realRelations', 3)->make()->each(function ($product) use ($user) {
                 // se guarda el producto en la base de datos.
                 $user->products()->save($product);
                 $this->command->info("--- guardado producto {$product->title} ---");

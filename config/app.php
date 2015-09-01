@@ -156,18 +156,25 @@ return [
         Orbiagro\Providers\EventServiceProvider::class,
         Orbiagro\Providers\RouteServiceProvider::class,
         Orbiagro\Providers\ViewServiceProvider::class,
+        Orbiagro\Providers\Internal\CreateAndUpdateModelServiceProvider::class,
+        Orbiagro\Providers\Internal\DeletingWithImageServiceProvider::class,
 
         /**
         * App
         */
         Orbiagro\Providers\ImageDeleteServiceProvider::class,
         Orbiagro\Providers\ProductServiceProvider::class,
+        Orbiagro\Providers\CategoriesRepositoriesServiceProvider::class,
+        Orbiagro\Providers\UserRepositoriesServiceProvider::class,
+        Orbiagro\Providers\ProductRepositoriesServiceProvider::class,
+        Orbiagro\Providers\MiscRepositoriesServiceProvider::class,
 
         /**
         * Vendor
         */
         Laracasts\Flash\FlashServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
         Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class
 
     ],

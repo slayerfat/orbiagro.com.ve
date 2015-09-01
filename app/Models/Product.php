@@ -1,18 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\User;
-use Orbiagro\Models\Maker;
-use Orbiagro\Models\Visit;
-use Orbiagro\Models\File;
-use Orbiagro\Models\Image;
-use Orbiagro\Models\Feature;
-use Orbiagro\Models\Provider;
-use Orbiagro\Models\Direction;
-use Orbiagro\Models\Promotion;
-use Orbiagro\Models\SubCategory;
-use Orbiagro\Models\Nutritional;
-use Orbiagro\Models\Characteristic;
-use Orbiagro\Models\MechanicalInfo;
 use Orbiagro\Mamarrachismo\Transformer;
 use Orbiagro\Mamarrachismo\CheckDollar;
 use Illuminate\Database\Eloquent\Model;
@@ -41,20 +28,19 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $deleted_at
  * @property-read mixed $paginate
- * @property-read \Orbiagro\Models\User $user
- * @property-read \Orbiagro\Models\Maker $maker
- * @property-read \Orbiagro\Models\SubCategory $subCategory
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Feature[] $features
- * @property-read \Orbiagro\Models\Characteristic $characteristics
- * @property-read \Orbiagro\Models\MechanicalInfo $mechanical
- * @property-read \Orbiagro\Models\Nutritional $nutritional
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Promotion[] $promotions
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\User[] $purchases
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Provider[] $providers
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Direction $direction
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\File[] $files
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Image[] $images
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
+ * @property-read User $user
+ * @property-read Maker $maker
+ * @property-read SubCategory $subCategory
+ * @property-read \Illuminate\Database\Eloquent\Collection|Feature[] $features
+ * @property-read Characteristic $characteristics
+ * @property-read MechanicalInfo $mechanical
+ * @property-read Nutritional $nutritional
+ * @property-read \Illuminate\Database\Eloquent\Collection|Promotion[] $promotions
+ * @property-read \Illuminate\Database\Eloquent\Collection|User[] $purchases
+ * @property-read \Illuminate\Database\Eloquent\Collection|Provider[] $providers
+ * @property-read \Illuminate\Database\Eloquent\Collection|File[] $files
+ * @property-read \Illuminate\Database\Eloquent\Collection|Image[] $images
+ * @property-read \Illuminate\Database\Eloquent\Collection|Visit[] $visits
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereMakerId($value)

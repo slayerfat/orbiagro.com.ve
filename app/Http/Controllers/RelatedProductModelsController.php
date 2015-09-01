@@ -4,14 +4,13 @@ use Orbiagro\Http\Requests\CharacteristicRequest;
 use Orbiagro\Http\Requests\MechanicalInfoRequest;
 use Orbiagro\Http\Requests\NutritionalRequest;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Http\Controllers\Controller;
+use Illuminate\View\View as Response;
 use Illuminate\Contracts\Auth\Guard;
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Models\Characteristic;
 use Orbiagro\Models\MechanicalInfo;
 use Orbiagro\Models\Nutritional;
 use Orbiagro\Models\Product;
-use Illuminate\View\View as Response;
 
 class RelatedProductModelsController extends Controller
 {

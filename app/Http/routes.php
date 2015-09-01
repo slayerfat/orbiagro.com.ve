@@ -1,6 +1,6 @@
 <?php
 
-
+use Orbiagro\Http\Routes\ConfirmationsRoutes as Confirmations;
 use Orbiagro\Http\Routes\UserRoutes as User;
 use Orbiagro\Http\Routes\ProductRoutes as Product;
 use Orbiagro\Http\Routes\CategoriesRoutes as Categories;
@@ -14,12 +14,13 @@ use Orbiagro\Http\Routes\MiscRoutes as Misc;
 
 $routes = collect();
 
-// se asume que el orden importa.
+// El orden importa.
+$routes->push(new Confirmations);
 $routes->push(new User);
 $routes->push(new Product);
 $routes->push(new Categories);
 $routes->push(new Misc);
 
-$routes->each(function ($route) {
+foreach ($routes as $route) {
     $route->execute();
-});
+}

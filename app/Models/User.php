@@ -1,12 +1,6 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\Visit;
-use Orbiagro\Models\Person;
-use Orbiagro\Models\Billing;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Profile;
 use Illuminate\Auth\Authenticatable;
-use Orbiagro\Models\UserConfirmation;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,13 +21,13 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string $deleted_at
- * @property-read \Orbiagro\Models\Person $person
- * @property-read \Orbiagro\Models\UserConfirmation $confirmation
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Billing[] $billings
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
- * @property-read \Orbiagro\Models\Profile $profile
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $purchases
+ * @property-read Person $person
+ * @property-read UserConfirmation $confirmation
+ * @property-read \Illuminate\Database\Eloquent\Collection|Billing[] $billings
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|Visit[] $visits
+ * @property-read Profile $profile
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $purchases
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereProfileId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereName($value)
@@ -45,6 +39,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User admins()
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User random()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Orbiagro\Models\User findOrFail($id, $columns = [])
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
@@ -227,7 +222,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function isOwnerOrAdmin($id)
     {
-        if ($this->profile->description === 'Administrador') {
+        if ($this->isAdmin()) {
             return true;
         }
 

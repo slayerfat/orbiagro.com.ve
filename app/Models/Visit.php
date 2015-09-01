@@ -1,6 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
@@ -17,7 +16,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Orbiagro\Models\User $user
+ * @property-read User $user
  * @property-read \ $visitable
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Visit whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Visit whereUserId($value)

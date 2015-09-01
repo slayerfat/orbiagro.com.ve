@@ -1,12 +1,16 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
+use Log;
+use Storage;
 use Exception;
 use Validator;
-use Storage;
 use Intervention;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use LogicException;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Models\Image as ImageModel;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
+use Orbiagro\Repositories\Exceptions\DefaultImageFileNotFoundException;
 
 class Image extends Upload
 {
@@ -17,7 +21,7 @@ class Image extends Upload
      * @param Model $model El modelo a relacionar con la imagen.
      * @param array $array El array con los objetos UploadedFiles.
      * @return \Illuminate\Support\Collection
-     * @throws Exception
+     * @throws LogicException
      */
     public function createImages(Model $model, array $array = null)
     {
@@ -26,7 +30,7 @@ class Image extends Upload
         $this->path = $this->generatePathFromModel($model);
 
         if (!$array) {
-            $collection = $collection->push($this->createDefaultImage($model, $this->path));
+            $collection->push($this->createDefaultImage($model, $this->path));
 
             return $collection;
         }
@@ -40,14 +44,14 @@ class Image extends Upload
                 // se crea la imagen por defecto
                 if (sizeOf($array) <= 1) {
                     // si las imagenes no son validas crea una imagen por defecto
-                    $collection = $collection->push($this->createDefaultImage($model, $this->path));
+                    $collection->push($this->createDefaultImage($model, $this->path));
 
                     return $collection;
                 }
 
                 $this->errors = $validator->errors()->all();
 
-                throw new Exception('Imagenes no validas.');
+                throw new LogicException('Imagenes no validas.');
             }
 
             // se crea la imagen en el HD.
@@ -56,7 +60,7 @@ class Image extends Upload
             }
 
             // se crea el modelo.
-            $collection = $collection->push($this->createImageModel($result, $model));
+            $collection->push($this->createImageModel($result, $model));
         }
 
         return $collection;
@@ -82,18 +86,19 @@ class Image extends Upload
     }
 
     /**
-     * crea la imagen por defecto relacionada con algun modelo.
+     * Crea la imagen por defecto relacionada con algun modelo.
      *
-     * @param Model $model El modelo relacionado para ser asociado.
-     * @param string $modelPath La direccion a donde se guardara
+     * @param Model $model
+     * @param null $modelPath
      * @return Model
+     * @throws DefaultImageFileNotFoundException
      * @throws Exception
      */
     public function createDefaultImage(Model $model, $modelPath = null)
     {
-        if ($modelPath === null && isset($this->path)) {
-            $modelPath = $this->path;
-        }
+        $modelPath = $this->getModelPath($model, $modelPath);
+
+        $this->checkModelImage($model);
 
         // el nombre del archivo
         $name = date('Ymdhmmss-').str_random(20);
@@ -101,7 +106,7 @@ class Image extends Upload
 
         // se copia el archivo
         if (!Storage::disk('public')->copy('sin_imagen.gif', $path)) {
-            throw new Exception('Imagen por defecto no puede ser creada.');
+            throw new DefaultImageFileNotFoundException('Imagen por defecto no puede ser creada.');
         }
 
         // la data necesaria para crear el modelo de imagen.
@@ -122,27 +127,43 @@ class Image extends Upload
     }
 
     /**
-     * actualiza la imagen relacionada con algun modelo.
+     * Actualiza la imagen relacionada con algun modelo.
      *
-     * @param Model $model El modelo de la imagen.
-     * @param UploadedFile $file Objeto UploadedFiles con la imagen.
-     * @param array $options las opcions relacionadas con Intervention.
+     * @param Model $model El modelo Eloquent.
+     * @param UploadedFile $file Objeto UploadedFiles con el archivo.
+     * @param array $options Las opcions relacionadas la operacion.
      * @return Model
+     * @throws DefaultImageFileNotFoundException
      * @throws Exception
+     * @throws OrphanImageException
      */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
-        // si no hay algun modelo relacionado, se crea uno de cero.
-        if ($model->image == null) {
-            // create devuelve una coleccion
-            $results = $this->create($model, $file);
+        if (!$model instanceof ImageModel) {
+            $this->checkModelImage($model);
 
-            return $results->first();
+            Log::alert(
+                'Posible manipulacion de archivos en carpeta publica.',
+                ['self' => $this, 'mode' => $model, 'user' => \Auth::user()]
+            );
+
+            flash()->warning('Problemas inesperados en el servidor.');
+
+            return $this->createDefaultImage($model);
         }
 
-        $imageModel = $model->image;
+        /** @var Model $parentModel */
+        $parentModel = $model->imageable;
 
-        $this->path = $this->generatePathFromModel($model);
+        if ($parentModel == null) {
+            throw new OrphanImageException(
+                'La imagen con id: '.$model->id
+                .' no posee padre.',
+                $model->id
+            );
+        }
+
+        $this->path = $this->generatePathFromModel($parentModel);
 
         // el validador
         $validator = Validator::make(['image' => $file], $this->imageRules);
@@ -154,24 +175,27 @@ class Image extends Upload
         }
 
         // verdadero porque se eliminan TODOS los archivos
-        $this->deleteImageFiles($imageModel, true);
+        $this->deleteImageFiles($model, true);
 
         // se crea la imagen en el HD y se actualiza el modelo.
         if (!$result = $this->makeImageFile($file, $this->path, $options)) {
-            return $this->createDefaultImage($model, $this->path);
+            return $this->createDefaultImage($parentModel, $this->path);
         }
 
-        return $imageModel->update($result);
+        $model->update($result);
+
+        return $model;
     }
 
     /**
+     * Cropea la imagen y la persiste en la BD.
      * @param  Model $image  la imagen.
      * @param  int   $width
      * @param  int   $height
      * @param  int   $posX
      * @param  int   $posY
      *
-     * @return Model
+     * @return bool
      */
     public function cropImage(Model $image, $width, $height, $posX = null, $posY = null)
     {
@@ -197,34 +221,41 @@ class Image extends Upload
     /**
      * elimina todas las imagenes del disco duro.
      *
-     * @param Image   $imageModel El modelo de la imagen.
+     * @param ImageModel   $imageModel El modelo de la imagen.
      * @param boolean $all        para determinar si se elimina del disco duro TODOS los archivos.
      *
      * @return void
      */
     public function deleteImageFiles($imageModel, $all)
     {
-        $this->errors = [];
-
-        $attributes = ['small', 'medium', 'large'];
+        $paths = [
+            $imageModel->small,
+            $imageModel->medium,
+            $imageModel->large
+        ];
 
         if ($all === true) {
-            $attributes[] = 'original';
-            $attributes[] = 'path';
+            $paths[] = $imageModel->path;
+            $paths[] = $imageModel->original;
         }
 
-        // se chequea si existe el archivo y se elimina
-        foreach ($attributes as $attribute) {
-            if ($imageModel->$attribute !== null && trim($imageModel->$attribute) != '') {
-                try {
-                    Storage::disk('public')->delete($imageModel->$attribute);
-                } catch (Exception $e) {
-                    $this->errors['imageModel'] = $imageModel;
-                    $this->errors['all'] = $all;
-                    $this->errors['attributes'] = $attributes;
-                    $this->errors["deleteImage: $attribute"] = $e;
-                }
+        foreach ($paths as $path) {
+            if (!Storage::disk('public')->exists($path)) {
+                Log::alert(
+                    'Se intento eliminar una imagen que no existe en el disco duro.',
+                    [
+                        'image_id'       => $imageModel->id,
+                        'imageable_id'   => $imageModel->imageable_id,
+                        'imageable_type' => $imageModel->imageable_type,
+                        'path'           => $path,
+                        'user'           => \Auth::user()
+                    ]
+                );
+
+                continue;
             }
+
+            Storage::disk('public')->delete($path);
         }
     }
 
@@ -248,15 +279,11 @@ class Image extends Upload
 
         $data = $this->makeOriginalFile($data);
 
-        $image = Intervention::make($data['path']);
-
-        $result = $this->createSmallMediumLargeFiles($image, $data);
-
-        $data = $data + $result;
-
         if (!$options) {
             return $data;
         }
+
+        $image = Intervention::make($data['path']);
 
         // Intervention
         foreach ($options as $method => $parameters) {
@@ -273,17 +300,19 @@ class Image extends Upload
      *
      * @param  array $data la informacion relacionada con la imagen a crear.
      * @return array
-     * @throws Exception
+     * @throws LogicException
      */
     private function makeOriginalFile(array $data)
     {
         if (!Storage::disk('public')->exists($data['path'])) {
-            throw new Exception('No existe archivo asociado en el disco.');
+            throw new LogicException('No existe archivo asociado en el disco.');
         }
 
         $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
 
-        $image = Intervention::make(public_path($data['path']))->save(public_path($data['original']));
+        Intervention::make(public_path($data['path']))->save(public_path($data['original']));
+
+        $image = Intervention::make(public_path($data['original']));
 
         $result = $this->createSmallMediumLargeFiles($image, $data);
 
@@ -298,12 +327,12 @@ class Image extends Upload
      *                     solo se necesita la direccion del
      *                     modelo (producto/id).
      * @return array
-     * @throws Exception
+     * @throws LogicException
      */
     private function createSmallMediumLargeFiles(Intervention\Image\Image $image, array $data)
     {
         if (!isset($data['dir'])) {
-            throw new Exception('Error: no hay informacion sobre el directorio relacionado.', 6);
+            throw new LogicException('Error: no hay informacion sobre el directorio relacionado.', 6);
         }
 
         // datos de la imagen
@@ -318,6 +347,8 @@ class Image extends Upload
             'medium' => $data['dir'].'/m-'.$filename.'.'.$ext,
             'large'  => $data['dir'].'/l-'.$filename.'.'.$ext,
         ];
+
+        Log::debug('Creando imagenes s-m-l relaciondas con una nueva imagen!', ['data' => $data]);
 
         // para el foreach
         $sizes = [
@@ -381,6 +412,36 @@ class Image extends Upload
                     .get_class($model)
                     .'desconocido, no se puede guardar imagen.'
                 );
+        }
+    }
+
+    /**
+     * Obtiene la direccion para generar alguna imagen.
+     * @param Model $model
+     * @param $modelPath
+     * @return string
+     */
+    private function getModelPath(Model $model, $modelPath)
+    {
+        if ($modelPath === null) {
+            if (isset($this->path)) {
+                return $this->path;
+            }
+
+            return $this->path = $this->generatePathFromModel($model);
+        }
+
+        return $modelPath;
+    }
+
+    /**
+     * Elimina la imagen en la base de datos.
+     * @param Model $model
+     */
+    private function checkModelImage(Model $model)
+    {
+        if ($model->image) {
+            $model->image()->delete();
         }
     }
 }

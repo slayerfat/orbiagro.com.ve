@@ -1,14 +1,10 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\Request;
 use Orbiagro\Http\Requests\PeopleRequest;
-use Orbiagro\Http\Controllers\Controller;
-use Orbiagro\Models\User;
-use Orbiagro\Models\Person;
 use Orbiagro\Models\Gender;
 use Orbiagro\Models\Nationality;
 use Illuminate\View\View as Response;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 /**
  * Class PeopleController
@@ -18,49 +14,54 @@ class PeopleController extends Controller
 {
 
     /**
-     * @var Person
+     * @var UserRepositoryInterface
      */
-    protected $person;
+    private $userRepo;
 
     /**
      * Create a new controller instance.
-     * @param Person $person
+     * @param UserRepositoryInterface $userRepo
      */
-    public function __construct(Person $person)
+    public function __construct(UserRepositoryInterface $userRepo)
     {
         $this->middleware('auth');
+
+        // TODO ver si se implementa o no esto
         // $this->middleware('user.admin');
-        $this->person = $person;
+
+        $this->userRepo = $userRepo;
     }
 
     /**
      * Show the form for creating a new resource.
      *
      * @param int   $id
-     * @param Guard $auth
      *
      * @return Response
      */
-    public function create($id, Guard $auth)
+    public function create($id)
     {
-        if (!$user = User::where('name', $id)->first()) {
-            $user = User::findOrFail($id);
-        }
+        $user = $this->userRepo->validateCreatePersonRequest($id);
 
-        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
+        if (is_null($user)) {
             return $this->redirectToRoute('usuarios.show', $$user->name);
         }
 
+        $person = $this->userRepo->getEmptyPersonInstance();
+
+        /**
+         * @todo Repos de estos modelos
+         */
         $genders = Gender::lists('description', 'id');
 
         $nationalities = Nationality::lists('description', 'id');
 
-        return view('people.create')->with([
-            'person'        => $this->person,
-            'user'          => $user,
-            'genders'       => $genders,
-            'nationalities' => $nationalities,
-        ]);
+        return view('people.create', compact(
+            'person',
+            'user',
+            'genders',
+            'nationalities'
+        ));
     }
 
     /**
@@ -72,13 +73,7 @@ class PeopleController extends Controller
      */
     public function store($id, PeopleRequest $request)
     {
-        $user = User::findOrFail($id);
-
-        $this->person->fill($request->all());
-
-        $this->person->gender_id = $request->input('gender_id');
-        $this->person->nationality_id = $request->input('nationality_id');
-        $user->person()->save($this->person);
+        $user = $this->userRepo->storePerson($id, $request->all());
 
         flash()->success('Los datos personales han sido actualizados con exito.');
 
@@ -89,29 +84,28 @@ class PeopleController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int      $id
-     * @param  Guard    $auth
      * @return Response
      */
-    public function edit($id, Guard $auth)
+    public function edit($id)
     {
-        if (!$user = User::where('name', $id)->first()) {
-            $user = User::findOrFail($id);
-        }
+        $user = $this->userRepo->validateCreatePersonRequest($id);
 
-        if (!$auth->user()->isOwnerOrAdmin($user->id)) {
+        if (is_null($user)) {
             return $this->redirectToRoute('usuarios.show', $$user->name);
         }
+
+        $person = $user->person;
 
         $genders = Gender::lists('description', 'id');
 
         $nationalities = Nationality::lists('description', 'id');
 
-        return view('people.edit')->with([
-            'person'        => $user->person,
-            'user'          => $user,
-            'genders'       => $genders,
-            'nationalities' => $nationalities,
-        ]);
+        return view('people.edit', compact(
+            'person',
+            'user',
+            'genders',
+            'nationalities'
+        ));
     }
 
     /**
@@ -123,13 +117,7 @@ class PeopleController extends Controller
      */
     public function update($id, PeopleRequest $request)
     {
-        $user = User::with('person')->findOrFail($id);
-        $user->person->fill($request->all());
-
-        $user->person->gender_id = $request->input('gender_id');
-        $user->person->nationality_id = $request->input('nationality_id');
-
-        $user->person->update();
+        $user = $this->userRepo->updatePerson($id, $request->all());
 
         flash()->success('Los datos personales han sido actualizados con exito.');
 

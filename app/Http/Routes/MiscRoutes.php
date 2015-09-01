@@ -110,41 +110,6 @@ class MiscRoutes extends Routes
         ],
 
         /**
-         * usuario por verificar
-         */
-        [
-            'method'         => 'get',
-            'url'            => 'usuarios/por-verificar',
-            'data'           => [
-                'uses'       => 'HomeController@unverified',
-                'as'         => 'users.unverified',
-                'middleware' => 'user.verified',
-            ]
-        ],
-
-        /**
-         * para generar confirmaciones de usuario
-         */
-        [
-            'method'         => 'get',
-            'url'            => 'usuarios/generar-confirmacion',
-            'data'           => [
-                'uses'       => 'ConfirmationsController@createConfirm',
-                'as'         => 'users.confirmation.create',
-                'middleware' => 'user.verified',
-            ]
-        ],
-        [
-            'method'         => 'get',
-            'url'            => 'usuarios/confirmar/{string}',
-            'data'           => [
-                'uses'       => 'ConfirmationsController@confirm',
-                'as'         => 'users.confirmation.confirm',
-                'middleware' => 'user.verified',
-            ]
-        ],
-
-        /**
          * Ajax de Direcciones
          */
         [
@@ -185,7 +150,7 @@ class MiscRoutes extends Routes
         ],
         [
             'method'         => 'get',
-            'url'            => 'direcciones/parroquia/{parishes}',
+            'url'            => 'direcciones/parroquias/{parishes}',
             'data'           => [
                 'uses'       => 'DirectionsController@parish',
                 'as'         => 'api.parishes.show',

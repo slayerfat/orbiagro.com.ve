@@ -41,6 +41,12 @@ trait InternalDBManagement
             return parent::save();
         }
 
+        // por alguna razon (no idea)
+        // algunos modelos guardaban normal y otros no.
+        if (!empty($options)) {
+            $this->fill($options);
+        }
+
         // se asigna el id
         $this->setUserid();
 

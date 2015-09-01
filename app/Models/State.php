@@ -1,6 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\Town;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
@@ -13,7 +12,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Town[] $towns
+ * @property-read \Illuminate\Database\Eloquent\Collection|Town[] $towns
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\State whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\State whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\State whereCreatedBy($value)

@@ -186,12 +186,10 @@ class VisitsService
 
     /**
      * Usado para crear el modelo relacion al recurso, en este caso una visita.
-     *
-     * @param  array  $array el arreglo con los productos a relacionar
-     * @param  string $name  el nombre del recurso (Product, SubCategory, etc)
+     * @param  array $array el arreglo con los productos a relacionar
+     * @param  string $name el nombre del recurso (Product, SubCategory, etc)
      * @param  string $model el modelo a manipular.
-     *
-     * @return void
+     * @throws Exception
      */
     private function createVisitModel(array $array, $name, $model)
     {

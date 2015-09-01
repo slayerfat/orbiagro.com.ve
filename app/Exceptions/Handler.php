@@ -2,7 +2,14 @@
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Log;
+use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
+use Orbiagro\Models\Image;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run as Whoops;
 
 class Handler extends ExceptionHandler
 {
@@ -26,6 +33,9 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
+        //config('app.debug')
+        //   $this->renderExceptionWithWhoops($e);
+
         return parent::report($e);
     }
 
@@ -34,10 +44,54 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $e
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof OrphanImageException) {
+            return $this->renderOrphanImageException($request, $e);
+        }
+
         return parent::render($request, $e);
+    }
+
+    /**
+     * Render an exception using Whoops.
+     *
+     * @param  \Exception $e
+     * @return Response
+     */
+    protected function renderExceptionWithWhoops(Exception $e)
+    {
+        $whoops = new Whoops;
+        $whoops->pushHandler(new PrettyPageHandler());
+
+        return new Response(
+            $whoops->handleException($e),
+            $e->getStatusCode(),
+            $e->getHeaders()
+        );
+    }
+
+    /**
+     * @param $request
+     * @param Exception $e
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    private function renderOrphanImageException($request, Exception $e)
+    {
+        Log::critical($e);
+
+        $image = Image::find($e->getImageId());
+
+        if ($image !== null) {
+            $image->delete();
+        } elseif (is_null($image)) {
+            return parent::render($request, $e);
+        }
+
+        flash()->error('Error Inesperado, por favor reintente en un momento.');
+
+        return redirect()->back();
     }
 }

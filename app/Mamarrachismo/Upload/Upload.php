@@ -1,10 +1,9 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
-use Exception;
-use Validator;
-use Storage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use LogicException;
+use Orbiagro\Models\Product;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class Upload
 {
@@ -103,29 +102,44 @@ abstract class Upload
         return $data;
     }
 
+    /**
+     * Determina cuales son los datos correctos para
+     * crear un directorio adecuado en el sistema.
+     *
+     * @param $model
+     * @return string
+     * @throws LogicException
+     */
     protected function generatePathFromModel($model)
     {
+        $dir = class_basename($model);
+
+        $dir = strtolower($dir);
+
         switch (get_class($model)) {
             case 'Orbiagro\Models\Product':
-                return "products/{$model->id}";
+                return "{$dir}/{$model->id}";
 
             case 'Orbiagro\Models\Feature':
-                return "products/{$model->product->id}";
+                $productDir = class_basename(Product::class);
+
+                $productDir = strtolower($productDir);
+                return "{$productDir}/{$model->product->id}/{$dir}";
 
             case 'Orbiagro\Models\Category':
-                return "category/{$model->id}";
+                return "{$dir}/{$model->id}";
 
             case 'Orbiagro\Models\SubCategory':
-                return "sub-category/{$model->id}";
+                return "{$dir}/{$model->id}";
 
             case 'Orbiagro\Models\Maker':
-                return "makers/{$model->id}";
+                return "{$dir}/{$model->id}";
 
             case 'Orbiagro\Models\Promotion':
-                return "promos/{$model->id}";
+                return "{$dir}/{$model->id}";
 
             default:
-                throw new Exception("Error: modelo desconocido, no se puede crear ruta, modelo ".gettype($model), 2);
+                throw new LogicException('Modelo desconocido, no se puede crear ruta, modelo '.get_class($model));
 
         }
     }

@@ -1,9 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\User;
-use Orbiagro\Models\Gender;
-use Orbiagro\Models\Direction;
-use Orbiagro\Models\Nationality;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
@@ -28,10 +24,10 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property-read mixed $first_sur_name
  * @property-read mixed $last_sur_name
- * @property-read \Orbiagro\Models\Gender $gender
- * @property-read \Orbiagro\Models\Nationality $nationality
- * @property-read \Orbiagro\Models\User $user
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Direction[] $direction
+ * @property-read Gender $gender
+ * @property-read Nationality $nationality
+ * @property-read User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|Direction[] $direction
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereGenderId($value)

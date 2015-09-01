@@ -1,7 +1,6 @@
 <?php namespace Orbiagro\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
 use Orbiagro\Models\Image;
 use File;
 
@@ -15,9 +14,19 @@ class ImageDeleteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Image::deleting(function ($image) {
-            if (File::isFile($image->path)) {
-                return File::delete($image->path);
+        Image::deleted(function ($image) {
+            $paths = [
+                $image->path,
+                $image->original,
+                $image->small,
+                $image->medium,
+                $image->large,
+            ];
+
+            foreach ($paths as $path) {
+                if (File::isFile($path)) {
+                    return File::delete($path);
+                }
             }
         });
     }

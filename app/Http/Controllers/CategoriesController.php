@@ -1,13 +1,10 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Log;
-use Exception;
-use Orbiagro\Models\Category;
 use Illuminate\View\View as Response;
-use Illuminate\Database\QueryException;
 use Orbiagro\Http\Requests\CategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 
 class CategoriesController extends Controller
 {
@@ -15,21 +12,24 @@ class CategoriesController extends Controller
     use SEOToolsTrait, CanSaveUploads;
 
     /**
-     * La instancia de la categoria.
+     * La instancia del repositorio
      *
-     * @var \Orbiagro\Models\Category
+     * @var CategoryRepositoryInterface
      */
-    protected $cat;
+    private $cat;
 
     /**
      * Create a new controller instance.
-     * @param Category $cat
+     *
+     * @param CategoryRepositoryInterface $cat
      */
-    public function __construct(Category $cat)
+    public function __construct(CategoryRepositoryInterface $cat)
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $options = ['except' => ['index', 'show']];
 
-        $this->middleware('user.admin', ['except' => ['index', 'show']]);
+        $this->middleware('auth', $options);
+
+        $this->middleware('user.admin', $options);
 
         $this->cat = $cat;
     }
@@ -41,21 +41,13 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $cats  = $this->cat->all()->load('subCategories');
+        $cats  = $this->cat->getAll();
 
-        $productsCollection = collect();
-
-        foreach ($cats as $cat) {
-            foreach ($cat->subCategories as $subCat) {
-                $productsCollection->push(
-                    $subCat->products()->random()->take(6)->get()
-                );
-            }
-        }
+        $productsCollection = $this->cat->getRelatedProducts($cats);
 
         $this->seo()->setTitle('Categorias en orbiagro.com.ve');
         $this->seo()->setDescription('Categorias existentes es orbiagro.com.ve');
-        $this->seo()->opengraph()->setUrl(action('CategoriesController@index'));
+        $this->seo()->opengraph()->setUrl(route('cats.index'));
 
         return view('category.index', compact('cats', 'productsCollection'));
     }
@@ -68,7 +60,7 @@ class CategoriesController extends Controller
     public function create()
     {
         return view('category.create')->with([
-            'cat' => $this->cat
+            'cat' => $this->cat->getEmptyInstance()
         ]);
     }
 
@@ -81,18 +73,16 @@ class CategoriesController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $this->cat->fill($request->all());
-
-        $this->cat->save();
+        $cat = $this->cat->create($request->all());
 
         /**
          * @see MakersController::store()
          */
         flash()->success('Categoria creada exitosamente.');
 
-        $this->createImage($request, $this->cat);
+        $this->createImage($request, $cat);
 
-        return redirect()->action('CategoriesController@index');
+        return redirect()->route('cats.show', $cat->id);
     }
 
     /**
@@ -103,15 +93,13 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        if (!$cat = Category::where('slug', $id)->first()) {
-            $cat = Category::findOrFail($id);
-        }
+        $cat = $this->cat->getBySlugOrId($id);
 
-        $subCats = $cat->subCategories;
+        $subCats = $this->cat->getSubCats($cat);
 
         $this->seo()->setTitle("{$cat->description} en orbiagro.com.ve");
         $this->seo()->setDescription("{$cat->description} existentes es orbiagro.com.ve");
-        $this->seo()->opengraph()->setUrl(action('CategoriesController@show', $id));
+        $this->seo()->opengraph()->setUrl(route('cats.show', $id));
 
         return view('category.show', compact('cat', 'subCats'));
     }
@@ -124,11 +112,9 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        $this->cat = Category::findOrFail($id);
+        $cat = $this->cat->getById($id);
 
-        return view('category.edit')->with([
-            'cat' => $this->cat,
-        ]);
+        return view('category.edit', compact('cat'));
     }
 
     /**
@@ -141,18 +127,16 @@ class CategoriesController extends Controller
      */
     public function update($id, CategoryRequest $request)
     {
-        $this->cat = category::findOrFail($id)->load('image');
-
-        $this->cat->update($request->all());
+        $cat = $this->cat->update($id, $request->all());
 
         /**
          * @see MakersController::store()
          */
         flash()->success('La Categoria ha sido actualizada correctamente.');
 
-        $this->updateImage($request, $this->cat);
+        $this->updateImage($request, $cat);
 
-        return redirect()->action('CategoriesController@show', $this->cat->slug);
+        return redirect()->route('cats.show', $cat->slug);
     }
 
     /**
@@ -163,25 +147,10 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $this->cat = category::findOrFail($id);
-
-        try {
-            $this->cat->delete();
-
-        } catch (Exception $e) {
-            if ($e instanceof QueryException || $e->getCode() == 23000) {
-                flash()->error('No deben haber Productos asociados.');
-
-                return redirect()->action('CategoriesController@show', $this->cat->slug);
-            }
-
-            Log::error($e);
-
-            abort(500);
-        }
+        $this->cat->delete($id);
 
         flash()->success('La Categoria ha sido eliminada correctamente.');
 
-        return redirect()->action('CategoriesController@index');
+        return redirect()->route('cats.index');
     }
 }

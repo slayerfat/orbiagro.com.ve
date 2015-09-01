@@ -17,7 +17,7 @@
       Si ha seguido estos pasos o borro sin querer el susodicho correo, puede
       generar
       <strong>
-        {!! link_to_action('ConfirmationsController@generateConfirm', 'Una nueva Verificacion.') !!}
+        {!! link_to_route('users.confirmations.create', 'Una nueva Verificacion.') !!}
       </strong>
     </h4>
   </div>

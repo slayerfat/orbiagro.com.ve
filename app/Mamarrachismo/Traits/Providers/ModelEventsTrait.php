@@ -1,9 +1,15 @@
 <?php namespace Orbiagro\Mamarrachismo\Traits\Providers;
 
+use Orbiagro\Models\Image;
 use Storage;
 
 trait ModelEventsTrait
 {
+
+    /**
+     * @var Image
+     */
+    private $image;
     /**
      * crea el hook segun el modelo para ser asociado con
      * algun id de usuario al momento de ser creado o actualizado.
@@ -39,12 +45,14 @@ trait ModelEventsTrait
             $this->id = $mdl->id;
         });
 
-        $model::deleted(function () {
+        $model::deleted(function () use ($model) {
             if ($this->image) {
                 $this->image->delete();
             }
 
-            Storage::disk('public')->deleteDirectory("category/{$this->id}");
+            $dir = strtolower(class_basename($model));
+
+            Storage::disk('public')->deleteDirectory("{$dir}/{$this->id}");
         });
     }
 }

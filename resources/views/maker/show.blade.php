@@ -13,6 +13,9 @@
           {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block', 'onclick' => 'deleteResourceConfirm()']) !!}
           {!! Form::close() !!}
         </div>
+        @if($maker->image)
+          @include('partials.images.image-admin-buttons', ['image' => $maker->image])
+        @endif
       </div>
     </div>
   @endif
@@ -29,16 +32,6 @@
           </div>
           @if($maker->image)
             <div class="media-right">
-              @if(Auth::user() and Auth::user()->isOwnerOrAdmin($maker->user_id))
-                <span>
-                  <a href="{{ action('ImagesController@edit', $maker->image->id) }}">
-                    <button
-                      type="button"
-                      name="image-edit"
-                      class="btn btn-default">Editar Imagen</button>
-                  </a>
-                </span>
-              @endif
               <img
                 class="media-object"
                 src="{{asset($maker->image->small)}}"

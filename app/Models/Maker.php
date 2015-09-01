@@ -1,7 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\Image;
-use Orbiagro\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
@@ -19,7 +17,7 @@ use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereSlug($value)

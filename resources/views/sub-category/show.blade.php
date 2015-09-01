@@ -14,16 +14,7 @@
           {!! Form::close() !!}
         </div>
         @if($subCat->image)
-          <div class="col-xs-2">
-            <span>
-              <a href="{{ action('ImagesController@edit', $subCat->image->id) }}">
-                <button
-                  type="button"
-                  name="image-edit"
-                  class="btn btn-default">Editar Imagen</button>
-              </a>
-            </span>
-          </div>
+          @include('partials.images.image-admin-buttons', ['image' => $subCat->image])
         @endif
       </div>
     </div>

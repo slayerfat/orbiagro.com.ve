@@ -7,7 +7,6 @@ function deleteResourceFromAnchor(id)
   }
   if (confirm('Esta accion no se puede deshacer.'))
   {
-    event.preventDefault();
     document.getElementById(id).submit();
     return true;
   }

@@ -1,8 +1,5 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Models\Image;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\SubCategory;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
@@ -20,7 +17,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\SubCategory[] $subCategories
+ * @property-read \Illuminate\Database\Eloquent\Collection|SubCategory[] $subCategories
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Category whereInfo($value)
