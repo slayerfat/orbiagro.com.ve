@@ -94,4 +94,145 @@ class ProfileRepositoryTest extends TestCase
             $repoMock->getPaginated(1)
         );
     }
+
+    public function testGetLists()
+    {
+        $model = Mockery::mock(Profile::class)
+            ->makePartial();
+
+        $model->shouldReceive('lists')
+            ->once()
+            ->with('description', 'id')
+            ->andReturn('mocked');
+
+        $repoMock = new ProfileRepository($model);
+
+        $this->assertEquals(
+            'mocked',
+            $repoMock->getLists()
+        );
+    }
+
+    public function testStore()
+    {
+        $model = Mockery::mock(Profile::class)
+            ->makePartial();
+
+        $model->shouldReceive('newInstance')
+            ->once()
+            ->andReturnSelf();
+
+        $model->shouldReceive('fill')
+            ->once();
+
+        $model->shouldReceive('save')
+            ->once();
+
+        $repoMock = new ProfileRepository($model);
+
+        $this->assertSame(
+            $model,
+            $repoMock->store([])
+        );
+    }
+
+    public function testUpdate()
+    {
+        $model = Mockery::mock(Profile::class)
+            ->makePartial();
+
+        $model->shouldReceive('fill')
+            ->once();
+
+        $model->shouldReceive('update')
+            ->once();
+
+        $repoMock = Mockery::mock(ProfileRepository::class, [$model])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $repoMock->shouldReceive('getById')
+            ->once()
+            ->andReturn($model);
+
+        $this->assertSame(
+            $model,
+            $repoMock->update(1, [])
+        );
+    }
+
+    public function testDestroy()
+    {
+        $model = Mockery::mock(Profile::class)
+            ->makePartial();
+
+        $model->users = collect();
+
+        $model->shouldReceive('delete')
+            ->once()
+            ->andReturn('mocked');
+
+        $repoMock = Mockery::mock(ProfileRepository::class, [$model])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $repoMock->shouldReceive('getById')
+            ->once()
+            ->andReturn($model);
+
+        $this->assertSame(
+            'mocked',
+            $repoMock->destroy(4)
+        );
+    }
+
+    public function testDestroyShouldNotAllowWithUsers()
+    {
+        $model = Mockery::mock(Profile::class)
+            ->makePartial();
+
+        $model->users = collect([1,2,3]);
+
+        $repoMock = Mockery::mock(ProfileRepository::class, [$model])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $repoMock->shouldReceive('getById')
+            ->once()
+            ->andReturn($model);
+
+        $this->assertFalse($repoMock->destroy(4));
+    }
+
+    /**
+     * @expectedException \Orbiagro\Repositories\Exceptions\InvalidProfileRequestException
+     */
+    public function testDestroyShouldThrowExceptionIfPrimaryAreBeingDeleted()
+    {
+        $model = Mockery::mock(Profile::class)
+            ->makePartial();
+
+        $repoMock = Mockery::mock(ProfileRepository::class, [$model])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $this->assertFalse($repoMock->destroy(1));
+    }
+
+    public function testGetEmptyInstance()
+    {
+        $model = Mockery::mock(Profile::class)
+            ->makePartial();
+
+        $model->shouldReceive('newInstance')
+            ->once()
+            ->andReturnSelf();
+
+        $repoMock = new ProfileRepository($model);
+
+        $this->assertSame(
+            $model,
+            $repoMock->getEmptyInstance()
+        );
+    }
 }

@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Repositories;
 
 use Orbiagro\Models\Profile;
+use Orbiagro\Repositories\Exceptions\InvalidProfileRequestException;
 use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
 
 class ProfileRepository extends AbstractRepository implements ProfileRepositoryInterface
@@ -38,7 +39,7 @@ class ProfileRepository extends AbstractRepository implements ProfileRepositoryI
      */
     public function store(array $data)
     {
-        $profile = $this->getEmptyInstance();
+        $profile = $this->model->newInstance();
 
         $profile->fill($data);
 
@@ -66,12 +67,12 @@ class ProfileRepository extends AbstractRepository implements ProfileRepositoryI
     /**
      * @param $id
      * @return bool|null
-     * @throws \Exception
+     * @throws InvalidProfileRequestException
      */
     public function destroy($id)
     {
         if ($id <= 3) {
-            throw new \Exception('Los perfiles principales no pueden ser eliminados.');
+            throw new InvalidProfileRequestException('Los perfiles principales no pueden ser eliminados.');
         }
 
         $profile = $this->getById($id);
