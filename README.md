@@ -9,3 +9,13 @@
 ##en construcción.
 
 ![99-bugs](http://www.kotzendes-einhorn.de/blog/wp-content/uploads/2014/04/99-bugs-in-the-code.jpg)
+
+###dev
+
+ide helper
+
+`php artisan ide-helper:generate`
+
+`php artisan ide-helper:models -W`
+
+`php artisan ide-helper:meta`

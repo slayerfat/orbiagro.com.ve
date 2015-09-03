@@ -1,5 +1,7 @@
 <?php namespace Orbiagro\Providers;
 
+use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Auth\Registrar;
 use Laracasts\Generators\GeneratorsServiceProvider;
@@ -7,16 +9,6 @@ use Orbiagro\Services\Registrar as OrbiagroRegistrar;
 
 class AppServiceProvider extends ServiceProvider
 {
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
 
     /**
      * Register any application services.
@@ -31,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->environment() == 'local') {
             $this->app->register(GeneratorsServiceProvider::class);
+            $this->app->register(DebugBarServiceProvider::class);
+            $this->app->register(IdeHelperServiceProvider::class);
         }
         $this->app->bind(
             Registrar::class,
