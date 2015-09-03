@@ -13,7 +13,7 @@
         </em>
       </li>
       <li>
-        {!! link_to_route('products.subcats.index, 'Productos', $subCat->slug) !!}
+        {!! link_to_route('products.subcats.index', 'Productos', $subCat->slug) !!}
       </li>
     </ol>
   </div>
