@@ -95,12 +95,10 @@ class CategoryRepositoryTest extends TestCase
         $collectionMock = Mockery::mock(Collection::class)->makePartial();
 
         $collectionMock->shouldReceive('each')
-            ->once()
-            ->andReturn('mocked collection');
+            ->once();
 
-        $this->assertEquals(
-            'mocked collection',
-            $catRepo->getRelatedProducts($collectionMock)
+        $this->assertTrue(
+            $catRepo->getRelatedProducts($collectionMock) instanceof \Illuminate\Support\Collection
         );
     }
 
