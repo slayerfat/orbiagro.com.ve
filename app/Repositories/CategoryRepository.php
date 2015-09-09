@@ -40,20 +40,22 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
      */
     public function getRelatedProducts(Collection $cats, $quantity = 6)
     {
-        return $cats->each(function ($cat) use ($quantity) {
-            $collection = collect();
+        $collection = collect();
 
+        $cats->each(function ($cat) use ($quantity, $collection) {
             foreach ($cat->subCategories as $subCat) {
-                $collection->push(
-                    $subCat->products()
-                           ->random()
-                           ->take($quantity)
-                           ->get()
-                );
+                if (!$subCat->products->isEmpty()) {
+                    $collection->push(
+                        $subCat->products()
+                            ->random()
+                            ->take($quantity)
+                            ->get()
+                    );
+                }
             }
-
-            return $collection;
         });
+
+        return $collection;
     }
 
 

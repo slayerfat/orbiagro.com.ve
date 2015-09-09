@@ -1,5 +1,5 @@
-@unless(isset($products))
-    @foreach($products as $product)
+@if(isset($products))
+      @foreach($products as $product)
         <div class="{!!isset($size) ? $size : 'col-xs-4'!!}">
             <div class="thumbnail">
                 @unless($product->images->isEmpty())
@@ -16,4 +16,4 @@
             </div>
         </div>
     @endforeach
-@endunless
+@endif
