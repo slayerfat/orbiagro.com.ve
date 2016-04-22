@@ -5,7 +5,6 @@ use Route;
 /**
  * @see http://i.imgur.com/xVyoSl.jpg
  */
-
 abstract class Routes
 {
     /**
@@ -38,13 +37,15 @@ abstract class Routes
     /**
      * el prototipo basico para registrar rutas.
      *
-     * @param  array  $restfulArray
-     * @param  array  $nonRestfulArray
+     * @param  array $restfulArray
+     * @param  array $nonRestfulArray
      *
      * @return void
      */
-    protected function executePrototype(array $restfulArray, array $nonRestfulArray)
-    {
+    protected function executePrototype(
+        array $restfulArray,
+        array $nonRestfulArray
+    ) {
         foreach ($restfulArray as $array) {
             $this->registerRESTfulGroup(
                 $array['routerOptions'],
@@ -52,27 +53,14 @@ abstract class Routes
             );
         }
 
-        $this->registerSigleRoute($nonRestfulArray);
-    }
-
-    /**
-     * itera las opciones para registrar las rutas.
-     *
-     * @param  array  $options
-     * @return void
-     */
-    protected function registerSigleRoute(array $options)
-    {
-        foreach ($options as $details) {
-            Route::$details['method']($details['url'], $details['data']);
-        }
+        $this->registerSingleRoute($nonRestfulArray);
     }
 
     /**
      * Registra un grupo de rutas.
      *
-     * @param  array  $options Las opciones del grupo.
-     * @param  array  $details Los parametros necesarios para registrar la ruta.
+     * @param  array $options Las opciones del grupo.
+     * @param  array $details Los parametros necesarios para registrar la ruta.
      *
      * @return void
      */
@@ -83,10 +71,10 @@ abstract class Routes
                 'index'   => ['get', '/'],
                 'create'  => ['get', '/crear'],
                 'store'   => ['post', '/'],
-                'show'    => ['get', '/'.$details['resource']],
-                'edit'    => ['get', '/'.$details['resource'].'/editar'],
-                'update'  => ['patch', '/'.$details['resource']],
-                'destroy' => ['delete', '/'.$details['resource']],
+                'show'    => ['get', '/' . $details['resource']],
+                'edit'    => ['get', '/' . $details['resource'] . '/editar'],
+                'update'  => ['patch', '/' . $details['resource']],
+                'destroy' => ['delete', '/' . $details['resource']],
             ];
 
             // si en los detalles hay ignore, se salta.
@@ -103,21 +91,32 @@ abstract class Routes
                  * @example Route::rule[0](rule[1], ...)
                  *          Route::create('/',      ...)
                  */
-                Route::$rule[0](
-                    $rule[1],
-                    [
-                        'uses' => $details['uses'].'@'.$name,
-                        'as'   => $details['as'].'.'.$name
-                    ]
-                );
+                call_user_func([Route::class, $rule[0]], $rule[1], [
+                    'uses' => $details['uses'] . '@' . $name,
+                    'as'   => $details['as'] . '.' . $name,
+                ]);
             }
         });
     }
 
     /**
+     * itera las opciones para registrar las rutas.
+     *
+     * @param  array $options
+     * @return void
+     */
+    protected function registerSingleRoute(array $options)
+    {
+        foreach ($options as $details) {
+            call_user_func([Route::class, $details['method']], $details['url'],
+                $details['data']);
+        }
+    }
+
+    /**
      * Se registra mamarrachamente un listado de controladores.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return void
      */
     protected function registerControllerPrototype(array $data)
