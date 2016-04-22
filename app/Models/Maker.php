@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
  * Orbiagro\Models\Maker
@@ -17,7 +17,8 @@ use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Orbiagro\Models\Image $image
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereSlug($value)
@@ -28,6 +29,7 @@ use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Maker random()
+ * @mixin \Eloquent
  */
 class Maker extends Model
 {

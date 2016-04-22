@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Models;
 
-use Storage;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Storage;
 
 /**
  * Orbiagro\Models\File
@@ -16,7 +16,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read \ $filable
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $filable
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\File whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\File whereFileableId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\File whereFileableType($value)
@@ -26,6 +26,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\File whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\File whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\File whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class File extends Model
 {

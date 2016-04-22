@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Models;
 
-use Storage;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Storage;
 
 /**
  * Orbiagro\Models\Image
@@ -21,7 +21,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read \ $imageable
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $imageable
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereImageableId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereImageableType($value)
@@ -36,6 +36,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class Image extends Model
 {

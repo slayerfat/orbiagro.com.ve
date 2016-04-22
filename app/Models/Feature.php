@@ -15,7 +15,9 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read Product $product
+ * @property-read \Orbiagro\Models\Product $product
+ * @property-read \Orbiagro\Models\File $file
+ * @property-read \Orbiagro\Models\Image $image
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Feature whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Feature whereProductId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Feature whereTitle($value)
@@ -24,6 +26,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Feature whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Feature whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Feature whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Feature extends Model
 {

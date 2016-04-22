@@ -1,11 +1,11 @@
 <?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\Transformer;
 use Orbiagro\Mamarrachismo\ModelValidation;
-use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Transformer;
 
 /**
  * Orbiagro\Models\Promotion
@@ -22,9 +22,9 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read PromoType $type
- * @property-read \Illuminate\Database\Eloquent\Collection|Image[] $images
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Orbiagro\Models\PromoType $type
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Image[] $images
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion wherePromoTypeId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereTitle($value)
@@ -38,6 +38,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion random()
+ * @mixin \Eloquent
  */
 class Promotion extends Model
 {

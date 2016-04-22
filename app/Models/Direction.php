@@ -17,9 +17,9 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $created_by
  * @property integer $updated_by
  * @property string $deleted_at
- * @property-read \ $directionable
- * @property-read MapDetail $map
- * @property-read Parish $parish
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $directionable
+ * @property-read \Orbiagro\Models\MapDetail $map
+ * @property-read \Orbiagro\Models\Parish $parish
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereDirectionableId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereDirectionableType($value)
@@ -30,6 +30,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class Direction extends Model
 {

@@ -2,9 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-use Orbiagro\Mamarrachismo\Transformer;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Transformer;
 
 /**
  * Orbiagro\Models\MechanicalInfo
@@ -24,7 +23,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $created_by
  * @property integer $updated_by
  * @property-write mixed $horse_power
- * @property-read Product $product
+ * @property-read \Orbiagro\Models\Product $product
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereProductId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereMotor($value)
@@ -39,6 +38,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MechanicalInfo whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class MechanicalInfo extends Model
 {

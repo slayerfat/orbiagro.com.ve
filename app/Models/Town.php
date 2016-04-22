@@ -13,8 +13,8 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read State $state
- * @property-read \Illuminate\Database\Eloquent\Collection|Parish[] $parishes
+ * @property-read \Orbiagro\Models\State $state
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Parish[] $parishes
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereStateId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereDescription($value)
@@ -22,6 +22,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Town whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Town extends Model
 {
