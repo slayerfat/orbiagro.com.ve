@@ -1,9 +1,11 @@
 <?php namespace Orbiagro\Exceptions;
 
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Log;
 use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
 use Orbiagro\Models\Image;
@@ -20,7 +22,10 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        HttpException::class
+        AuthorizationException::class,
+        HttpException::class,
+        ModelNotFoundException::class,
+        ValidationException::class,
     ];
 
     /**

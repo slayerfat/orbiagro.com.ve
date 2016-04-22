@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Models;
 
-use Storage;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Storage;
 
 /**
  * Orbiagro\Models\Image
@@ -36,6 +36,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereUpdatedBy($value)
+ *
  */
 class Image extends Model
 {
