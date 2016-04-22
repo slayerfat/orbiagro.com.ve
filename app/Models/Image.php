@@ -21,7 +21,7 @@ use Storage;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read \ $imageable
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $imageable
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereImageableId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereImageableType($value)
@@ -36,7 +36,7 @@ use Storage;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereUpdatedBy($value)
- *
+ * @mixin \Eloquent
  */
 class Image extends Model
 {

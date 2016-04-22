@@ -18,9 +18,9 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read Bank $bank
- * @property-read CardType $cardType
- * @property-read User $user
+ * @property-read \Orbiagro\Models\Bank $bank
+ * @property-read \Orbiagro\Models\CardType $cardType
+ * @property-read \Orbiagro\Models\User $user
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereBankId($value)
@@ -33,6 +33,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Billing whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class Billing extends Model
 {

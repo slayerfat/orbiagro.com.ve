@@ -1,7 +1,6 @@
 <?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -16,8 +15,8 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read User $user
- * @property-read \ $visitable
+ * @property-read \Orbiagro\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $visitable
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Visit whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Visit whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Visit whereVisitableId($value)
@@ -27,6 +26,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Visit whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Visit whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Visit whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Visit extends Model
 {

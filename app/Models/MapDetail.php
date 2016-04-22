@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -17,7 +16,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read Direction $direction
+ * @property-read \Orbiagro\Models\Direction $direction
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereDirectionId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereLatitude($value)
@@ -27,6 +26,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class MapDetail extends Model
 {

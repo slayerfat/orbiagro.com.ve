@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -18,9 +18,10 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read Category $category
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read \Illuminate\Database\Eloquent\Collection|Visit[] $visits
+ * @property-read \Orbiagro\Models\Category $category
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Orbiagro\Models\Image $image
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereCategoryId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereDescription($value)
@@ -31,6 +32,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\SubCategory random()
+ * @mixin \Eloquent
  */
 class SubCategory extends Model
 {

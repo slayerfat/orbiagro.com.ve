@@ -1,9 +1,9 @@
 <?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\Transformer;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Transformer;
 
 /**
  * Orbiagro\Models\Characteristic
@@ -19,7 +19,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read Product $product
+ * @property-read \Orbiagro\Models\Product $product
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereProductId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereHeight($value)
@@ -31,6 +31,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class Characteristic extends Model
 {

@@ -24,10 +24,10 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property-read mixed $first_sur_name
  * @property-read mixed $last_sur_name
- * @property-read Gender $gender
- * @property-read Nationality $nationality
- * @property-read User $user
- * @property-read \Illuminate\Database\Eloquent\Collection|Direction[] $direction
+ * @property-read \Orbiagro\Models\Gender $gender
+ * @property-read \Orbiagro\Models\Nationality $nationality
+ * @property-read \Orbiagro\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Direction[] $direction
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereGenderId($value)
@@ -43,6 +43,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Person extends Model
 {

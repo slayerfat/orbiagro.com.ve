@@ -13,7 +13,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read Product $product
+ * @property-read \Orbiagro\Models\Product $product
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereProductId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereDue($value)
@@ -21,6 +21,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class Nutritional extends Model
 {

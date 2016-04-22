@@ -29,7 +29,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Provider whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Provider whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Provider whereSlug($value)
@@ -52,6 +52,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Provider whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Provider whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Provider random()
+ * @mixin \Eloquent
  */
 class Provider extends Model
 {

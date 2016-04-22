@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -14,13 +13,14 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Person[] $people
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Person[] $people
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Gender whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Gender whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Gender whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Gender whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Gender whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Gender whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Gender extends Model
 {

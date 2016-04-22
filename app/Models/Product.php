@@ -1,13 +1,13 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Mamarrachismo\Transformer;
-use Orbiagro\Mamarrachismo\CheckDollar;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\ModelValidation;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
+use Orbiagro\Mamarrachismo\CheckDollar;
+use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Transformer;
 
 /**
  * Orbiagro\Models\Product
@@ -28,19 +28,21 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $deleted_at
  * @property-read mixed $paginate
- * @property-read User $user
- * @property-read Maker $maker
- * @property-read SubCategory $subCategory
- * @property-read \Illuminate\Database\Eloquent\Collection|Feature[] $features
- * @property-read Characteristic $characteristics
- * @property-read MechanicalInfo $mechanical
- * @property-read Nutritional $nutritional
- * @property-read \Illuminate\Database\Eloquent\Collection|Promotion[] $promotions
- * @property-read \Illuminate\Database\Eloquent\Collection|User[] $purchases
- * @property-read \Illuminate\Database\Eloquent\Collection|Provider[] $providers
- * @property-read \Illuminate\Database\Eloquent\Collection|File[] $files
- * @property-read \Illuminate\Database\Eloquent\Collection|Image[] $images
- * @property-read \Illuminate\Database\Eloquent\Collection|Visit[] $visits
+ * @property-read \Orbiagro\Models\User $user
+ * @property-read \Orbiagro\Models\Maker $maker
+ * @property-read \Orbiagro\Models\SubCategory $subCategory
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Feature[] $features
+ * @property-read \Orbiagro\Models\Characteristic $characteristics
+ * @property-read \Orbiagro\Models\MechanicalInfo $mechanical
+ * @property-read \Orbiagro\Models\Nutritional $nutritional
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Promotion[] $promotions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\User[] $purchases
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Provider[] $providers
+ * @property-read \Orbiagro\Models\Direction $direction
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\File[] $files
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Image[] $images
+ * @property-read \Orbiagro\Models\Image $image
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereMakerId($value)
@@ -58,6 +60,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product latest()
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product random()
+ * @mixin \Eloquent
  */
 class Product extends Model
 {
