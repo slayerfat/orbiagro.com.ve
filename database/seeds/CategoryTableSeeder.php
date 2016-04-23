@@ -17,7 +17,8 @@ class CategoryTableSeeder extends BaseSeeder
 
         $types = [
             'Productos Agro-Industriales',
-            'Productos Alimenticios'
+            'Productos Alimenticios',
+            'Industria Minera'
         ];
 
         $faker  = Faker::create('es_ES');

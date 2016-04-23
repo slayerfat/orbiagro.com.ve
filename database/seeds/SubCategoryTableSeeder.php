@@ -26,6 +26,20 @@ class SubCategoryTableSeeder extends BaseSeeder
                 'Arroz',
                 'Avena',
                 'Soya'
+            ],
+            'Industria Minera'            => [
+                'Minerales Metálicos',
+                'Minerales Sulfuros',
+                'Minerales Silicatos',
+                'Minerales Cuarzos',
+                'Minerales Sulfatados',
+                'Minerales Carbonados',
+                'Minerales Oxidados',
+                'Minerales Haluros',
+                'Minerales Sulfuros',
+                'Minerales Fosfatos',
+                'Minerales Elementales',
+                'Mineraloides',
             ]
         ];
 
