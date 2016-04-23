@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateProductsTable extends Migration
 {
@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->text('heroDetails')->nullable();
-            $table->double('price', 12, 2)->unsigned();
+            $table->double('price', 12, 2)->unsigned()->nullable();
             $table->integer('quantity')->unsigned();
             $table->string('slug');
             $table->timestamps();

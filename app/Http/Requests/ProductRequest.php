@@ -43,7 +43,7 @@ class ProductRequest extends Request
         return [
             'title'           => 'required|string|min:5',
             'description'     => 'required|string|min:20',
-            'price'           => 'required|numeric',
+            'price'           => 'numeric|between:1,9999999999',
             'quantity'        => 'required|numeric',
             'parish_id'       => 'required|numeric',
             'maker_id'        => 'required|numeric',
