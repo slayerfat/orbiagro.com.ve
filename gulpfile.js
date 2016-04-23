@@ -172,8 +172,14 @@ gulp.task('copy-app-files', function() {
  |
  */
 
+gulp.task('phpunit', function(){
+  mix.phpUnit('phpunit.xml', { debug: false, notify: true });
+});
+
 elixir(function(mix) {
   mix.sass('app.scss');
   mix.imgOptimizer();
-  mix.phpUnit('phpunit.xml', { debug: false, notify: true });
+  mix.browserSync({
+    proxy: 'orbiagro.app'
+  });
 });
