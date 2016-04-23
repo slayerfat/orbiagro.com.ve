@@ -36,7 +36,6 @@ class SubCategoryTableSeeder extends BaseSeeder
                 'Minerales Carbonados',
                 'Minerales Oxidados',
                 'Minerales Haluros',
-                'Minerales Sulfuros',
                 'Minerales Fosfatos',
                 'Minerales Elementales',
                 'Mineraloides',
