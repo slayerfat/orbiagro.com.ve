@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Intervention;
 use Log;
 use LogicException;
+use Orbiagro\Mamarrachismo\Upload\Exceptions\ImageValidationFail;
 use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
 use Orbiagro\Models\Image as ImageModel;
 use Orbiagro\Repositories\Exceptions\DefaultImageFileNotFoundException;
@@ -139,6 +140,7 @@ class Image extends Upload
      * @throws DefaultImageFileNotFoundException
      * @throws Exception
      * @throws OrphanImageException
+     * @throws ImageValidationFail
      */
     public function update(Model $model, UploadedFile $file = null, array $options = null)
     {
@@ -174,9 +176,7 @@ class Image extends Upload
         if (!isset($file) || $validator->fails()) {
             $this->errors = $validator->errors()->all();
 
-            Log::debug($this->errors);
-
-            throw new Exception('Archivo no valido.');
+            throw new ImageValidationFail('Archivo no valido.', $this->errors);
         }
 
         // verdadero porque se eliminan TODOS los archivos

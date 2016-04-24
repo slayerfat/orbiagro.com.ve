@@ -35,13 +35,13 @@ abstract class Upload
      * reglas para el validador.
      * @var array
      */
-    protected $imageRules = ['image' => 'required|mimes:jpeg,bmp,png,jpg,pjpeg,gif|size:4096'];
+    protected $imageRules = ['image' => 'required|mimes:jpeg,bmp,png,jpg,pjpeg,gif|between:1,4096'];
 
     /**
      * reglas para el validador.
      * @var array
      */
-    protected $fileRules = ['file' => 'mimes:pdf|size:10240'];
+    protected $fileRules = ['file' => 'mimes:pdf|between:1,10240'];
 
     /**
      * Para Utilizar esta clase es casi siempre necesario el uso del ID

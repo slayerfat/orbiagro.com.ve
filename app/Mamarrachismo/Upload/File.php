@@ -1,11 +1,12 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
 use Exception;
-use Validator;
+use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Mamarrachismo\Upload\Exceptions\FileValidationFail;
+use Orbiagro\Models\File as FileModel;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Models\File as FileModel;
+use Validator;
 
 class File extends Upload
 {
@@ -16,7 +17,7 @@ class File extends Upload
      * @param Model $model El modelo relacionado para ser asociado.
      * @param UploadedFile $file Objeto UploadedFiles con la imagen.
      * @return bool
-     * @throws Exception
+     * @throws FileValidationFail
      */
     public function create(Model $model, UploadedFile $file = null)
     {
@@ -31,7 +32,7 @@ class File extends Upload
 
         if ($validator->fails()) {
             $this->errors = $validator->errors()->all();
-            throw new Exception('Archivo no valido.');
+            throw new FileValidationFail('Archivo no valido.', $this->errors);
         }
 
         $this->path = $this->generatePathFromModel($model);
@@ -54,7 +55,7 @@ class File extends Upload
      * @param  UploadedFile $file El modelo del archivo.
      * @param  array $options Las opcions relacionadas, no implementado.
      * @return Model
-     * @throws Exception
+     * @throws FileValidationFail
      * @internal $options no implementadas.
      *
      */
@@ -75,8 +76,8 @@ class File extends Upload
         $validator = Validator::make(['file' => $file], $this->fileRules);
 
         if (!$file || $validator->fails()) {
-            $this->errors = $validator;
-            throw new Exception('Archivo no valido.');
+            $this->errors = $validator->errors()->all();
+            throw new FileValidationFail('Archivo no valido.', $this->errors);
         }
 
         // se chequea si existe el archivo y se elimina

@@ -1,11 +1,12 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use LogicException;
-use Orbiagro\Http\Requests;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Database\Eloquent\Model;
+use LogicException;
+use Orbiagro\Http\Requests;
+use Orbiagro\Mamarrachismo\Upload\Exceptions\ImageValidationFail;
 use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
 
 class ImagesController extends Controller
@@ -48,7 +49,11 @@ class ImagesController extends Controller
      */
     public function update($id, Request $request)
     {
-        $image = $this->imageRepo->update($id, $request);
+        try {
+            $image = $this->imageRepo->update($id, $request);
+        } catch (ImageValidationFail $e) {
+            return redirect()->back()->withErrors($e->getErrors());
+        }
 
         /** @var Model $model */
         $model = $image->imageable;
