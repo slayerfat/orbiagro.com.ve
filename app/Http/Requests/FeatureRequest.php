@@ -1,12 +1,12 @@
 <?php namespace Orbiagro\Http\Requests;
 
+use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
 use Orbiagro\Models\Feature;
 use Orbiagro\Models\Product;
 
-use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
-
 /**
  * Class FeatureRequest
+ *
  * @package Orbiagro\Http\Requests
  */
 class FeatureRequest extends Request
@@ -20,13 +20,13 @@ class FeatureRequest extends Request
         [
             'methodType' => 'POST',
             'class'      => Product::class,
-            'routeParam' => 'products'
+            'routeParam' => 'products',
         ],
         [
             'methodType' => 'PATCH',
             'class'      => Feature::class,
-            'routeParam' => 'features'
-        ]
+            'routeParam' => 'features',
+        ],
     ];
 
     /**
@@ -51,9 +51,9 @@ class FeatureRequest extends Request
     public function rules()
     {
         return [
-            'title'           => 'required|string|between:5,40',
-            'description'     => 'required|string|min:10',
-            'images'          => 'image ',
+            'title'       => 'required|string|between:5,40',
+            'description' => 'required|string|min:10',
+            'images'      => 'image ',
         ];
     }
 }

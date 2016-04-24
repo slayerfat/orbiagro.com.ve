@@ -16,6 +16,7 @@ use Orbiagro\Http\Middleware\VerifyCsrfToken;
 
 /**
  * Class Kernel
+ *
  * @package Orbiagro\Http
  */
 class Kernel extends HttpKernel

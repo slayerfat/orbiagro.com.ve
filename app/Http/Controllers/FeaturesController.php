@@ -1,14 +1,14 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Feature;
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Orbiagro\Http\Requests\FeatureRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
+use Orbiagro\Models\Feature;
+use Orbiagro\Models\Product;
 use Orbiagro\Repositories\Interfaces\FeatureRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 class FeaturesController extends Controller
 {
@@ -35,7 +35,7 @@ class FeaturesController extends Controller
      *
      * @param FeatureRepositoryInterface $featureRepository
      * @param ProductRepositoryInterface $productRepository
-     * @param UserRepositoryInterface    $userRepository
+     * @param UserRepositoryInterface $userRepository
      */
     public function __construct(
         FeatureRepositoryInterface $featureRepository,
@@ -44,15 +44,15 @@ class FeaturesController extends Controller
     ) {
         $this->middleware('auth');
 
-        $this->featRepo = $featureRepository;
+        $this->featRepo    = $featureRepository;
         $this->productRepo = $productRepository;
-        $this->userRepo = $userRepository;
+        $this->userRepo    = $userRepository;
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @param  int    $id
+     * @param  int $id
      * @param Feature $feature
      *
      * @return RedirectResponse|View
@@ -64,7 +64,7 @@ class FeaturesController extends Controller
         if ($this->featRepo->validateCreateRequest($id)) {
             return view('feature.create')->with([
                 'product' => $product,
-                'feature' => $feature
+                'feature' => $feature,
             ]);
         }
 
@@ -79,7 +79,7 @@ class FeaturesController extends Controller
      * Store a newly created resource in storage.
      *
      * @method store
-     * @param  int            $id
+     * @param  int $id
      * @param  FeatureRequest $request
      *
      * @return RedirectResponse
@@ -115,7 +115,7 @@ class FeaturesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse|View
      */
     public function edit($id)
@@ -140,7 +140,7 @@ class FeaturesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int            $id
+     * @param  int $id
      * @param  FeatureRequest $request
      *
      * @return RedirectResponse
@@ -165,7 +165,7 @@ class FeaturesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)

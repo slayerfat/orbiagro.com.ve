@@ -2,6 +2,7 @@
 
 /**
  * Class CategoriesRoutes
+ *
  * @package Orbiagro\Http\Routes
  */
 class CategoriesRoutes extends Routes
@@ -15,28 +16,28 @@ class CategoriesRoutes extends Routes
          * Category
          */
         [
-            'routerOptions'    => [
-                    'prefix'   => 'categorias',
-                ],
-            'rtDetails'        => [
-                    'uses'     => 'CategoriesController',
-                    'as'       => 'cats',
-                    'resource' => '{cats}'
-                ]
+            'routerOptions' => [
+                'prefix' => 'categorias',
+            ],
+            'rtDetails'     => [
+                'uses'     => 'CategoriesController',
+                'as'       => 'cats',
+                'resource' => '{cats}',
+            ],
         ],
 
         /**
          * SubCategory
          */
         [
-            'routerOptions'    => [
-                    'prefix'   => 'rubros',
-                ],
-            'rtDetails'        => [
-                    'uses'     => 'SubCategoriesController',
-                    'as'       => 'subCats',
-                    'resource' => '{subCats}'
-                ]
+            'routerOptions' => [
+                'prefix' => 'rubros',
+            ],
+            'rtDetails'     => [
+                'uses'     => 'SubCategoriesController',
+                'as'       => 'subCats',
+                'resource' => '{subCats}',
+            ],
         ],
     ];
 
@@ -48,12 +49,12 @@ class CategoriesRoutes extends Routes
          * listado de rubros segun su categoria
          */
         [
-            'method'   => 'get',
-            'url'      => 'categorias/{categorias}/rubros',
-            'data'     => [
+            'method' => 'get',
+            'url'    => 'categorias/{categorias}/rubros',
+            'data'   => [
                 'uses' => 'SubCategoriesController@indexByCategory',
-                'as'   => 'cats.subCats.index'
-            ]
+                'as'   => 'cats.subCats.index',
+            ],
         ],
     ];
 

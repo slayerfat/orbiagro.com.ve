@@ -15,7 +15,7 @@ class UserRequest extends Request
         [
             'methodType' => 'PATCH',
             'class'      => User::class,
-            'routeParam' => 'users'
+            'routeParam' => 'users',
         ],
     ];
 
@@ -54,8 +54,8 @@ class UserRequest extends Request
             case 'PUT':
             case 'PATCH':
                 return [
-                    'name'       => 'required|max:255|unique:users,name,'.(int)$this->route('users'),
-                    'email'      => 'required|email|max:255|unique:users,email,'.(int)$this->route('users'),
+                    'name'       => 'required|max:255|unique:users,name,' . (int)$this->route('users'),
+                    'email'      => 'required|email|max:255|unique:users,email,' . (int)$this->route('users'),
                     'password'   => 'confirmed|min:6',
                     'profile_id' => 'required|numeric',
                 ];

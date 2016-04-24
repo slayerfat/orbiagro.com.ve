@@ -1,9 +1,9 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Requests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use Orbiagro\Http\Requests;
 use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 
@@ -22,6 +22,7 @@ class ProductsProvidersController extends Controller
 
     /**
      * Create a new controller instance.
+     *
      * @param ProductRepositoryInterface $productRepo
      * @param ProductProviderRepositoryInterface $providerRepo
      */
@@ -33,14 +34,14 @@ class ProductsProvidersController extends Controller
 
         $this->middleware('user.admin');
 
-        $this->productRepo = $productRepo;
+        $this->productRepo  = $productRepo;
         $this->providerRepo = $providerRepo;
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @param  int      $productId
+     * @param  int $productId
      * @return View
      */
     public function create($productId)
@@ -66,14 +67,14 @@ class ProductsProvidersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  int     $productId
+     * @param  int $productId
      * @param  Request $request
      * @return RedirectResponse
      */
     public function store($productId, Request $request)
     {
         $this->validate($request, [
-            'provider_id' => 'required|numeric'
+            'provider_id' => 'required|numeric',
         ]);
 
         $product = $this->productRepo->getBySlugOrId($productId);
@@ -84,6 +85,7 @@ class ProductsProvidersController extends Controller
         );
 
         flash()->success('El Proveedor fue asociado con exito.');
+
         return redirect()->route('products.show', $product->slug);
     }
 
@@ -100,7 +102,7 @@ class ProductsProvidersController extends Controller
 
         $providers = $this->providerRepo->getLists();
 
-        $provider  = $product->providers()->where('provider_id', $providerId)->first();
+        $provider = $product->providers()->where('provider_id', $providerId)->first();
 
         $product->sku = $provider->pivot->sku;
 
@@ -119,7 +121,7 @@ class ProductsProvidersController extends Controller
     public function update($productId, $providerId, Request $request)
     {
         $this->validate($request, [
-            'provider_id' => 'required|numeric'
+            'provider_id' => 'required|numeric',
         ]);
 
         $product = $this->productRepo->getBySlugOrId($productId);
@@ -127,8 +129,8 @@ class ProductsProvidersController extends Controller
         $product->providers()->updateExistingPivot(
             $providerId,
             [
-                'sku' => $request->input('sku'),
-                'provider_id' => $request->input('provider_id')
+                'sku'         => $request->input('sku'),
+                'provider_id' => $request->input('provider_id'),
             ]
         );
 

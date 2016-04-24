@@ -14,8 +14,8 @@ class PeopleRequest extends Request
     protected $resourcesData = [
         [
             'class'      => Person::class,
-            'routeParam' => 'users'
-        ]
+            'routeParam' => 'users',
+        ],
     ];
 
     /**
@@ -60,7 +60,7 @@ class PeopleRequest extends Request
             case 'PATCH':
                 return [
                     'identity_card'  => 'numeric|between:999999,99999999|unique:people,identity_card,'
-                        .(int)$this->route('people'),
+                        . (int)$this->route('people'),
                     'first_name'     => 'alpha|max:40',
                     'last_name'      => 'alpha|max:40',
                     'first_surname'  => 'alpha|max:40',

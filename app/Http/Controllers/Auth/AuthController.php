@@ -1,18 +1,17 @@
 <?php namespace Orbiagro\Http\Controllers\Auth;
 
-use Orbiagro\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-// 5.1
-use Orbiagro\Models\User;
-use Orbiagro\Models\Profile;
-use Orbiagro\Models\UserConfirmation;
+use Orbiagro\Http\Controllers\Controller;
 use Orbiagro\Mamarrachismo\EnviarEmail as Email;
+use Orbiagro\Models\Profile;
+use Orbiagro\Models\User;
+use Orbiagro\Models\UserConfirmation;
 use Validator;
-use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
 /**
  * Class AuthController
+ *
  * @package Orbiagro\Http\Controllers\Auth
  */
 class AuthController extends Controller
@@ -50,7 +49,7 @@ class AuthController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public function validator(array $data)
@@ -65,16 +64,17 @@ class AuthController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return User
      */
     public function create(array $data)
     {
+        /** @var Profile $profile */
         $profile      = Profile::where('description', 'Desactivado')->firstOrFail();
         $confirmation = new UserConfirmation(['data' => true]);
 
         // nuevo usuario
-        $user = new User;
+        $user             = new User;
         $user->name       = $data['name'];
         $user->profile_id = $profile->id;
         $user->email      = $data['email'];
@@ -85,7 +85,7 @@ class AuthController extends Controller
         // datos usados para enviar el email
         $data = [
             'vista'   => ['emails.confirmation', 'emails.confirmationPlain'],
-            'subject' => 'Confirmacion de cuenta en orbiagro.com.ve',
+            'subject' => 'Confirmación de cuenta en orbiagro.com.ve',
             'user'    => $user,
         ];
 
@@ -94,9 +94,9 @@ class AuthController extends Controller
         Email::enviarEmail($data, $emails);
 
         flash()->info(
-            'Usuario creado exitosamene, un correo de confirmación '
-            .'ha sido enviado a '
-            .$user->email
+            'Usuario creado exitosamente, un correo de confirmación '
+            . 'ha sido enviado a '
+            . $user->email
         );
 
         return $user;

@@ -1,10 +1,10 @@
 <?php
 
-use Orbiagro\Http\Routes\ConfirmationsRoutes as Confirmations;
-use Orbiagro\Http\Routes\UserRoutes as User;
-use Orbiagro\Http\Routes\ProductRoutes as Product;
 use Orbiagro\Http\Routes\CategoriesRoutes as Categories;
+use Orbiagro\Http\Routes\ConfirmationsRoutes as Confirmations;
 use Orbiagro\Http\Routes\MiscRoutes as Misc;
+use Orbiagro\Http\Routes\ProductRoutes as Product;
+use Orbiagro\Http\Routes\UserRoutes as User;
 
 /**
  * @todo ver como mover esto a un ServiceProvider o algo similar.

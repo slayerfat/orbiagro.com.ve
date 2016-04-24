@@ -1,12 +1,12 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Requests;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Orbiagro\Mamarrachismo\VisitsService;
-use Orbiagro\Http\Requests\SubCategoryRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Orbiagro\Http\Requests;
+use Orbiagro\Http\Requests\SubCategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
@@ -123,7 +123,7 @@ class SubCategoriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @param  VisitsService $visits
      * @return View
      */
@@ -150,7 +150,7 @@ class SubCategoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function edit($id)
@@ -165,7 +165,7 @@ class SubCategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int                $id
+     * @param  int $id
      * @param  SubCategoryRequest $request
      *
      * @return RedirectResponse
@@ -191,7 +191,7 @@ class SubCategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)
@@ -205,7 +205,7 @@ class SubCategoriesController extends Controller
      * Busca aleatoriamente una cantidad de productos y regresa la coleccion.
      *
      * @param  \Illuminate\Support\Collection $subCats Las categorias.
-     * @param  int                            $ammount La cantidad a tomar.
+     * @param  int $ammount La cantidad a tomar.
      * @return \Illuminate\Support\Collection
      */
     private function getProductsInSubCat($subCats, $ammount = 12)

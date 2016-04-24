@@ -1,10 +1,10 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\View\View;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Orbiagro\Http\Requests\CategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 
 class CategoriesController extends Controller
@@ -42,7 +42,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $cats  = $this->cat->getAll();
+        $cats = $this->cat->getAll();
 
         $productsCollection = $this->cat->getRelatedProducts($cats);
 
@@ -61,7 +61,7 @@ class CategoriesController extends Controller
     public function create()
     {
         return view('category.create')->with([
-            'cat' => $this->cat->getEmptyInstance()
+            'cat' => $this->cat->getEmptyInstance(),
         ]);
     }
 
@@ -89,7 +89,7 @@ class CategoriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function show($id)
@@ -108,7 +108,7 @@ class CategoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function edit($id)
@@ -121,7 +121,7 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int             $id
+     * @param  int $id
      * @param  CategoryRequest $request
      *
      * @return RedirectResponse
@@ -143,7 +143,7 @@ class CategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)

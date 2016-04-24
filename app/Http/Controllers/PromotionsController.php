@@ -3,9 +3,8 @@
 namespace Orbiagro\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Orbiagro\Http\Requests;
 use Illuminate\View\View as Response;
-use Orbiagro\Http\Controllers\Controller;
+use Orbiagro\Http\Requests;
 
 class PromotionsController extends Controller
 {
@@ -32,7 +31,7 @@ class PromotionsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
+     * @param  Request $request
      * @return Response
      */
     public function store(Request $request)
@@ -43,7 +42,7 @@ class PromotionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function show($id)
@@ -54,7 +53,7 @@ class PromotionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function edit($id)
@@ -65,8 +64,8 @@ class PromotionsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
+     * @param  Request $request
+     * @param  int $id
      * @return Response
      */
     public function update(Request $request, $id)
@@ -77,7 +76,7 @@ class PromotionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function destroy($id)

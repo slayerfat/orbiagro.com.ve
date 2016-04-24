@@ -1,9 +1,9 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Orbiagro\Http\Requests\MakerRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Orbiagro\Http\Requests\MakerRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
 use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
 
@@ -19,6 +19,7 @@ class MakersController extends Controller
 
     /**
      * Create a new controller instance.
+     *
      * @param MakerRepositoryInterface $makerRepo
      */
     public function __construct(MakerRepositoryInterface $makerRepo)

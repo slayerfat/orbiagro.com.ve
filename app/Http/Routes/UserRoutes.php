@@ -2,6 +2,7 @@
 
 /**
  * Class UserRoutes
+ *
  * @package Orbiagro\Http\Routes
  */
 class UserRoutes extends Routes
@@ -9,6 +10,7 @@ class UserRoutes extends Routes
 
     /**
      * Prueba
+     *
      * @var array
      */
     protected $restfulOptions = [
@@ -16,11 +18,11 @@ class UserRoutes extends Routes
             'routerOptions' => [
                 'prefix' => 'usuarios',
             ],
-            'rtDetails' => [
+            'rtDetails'     => [
                 'uses'     => 'UsersController',
                 'as'       => 'users',
-                'resource' => '{users}'
-            ]
+                'resource' => '{users}',
+            ],
         ],
 
         /**
@@ -30,12 +32,12 @@ class UserRoutes extends Routes
             'routerOptions' => [
                 'prefix' => 'usuarios/datos-personales',
             ],
-            'rtDetails' => [
+            'rtDetails'     => [
                 'uses'     => 'PeopleController',
                 'as'       => 'users.people',
                 'resource' => '{people}',
-                'ignore' => ['create', 'edit', 'store']
-            ]
+                'ignore'   => ['create', 'edit', 'store'],
+            ],
         ],
     ];
 
@@ -47,40 +49,40 @@ class UserRoutes extends Routes
          * Usuarios Eliminados
          */
         [
-            'method'   => 'get',
-            'url'      => 'usuarios/eliminados/{users}',
-            'data'     => [
+            'method' => 'get',
+            'url'    => 'usuarios/eliminados/{users}',
+            'data'   => [
                 'uses' => 'UsersController@showTrashed',
-                'as'   => 'users.trashed'
-            ]
+                'as'   => 'users.trashed',
+            ],
         ],
 
         /**
          * El resto de datos personales
          */
         [
-            'method'   => 'get',
-            'url'      => 'usuarios/datos-personales/{usuarios}/crear',
-            'data'     => [
+            'method' => 'get',
+            'url'    => 'usuarios/datos-personales/{usuarios}/crear',
+            'data'   => [
                 'uses' => 'PeopleController@create',
-                'as'   => 'users.people.create'
-            ]
+                'as'   => 'users.people.create',
+            ],
         ],
         [
-            'method'   => 'get',
-            'url'      => 'usuarios/datos-personales/{usuarios}/editar',
-            'data'     => [
+            'method' => 'get',
+            'url'    => 'usuarios/datos-personales/{usuarios}/editar',
+            'data'   => [
                 'uses' => 'PeopleController@edit',
-                'as'   => 'users.people.edit'
-            ]
+                'as'   => 'users.people.edit',
+            ],
         ],
         [
-            'method'   => 'post',
-            'url'      => 'usuarios/datos-personales/{usuarios}',
-            'data'     => [
+            'method' => 'post',
+            'url'    => 'usuarios/datos-personales/{usuarios}',
+            'data'   => [
                 'uses' => 'PeopleController@store',
-                'as'   => 'users.people.store'
-            ]
+                'as'   => 'users.people.store',
+            ],
         ],
 
         /**
@@ -88,11 +90,11 @@ class UserRoutes extends Routes
          */
         [
             'method' => 'get',
-            'url' => 'usuarios/{users}/productos',
-            'data' => [
+            'url'    => 'usuarios/{users}/productos',
+            'data'   => [
                 'uses' => 'UsersController@products',
-                'as' => 'users.products'
-            ]
+                'as'   => 'users.products',
+            ],
         ],
 
         /**
@@ -100,11 +102,11 @@ class UserRoutes extends Routes
          */
         [
             'method' => 'post',
-            'url' => 'usuarios/{users}/restore',
-            'data' => [
+            'url'    => 'usuarios/{users}/restore',
+            'data'   => [
                 'uses' => 'UsersController@restore',
-                'as' => 'users.restore'
-            ]
+                'as'   => 'users.restore',
+            ],
         ],
 
         /**
@@ -114,11 +116,11 @@ class UserRoutes extends Routes
          */
         [
             'method' => 'get',
-            'url' => 'usuarios/{users}/confirmar-eliminacion',
-            'data' => [
+            'url'    => 'usuarios/{users}/confirmar-eliminacion',
+            'data'   => [
                 'uses' => 'UsersController@preDestroy',
-                'as' => 'users.destroy.pre'
-            ]
+                'as'   => 'users.destroy.pre',
+            ],
         ],
 
         /**
@@ -126,11 +128,11 @@ class UserRoutes extends Routes
          */
         [
             'method' => 'delete',
-            'url' => 'usuarios/{users}/forceDestroy',
-            'data' => [
+            'url'    => 'usuarios/{users}/forceDestroy',
+            'data'   => [
                 'uses' => 'UsersController@forceDestroy',
-                'as' => 'users.destroy.forced'
-            ]
+                'as'   => 'users.destroy.forced',
+            ],
         ],
 
         /**
@@ -138,11 +140,11 @@ class UserRoutes extends Routes
          */
         [
             'method' => 'get',
-            'url' => 'usuarios/{users}/visitas/productos',
-            'data' => [
+            'url'    => 'usuarios/{users}/visitas/productos',
+            'data'   => [
                 'uses' => 'UsersController@productVisits',
-                'as' => 'users.products.visits'
-            ]
+                'as'   => 'users.products.visits',
+            ],
         ],
     ];
 

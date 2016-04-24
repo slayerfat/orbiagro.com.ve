@@ -15,7 +15,7 @@ class ProductRequest extends Request
         [
             'methodType' => 'PATCH',
             'class'      => Product::class,
-            'routeParam' => 'products'
+            'routeParam' => 'products',
         ],
     ];
 

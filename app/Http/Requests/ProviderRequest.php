@@ -43,8 +43,8 @@ class ProviderRequest extends Request
             case 'PUT':
             case 'PATCH':
                 return [
-                    'name'            => 'required|unique:providers,name,'.(int)$this->route('providers'),
-                    'url'             => 'url|unique:providers,url,'.(int)$this->route('providers'),
+                    'name'            => 'required|unique:providers,name,' . (int)$this->route('providers'),
+                    'url'             => 'url|unique:providers,url,' . (int)$this->route('providers'),
                     'contact_name'    => 'string|max:255',
                     'contact_title'   => 'alpha|max:10',
                     'contact_email'   => 'email',
