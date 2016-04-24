@@ -1,16 +1,16 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
-use Log;
-use Storage;
 use Exception;
-use Validator;
-use Intervention;
-use LogicException;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Models\Image as ImageModel;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Intervention;
+use Log;
+use LogicException;
 use Orbiagro\Mamarrachismo\Upload\Exceptions\OrphanImageException;
+use Orbiagro\Models\Image as ImageModel;
 use Orbiagro\Repositories\Exceptions\DefaultImageFileNotFoundException;
+use Storage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Validator;
 
 class Image extends Upload
 {
@@ -45,6 +45,9 @@ class Image extends Upload
                 if (sizeOf($array) <= 1) {
                     // si las imagenes no son validas crea una imagen por defecto
                     $collection->push($this->createDefaultImage($model, $this->path));
+
+                    $this->errors = $validator->errors()->all();
+                    Log::debug($this->errors);
 
                     return $collection;
                 }
@@ -171,6 +174,8 @@ class Image extends Upload
         if (!isset($file) || $validator->fails()) {
             $this->errors = $validator->errors()->all();
 
+            Log::debug($this->errors);
+
             throw new Exception('Archivo no valido.');
         }
 
@@ -189,7 +194,7 @@ class Image extends Upload
 
     /**
      * Cropea la imagen y la persiste en la BD.
-     * @param  Model $image  la imagen.
+     * @param  Model|ImageModel $image  la imagen.
      * @param  int   $width
      * @param  int   $height
      * @param  int   $posX
@@ -305,6 +310,7 @@ class Image extends Upload
     private function makeOriginalFile(array $data)
     {
         if (!Storage::disk('public')->exists($data['path'])) {
+            Log::debug('No existe archivo asociado en el disco:', [$data]);
             throw new LogicException('No existe archivo asociado en el disco.');
         }
 
@@ -372,7 +378,7 @@ class Image extends Upload
      * crea el modelo nuevo de alguna imagen relacionada con algun producto.
      *
      * @param array $array el array que contiene los datos para la imagen.
-     * @param Model $model el modelo a asociar.
+     * @param Model|\Orbiagro\Models\Product $model el modelo a asociar.
      * @return Model
      * @throws Exception
      */
@@ -436,7 +442,7 @@ class Image extends Upload
 
     /**
      * Elimina la imagen en la base de datos.
-     * @param Model $model
+     * @param Model|\Orbiagro\Models\Product $model
      */
     private function checkModelImage(Model $model)
     {

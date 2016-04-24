@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
+use Illuminate\Database\Eloquent\Model;
 use LogicException;
 use Orbiagro\Models\Product;
-use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class Upload
@@ -35,13 +35,13 @@ abstract class Upload
      * reglas para el validador.
      * @var array
      */
-    protected $imageRules = ['image' => 'required|mimes:jpeg,bmp,png|max:10000'];
+    protected $imageRules = ['image' => 'required|mimes:jpeg,bmp,png,jpg,pjpeg,gif|size:4096'];
 
     /**
      * reglas para el validador.
      * @var array
      */
-    protected $fileRules = ['file' => 'mimes:pdf|max:10000'];
+    protected $fileRules = ['file' => 'mimes:pdf|size:10240'];
 
     /**
      * Para Utilizar esta clase es casi siempre necesario el uso del ID
