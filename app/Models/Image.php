@@ -43,18 +43,25 @@ class Image extends Model
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'path',
         'original',
-        'small', 'medium',
+        'small',
+        'medium',
         'large',
         'mime',
-        'alt'
+        'alt',
     ];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * Determina si el archivo existe realmente antes de aceptarlo como dato.
+     *
+     * @param $value
+     * @return null
+     */
     public function setPathAttribute($value)
     {
         if ($this->fileExists($value)) {
@@ -64,38 +71,12 @@ class Image extends Model
         return $this->attributes['path'] = null;
     }
 
-    public function setAltAttribute($value)
-    {
-        $this->attributes['alt'] = str_slug($value)
-        .' en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.';
-    }
-
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
-    public function getPathAttribute($value)
-    {
-        if ($value) {
-            return $value;
-        }
-
-        return null;
-    }
-
     /**
-     * Relacion polimorfica
-     * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+     * Determina si el archivo existe o no tanto en modo prueba como normal.
      *
-     * Category, SubCategory, Feature, Maker, Product, Promotion
+     * @param $path
+     * @return bool
      */
-    public function imageable()
-    {
-        return $this->morphTo();
-    }
-
-    // --------------------------------------------------------------------------
-    // Private Methods
-    // --------------------------------------------------------------------------
     private function fileExists($path)
     {
         if (Storage::disk('public')->exists($path)) {
@@ -106,5 +87,40 @@ class Image extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Genera un alt valido para esta imagen.
+     *
+     * @param $value
+     */
+    public function setAltAttribute($value)
+    {
+        $this->attributes['alt'] = str_slug($value)
+            . ' en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.';
+    }
+
+    /**
+     * @param $value
+     * @return null
+     */
+    public function getPathAttribute($value)
+    {
+        if ($value) {
+            return $value;
+        }
+
+        return null;
+    }
+
+    /**
+     * Category, SubCategory, Feature, Maker, Product, Promotion
+     *
+     * @link http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo|\Illuminate\Database\Eloquent\Builder
+     */
+    public function imageable()
+    {
+        return $this->morphTo();
     }
 }

@@ -26,9 +26,9 @@ class Bank extends Model
 
     use InternalDBManagement;
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function billings()
     {
         return $this->hasMany(Billing::class);

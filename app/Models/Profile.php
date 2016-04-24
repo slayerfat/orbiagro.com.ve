@@ -25,17 +25,18 @@ class Profile extends Model
      */
     protected $fillable = ['description'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = ModelValidation::byLenght($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getDescriptionAttribute($value)
     {
         if ($value) {
@@ -45,9 +46,9 @@ class Profile extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function users()
     {
         return $this->hasMany(User::class);

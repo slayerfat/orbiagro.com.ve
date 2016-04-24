@@ -40,20 +40,25 @@ class Billing extends Model
 
     use InternalDBManagement;
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function bank()
     {
         return $this->belongsTo(Bank::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function cardType()
     {
         return $this->belongsTo(CardType::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function user()
     {
         return $this->belongsTo(User::class);

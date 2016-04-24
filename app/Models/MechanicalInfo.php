@@ -45,56 +45,73 @@ class MechanicalInfo extends Model
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
-    'motor',
-    'motor_serial',
-    'model',
-    'cylinders',
-    'horsepower',
-    'mileage',
-    'traction',
-    'lift',
+        'motor',
+        'motor_serial',
+        'model',
+        'cylinders',
+        'horsepower',
+        'mileage',
+        'traction',
+        'lift',
     ];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setLiftAttribute($value)
     {
         $this->attributes['lift'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setTractionAttribute($value)
     {
         $this->attributes['traction'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setMileageAttribute($value)
     {
         $this->attributes['mileage'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setCylindersAttribute($value)
     {
         $this->attributes['cylinders'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setHorsePowerAttribute($value)
     {
         $this->attributes['horsepower'] = ModelValidation::byNonNegative($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Metodos Publicos
-    // --------------------------------------------------------------------------
+    /**
+     * Genera texto legible del kilometraje.
+     *
+     * @return null|string
+     */
     public function mileageKm()
     {
         $mileage = Transformer::toReadable($this->attributes['mileage']);
@@ -106,6 +123,11 @@ class MechanicalInfo extends Model
         return null;
     }
 
+    /**
+     * Genera texto legible de caballos de fuerza.
+     *
+     * @return null|string
+     */
     public function horsepowerHP()
     {
         $horsepower = Transformer::toReadable($this->attributes['horsepower']);

@@ -13,7 +13,7 @@ trait CanSearchRandomly
     {
         // por ahora ignorado, pendiente de ver si hay o no test por BD.
         // si (env('APP_ENV') == 'ntesting')
-          // query orderByRaw('RANDOM()');
+        // query orderByRaw('RANDOM()');
 
         return $query->orderByRaw('RAND()');
     }

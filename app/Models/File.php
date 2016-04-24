@@ -33,11 +33,17 @@ class File extends Model
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['path', 'mime'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * Determina si el camino o path existe antes de aceptarlo como dato.
+     *
+     * @param $value
+     * @return null
+     */
     public function setPathAttribute($value)
     {
         if ($this->fileExists($value)) {
@@ -47,34 +53,10 @@ class File extends Model
         return $this->attributes['path'] = null;
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
-    public function getPathAttribute($value)
-    {
-        if ($value) {
-            return $value;
-        }
-
-        return null;
-    }
-
     /**
-     * Relacion polimorfica
-     * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-     */
-    public function filable()
-    {
-        return $this->morphTo();
-    }
-
-    // --------------------------------------------------------------------------
-    // Private Methods
-    // --------------------------------------------------------------------------
-
-    /**
-     * @param string $path
+     * Determina si el archivo realmente existe, tanto en prueba como normal.
      *
+     * @param string $path
      * @return boolean
      */
     private function fileExists($path)
@@ -86,5 +68,27 @@ class File extends Model
         }
 
         return false;
+    }
+
+    /**
+     * @param $value
+     * @return null
+     */
+    public function getPathAttribute($value)
+    {
+        if ($value) {
+            return $value;
+        }
+
+        return null;
+    }
+
+    /**
+     * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo|\Illuminate\Database\Eloquent\Builder
+     */
+    public function filable()
+    {
+        return $this->morphTo();
     }
 }

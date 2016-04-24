@@ -38,19 +38,17 @@ class Parish extends Model
      */
     protected $hidden = ['created_at', 'updated_at'];
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    //
-    // belongs to
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function town()
     {
         return $this->belongsTo(Town::class);
     }
 
-    // --------------------------------------------------------------------------
-    // has many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function directions()
     {
         return $this->hasMany(Direction::class);

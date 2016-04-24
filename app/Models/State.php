@@ -33,9 +33,9 @@ class State extends Model
      */
     protected $hidden = ['created_at', 'updated_at'];
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function towns()
     {
         return $this->hasMany(Town::class);

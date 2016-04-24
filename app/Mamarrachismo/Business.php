@@ -53,7 +53,7 @@ class Business
         $this->statements = collect([
             [
                 'text'  => 'Pagina web destacada en compra y venta de productos'
-                    .'industriales, pensado en particulares y empresas interesadas.',
+                    . 'industriales, pensado en particulares y empresas interesadas.',
                 'class' => 'fa fa-refresh fa-300px fa-spin',
             ],
             [
@@ -62,12 +62,12 @@ class Business
             ],
             [
                 'text'  => 'Facilita la compra y venta de productos alimenticios, '
-                    .'forestales, maquinaria, implementos agricolas y metalmecanicos.',
+                    . 'forestales, maquinaria, implementos agricolas y metalmecanicos.',
                 'class' => 'fa fa-300px fa-spin fa-cog',
             ],
             [
                 'text'  => 'Buscamos establecer lazos comerciales y de mercadeo que generen '
-                    .'intercambios lucrativos relacionados con la producción agro-industrial.',
+                    . 'intercambios lucrativos relacionados con la producción agro-industrial.',
                 'class' => 'fa fa-300px fa-line-chart',
             ],
         ]);

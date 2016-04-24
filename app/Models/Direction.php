@@ -37,19 +37,23 @@ class Direction extends Model
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['parish_id', 'details'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setDetailsAttribute($value)
     {
         $this->attributes['details'] = ModelValidation::byLenght($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getDetailsAttribute($value)
     {
         if ($value) {
@@ -59,30 +63,28 @@ class Direction extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
     /**
      * Relacion polimorfica
+     *
      * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo|\Illuminate\Database\Eloquent\Builder
      */
     public function directionable()
     {
         return $this->morphTo();
     }
 
-    // --------------------------------------------------------------------------
-    // Has One
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function map()
     {
         return $this->hasOne(MapDetail::class);
     }
 
-    // --------------------------------------------------------------------------
-    // belongs to
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function parish()
     {
         return $this->belongsTo(Parish::class);

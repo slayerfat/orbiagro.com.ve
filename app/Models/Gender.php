@@ -27,17 +27,18 @@ class Gender extends Model
 
     use InternalDBManagement;
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = ModelValidation::byLenght($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getDescriptionAttribute($value)
     {
         if ($value) {
@@ -47,9 +48,9 @@ class Gender extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function people()
     {
         return $this->hasMany(Person::class);

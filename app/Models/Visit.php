@@ -33,21 +33,17 @@ class Visit extends Model
 
     use InternalDBManagement;
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Belongs to
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Polymorphic
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function visitable()
     {
         return $this->morphTo();

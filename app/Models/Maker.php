@@ -36,18 +36,25 @@ class Maker extends Model
 
     use InternalDBManagement, CanSearchRandomly;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['name', 'domain', 'url'];
 
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = ModelValidation::byLenght($value, 3);
-        $this->attributes['slug']  = str_slug($this->attributes['name']);
+        $this->attributes['slug'] = str_slug($this->attributes['name']);
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function setSlugAttribute($value)
     {
         $slug = ModelValidation::byLenght($value, 3);
@@ -59,9 +66,10 @@ class Maker extends Model
         return $this->attributes['slug'] = null;
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getNameAttribute($value)
     {
         if ($value) {
@@ -71,24 +79,17 @@ class Maker extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-    // --------------------------------------------------------------------------
-    // Has Many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function products()
     {
         return $this->hasMany(Product::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Belongs to Many
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Polymorphic
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function image()
     {
         return $this->morphOne(Image::class, 'imageable');

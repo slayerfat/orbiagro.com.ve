@@ -26,13 +26,9 @@ class PromoType extends Model
 
     use InternalDBManagement;
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // HasMany
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function promotions()
     {
         return $this->hasMany(Promotion::class);

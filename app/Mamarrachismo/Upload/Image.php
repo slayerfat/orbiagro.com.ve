@@ -73,8 +73,8 @@ class Image extends Upload
     /**
      * crea la imagen relacionada con algun modelo.
      *
-     * @param Model        $model El modelo relacionado para ser asociado.
-     * @param UploadedFile $file  Objeto UploadedFiles con la imagen.
+     * @param Model $model El modelo relacionado para ser asociado.
+     * @param UploadedFile $file Objeto UploadedFiles con la imagen.
      *
      * @return \Illuminate\Support\Collection
      */
@@ -105,7 +105,7 @@ class Image extends Upload
         $this->checkModelImage($model);
 
         // el nombre del archivo
-        $name = date('Ymdhmmss-').str_random(20);
+        $name = date('Ymdhmmss-') . str_random(20);
         $path = "{$modelPath}/{$name}.gif";
 
         // se copia el archivo
@@ -119,7 +119,7 @@ class Image extends Upload
             'ext'  => 'gif',
             'dir'  => $modelPath,
             'path' => $path,
-            'mime' => 'image/gif'
+            'mime' => 'image/gif',
         ];
 
         $data = $this->makeOriginalFile($data);
@@ -162,8 +162,8 @@ class Image extends Upload
 
         if ($parentModel == null) {
             throw new OrphanImageException(
-                'La imagen con id: '.$model->id
-                .' no posee padre.',
+                'La imagen con id: ' . $model->id
+                . ' no posee padre.',
                 $model->id
             );
         }
@@ -194,11 +194,12 @@ class Image extends Upload
 
     /**
      * Cropea la imagen y la persiste en la BD.
-     * @param  Model|ImageModel $image  la imagen.
-     * @param  int   $width
-     * @param  int   $height
-     * @param  int   $posX
-     * @param  int   $posY
+     *
+     * @param  Model|ImageModel $image la imagen.
+     * @param  int $width
+     * @param  int $height
+     * @param  int $posX
+     * @param  int $posY
      *
      * @return bool
      */
@@ -226,8 +227,8 @@ class Image extends Upload
     /**
      * elimina todas las imagenes del disco duro.
      *
-     * @param ImageModel   $imageModel El modelo de la imagen.
-     * @param boolean $all        para determinar si se elimina del disco duro TODOS los archivos.
+     * @param ImageModel $imageModel El modelo de la imagen.
+     * @param boolean $all para determinar si se elimina del disco duro TODOS los archivos.
      *
      * @return void
      */
@@ -236,7 +237,7 @@ class Image extends Upload
         $paths = [
             $imageModel->small,
             $imageModel->medium,
-            $imageModel->large
+            $imageModel->large,
         ];
 
         if ($all === true) {
@@ -253,7 +254,7 @@ class Image extends Upload
                         'imageable_id'   => $imageModel->imageable_id,
                         'imageable_type' => $imageModel->imageable_type,
                         'path'           => $path,
-                        'user'           => \Auth::user()
+                        'user'           => \Auth::user(),
                     ]
                 );
 
@@ -272,8 +273,8 @@ class Image extends Upload
      * usado para crear en el disco duro el archivo relacionado a un producto.
      *
      * @param  UploadedFile $file
-     * @param  string       $path     la direccion a donde se guardara el archivo.
-     * @param  array        $options  las opcions relacionadas con Intervention.
+     * @param  string $path la direccion a donde se guardara el archivo.
+     * @param  array $options las opcions relacionadas con Intervention.
      *
      * @return array        $data     la carpeta, nombre y
      *                                extension del archivo guardado.
@@ -314,7 +315,7 @@ class Image extends Upload
             throw new LogicException('No existe archivo asociado en el disco.');
         }
 
-        $data['original'] = $data['dir'].'/o-'.$data['name'].'.'.$data['ext'];
+        $data['original'] = $data['dir'] . '/o-' . $data['name'] . '.' . $data['ext'];
 
         Intervention::make(public_path($data['path']))->save(public_path($data['original']));
 
@@ -345,13 +346,13 @@ class Image extends Upload
         $dir          = $image->dirname;
         $filename     = $image->filename;
         $ext          = $image->extension;
-        $originalPath = $dir.'/'.$image->basename;
+        $originalPath = $dir . '/' . $image->basename;
 
         // datos para relacionar con el modelo
         $data = [
-            'small'  => $data['dir'].'/s-'.$filename.'.'.$ext,
-            'medium' => $data['dir'].'/m-'.$filename.'.'.$ext,
-            'large'  => $data['dir'].'/l-'.$filename.'.'.$ext,
+            'small'  => $data['dir'] . '/s-' . $filename . '.' . $ext,
+            'medium' => $data['dir'] . '/m-' . $filename . '.' . $ext,
+            'large'  => $data['dir'] . '/l-' . $filename . '.' . $ext,
         ];
 
         Log::debug('Creando imagenes s-m-l relaciondas con una nueva imagen!', ['data' => $data]);
@@ -360,7 +361,7 @@ class Image extends Upload
         $sizes = [
             128  => $data['small'],
             512  => $data['medium'],
-            1024 => $data['large']
+            1024 => $data['large'],
         ];
 
         foreach ($sizes as $size => $path) {
@@ -397,32 +398,37 @@ class Image extends Upload
             case 'Orbiagro\Models\Product':
             case 'Orbiagro\Models\Promotion':
                 $image->alt = $model->title;
+
                 return $model->images()->save($image);
 
             case 'Orbiagro\Models\Feature':
                 $image->alt = $model->title;
+
                 return $model->image()->save($image);
 
             case 'Orbiagro\Models\Category':
             case 'Orbiagro\Models\SubCategory':
                 $image->alt = $model->description;
+
                 return $model->image()->save($image);
 
             case 'Orbiagro\Models\Maker':
                 $image->alt = $model->name;
+
                 return $model->image()->save($image);
 
             default:
                 throw new Exception(
                     'Modelo '
-                    .get_class($model)
-                    .'desconocido, no se puede guardar imagen.'
+                    . get_class($model)
+                    . 'desconocido, no se puede guardar imagen.'
                 );
         }
     }
 
     /**
      * Obtiene la direccion para generar alguna imagen.
+     *
      * @param Model $model
      * @param $modelPath
      * @return string
@@ -442,6 +448,7 @@ class Image extends Upload
 
     /**
      * Elimina la imagen en la base de datos.
+     *
      * @param Model|\Orbiagro\Models\Product $model
      */
     private function checkModelImage(Model $model)

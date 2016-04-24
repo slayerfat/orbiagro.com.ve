@@ -59,6 +59,9 @@ class Provider extends Model
 
     use InternalDBManagement, CanSearchRandomly;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'name',
         'slug',
@@ -75,12 +78,12 @@ class Provider extends Model
         'phone_2',
         'phone_3',
         'phone_4',
-        'trust'
+        'trust',
     ];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = ModelValidation::byLenght($value);
@@ -90,6 +93,10 @@ class Provider extends Model
         }
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function setSlugAttribute($value)
     {
         if (ModelValidation::byLenght($value) !== null) {
@@ -99,9 +106,10 @@ class Provider extends Model
         return $this->attributes['slug'] = null;
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getNameAttribute($value)
     {
         if ($value) {
@@ -111,17 +119,9 @@ class Provider extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Scopes
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Belongs To Many
-    // --------------------------------------------------------------------------
+    /**
+     * @return $this|\Illuminate\Database\Eloquent\Builder
+     */
     public function products()
     {
         return $this->belongsToMany(Product::class)->withPivot('sku');

@@ -39,11 +39,14 @@ class SubCategory extends Model
 
     use InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['category_id', 'description', 'info'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = ModelValidation::byLenght($value, 3);
@@ -53,11 +56,18 @@ class SubCategory extends Model
         }
     }
 
+    /**
+     * @param $value
+     */
     public function setInfoAttribute($value)
     {
         $this->attributes['info'] = ModelValidation::byLenght($value);
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function setSlugAttribute($value)
     {
         if (ModelValidation::byLenght($value, 3) !== null) {
@@ -67,9 +77,10 @@ class SubCategory extends Model
         return $this->attributes['slug'] = null;
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getDescriptionAttribute($value)
     {
         if ($value) {
@@ -79,6 +90,10 @@ class SubCategory extends Model
         return null;
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getInfoAttribute($value)
     {
         if ($value) {
@@ -92,42 +107,33 @@ class SubCategory extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Scopes
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Belongs To
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Has Many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function products()
     {
         return $this->hasMany(Product::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Belongs To Many
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Polymorphic
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function image()
     {
         return $this->morphOne(Image::class, 'imageable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function visits()
     {
         return $this->morphMany(Visit::class, 'visitable');

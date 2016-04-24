@@ -36,15 +36,17 @@ class Town extends Model
      */
     protected $hidden = ['created_at', 'updated_at'];
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function state()
     {
         return $this->belongsTo(State::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function parishes()
     {
         return $this->hasMany(Parish::class);

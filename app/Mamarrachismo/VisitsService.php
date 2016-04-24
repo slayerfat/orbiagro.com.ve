@@ -1,11 +1,11 @@
 <?php namespace Orbiagro\Mamarrachismo;
 
 use Auth;
+use Carbon\Carbon;
 use Cookie;
 use Exception;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Models\Visit;
 
 /**
@@ -17,6 +17,7 @@ class VisitsService
 
     /**
      * Para almacenar Ids de los modelos a manipular.
+     *
      * @var array
      */
     protected $bag = [];
@@ -52,8 +53,8 @@ class VisitsService
     }
 
     /**
-     * @param string $model    el objeto a manipular.
-     * @param int    $quantity la cantidad a tomar.
+     * @param string $model el objeto a manipular.
+     * @param int $quantity la cantidad a tomar.
      *
      * @return Collection
      */
@@ -98,8 +99,8 @@ class VisitsService
     /**
      * usado para determinar cuales son los recursos mas populares (count)
      *
-     * @param string $model    el modelo, nos interesa la clase (Orbiagro\Models\Product)
-     * @param int   $quantity la cantidad a tomar
+     * @param string $model el modelo, nos interesa la clase (Orbiagro\Models\Product)
+     * @param int $quantity la cantidad a tomar
      *
      * @return Collection
      */
@@ -145,7 +146,7 @@ class VisitsService
         $parsed = [];
 
         foreach ($array as $key => $value) {
-            $exploted = explode('_', $key);
+            $exploted             = explode('_', $key);
             $parsed[$exploted[1]] = $value;
         }
 
@@ -156,7 +157,7 @@ class VisitsService
      * guarda las visitas a productos del usuario en la base de datos.
      *
      * @param string $model el modelo a manipular.
-     * @param array  $array el array a iterar (id => visitas).
+     * @param array $array el array a iterar (id => visitas).
      *
      * @return boolean
      */
@@ -186,6 +187,7 @@ class VisitsService
 
     /**
      * Usado para crear el modelo relacion al recurso, en este caso una visita.
+     *
      * @param  array $array el arreglo con los productos a relacionar
      * @param  string $name el nombre del recurso (Product, SubCategory, etc)
      * @param  string $model el modelo a manipular.
@@ -211,8 +213,8 @@ class VisitsService
 
             // se determina si hay o no que crear una nueva visita
             if (Auth::user()->visits()->where('visitable_id', $result->id)->get()->isEmpty()) {
-                $visit = new Visit;
-                $visit->total = $total;
+                $visit          = new Visit;
+                $visit->total   = $total;
                 $visit->user_id = Auth::user()->id;
                 $result->visits()->save($visit);
             } elseif ($visit = Auth::user()->visits()->where('visitable_id', $result->id)->first()) {
@@ -283,7 +285,7 @@ class VisitsService
         $key = class_basename($model);
 
         // se procesan las cookies del usuario
-        $array = Transformer::getArrayByKeyValue("/({$key}\_)+/", Cookie::get());
+        $array  = Transformer::getArrayByKeyValue("/({$key}\_)+/", Cookie::get());
         $parsed = $this->parseIdsInArrayKeys($array);
 
         if (!empty($parsed)) {

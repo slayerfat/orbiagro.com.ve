@@ -1,9 +1,8 @@
 <?php namespace Orbiagro\Mamarrachismo;
 
-use Auth;
+use Illuminate\Database\Eloquent\Collection;
 use Mail;
 use Orbiagro\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 
 /**
  * https://github.com/slayerfat/sistemaCONDOR/blob/master/app/Http/Controllers/Otros/EnviarEmail.php
@@ -12,9 +11,10 @@ class EnviarEmail
 {
 
     /**
-    * la bolsa de correos a ser enviados.
-    * @var array
-    */
+     * la bolsa de correos a ser enviados.
+     *
+     * @var array
+     */
     protected $emails = [];
 
     /**
@@ -95,8 +95,8 @@ class EnviarEmail
      *
      * @todo ajustarlo a este app.
      *
-     * @param  array    $data   el array con los datos relacionados
-     * @param  array    $emails
+     * @param  array $data el array con los datos relacionados
+     * @param  array $emails
      *
      * @return boolean
      */
