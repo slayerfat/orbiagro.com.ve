@@ -1,8 +1,8 @@
 <?php
 
-use Orbiagro\Models\User;
 use Illuminate\Database\Seeder;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Models\User;
 
 abstract class BaseSeeder extends Seeder
 {
@@ -19,11 +19,19 @@ abstract class BaseSeeder extends Seeder
     protected $user;
 
     /**
+     * Para crear data aleatoria
+     *
+     * @var \Faker\Generator
+     */
+    protected $faker;
+
+    /**
      * @uses BaseSeeder::getUser()
      */
     public function __construct()
     {
-        $this->user = $this->getUser();
+        $this->user  = $this->getUser();
+        $this->faker = Faker::create('es_ES');
     }
 
     /**
