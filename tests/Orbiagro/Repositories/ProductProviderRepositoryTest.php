@@ -11,7 +11,7 @@ class ProductProviderRepositoryTest extends TestCase
     public function testConstruct()
     {
         $mock = Mockery::mock(Provider::class)
-                             ->makePartial();
+            ->makePartial();
 
         $providerRepo = new ProductProviderRepository($mock);
 
@@ -24,9 +24,9 @@ class ProductProviderRepositoryTest extends TestCase
     public function testGetLists()
     {
         $mock = Mockery::mock(Provider::class)
-                       ->makePartial();
+            ->makePartial();
 
-        $mock->shouldReceive('lists')
+        $mock->shouldReceive('pluck')
             ->once()
             ->with('name', 'id')
             ->andReturn('mocked');
@@ -60,7 +60,7 @@ class ProductProviderRepositoryTest extends TestCase
     public function testGetAll()
     {
         $provider = Mockery::mock(Provider::class)
-                              ->makePartial();
+            ->makePartial();
 
         $provider->shouldReceive('with')
             ->once()
@@ -82,16 +82,16 @@ class ProductProviderRepositoryTest extends TestCase
     public function testGetById()
     {
         $provider = Mockery::mock(Provider::class)
-                           ->makePartial();
+            ->makePartial();
 
         $provider->shouldReceive('with')
-                 ->once()
-                 ->with('products')
-                 ->andReturnSelf();
+            ->once()
+            ->with('products')
+            ->andReturnSelf();
 
         $provider->shouldReceive('findOrFail')
-                 ->once()
-                 ->andReturn('mocked');
+            ->once()
+            ->andReturn('mocked');
 
         $providerRepo = new ProductProviderRepository($provider);
 
@@ -112,8 +112,8 @@ class ProductProviderRepositoryTest extends TestCase
             ->andReturnSelf();
 
         $providerRepo->shouldReceive('save')
-                 ->once()
-                 ->andReturn('mocked');
+            ->once()
+            ->andReturn('mocked');
 
         $this->assertSame(
             $providerRepo,
@@ -126,22 +126,22 @@ class ProductProviderRepositoryTest extends TestCase
         $mock = Mockery::mock(Provider::class);
 
         $mock->shouldReceive('with')
-             ->once()
-             ->with('products')
-             ->andReturnSelf();
+            ->once()
+            ->with('products')
+            ->andReturnSelf();
 
         $mock->shouldReceive('findOrFail')
-             ->once()
-             ->andReturnSelf();
+            ->once()
+            ->andReturnSelf();
 
         $mock->shouldReceive('fill')
-             ->once()
-             ->with([])
-             ->andReturnSelf();
+            ->once()
+            ->with([])
+            ->andReturnSelf();
 
         $mock->shouldReceive('update')
-             ->once()
-             ->andReturnSelf();
+            ->once()
+            ->andReturnSelf();
 
         $providerRepo = new ProductProviderRepository($mock);
 

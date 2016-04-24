@@ -3,8 +3,8 @@
 use Mockery;
 use Orbiagro\Models\SubCategory;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
-use Tests\TestCase;
 use Orbiagro\Repositories\SubCategoryRepository;
+use Tests\TestCase;
 
 class SubCategoryRepositoryTest extends TestCase
 {
@@ -77,7 +77,7 @@ class SubCategoryRepositoryTest extends TestCase
 
         $catRepoMock = Mockery::mock(CategoryRepositoryInterface::class);
 
-        $mock->shouldReceive('lists')
+        $mock->shouldReceive('pluck')
             ->once()
             ->with('description', 'id')
             ->andReturn('mocked');

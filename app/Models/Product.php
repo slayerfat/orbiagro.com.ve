@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Orbiagro\Mamarrachismo\CheckDollar;
@@ -356,14 +357,14 @@ class Product extends Model
 
             // si no fue pasado ningun parametro
         } elseif ($checkDollar === null) {
-            $checkDollar = new CheckDollar;
+            $checkDollar = new CheckDollar(Carbon::now());
 
             $dollar = $this->checkDollar($checkDollar);
         }
 
         // si existe un $dollar y existe el precio del producto:
         if (isset($dollar) && isset($this->attributes['price'])) {
-            $value = (int)$this->attributes['price'] / $dollar;
+            $value = $this->attributes['price'] / (int)$dollar;
 
             return "\$ " . Transformer::toReadable($value);
         }
@@ -391,7 +392,7 @@ class Product extends Model
 
             // no existe ni parametro ni atributo
         } elseif ($checkDollar === null) {
-            $obj = new CheckDollar;
+            $obj = new CheckDollar(Carbon::now());
 
             if ($obj->isValid()) {
                 $this->CheckDollar = $obj;

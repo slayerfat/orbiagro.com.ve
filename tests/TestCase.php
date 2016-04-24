@@ -19,7 +19,8 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
     /**
      * la instancia del Mockery a manipular
-     * @var Mockery
+     *
+     * @var Mockery|Mockery\MockInterface
      */
     protected $mock;
 
