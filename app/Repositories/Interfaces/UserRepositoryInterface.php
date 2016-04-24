@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\Collection;
 use Orbiagro\Models\Person;
-use Orbiagro\Models\Product;
 use Orbiagro\Models\User;
 
 interface UserRepositoryInterface

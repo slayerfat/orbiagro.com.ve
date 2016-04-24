@@ -30,7 +30,7 @@ class ProfileRepository extends AbstractRepository implements ProfileRepositoryI
      */
     public function getLists()
     {
-        return $this->model->lists('description', 'id');
+        return $this->model->pluck('description', 'id');
     }
 
     /**
@@ -75,6 +75,7 @@ class ProfileRepository extends AbstractRepository implements ProfileRepositoryI
             throw new InvalidProfileRequestException('Los perfiles principales no pueden ser eliminados.');
         }
 
+        /** @var Profile $profile */
         $profile = $this->getById($id);
 
         if (!$profile->users->isEmpty()) {

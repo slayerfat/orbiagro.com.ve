@@ -1,9 +1,9 @@
 <?php namespace Orbiagro\Providers;
 
-use Orbiagro\Commands as OrbiagroCommands;
-use Orbiagro\Handlers\Commands;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Support\ServiceProvider;
+use Orbiagro\Commands as OrbiagroCommands;
+use Orbiagro\Handlers\Commands;
 
 class BusServiceProvider extends ServiceProvider
 {
@@ -11,7 +11,7 @@ class BusServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      *
-     * @param  \Illuminate\Bus\Dispatcher  $dispatcher
+     * @param  \Illuminate\Bus\Dispatcher $dispatcher
      * @return void
      */
     public function boot(Dispatcher $dispatcher)

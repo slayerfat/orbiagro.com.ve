@@ -1,9 +1,7 @@
 <?php namespace Orbiagro\Providers\Internal;
 
-use Illuminate\Support\ServiceProvider;
-
 use Auth;
-
+use Illuminate\Support\ServiceProvider;
 use Orbiagro\Mamarrachismo\Traits\Providers\ModelEventsTrait;
 
 class CreateAndUpdateModelServiceProvider extends ServiceProvider

@@ -7,7 +7,6 @@ interface ProfileRepositoryInterface
 
     /**
      * @param string $id
-
      * @return Profile
      */
     public function getByDescription($id);

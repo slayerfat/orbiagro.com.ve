@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Repositories;
 
-use Orbiagro\Models\Category;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Models\Category;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 
 class CategoryRepository extends AbstractRepository implements CategoryRepositoryInterface
@@ -21,7 +21,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
      */
     public function getLists()
     {
-        return $this->model->lists('description', 'id');
+        return $this->model->pluck('description', 'id');
     }
 
     /**
@@ -34,7 +34,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 
     /**
      * @param Collection $cats
-     * @param int        $quantity
+     * @param int $quantity
      *
      * @return Collection
      */
@@ -42,7 +42,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
     {
         $collection = collect();
 
-        $cats->each(function ($cat) use ($quantity, $collection) {
+        $cats->each(function (Category $cat) use ($quantity, $collection) {
             foreach ($cat->subCategories as $subCat) {
                 if (!$subCat->products->isEmpty()) {
                     $collection->push(
@@ -74,7 +74,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
     }
 
     /**
-     * @param Model $model
+     * @param Model|Category $model
      *
      * @return Collection
      */

@@ -1,23 +1,21 @@
 <?php namespace Orbiagro\Repositories\Interfaces;
 
 use Exception;
-use LogicException;
 use Illuminate\Database\Eloquent\Model;
+use LogicException;
 use Orbiagro\Repositories\Exceptions\DuplicateConfirmationException;
 
 interface UserConfirmationInterface
 {
 
     /**
-     * @return Model
-     *
+     * @return Model|\Orbiagro\Models\User
      * @throws LogicException
      */
     public function create();
 
     /**
      * @param $data
-     *
      * @return Model|null
      * @throws DuplicateConfirmationException
      */
@@ -25,7 +23,6 @@ interface UserConfirmationInterface
 
     /**
      * @param Model $model
-     *
      * @return null|\Orbiagro\Models\User
      * @throws Exception
      * @throws LogicException

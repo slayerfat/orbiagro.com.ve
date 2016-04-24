@@ -1,12 +1,12 @@
 <?php namespace Orbiagro\Providers;
 
+use Illuminate\Support\ServiceProvider;
 use Orbiagro\Models\Category;
 use Orbiagro\Models\SubCategory;
-use Illuminate\Support\ServiceProvider;
 use Orbiagro\Repositories\CategoryRepository;
-use Orbiagro\Repositories\SubCategoryRepository;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
+use Orbiagro\Repositories\SubCategoryRepository;
 
 class CategoriesRepositoriesServiceProvider extends ServiceProvider
 {

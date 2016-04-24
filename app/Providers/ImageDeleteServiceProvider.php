@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Providers;
 
+use File;
 use Illuminate\Support\ServiceProvider;
 use Orbiagro\Models\Image;
-use File;
 
 class ImageDeleteServiceProvider extends ServiceProvider
 {

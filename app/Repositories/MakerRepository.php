@@ -1,11 +1,9 @@
 <?php namespace Orbiagro\Repositories;
 
-use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use LogicException;
 use Orbiagro\Models\Maker;
 use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
-use Illuminate\Database\QueryException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MakerRepository extends AbstractRepository implements MakerRepositoryInterface
@@ -24,7 +22,7 @@ class MakerRepository extends AbstractRepository implements MakerRepositoryInter
      */
     public function getLists()
     {
-        return $this->model->lists('name', 'id');
+        return $this->model->pluck('name', 'id');
     }
 
     /**
@@ -37,7 +35,6 @@ class MakerRepository extends AbstractRepository implements MakerRepositoryInter
 
     /**
      * @param array $data
-     *
      * @return Maker
      */
     public function create(array $data)
@@ -52,10 +49,9 @@ class MakerRepository extends AbstractRepository implements MakerRepositoryInter
     }
 
     /**
-     * @param       $id
+     * @param int $id
      * @param array $data
-     *
-     * @return Maker
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function update($id, array $data)
     {
