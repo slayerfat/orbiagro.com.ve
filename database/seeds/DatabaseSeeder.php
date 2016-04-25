@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,9 +18,6 @@ class DatabaseSeeder extends Seeder
     */
     public function run()
     {
-        // Telling Eloquent to allow mass assignment.
-        Model::unguard();
-
         $this->command->info("*** Empezando Migracion! ***");
 
         $this->truncateDb();
@@ -50,9 +46,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PromotionTableSeeder::class);
 
         $this->command->info("*** Migracion terminada! ***");
-
-        // Telling Eloquent to not allow mass assignment.
-        Model::reguard();
     }
 
     protected function truncateDb()

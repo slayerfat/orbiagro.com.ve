@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Mamarrachismo\Upload;
 
+use File;
 use Illuminate\Database\Eloquent\Model;
 use LogicException;
 use Orbiagro\Models\Product;
@@ -86,20 +87,30 @@ abstract class Upload
      */
     protected function makeFile(UploadedFile $file, $path = null)
     {
-        // el nombre del archivo
-        $name = date('Ymdhms-') . str_random(16);
+        // generamos el nombre del archivo
+        $name   = date('Ymdhms-') . str_random(16);
+        $ext    = $file->getClientOriginalExtension();
+        $target = "{$path}/{$name}.{$ext}";
 
-        $ext = $file->getClientOriginalExtension();
+        // si el directorio no existe, entonces lo
+        // creamos y le asignamos el grupo correcto.
+        if (!File::exists(public_path($path))) {
+            File::makeDirectory(public_path($path), 0775, true);
+            chgrp(public_path($path), env('APP_GROUP'));
+        }
 
-        $file->move($path, "{$name}.{$ext}");
+        // movemos el archivo a la carpeta publica.
+        File::move($file->getRealPath(), public_path($target));
+        chgrp(public_path($target), env('APP_GROUP'));
 
         // la data necesaria para crear el modelo de imagen.
         $data = [
-            'name' => $name,
-            'ext'  => $ext,
-            'dir'  => $path,
-            'path' => "$path/{$name}.{$ext}",
-            'mime' => $file->getClientMimeType(),
+            'name'   => $name,
+            'ext'    => $ext,
+            'dir'    => $path,
+            'path'   => $target,
+            'public' => public_path($target),
+            'mime'   => $file->getClientMimeType(),
         ];
 
         return $data;
@@ -115,9 +126,7 @@ abstract class Upload
      */
     protected function generatePathFromModel($model)
     {
-        $dir = class_basename($model);
-
-        $dir = strtolower($dir);
+        $dir = strtolower(class_basename($model));
 
         switch (get_class($model)) {
             case 'Orbiagro\Models\Product':
@@ -144,7 +153,6 @@ abstract class Upload
 
             default:
                 throw new LogicException('Modelo desconocido, no se puede crear ruta, modelo ' . get_class($model));
-
         }
     }
 }

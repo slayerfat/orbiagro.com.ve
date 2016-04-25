@@ -81,8 +81,9 @@ class Image extends Model
     {
         if (Storage::disk('public')->exists($path)) {
             return true;
-
         } elseif (Storage::disk('test')->exists($path)) {
+            return true;
+        } elseif (file_exists($path)) {
             return true;
         }
 

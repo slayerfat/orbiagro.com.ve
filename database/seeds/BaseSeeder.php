@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Http\UploadedFile;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 use Orbiagro\Models\User;
 
@@ -35,6 +36,8 @@ abstract class BaseSeeder extends Seeder
     }
 
     /**
+     * Determina el usuario a utilizar.
+     *
      * @return User
      */
     protected function getUser()
@@ -49,16 +52,49 @@ abstract class BaseSeeder extends Seeder
     }
 
     /**
+     * Crea el directorio necesario para introducir imagenes relacionadas a un modelo.
+     *
      * @param $class
      */
     protected function createDirectory($class)
     {
-        $dir = class_basename($class);
-
-        $dir = strtolower($dir);
+        $dir = strtolower(class_basename($class));
 
         // se elimina el directorio de todos los archivos
-        Storage::disk('public')->deleteDirectory($dir);
-        Storage::disk('public')->makeDirectory($dir);
+        File::deleteDirectory(public_path($dir));
+        File::makeDirectory(public_path($dir), 0775, true);
+        chgrp(public_path($dir), env('APP_GROUP'));
+    }
+
+    /**
+     * Permite la creacion de una imagen relacionada a un modelo.
+     *
+     * @param array $data
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    protected function createUploadedFileImg($data)
+    {
+        $this->command->comment("Creando archivo {$data['url']}");
+
+        if (!Storage::disk('local')->exists($data['temp'])) {
+            Storage::disk('local')->put(
+                $data['temp'],
+                file_get_contents($data['url'])
+            );
+        }
+
+        $name = str_random() . '.' . $data['ext'];
+
+        Storage::disk('local')->copy($data['temp'], $name);
+
+        // este objeto simula un archivo subido por medio de un usuario.
+        return new UploadedFile(
+            storage_path('app/' . $name),
+            $name,
+            $data['mime'],
+            Storage::disk('local')->size($data['temp']),
+            UPLOAD_ERR_OK,
+            true
+        );
     }
 }
