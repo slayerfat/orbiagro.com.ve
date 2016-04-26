@@ -70,9 +70,18 @@ class ProductsController extends Controller
      */
     public function index(VisitsService $visits)
     {
+        /** @var \Illuminate\Support\Collection $products */
         $products = $this->productRepo->getPaginated(20);
         $cats     = $this->catRepo->getAll();
         $subCats  = $this->subCatRepo->getAll();
+
+        // si existen productos y tiene image se asigna,
+        // de lo contrario se asigna la de un rubro
+        $image   = $products->random() ? $products->random()->images->first() ?
+            $products->random()->images->first()->small : $subCats->random()->image->small
+            : $subCats->random()->image->small;
+        $paths   = $this->makeOpenGraphImages($products, 4);
+        $paths[] = asset($image);
 
         $visitedProducts = $visits->getVisitedResources(
             $this->productRepo->getEmptyInstance()
@@ -81,6 +90,8 @@ class ProductsController extends Controller
         $this->seo()->setTitle('Productos en orbiagro.com.ve');
         $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
         $this->seo()->opengraph()->setUrl(route('products.index'));
+        $this->seo()->opengraph()->addImages($paths);
+        $this->seo()->twitter()->addImage(asset($image));
 
         return view('product.index', compact(
             'products',
@@ -101,19 +112,6 @@ class ProductsController extends Controller
     public function indexByCategory($categoryId, VisitsService $visits)
     {
         return $this->indexByParent('category', $categoryId, $visits);
-    }
-
-    /**
-     * Muestra el index segun el Rubro.
-     *
-     * @param  int $subCategoryId
-     * @param  VisitsService $visits
-     *
-     * @return View
-     */
-    public function indexBySubCategory($subCategoryId, VisitsService $visits)
-    {
-        return $this->indexByParent('subCategory', $subCategoryId, $visits);
     }
 
     /**
@@ -166,6 +164,19 @@ class ProductsController extends Controller
             'subCats',
             'visitedProducts'
         ));
+    }
+
+    /**
+     * Muestra el index segun el Rubro.
+     *
+     * @param  int $subCategoryId
+     * @param  VisitsService $visits
+     *
+     * @return View
+     */
+    public function indexBySubCategory($subCategoryId, VisitsService $visits)
+    {
+        return $this->indexByParent('subCategory', $subCategoryId, $visits);
     }
 
     /**
@@ -235,7 +246,15 @@ class ProductsController extends Controller
             . ' dentro de orbiagro.com.ve'
         );
 
+        $paths = [];
+
+        foreach ($product->images as $image) {
+            $paths[] = asset($image->small);
+        }
+
         $this->seo()->opengraph()->setUrl(route('products.show', $id));
+        $this->seo()->opengraph()->addImages($paths);
+        $this->seo()->twitter()->addImage(asset($product->images->first()->small));
 
         return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
     }
@@ -296,6 +315,38 @@ class ProductsController extends Controller
     }
 
     /**
+     * Ejecuta la operacion segun los paramentros. Este metodo sirve
+     * para deshabilitar, eliminar y restaurar productos.
+     *
+     * @param  $product
+     * @param  string $method
+     * @param  string $message
+     * @param  string $severity
+     * @param  string $route
+     *
+     * @return RedirectResponse
+     */
+    protected function destroyDeleteRestorePrototype(
+        $product,
+        $method,
+        $message,
+        $severity = 'info',
+        $route = 'products.index'
+    ) {
+        if (!$this->productRepo->canUserManipulate($product->user_id)) {
+            return $this->redirectToroute('products.show', $product->user_id);
+        }
+
+        $product->$method();
+
+        if ($route == 'products.index') {
+            return $this->redirectToroute($route, null, $message, $severity);
+        }
+
+        return $this->redirectToroute($route, $product->slug, $message, $severity);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int $id
@@ -329,38 +380,6 @@ class ProductsController extends Controller
             'success',
             'products.show'
         );
-    }
-
-    /**
-     * Ejecuta la operacion segun los paramentros. Este metodo sirve
-     * para deshabilitar, eliminar y restaurar productos.
-     *
-     * @param  $product
-     * @param  string $method
-     * @param  string $message
-     * @param  string $severity
-     * @param  string $route
-     *
-     * @return RedirectResponse
-     */
-    protected function destroyDeleteRestorePrototype(
-        $product,
-        $method,
-        $message,
-        $severity = 'info',
-        $route = 'products.index'
-    ) {
-        if (!$this->productRepo->canUserManipulate($product->user_id)) {
-            return $this->redirectToroute('products.show', $product->user_id);
-        }
-
-        $product->$method();
-
-        if ($route == 'products.index') {
-            return $this->redirectToroute($route, null, $message, $severity);
-        }
-
-        return $this->redirectToroute($route, $product->slug, $message, $severity);
     }
 
     /**

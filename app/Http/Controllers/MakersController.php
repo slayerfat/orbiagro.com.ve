@@ -40,10 +40,13 @@ class MakersController extends Controller
     public function index()
     {
         $makers = $this->makerRepo->getAll();
+        $image = $makers->random() ? $makers->random()->image->small : null;
 
         $this->seo()->setTitle('Fabricantes en orbiagro.com.ve');
         $this->seo()->setDescription('Fabricantes existentes en orbiagro.com.ve');
         $this->seo()->opengraph()->setUrl(route('makers.index'));
+        $this->seo()->opengraph()->addImage(asset($image));
+        $this->seo()->twitter()->addImage(asset($image));
 
         return view('maker.index', compact('makers'));
     }
@@ -96,6 +99,8 @@ class MakersController extends Controller
         $this->seo()->setTitle("{$maker->name} y sus articulos en orbiagro.com.ve");
         $this->seo()->setDescription("{$maker->name} y sus productos relacionados en orbiagro.com.ve");
         $this->seo()->opengraph()->setUrl(route('makers.show', $id));
+        $this->seo()->opengraph()->addImage(asset($maker->image->small));
+        $this->seo()->twitter()->addImage(asset($maker->image->small));
 
         return view('maker.show', compact('maker'));
     }

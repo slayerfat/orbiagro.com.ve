@@ -37,4 +37,31 @@ abstract class Controller extends BaseController
 
         return redirect()->route($route, $id);
     }
+
+    /**
+     * Crea un arreglo de imagenes utilizadas por facebook y su openGraph
+     *
+     * @param \Illuminate\Support\Collection $elements
+     * @param int $amount
+     * @return array
+     */
+    protected function makeOpenGraphImages($elements, $amount = 5)
+    {
+        // determinamos la cantidad, no mas de 5
+        $picks = $elements->random($elements->count() >= $amount ? $amount : $elements->count())->load('image');
+        $paths = [];
+        if ($elements->count() > 1 || $elements->count() >= $amount) {
+            foreach ($picks as $element) {
+                $paths[] = asset($element->image->small);
+            }
+
+            return $paths;
+        } elseif ($elements->count() == 1) {
+            $paths[] = asset($picks->image->small);
+
+            return $paths;
+        }
+
+        return $paths;
+    }
 }
