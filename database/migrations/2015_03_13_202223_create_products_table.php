@@ -21,6 +21,8 @@ class CreateProductsTable extends Migration
             $table->foreign('maker_id')->references('id')->on('makers');
             $table->integer('sub_category_id')->unsigned();
             $table->foreign('sub_category_id')->references('id')->on('sub_categories');
+            $table->integer('quantity_type_id')->unsigned();
+            $table->foreign('quantity_type_id')->references('id')->on('quantity_types');
             $table->string('title');
             $table->text('description');
             $table->text('heroDetails')->nullable();

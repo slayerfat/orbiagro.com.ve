@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BankTableSeeder::class);
         $this->call(CardTypeTableSeeder::class);
         $this->call(PromoTypesTableSeeder::class);
+        $this->call(QuantityTypeTableSeeder::class);
 
         // tablas primarias
         $this->call(ProviderTableSeed::class);

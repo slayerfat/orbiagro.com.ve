@@ -17,6 +17,7 @@ use Orbiagro\Mamarrachismo\Transformer;
  * @property integer $user_id
  * @property integer $maker_id
  * @property integer $sub_category_id
+ * @property integer $quantity_type_id
  * @property string $title
  * @property string $description
  * @property string $heroDetails
@@ -36,6 +37,7 @@ use Orbiagro\Mamarrachismo\Transformer;
  * @property-read \Orbiagro\Models\Characteristic $characteristics
  * @property-read \Orbiagro\Models\MechanicalInfo $mechanical
  * @property-read \Orbiagro\Models\Nutritional $nutritional
+ * @property-read \Orbiagro\Models\QuantityType $quantityType
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Promotion[] $promotions
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\User[] $purchases
  * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Provider[] $providers
@@ -48,6 +50,7 @@ use Orbiagro\Mamarrachismo\Transformer;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereMakerId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereSubCategoryId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereQuantityTypeId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereTitle($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereHeroDetails($value)
@@ -222,6 +225,14 @@ class Product extends Model
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
+    public function quantityType()
+    {
+        return $this->belongsTo(QuantityType::class);
     }
 
     /**

@@ -246,6 +246,12 @@ $factory->define(Orbiagro\Models\Visit::class, function () {
     ];
 });
 
+$factory->define(Orbiagro\Models\QuantityType::class, function (Faker\Generator $faker) {
+    return [
+        'desc' => $faker->word,
+    ];
+});
+
 $factory->define(Orbiagro\Models\Category::class, function (Faker\Generator $faker) {
     return [
         'description' => $faker->sentence(3),

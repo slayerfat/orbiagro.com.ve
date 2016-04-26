@@ -54,7 +54,8 @@ abstract class BaseSeeder extends Seeder
     /**
      * Crea el directorio necesario para introducir imagenes relacionadas a un modelo.
      *
-     * @param $class
+     * @param \Illuminate\Database\Eloquent\Model $class
+     * @return void
      */
     protected function createDirectory($class)
     {
