@@ -50,6 +50,9 @@
                 <li>{!! link_to_route('subCats.create', 'Crear Rubro') !!}</li>
                 <li>{!! link_to_route('cats.create', 'Crear Categoria') !!}</li>
                 <li class="divider"></li>
+                <li>{!! link_to_route('quantityTypes.create', 'Crear Tipo de cantidad') !!}</li>
+                <li>{!! link_to_route('quantityTypes.index', 'Consultar Tipo de cantidad') !!}</li>
+                <li class="divider"></li>
                 <li>{!! link_to_route('makers.create', 'Crear Fabricante') !!}</li>
                 <li>{!! link_to_route('makers.index', 'Consultar Fabricante') !!}</li>
                 <li class="divider"></li>

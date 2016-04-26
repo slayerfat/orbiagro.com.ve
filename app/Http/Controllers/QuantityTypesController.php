@@ -2,8 +2,9 @@
 
 namespace Orbiagro\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Orbiagro\Http\Requests;
+use Orbiagro\Http\Requests\QuantityTypeRequest;
+use Orbiagro\Models\QuantityType;
 use Orbiagro\Repositories\Interfaces\QuantityTypeRepositoryInterface;
 
 class QuantityTypesController extends Controller
@@ -12,7 +13,7 @@ class QuantityTypesController extends Controller
     /**
      * @var QuantityTypeRepositoryInterface
      */
-    private $quantityType;
+    private $quantityTypeRepo;
 
     /**
      * @param QuantityTypeRepositoryInterface $quantityType
@@ -22,7 +23,7 @@ class QuantityTypesController extends Controller
         $this->middleware('auth');
         $this->middleware('user.admin');
 
-        $this->quantityType = $quantityType;
+        $this->quantityTypeRepo = $quantityType;
     }
 
     /**
@@ -32,7 +33,9 @@ class QuantityTypesController extends Controller
      */
     public function index()
     {
-        //
+        $quantityTypes = $this->quantityTypeRepo->getAll();
+
+        return view('quantityType.index', compact('quantityTypes'));
     }
 
     /**
@@ -42,18 +45,22 @@ class QuantityTypesController extends Controller
      */
     public function create()
     {
-        //
+        $quantityType = $this->quantityTypeRepo->getEmptyInstance();
+
+        return view('quantityType.create', compact('quantityType'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Orbiagro\Http\Requests\QuantityTypeRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(QuantityTypeRequest $request)
     {
-        //
+        $quantityType = $this->quantityTypeRepo->create($request->all());
+
+        return view('quantityType.show', compact('quantityType'));
     }
 
     /**
@@ -64,7 +71,9 @@ class QuantityTypesController extends Controller
      */
     public function show($id)
     {
-        //
+        $quantityType = $this->quantityTypeRepo->getById($id);
+
+        return view('quantityType.show', compact('quantityType'));
     }
 
     /**
@@ -75,19 +84,27 @@ class QuantityTypesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $quantityType = $this->quantityTypeRepo->getById($id);
+
+        return view('quantityType.edit', compact('quantityType'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param QuantityTypeRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @see MakersController::create()
      */
-    public function update(Request $request, $id)
+    public function update(QuantityTypeRequest $request, $id)
     {
-        //
+        /** @var QuantityType $quantityType */
+        $quantityType = $this->quantityTypeRepo->update($id, $request->all());
+
+        flash('El Tipo de cantidad ha sido actualizado correctamente.');
+
+        return redirect()->route('quantityTypes.show', $quantityType->id);
     }
 
     /**
