@@ -15,26 +15,10 @@
     <div class="collapse navbar-collapse" id="main-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="/">Inicio</a></li>
-        {{-- <li class="dropdown"> --}}
         <li>
-          {{-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-            Categorias
-            <span class="caret"></span>
-          </a> --}}
-          {{-- <ul class="dropdown-menu" role="menu"> --}}
-            {{-- <li>{!! link_to_route('cats.index', 'Consultar') !!}</li> --}}
-          {{-- </ul> --}}
           {!! link_to_route('cats.index', 'Categorias') !!}
         </li>
-        {{-- <li class="dropdown"> --}}
         <li>
-          {{-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-            Rubros
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu" role="menu">
-            <li>{!! link_to_route('subCats.index', 'Consultar') !!}</li>
-          </ul> --}}
           {!! link_to_route('subCats.index', 'Rubros') !!}
         </li>
         <li class="dropdown">
@@ -79,8 +63,8 @@
 
       <ul class="nav navbar-nav navbar-right" id="main-navbar-user">
         @if (Auth::guest())
-          <li><a href="/auth/login">Entrar</a></li>
-          <li><a href="/auth/register">Registrarse</a></li>
+          <li><a href="{{ url('/login') }}">Entrar</a></li>
+          {{--<li><a href="{{ url('/register') }}">Registrarse</a></li>--}}
         @else
           <p class="navbar-text">Hola {{Auth::user()->name}}!</p>
           <li class="dropdown">
@@ -89,7 +73,7 @@
               <li>
                 {!! link_to_route('users.show', 'Perfil', Auth::user()->name) !!}
               </li>
-              <li><a href="/auth/logout">Salir</a></li>
+              <li><a href="{{ url('/logout') }}">Salir</a></li>
             </ul>
           </li>
         @endif

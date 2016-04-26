@@ -40,11 +40,11 @@
         <h2>Oh, Parece ser que no hay Productos!</h2>
         @if(Auth::guest())
           <h3>
-            <a href="/auth/login">Entra y Crea un nuevo Producto</a>
+            <a href="{{ url('/login') }}">Entra y Crea un nuevo Producto</a>
           </h3>
-          <h3>
-            <a href="/auth/register">O Registrate para Crear un nuevo Producto</a>
-          </h3>
+          {{--<h3>--}}
+            {{--<a href="/auth/register">O Registrate para Crear un nuevo Producto</a>--}}
+          {{--</h3>--}}
         @else
           <h3>
             {!! link_to_route('products.create', 'Crea un nuevo Producto') !!}
