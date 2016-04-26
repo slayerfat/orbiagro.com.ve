@@ -20,7 +20,7 @@ class RedirectIfUnverified
     public function handle($request, Closure $next)
     {
         if ($request->user()->hasConfirmation()) {
-            flash()->warning('Ud. todavia no ha verificado su cuenta en el sistema.');
+            flash()->warning('Ud. todavía no ha verificado su cuenta en el sistema.');
 
             return redirect()->route('users.unverified');
         }
