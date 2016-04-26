@@ -365,8 +365,8 @@ class Product extends Model
             $dollar = $this->checkDollar($checkDollar);
 
             // si el objeto existe como atributo
-        } elseif ($checkDollar === null && isset($this->CheckDollar)) {
-            $dollar = $this->checkDollar($this->CheckDollar);
+        } elseif ($checkDollar === null && isset($this->checkDollar)) {
+            $dollar = $this->checkDollar($this->checkDollar);
 
             // si no fue pasado ningun parametro
         } elseif ($checkDollar === null) {
@@ -398,9 +398,9 @@ class Product extends Model
             return $checkDollar->dollar->promedio;
 
             // no existe parametro pero existe como atributo
-        } elseif ($checkDollar === null && isset($this->CheckDollar)) {
-            if ($this->CheckDollar->isValid()) {
-                return $this->CheckDollar->dollar->promedio;
+        } elseif ($checkDollar === null && isset($this->checkDollar)) {
+            if ($this->checkDollar->isValid()) {
+                return $this->checkDollar->dollar->promedio;
             }
 
             // no existe ni parametro ni atributo
@@ -408,7 +408,7 @@ class Product extends Model
             $obj = new CheckDollar(Carbon::now());
 
             if ($obj->isValid()) {
-                $this->CheckDollar = $obj;
+                $this->checkDollar = $obj;
 
                 return $obj->dollar->promedio;
             }
