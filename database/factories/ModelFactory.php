@@ -1,20 +1,22 @@
 <?php
 
-/**
- * Nos interesa que la cedula de indentidad no se repita para
- * no generar algun conflico al generar datos.
- *
- * @return int
- */
-function makeCI()
-{
-    $number = rand(999999, 99999999);
-    $user   = \Orbiagro\Models\Person::where('identity_card', $number)->get();
-    if ($user->isEmpty()) {
-        return $number;
-    }
+if (!function_exists('makeCI')) {
+    /**
+     * Nos interesa que la cedula de indentidad no se repita para
+     * no generar algun conflico al generar datos.
+     *
+     * @return int
+     */
+    function makeCI()
+    {
+        $number = rand(999999, 99999999);
+        $user   = \Orbiagro\Models\Person::where('identity_card', $number)->get();
+        if ($user->isEmpty()) {
+            return $number;
+        }
 
-    return makeCI();
+        return makeCI();
+    }
 }
 
 /** @var Illuminate\Database\Eloquent\Factory $factory */
