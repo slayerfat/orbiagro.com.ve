@@ -11,6 +11,7 @@ use Orbiagro\Models\Maker;
 use Orbiagro\Models\Nutritional;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\Provider;
+use Orbiagro\Models\QuantityType;
 use Orbiagro\Models\SubCategory;
 use Orbiagro\Models\User;
 use Orbiagro\Models\Visit;
@@ -188,6 +189,17 @@ class ProductTest extends TestCase
         $this->assertEquals('mocked', $this->mock->visits());
     }
 
+    public function testQuantityTypeRelationship()
+    {
+        $this->mock
+            ->shouldReceive('belongsTo')
+            ->once()
+            ->with(QuantityType::class)
+            ->andReturn('mocked');
+
+        $this->assertEquals('mocked', $this->mock->quantityType());
+    }
+
     public function testCorrectFormattedSlug()
     {
         $this->tester->slug = 'tetsuo kaneda tetsuo kaneda';
@@ -316,14 +328,19 @@ class ProductTest extends TestCase
 
     public function testReadableQuantityMethodAttribute()
     {
-        $this->markTestIncomplete('No implementado');
+        $quantity       = new \stdClass;
+        $quantity->desc = 'Unidad';
+        /** @var \stdClass $tester */
+        $tester               = $this->tester;
+        $tester->quantityType = $quantity;
+
         $this->tester->quantity = 1;
-        $this->assertEquals('1 Unidad.', $this->tester->readableQuantity());
+        $this->assertEquals('1 Unidad', $this->tester->formattedQuantity());
         $this->tester->quantity = 2;
-        $this->assertEquals('2 Unidades.', $this->tester->readableQuantity());
+        $this->assertEquals('2 Unidades', $this->tester->formattedQuantity());
         $this->tester->quantity = 0;
-        $this->assertEquals('0 Unidades.', $this->tester->readableQuantity());
+        $this->assertEquals('0 Unidades', $this->tester->formattedQuantity());
         $this->tester->quantity = -1;
-        $this->assertEquals('0 Unidades.', $this->tester->readableQuantity());
+        $this->assertEquals('0 Unidades', $this->tester->formattedQuantity());
     }
 }

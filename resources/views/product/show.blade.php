@@ -37,7 +37,7 @@
               <strong>{{ $product->priceBs() }}</strong>
             </h2>
             <p>
-              {{ $product->quantity }} Unidades
+              {{ $product->formattedQuantity() }}
             </p>
           </div>
         </div>

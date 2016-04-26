@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Orbiagro\Models\QuantityType
+ * Orbiagro\Models\QuantityTypeRepository
  *
  * @property integer $id
  * @property string $desc

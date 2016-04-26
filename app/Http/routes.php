@@ -713,4 +713,40 @@ Route::group(['middleware' => ['web']], function () {
         '/promociones/{promotions}',
         ['as' => 'promotions.destroy', 'uses' => 'PromotionsController@destroy']
     );
+
+    // QuantityTypes
+    Route::get(
+        '/tipos-cantidad',
+        ['as' => 'quantityTypes.index', 'uses' => 'QuantityTypesController@index']
+    );
+
+    Route::get(
+        '/tipos-cantidad/crear',
+        ['as' => 'quantityTypes.create', 'uses' => 'QuantityTypesController@create']
+    );
+
+    Route::post(
+        '/tipos-cantidad',
+        ['as' => 'quantityTypes.store', 'uses' => 'QuantityTypesController@store']
+    );
+
+    Route::get(
+        '/tipos-cantidad/{quantityTypes}',
+        ['as' => 'quantityTypes.show', 'uses' => 'QuantityTypesController@show']
+    );
+
+    Route::get(
+        '/tipos-cantidad/{quantityTypes}/editar',
+        ['as' => 'quantityTypes.edit', 'uses' => 'QuantityTypesController@edit']
+    );
+
+    Route::patch(
+        '/tipos-cantidad/{quantityTypes}',
+        ['as' => 'quantityTypes.update', 'uses' => 'QuantityTypesController@update']
+    );
+
+    Route::delete(
+        '/tipos-cantidad/{quantityTypes}',
+        ['as' => 'quantityTypes.destroy', 'uses' => 'QuantityTypesController@destroy']
+    );
 });

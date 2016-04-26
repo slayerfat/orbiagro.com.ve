@@ -13,7 +13,7 @@ class QuantityTypeTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->command->info("*** Empezando creacion de QuantityType! ***");
+        $this->command->info("*** Empezando creacion de QuantityTypeRepository! ***");
 
         $types = [
             'Unidad',
@@ -30,6 +30,6 @@ class QuantityTypeTableSeeder extends Seeder
             QuantityType::create(['desc' => $type]);
         }
 
-        $this->command->info('Creacion de QuantityType completado.');
+        $this->command->info('Creacion de QuantityTypeRepository completado.');
     }
 }

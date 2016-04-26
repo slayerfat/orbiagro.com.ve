@@ -10,6 +10,7 @@ use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\QuantityTypeRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
 class ProductsController extends Controller
@@ -33,16 +34,23 @@ class ProductsController extends Controller
     private $subCatRepo;
 
     /**
+     * @var QuantityTypeRepositoryInterface
+     */
+    private $quantityTypeRepo;
+
+    /**
      * Create a new controller instance.
      *
      * @param ProductRepositoryInterface $productRepo
      * @param CategoryRepositoryInterface $catRepo
      * @param SubCategoryRepositoryInterface $subCatRepo
+     * @param QuantityTypeRepositoryInterface $quantityTypeRepo
      */
     public function __construct(
         ProductRepositoryInterface $productRepo,
         CategoryRepositoryInterface $catRepo,
-        SubCategoryRepositoryInterface $subCatRepo
+        SubCategoryRepositoryInterface $subCatRepo,
+        QuantityTypeRepositoryInterface $quantityTypeRepo
     ) {
         $rules = [
             'except' =>
@@ -57,9 +65,10 @@ class ProductsController extends Controller
         $this->middleware('auth', $rules);
         $this->middleware('user.unverified', $rules);
 
-        $this->catRepo     = $catRepo;
-        $this->subCatRepo  = $subCatRepo;
-        $this->productRepo = $productRepo;
+        $this->catRepo          = $catRepo;
+        $this->subCatRepo       = $subCatRepo;
+        $this->productRepo      = $productRepo;
+        $this->quantityTypeRepo = $quantityTypeRepo;
     }
 
     /**
@@ -193,13 +202,12 @@ class ProductsController extends Controller
             return redirect()->back();
         }
 
-        $makers = $maker->getLists();
+        $makers        = $maker->getLists();
+        $product       = $this->productRepo->getEmptyInstance();
+        $cats          = $this->catRepo->getArraySortedWithSubCategories();
+        $quantityTypes = $this->quantityTypeRepo->getLists();
 
-        $product = $this->productRepo->getEmptyInstance();
-
-        $cats = $this->catRepo->getArraySortedWithSubCategories();
-
-        return view('product.create', compact('product', 'makers', 'cats'));
+        return view('product.create', compact('product', 'makers', 'cats', 'quantityTypes'));
     }
 
     /**
@@ -274,11 +282,11 @@ class ProductsController extends Controller
             return $this->redirectToroute('products.show', $id);
         }
 
-        $makers = $maker->getLists();
+        $makers        = $maker->getLists();
+        $cats          = $this->catRepo->getArraySortedWithSubCategories();
+        $quantityTypes = $this->quantityTypeRepo->getLists();
 
-        $cats = $this->catRepo->getArraySortedWithSubCategories();
-
-        return view('product.edit', compact('product', 'makers', 'cats'));
+        return view('product.edit', compact('product', 'makers', 'cats', 'quantityTypes'));
     }
 
     /**
@@ -292,7 +300,7 @@ class ProductsController extends Controller
     {
         $product = $this->productRepo->update($id, $request->all());
 
-        flash('El Producto ha sido actualizado con exito.');
+        flash('El Producto ha sido actualizado con éxito.');
 
         return redirect()->route('products.show', $product->slug);
     }

@@ -19,12 +19,18 @@
 @section('product-price-quantity')
   <div class="form-group">
     {!! Form::label('price', 'Precio:', ['class' => 'col-md-2 control-label']) !!}
-    <div class="col-md-4">
+    <div class="col-md-10">
       {!! Form::input('number', 'price', $price, ['class' => 'form-control', 'placeholder' => 'Vacío significa precio a convenir']) !!}
     </div>
+  </div>
+  <div class="form-group">
     {!! Form::label('quantity', 'Cantidad:', ['class' => 'col-md-2 control-label']) !!}
     <div class="col-md-4">
       {!! Form::input('number', 'quantity', $quantity, ['class' => 'form-control']) !!}
+    </div>
+    {!! Form::label('quantity_type_id', 'Tipo:', ['class' => 'col-md-2 control-label']) !!}
+    <div class="col-md-4">
+      {!! Form::select('quantity_type_id', $quantityTypes, null, ['class' => 'form-control']) !!}
     </div>
   </div>
 @stop

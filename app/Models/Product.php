@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Models;
 
 use Carbon\Carbon;
+use ICanBoogie\Inflector;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Orbiagro\Mamarrachismo\CheckDollar;
@@ -78,6 +79,7 @@ class Product extends Model
         'user_id',
         'maker_id',
         'sub_category_id',
+        'quantity_type_id',
         'title',
         'description',
         'heroDetails',
@@ -462,5 +464,21 @@ class Product extends Model
     public function isForceDeleting()
     {
         return $this->forceDeleting;
+    }
+
+    /**
+     * @return string
+     */
+    public function formattedQuantity()
+    {
+        $inflector = Inflector::get('es');
+        $type      = $this->quantityType->desc;
+
+        if ($this->quantity <> 1) {
+            $type = $inflector->pluralize($this->quantityType->desc);
+        }
+
+        return $this->quantity . ' ' . $type;
+
     }
 }
