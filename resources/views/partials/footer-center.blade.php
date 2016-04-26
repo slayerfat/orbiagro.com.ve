@@ -11,5 +11,12 @@
     {!! link_to_route('products.index', 'Productos') !!}
   </p>
 
-  <p class="footer-orbiagro">slayerfat © 2015</p>
+  <p class="footer-slayerfat">
+    <a href="https://github.com/slayerfat">
+      <i class="fa fa-github"></i> slayerfat
+    </a>
+    © {{ date('Y') }}
+    <br>
+    <a href="https://twitter.com/slayerfat">@slayerfat</a>
+  </p>
 </footer>
