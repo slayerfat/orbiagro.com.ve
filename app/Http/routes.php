@@ -549,6 +549,11 @@ Route::group(['middleware' => ['web']], function () {
         ['as' => 'subCats.update', 'uses' => 'SubCategoriesController@update']
     );
 
+    Route::delete(
+        '/rubros/{subCats}',
+        ['as' => 'subCats.destroy', 'uses' => 'SubCategoriesController@destroy']
+    );
+
     // Makers
     Route::get(
         '/fabricantes',
