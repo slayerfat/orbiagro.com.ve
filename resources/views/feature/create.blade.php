@@ -13,7 +13,7 @@
           <div class="panel-body">
             @include('errors.bag')
             {!! Form::model($feature, [
-              'route' => ['features.store', $product->id],
+              'route' => ['products.features.store', $product->id],
               'class' => 'form-horizontal',
               'files' => true,
               ]) !!}
