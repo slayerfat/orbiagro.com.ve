@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Http\Controllers;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\View\View;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\PromotionRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
@@ -29,9 +29,10 @@ class HomeController extends Controller
 
     /**
      * Create a new controller instance.
-     * @param CategoryRepositoryInterface    $catRepo
+     *
+     * @param CategoryRepositoryInterface $catRepo
      * @param SubCategoryRepositoryInterface $subCatRepo
-     * @param PromotionRepositoryInterface   $promoRepo
+     * @param PromotionRepositoryInterface $promoRepo
      */
     public function __construct(
         CategoryRepositoryInterface $catRepo,
@@ -40,9 +41,9 @@ class HomeController extends Controller
     ) {
         $this->middleware('auth', ['except' => 'index']);
 
-        $this->catRepo = $catRepo;
+        $this->catRepo    = $catRepo;
         $this->subCatRepo = $subCatRepo;
-        $this->promoRepo = $promoRepo;
+        $this->promoRepo  = $promoRepo;
     }
 
     /**
@@ -69,12 +70,12 @@ class HomeController extends Controller
     /**
      * Muestra la vista para el usuario no verificado.
      *
-     * @param  Guard    $auth
+     * @param  Guard $auth
      * @return View
      */
     public function unverified(Guard $auth)
     {
-        $user  = $auth->user();
+        $user = $auth->user();
 
         return view('auth.verification', compact('user'));
     }

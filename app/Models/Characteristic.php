@@ -1,9 +1,10 @@
 <?php namespace Orbiagro\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\Transformer;
+use LogicException;
 use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Transformer;
 
 /**
  * Orbiagro\Models\Characteristic
@@ -19,7 +20,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read Product $product
+ * @property-read \Orbiagro\Models\Product $product
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereProductId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereHeight($value)
@@ -31,52 +32,68 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Characteristic whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class Characteristic extends Model
 {
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'height',
         'width',
         'depth',
         'units',
-        'weight'
+        'weight',
     ];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
-
+    /**
+     * @param $value
+     */
     public function setWeightAttribute($value)
     {
         $this->attributes['weight'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setHeightAttribute($value)
     {
         $this->attributes['height'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setWidthAttribute($value)
     {
         $this->attributes['width'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setDepthAttribute($value)
     {
         $this->attributes['depth'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setUnitsAttribute($value)
     {
         $this->attributes['units'] = ModelValidation::byNonNegative($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null
+     */
     public function getDepthAttribute($value)
     {
         if ($value) {
@@ -86,25 +103,22 @@ class Characteristic extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Public Methods
-    // --------------------------------------------------------------------------
-
     /**
      * convierte algun valor numero a otra medida.
      *
-     * @param  mixed  $int        el numero a convertir.
-     * @param  string $base       la unidad de medida que esta asociada al numero.
-     * @param  string $attribute  el atributo que se desea modificar.
-     * @return mixed              el resultado.
+     * @param  mixed $int el numero a convertir.
+     * @param  string $base la unidad de medida que esta asociada al numero.
+     * @param  string $attribute el atributo que se desea modificar.
+     * @return mixed el resultado.
+     * @throws LogicException
      */
     public function convert($int, $base, $attribute = null)
     {
@@ -113,12 +127,15 @@ class Characteristic extends Model
         } elseif ($attribute === null) {
             return Transformer::transform($int, $base);
         }
+
+        throw new LogicException('Error inesperado al convertir datos');
     }
 
     /**
-    * Devuelve el peso en formato legible en Gramos.
-    * @return mixed
-    */
+     * Devuelve el peso en formato legible en Gramos.
+     *
+     * @return mixed
+     */
     public function weightGm()
     {
         $weight = Transformer::transform($this->attributes['weight'], 'kg', 'g');
@@ -134,6 +151,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve el peso en formato legible en Kg.
+     *
      * @return mixed
      */
     public function weightKg()
@@ -149,6 +167,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve el peso en formato legible en Toneladas.
+     *
      * @return mixed
      */
     public function weightTons()
@@ -165,6 +184,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve las unidades en formato legible en Unidades.
+     *
      * @return mixed
      */
     public function formattedUnits()
@@ -180,6 +200,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve el ancho en formato legible en cm.
+     *
      * @return mixed
      */
     public function widthCm()
@@ -195,6 +216,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve el ancho en formato legible en mm.
+     *
      * @return mixed
      */
     public function widthMm()
@@ -212,6 +234,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve el ancho en formato legible en cm.
+     *
      * @return mixed
      */
     public function heightCm()
@@ -227,6 +250,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve el ancho en formato legible en mm.
+     *
      * @return mixed
      */
     public function heightMm()
@@ -244,6 +268,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve el ancho en formato legible en cm.
+     *
      * @return mixed
      */
     public function depthCm()
@@ -259,6 +284,7 @@ class Characteristic extends Model
 
     /**
      * Devuelve el ancho en formato legible en mm.
+     *
      * @return mixed
      */
     public function depthMm()

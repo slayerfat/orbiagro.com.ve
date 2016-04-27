@@ -13,7 +13,7 @@
         <div class="panel-body">
           @include('errors.bag')
 
-          <form class="form-horizontal" role="form" method="POST" action="/auth/login">
+          <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="form-group">
@@ -34,7 +34,7 @@
               <div class="col-md-6 col-md-offset-4">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" name="remember"> Recuerdame
+                    <input type="checkbox" name="remember"> Recuérdame
                   </label>
                 </div>
               </div>
@@ -46,7 +46,7 @@
                   Entrar
                 </button>
 
-                <a href="/password/email">¿Olvido su Contraseña?</a>
+                <a href="{{ url('/password/reset') }}">¿Olvido su Contraseña?</a>
               </div>
             </div>
           </form>

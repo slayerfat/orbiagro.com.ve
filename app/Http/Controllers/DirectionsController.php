@@ -1,9 +1,9 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Models\Town;
-use Orbiagro\Models\State;
-use Orbiagro\Models\Parish;
 use Illuminate\Database\Eloquent\Collection;
+use Orbiagro\Models\Parish;
+use Orbiagro\Models\State;
+use Orbiagro\Models\Town;
 
 class DirectionsController extends Controller
 {
@@ -40,7 +40,7 @@ class DirectionsController extends Controller
      */
     public function town($id)
     {
-        $town = Town::where('id', $id)->first();
+        $town   = Town::where('id', $id)->first();
         $number = $town->state_id;
 
         return Town::where('state_id', $number)->get();

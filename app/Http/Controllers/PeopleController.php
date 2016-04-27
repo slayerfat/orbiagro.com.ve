@@ -1,14 +1,15 @@
 <?php namespace Orbiagro\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Orbiagro\Http\Requests\PeopleRequest;
 use Orbiagro\Models\Gender;
 use Orbiagro\Models\Nationality;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 /**
  * Class PeopleController
+ *
  * @package Orbiagro\Http\Controllers
  */
 class PeopleController extends Controller
@@ -21,6 +22,7 @@ class PeopleController extends Controller
 
     /**
      * Create a new controller instance.
+     *
      * @param UserRepositoryInterface $userRepo
      */
     public function __construct(UserRepositoryInterface $userRepo)
@@ -36,7 +38,7 @@ class PeopleController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param int   $id
+     * @param int $id
      *
      * @return View|RedirectResponse
      */
@@ -67,7 +69,8 @@ class PeopleController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param  int           $id
+     *
+     * @param  int $id
      * @param  PeopleRequest $request
      *
      * @return RedirectResponse
@@ -84,7 +87,7 @@ class PeopleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int      $id
+     * @param  int $id
      * @return View|RedirectResponse
      */
     public function edit($id)
@@ -111,7 +114,8 @@ class PeopleController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param  int           $id
+     *
+     * @param  int $id
      * @param  PeopleRequest $request
      *
      * @return RedirectResponse

@@ -57,7 +57,7 @@ class SubCategoryRepository extends AbstractRepository implements SubCategoryRep
      */
     public function getLists()
     {
-        return $this->model->lists('description', 'id');
+        return $this->model->pluck('description', 'id');
     }
 
     /**

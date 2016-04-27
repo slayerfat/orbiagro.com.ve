@@ -1,20 +1,26 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| Here you may define all of your model factories. Model factories give
-| you a convenient way to create models for testing and seeding your
-| database. Just tell the factory how a default model should look.
-|
-*/
+if (!function_exists('makeCI')) {
+    /**
+     * Nos interesa que la cedula de indentidad no se repita para
+     * no generar algun conflico al generar datos.
+     *
+     * @return int
+     */
+    function makeCI()
+    {
+        $number = rand(999999, 99999999);
+        $user   = \Orbiagro\Models\Person::where('identity_card', $number)->get();
+        if ($user->isEmpty()) {
+            return $number;
+        }
 
-// implementado asi por la libreria en español
-$faker = Faker\Factory::create('es_ES');
+        return makeCI();
+    }
+}
 
-$factory->define(Orbiagro\Models\User::class, function ($faker) {
+/** @var Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(Orbiagro\Models\User::class, function (Faker\Generator $faker) {
     return [
         'name'           => $faker->name,
         'email'          => $faker->email,
@@ -24,14 +30,14 @@ $factory->define(Orbiagro\Models\User::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\UserConfirmation::class, function ($faker) {
+$factory->define(Orbiagro\Models\UserConfirmation::class, function (Faker\Generator $faker) {
     return [
-        'data'           => $faker->text,
-        'user_id'        => 1,
+        'data'    => $faker->text,
+        'user_id' => 1,
     ];
 });
 
-$factory->define(Orbiagro\Models\Profile::class, function ($faker) {
+$factory->define(Orbiagro\Models\Profile::class, function (Faker\Generator $faker) {
     return [
         'description' => $faker->text,
         'created_by'  => 1,
@@ -39,7 +45,7 @@ $factory->define(Orbiagro\Models\Profile::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Billing::class, function ($faker) {
+$factory->define(Orbiagro\Models\Billing::class, function (Faker\Generator $faker) {
     return [
         'bank_id'      => 1,
         'card_type_id' => 1,
@@ -52,7 +58,7 @@ $factory->define(Orbiagro\Models\Billing::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Maker::class, function ($faker) {
+$factory->define(Orbiagro\Models\Maker::class, function (Faker\Generator $faker) {
     return [
         'name'       => $faker->company,
         'domain'     => $faker->domainName,
@@ -62,7 +68,7 @@ $factory->define(Orbiagro\Models\Maker::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Characteristic::class, function ($faker) {
+$factory->define(Orbiagro\Models\Characteristic::class, function () {
     return [
         'height'     => rand(1, 1000),
         'width'      => rand(1, 1000),
@@ -74,7 +80,7 @@ $factory->define(Orbiagro\Models\Characteristic::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\MechanicalInfo::class, function ($faker) {
+$factory->define(Orbiagro\Models\MechanicalInfo::class, function () {
     return [
         'motor'        => rand(1, 16),
         'motor_serial' => rand(100000, 999999),
@@ -89,7 +95,7 @@ $factory->define(Orbiagro\Models\MechanicalInfo::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Nutritional::class, function ($faker) {
+$factory->define(Orbiagro\Models\Nutritional::class, function () {
     return [
         'due'        => '1999-09-09',
         'created_by' => 1,
@@ -97,7 +103,7 @@ $factory->define(Orbiagro\Models\Nutritional::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Feature::class, function ($faker) {
+$factory->define(Orbiagro\Models\Feature::class, function (Faker\Generator $faker) {
     return [
         'title'       => $faker->sentence(5),
         'description' => $faker->text,
@@ -106,15 +112,15 @@ $factory->define(Orbiagro\Models\Feature::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Person::class, function ($faker) {
+$factory->define(Orbiagro\Models\Person::class, function (Faker\Generator $faker) {
     return [
         'gender_id'      => 1,
         'nationality_id' => 1,
         'first_name'     => $faker->firstName,
         'first_surname'  => $faker->lastName,
-        'identity_card'  => rand(99999, 99999999),
+        'identity_card'  => makeCI(),
         'phone'          => $faker->phoneNumber,
-        'birth_date'     => $faker->date,
+        'birth_date'     => $faker->date(),
         'created_at'     => Carbon\Carbon::now(),
         'updated_at'     => Carbon\Carbon::now(),
         'created_by'     => 1,
@@ -122,7 +128,7 @@ $factory->define(Orbiagro\Models\Person::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Direction::class, function ($faker) {
+$factory->define(Orbiagro\Models\Direction::class, function (Faker\Generator $faker) {
     return [
         'parish_id'  => 1,
         'details'    => $faker->streetAddress,
@@ -131,17 +137,18 @@ $factory->define(Orbiagro\Models\Direction::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Product::class, function ($faker) {
+$factory->define(Orbiagro\Models\Product::class, function (Faker\Generator $faker) {
     return [
-        'maker_id'        => 1,
-        'sub_category_id' => 1,
-        'title'           => $faker->sentence(5),
-        'description'     => $faker->text,
-        'heroDetails'     => $faker->text,
-        'price'           => $faker->randomFloat(2, 100, 9999999999),
-        'quantity'        => $faker->randomDigitNotNull,
-        'created_by'      => 1,
-        'updated_by'      => 1,
+        'maker_id'         => 1,
+        'sub_category_id'  => 1,
+        'quantity_type_id' => 1,
+        'title'            => $faker->sentence(5),
+        'description'      => $faker->text,
+        'heroDetails'      => $faker->text,
+        'price'            => $faker->randomFloat(2, 100, 9999999999),
+        'quantity'         => $faker->randomDigitNotNull,
+        'created_by'       => 1,
+        'updated_by'       => 1,
     ];
 });
 
@@ -160,7 +167,7 @@ $factory->defineAs(Orbiagro\Models\Product::class, 'realRelations', function () 
     );
 });
 
-$factory->define(Orbiagro\Models\MapDetail::class, function ($faker) {
+$factory->define(Orbiagro\Models\MapDetail::class, function () {
     return [
         'latitude'   => 10.492315,
         'longitude'  => -66.932899,
@@ -170,7 +177,7 @@ $factory->define(Orbiagro\Models\MapDetail::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\Promotion::class, function ($faker) {
+$factory->define(Orbiagro\Models\Promotion::class, function (Faker\Generator $faker) {
     $number = rand(1, 100);
 
     return [
@@ -185,16 +192,17 @@ $factory->define(Orbiagro\Models\Promotion::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\PromoType::class, function ($faker) {
+$factory->define(Orbiagro\Models\PromoType::class, function (Faker\Generator $faker) {
     return [
-        'description'   => $faker->word,
-        'created_by'    => 1,
-        'updated_by'    => 1,
+        'description' => $faker->word,
+        'created_by'  => 1,
+        'updated_by'  => 1,
     ];
 });
 
-$factory->defineAs(Orbiagro\Models\Promotion::class, 'realRelations', function ($faker) {
+$factory->defineAs(Orbiagro\Models\Promotion::class, 'realRelations', function (Faker\Generator $faker) {
     $number = rand(1, 100);
+    /** @var \Orbiagro\Models\Promotion $promoType */
     $promoType = Orbiagro\Models\PromoType::where('description', 'primavera')->first();
 
     return [
@@ -209,7 +217,7 @@ $factory->defineAs(Orbiagro\Models\Promotion::class, 'realRelations', function (
     ];
 });
 
-$factory->define(Orbiagro\Models\Provider::class, function ($faker) {
+$factory->define(Orbiagro\Models\Provider::class, function (Faker\Generator $faker) {
     return [
         'name'            => $faker->company,
         'url'             => $faker->url,
@@ -240,7 +248,13 @@ $factory->define(Orbiagro\Models\Visit::class, function () {
     ];
 });
 
-$factory->define(Orbiagro\Models\Category::class, function ($faker) {
+$factory->define(Orbiagro\Models\QuantityType::class, function (Faker\Generator $faker) {
+    return [
+        'desc' => $faker->word,
+    ];
+});
+
+$factory->define(Orbiagro\Models\Category::class, function (Faker\Generator $faker) {
     return [
         'description' => $faker->sentence(3),
         'info'        => $faker->sentence(3),
@@ -250,7 +264,7 @@ $factory->define(Orbiagro\Models\Category::class, function ($faker) {
     ];
 });
 
-$factory->define(Orbiagro\Models\SubCategory::class, function ($faker) {
+$factory->define(Orbiagro\Models\SubCategory::class, function (Faker\Generator $faker) {
     return [
         'description' => $faker->sentence(3),
         'info'        => $faker->sentence(3),

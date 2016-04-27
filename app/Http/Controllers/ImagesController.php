@@ -1,11 +1,12 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use LogicException;
-use Orbiagro\Http\Requests;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Database\Eloquent\Model;
+use LogicException;
+use Orbiagro\Http\Requests;
+use Orbiagro\Mamarrachismo\Upload\Exceptions\ImageValidationFail;
 use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
 
 class ImagesController extends Controller
@@ -18,6 +19,7 @@ class ImagesController extends Controller
 
     /**
      * Create a new controller instance.
+     *
      * @param ImageRepositoryInterface $imageRepo
      */
     public function __construct(ImageRepositoryInterface $imageRepo)
@@ -30,7 +32,7 @@ class ImagesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function edit($id)
@@ -42,13 +44,18 @@ class ImagesController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
      * @param  int $id
      * @param  Request $request
      * @return RedirectResponse
      */
     public function update($id, Request $request)
     {
-        $image = $this->imageRepo->update($id, $request);
+        try {
+            $image = $this->imageRepo->update($id, $request);
+        } catch (ImageValidationFail $e) {
+            return redirect()->back()->withErrors($e->getErrors());
+        }
 
         /** @var Model $model */
         $model = $image->imageable;
@@ -63,7 +70,7 @@ class ImagesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)
@@ -86,7 +93,7 @@ class ImagesController extends Controller
      * Utilizado para generar el nombre del controlador y
      * el identificador necesario para encontrar el recurso.
      *
-     * @param  Model $model el modelo a manipular.
+     * @param  Model|\Orbiagro\Models\Product|\Orbiagro\Models\Feature $model el modelo a manipular.
      * @return array
      * @throws LogicException
      */
@@ -94,45 +101,45 @@ class ImagesController extends Controller
     {
         $array = [
             'controller' => '',
-            'route' => '',
-            'id' => null
+            'route'      => '',
+            'id'         => null,
         ];
 
         switch (get_class($model)) {
             case 'Orbiagro\Models\Product':
                 $array['controller'] = 'ProductsController@show';
-                $array['route'] = 'products.show';
+                $array['route']      = 'products.show';
                 break;
 
             case 'Orbiagro\Models\Feature':
                 $array['controller'] = 'ProductsController@show';
-                $array['route'] = 'products.show';
+                $array['route']      = 'products.show';
 
                 $array['id'] = $model->product->id;
                 break;
 
             case 'Orbiagro\Models\Category':
                 $array['controller'] = 'CategoriesController@show';
-                $array['route'] = 'cats.show';
+                $array['route']      = 'cats.show';
                 break;
 
             case 'Orbiagro\Models\SubCategory':
                 $array['controller'] = 'SubCategoriesController@show';
-                $array['route'] = 'subCats.show';
+                $array['route']      = 'subCats.show';
                 break;
 
             case 'Orbiagro\Models\Maker':
                 $array['controller'] = 'MakersController@show';
-                $array['route'] = 'makers.show';
+                $array['route']      = 'makers.show';
                 break;
 
             case 'Orbiagro\Models\Promotion':
                 $array['controller'] = 'PromotionsController@show';
-                $array['route'] = 'promotions.show';
+                $array['route']      = 'promotions.show';
                 break;
 
             default:
-                throw new LogicException('modelo desconocido, no se puede crear ruta de '.get_class($model));
+                throw new LogicException('modelo desconocido, no se puede crear ruta de ' . get_class($model));
 
         }
 

@@ -1,12 +1,12 @@
 <?php namespace Orbiagro\Http\Requests;
 
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Characteristic;
-
 use Orbiagro\Mamarrachismo\Traits\Requests\CanSearchIDs;
+use Orbiagro\Models\Characteristic;
+use Orbiagro\Models\Product;
 
 /**
  * Class CharacteristicRequest
+ *
  * @package Orbiagro\Http\Requests
  */
 class CharacteristicRequest extends Request
@@ -21,13 +21,13 @@ class CharacteristicRequest extends Request
         [
             'methodType' => 'POST',
             'class'      => Product::class,
-            'routeParam' => 'products'
+            'routeParam' => 'products',
         ],
         [
             'methodType' => 'PATCH',
             'class'      => Characteristic::class,
-            'routeParam' => 'characteristics'
-        ]
+            'routeParam' => 'characteristics',
+        ],
     ];
 
     /**

@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Mamarrachismo\Traits\Requests;
 
-use LogicException;
-use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
+use LogicException;
 use Orbiagro\Models\Characteristic;
 use Orbiagro\Models\Feature;
 use Orbiagro\Models\Nutritional;
@@ -16,7 +16,7 @@ trait CanSearchIDs
     /**
      * Invoca findId y regresa si el usuario isOwner or nah.
      *
-     * @param  array   $array
+     * @param  array $array
      *
      * @return boolean
      */
@@ -85,7 +85,7 @@ trait CanSearchIDs
 
             default:
                 throw new InvalidArgumentException(
-                    __METHOD__.' no encontro una clase apropiada.'
+                    __METHOD__ . ' no encontro una clase apropiada.'
                 );
         }
 
@@ -127,15 +127,15 @@ trait CanSearchIDs
         if (method_exists($class, 'user')) {
             throw new LogicException(
                 'El modelo de tipo '
-                .get_class($class)
-                .' tiene un user_id null y posee un metodo definido, puede ser un modelo huerfano.'
+                . get_class($class)
+                . ' tiene un user_id null y posee un metodo definido, puede ser un modelo huerfano.'
             );
         }
 
         throw new LogicException(
             'El modelo de tipo '
-            .get_class($class)
-            .' tiene un user_id null y no posee metodo definido, chequear logica.'
+            . get_class($class)
+            . ' tiene un user_id null y no posee metodo definido, chequear logica.'
         );
     }
 }

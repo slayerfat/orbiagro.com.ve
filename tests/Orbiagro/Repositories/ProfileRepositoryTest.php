@@ -100,7 +100,7 @@ class ProfileRepositoryTest extends TestCase
         $model = Mockery::mock(Profile::class)
             ->makePartial();
 
-        $model->shouldReceive('lists')
+        $model->shouldReceive('pluck')
             ->once()
             ->with('description', 'id')
             ->andReturn('mocked');

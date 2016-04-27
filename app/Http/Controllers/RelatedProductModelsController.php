@@ -1,16 +1,16 @@
 <?php namespace Orbiagro\Http\Controllers;
 
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Orbiagro\Http\Requests\CharacteristicRequest;
 use Orbiagro\Http\Requests\MechanicalInfoRequest;
 use Orbiagro\Http\Requests\NutritionalRequest;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Contracts\Auth\Guard;
 use Orbiagro\Http\Requests\Request;
 use Orbiagro\Models\Characteristic;
 use Orbiagro\Models\MechanicalInfo;
 use Orbiagro\Models\Nutritional;
-use Illuminate\View\View;
 use Orbiagro\Models\Product;
 
 class RelatedProductModelsController extends Controller
@@ -38,9 +38,9 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int         $id
-     * @param  Nutritional $nuts  an instance of Deez Nuts.
-     * @param  Guard       $auth
+     * @param  int $id
+     * @param  Nutritional $nuts an instance of Deez Nuts.
+     * @param  Guard $auth
      *
      * @return RedirectResponse
      */
@@ -50,9 +50,9 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int            $id
+     * @param  int $id
      * @param  Characteristic $char
-     * @param  Guard          $auth
+     * @param  Guard $auth
      *
      * @return RedirectResponse
      */
@@ -62,9 +62,9 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int      $id
-     * @param  Model    $model
-     * @param  Guard    $auth
+     * @param  int $id
+     * @param  Model $model
+     * @param  Guard $auth
      *
      * @return RedirectResponse
      */
@@ -72,16 +72,20 @@ class RelatedProductModelsController extends Controller
     {
         $relation = $this->getRelatedMethod($model);
 
-        $product  = Product::findOrFail($id)->load($relation);
+        /** @var Product $product */
+        $product = Product::findOrFail($id)->load($relation);
 
-        if (!$auth->user()->isOwnerOrAdmin($product->user_id)) {
+        /** @var \Orbiagro\Models\User $user */
+        $user = $auth->user();
+
+        if (!$user->isOwnerOrAdmin($product->user_id)) {
             return $this->redirectToroute('products.show', $product->slug);
         }
 
         // para la vista
         $variables = [];
 
-        $results   = $this->getViewVariables($model);
+        $results = $this->getViewVariables($model);
 
         if ($product->$relation) {
             return $this->redirectToRoute(
@@ -103,12 +107,12 @@ class RelatedProductModelsController extends Controller
          */
         $variables[$results['variableName']] = $model;
 
-        return view($results['target'].'create')->with($variables);
+        return view($results['target'] . 'create')->with($variables);
     }
 
     /**
-     * @param  int                   $id
-     * @param  Characteristic        $char
+     * @param  int $id
+     * @param  Characteristic $char
      * @param  CharacteristicRequest $request
      *
      * @return RedirectResponse
@@ -119,8 +123,8 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int                   $id
-     * @param  MechanicalInfo        $mech
+     * @param  int $id
+     * @param  MechanicalInfo $mech
      * @param  MechanicalInfoRequest $request
      *
      * @return RedirectResponse
@@ -131,8 +135,8 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int                $id
-     * @param  Nutritional        $nuts    Instance of DEEZ NUTS...
+     * @param  int $id
+     * @param  Nutritional $nuts Instance of DEEZ NUTS...
      * @param  NutritionalRequest $request
      *
      * @return RedirectResponse
@@ -143,9 +147,9 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int      $id
-     * @param  Model    $model
-     * @param  Request  $request
+     * @param  int $id
+     * @param  Model $model
+     * @param  Request $request
      *
      * @return RedirectResponse
      */
@@ -153,6 +157,7 @@ class RelatedProductModelsController extends Controller
     {
         $relation = $this->getRelatedMethod($model);
 
+        /** @var Product $product */
         $product = Product::findOrFail($id)->load($relation);
 
         if ($product->$relation) {
@@ -168,13 +173,14 @@ class RelatedProductModelsController extends Controller
         $product->$relation()->save($model);
 
         flash('Recurso asociado creado exitosamente.');
+
         return redirect()->route('products.show', $product->slug);
     }
 
     /**
-     * @param  int            $id
+     * @param  int $id
      * @param  Characteristic $char
-     * @param  Guard          $auth
+     * @param  Guard $auth
      *
      * @return View
      */
@@ -184,9 +190,9 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int             $id
-     * @param  MechanicalInfo  $mech
-     * @param  Guard           $auth
+     * @param  int $id
+     * @param  MechanicalInfo $mech
+     * @param  Guard $auth
      *
      * @return View
      */
@@ -196,9 +202,9 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int         $id
+     * @param  int $id
      * @param  Nutritional $nuts Instance of DEEZ NUTS...
-     * @param  Guard       $auth
+     * @param  Guard $auth
      *
      * @return View
      */
@@ -209,7 +215,7 @@ class RelatedProductModelsController extends Controller
 
 
     /**
-     * @param  int   $id
+     * @param  int $id
      * @param  Model $model
      * @param  Guard $auth
      *
@@ -217,9 +223,12 @@ class RelatedProductModelsController extends Controller
      */
     protected function editPrototype($id, Model $model, Guard $auth)
     {
-        $model = $model::findOrFail($id)->load('product');
+        $model = call_user_func([$model, '::findOrFail'], $id)->load('product');
 
-        if (!$auth->user()->isOwnerOrAdmin($model->product->user_id)) {
+        /** @var \Orbiagro\Models\User $user */
+        $user = $auth->user();
+
+        if (!$user->isOwnerOrAdmin($model->product->user_id)) {
             return $this->redirectToroute('products.show', $model->product->slug);
         }
 
@@ -229,12 +238,12 @@ class RelatedProductModelsController extends Controller
 
         $variables[$results['variableName']] = $model;
 
-        return view($results['target'].'edit')->with($variables);
+        return view($results['target'] . 'edit')->with($variables);
     }
 
     /**
-     * @param  int                   $id
-     * @param  Characteristic        $char
+     * @param  int $id
+     * @param  Characteristic $char
      * @param  CharacteristicRequest $request
      *
      * @return RedirectResponse
@@ -245,8 +254,8 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int                   $id
-     * @param  MechanicalInfo        $mech
+     * @param  int $id
+     * @param  MechanicalInfo $mech
      * @param  MechanicalInfoRequest $request
      *
      * @return RedirectResponse
@@ -257,8 +266,8 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int                $id
-     * @param  Nutritional        $nuts Instance of DEEZ NUTS...
+     * @param  int $id
+     * @param  Nutritional $nuts Instance of DEEZ NUTS...
      * @param  NutritionalRequest $request
      *
      * @return RedirectResponse
@@ -269,19 +278,21 @@ class RelatedProductModelsController extends Controller
     }
 
     /**
-     * @param  int     $id
-     * @param  Model   $model
+     * @param  int $id
+     * @param  Model $model
      * @param  Request $request
      *
      * @return RedirectResponse
      */
     public function updatePrototype($id, Model $model, Request $request)
     {
-        $model = $model::findOrFail($id)->load('product');
+        /** @var MechanicalInfo|Nutritional|Characteristic $model */
+        $model = call_user_func([$model, '::findOrFail'], $id)->load('product');
 
         $model->update($request->all());
 
         flash('Recurso Actualizado exitosamente.');
+
         return redirect()->route('products.show', $model->product->slug);
     }
 
@@ -306,6 +317,8 @@ class RelatedProductModelsController extends Controller
             default:
                 abort(500, 'No se encontro modelo relacionado');
         }
+
+        return '';
     }
 
     /**
@@ -340,5 +353,7 @@ class RelatedProductModelsController extends Controller
             default:
                 abort(500, 'No se pudieron generar variables');
         }
+
+        return '';
     }
 }

@@ -14,8 +14,8 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read Town $town
- * @property-read \Illuminate\Database\Eloquent\Collection|Direction[] $directions
+ * @property-read \Orbiagro\Models\Town $town
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Direction[] $directions
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish whereTownId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish whereDescription($value)
@@ -24,6 +24,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Parish random()
+ * @mixin \Eloquent
  */
 class Parish extends Model
 {
@@ -37,19 +38,17 @@ class Parish extends Model
      */
     protected $hidden = ['created_at', 'updated_at'];
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    //
-    // belongs to
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function town()
     {
         return $this->belongsTo(Town::class);
     }
 
-    // --------------------------------------------------------------------------
-    // has many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function directions()
     {
         return $this->hasMany(Direction::class);

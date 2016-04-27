@@ -1,10 +1,10 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\View\View;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Orbiagro\Http\Requests\CategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 
 class CategoriesController extends Controller
@@ -43,12 +43,15 @@ class CategoriesController extends Controller
     public function index()
     {
         $cats  = $this->cat->getAll();
+        $paths = $this->makeOpenGraphImages($cats);
 
         $productsCollection = $this->cat->getRelatedProducts($cats);
 
-        $this->seo()->setTitle('Categorias en orbiagro.com.ve');
-        $this->seo()->setDescription('Categorias existentes es orbiagro.com.ve');
+        $this->seo()->setTitle('Categorías en orbiagro.com.ve');
+        $this->seo()->setDescription('Categorías existentes es orbiagro.com.ve');
         $this->seo()->opengraph()->setUrl(route('cats.index'));
+        $this->seo()->opengraph()->addImages($paths);
+        $this->seo()->twitter()->addImage(asset($cats->random()->image->small));
 
         return view('category.index', compact('cats', 'productsCollection'));
     }
@@ -61,7 +64,7 @@ class CategoriesController extends Controller
     public function create()
     {
         return view('category.create')->with([
-            'cat' => $this->cat->getEmptyInstance()
+            'cat' => $this->cat->getEmptyInstance(),
         ]);
     }
 
@@ -89,18 +92,19 @@ class CategoriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function show($id)
     {
-        $cat = $this->cat->getBySlugOrId($id);
-
+        $cat     = $this->cat->getBySlugOrId($id);
         $subCats = $this->cat->getSubCats($cat);
 
         $this->seo()->setTitle("{$cat->description} en orbiagro.com.ve");
         $this->seo()->setDescription("{$cat->description} existentes es orbiagro.com.ve");
         $this->seo()->opengraph()->setUrl(route('cats.show', $id));
+        $this->seo()->opengraph()->addImage(asset($cat->image->small));
+        $this->seo()->twitter()->addImage(asset($cat->image->small));
 
         return view('category.show', compact('cat', 'subCats'));
     }
@@ -108,7 +112,7 @@ class CategoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function edit($id)
@@ -121,7 +125,7 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int             $id
+     * @param  int $id
      * @param  CategoryRequest $request
      *
      * @return RedirectResponse
@@ -143,7 +147,7 @@ class CategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)

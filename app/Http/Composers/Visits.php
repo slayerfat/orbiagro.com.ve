@@ -1,14 +1,14 @@
 <?php namespace Orbiagro\Http\Composers;
 
 use Illuminate\Contracts\View\View;
+use Illuminate\View\View as Response;
 use Orbiagro\Mamarrachismo\VisitsService;
-
 use Orbiagro\Models\Product;
 use Orbiagro\Models\SubCategory;
-use Illuminate\View\View as Response;
 
 /**
  * Class Visits
+ *
  * @package Orbiagro\Http\Composers
  */
 class Visits
@@ -28,7 +28,7 @@ class Visits
     }
 
     /**
-     * @param  View   $view
+     * @param  View $view
      * @return Response
      */
     public function composePopularSubCats(View $view)
@@ -37,7 +37,7 @@ class Visits
     }
 
     /**
-     * @param  View   $view
+     * @param  View $view
      * @return Response
      */
     public function composeRelatedProducts(View $view)
@@ -46,7 +46,7 @@ class Visits
     }
 
     /**
-     * @param  View   $view
+     * @param  View $view
      * @return Response
      */
     public function composeVisitedSubCats(View $view)

@@ -1,11 +1,11 @@
 <?php namespace Orbiagro\Repositories;
 
 use LogicException;
-use Orbiagro\Models\Product;
 use Orbiagro\Models\Direction;
 use Orbiagro\Models\MapDetail;
-use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
+use Orbiagro\Models\Product;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
 class ProductRepository extends AbstractRepository implements ProductRepositoryInterface
@@ -32,7 +32,7 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
         SubCategoryRepositoryInterface $subCatRepo
     ) {
 
-        $this->catRepo = $catRepo;
+        $this->catRepo    = $catRepo;
         $this->subCatRepo = $subCatRepo;
 
         parent::__construct($product);

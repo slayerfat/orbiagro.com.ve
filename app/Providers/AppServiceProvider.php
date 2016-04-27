@@ -2,8 +2,8 @@
 
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Auth\Registrar;
+use Illuminate\Support\ServiceProvider;
 use Laracasts\Generators\GeneratorsServiceProvider;
 use Orbiagro\Services\Registrar as OrbiagroRegistrar;
 

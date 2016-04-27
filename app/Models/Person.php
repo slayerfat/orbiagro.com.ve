@@ -24,10 +24,10 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property-read mixed $first_sur_name
  * @property-read mixed $last_sur_name
- * @property-read Gender $gender
- * @property-read Nationality $nationality
- * @property-read User $user
- * @property-read \Illuminate\Database\Eloquent\Collection|Direction[] $direction
+ * @property-read \Orbiagro\Models\Gender $gender
+ * @property-read \Orbiagro\Models\Nationality $nationality
+ * @property-read \Orbiagro\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Direction[] $direction
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereGenderId($value)
@@ -43,12 +43,16 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Person whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Person extends Model
 {
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'first_name',
         'last_name',
@@ -56,12 +60,13 @@ class Person extends Model
         'last_surname',
         'identity_card',
         'phone',
-        'birth_date'
+        'birth_date',
     ];
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getFirstNameAttribute($value)
     {
         if ($value) {
@@ -71,6 +76,10 @@ class Person extends Model
         return null;
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getLastNameAttribute($value)
     {
         if ($value) {
@@ -80,6 +89,10 @@ class Person extends Model
         return null;
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getFirstSurNameAttribute($value)
     {
         if ($value) {
@@ -89,6 +102,10 @@ class Person extends Model
         return null;
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getLastSurNameAttribute($value)
     {
         if ($value) {
@@ -98,13 +115,17 @@ class Person extends Model
         return null;
     }
 
+    /**
+     * @return null|string
+     */
     public function formattedNames()
     {
         if (isset($this->attributes['first_name'])
-        && isset($this->attributes['first_surname'])) {
+            && isset($this->attributes['first_surname'])
+        ) {
             return ucfirst($this->attributes['first_name'])
-                .' '
-                .ucfirst($this->attributes['first_surname']);
+            . ' '
+            . ucfirst($this->attributes['first_surname']);
 
         } elseif (isset($this->attributes['first_name'])) {
             return ucfirst($this->attributes['first_name']);
@@ -113,74 +134,98 @@ class Person extends Model
         return null;
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getPhoneAttribute($value)
     {
         return ModelValidation::parsePhone($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setIdentityCardAttribute($value)
     {
         $this->attributes['identity_card'] = ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setFirstNameAttribute($value)
     {
         $this->attributes['first_name'] = ModelValidation::byLenght($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setLastNameAttribute($value)
     {
         $this->attributes['last_name'] = ModelValidation::byLenght($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setFirstSurnameAttribute($value)
     {
         $this->attributes['first_surname'] = ModelValidation::byLenght($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setLastSurnameAttribute($value)
     {
         $this->attributes['last_surname'] = ModelValidation::byLenght($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setPhoneAttribute($value)
     {
         $this->attributes['phone'] = ModelValidation::parseRawPhone($value);
     }
 
+    /**
+     * @param $value
+     */
     public function setBirthDateAttribute($value)
     {
         $this->attributes['birth_date'] = ModelValidation::byLenght($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Belongs To
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function gender()
     {
         return $this->belongsTo(Gender::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function nationality()
     {
         return $this->belongsTo(Nationality::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Polimorfica
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function direction()
     {
         return $this->morphMany(Direction::class, 'directionable');

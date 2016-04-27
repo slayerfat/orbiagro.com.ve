@@ -1,14 +1,20 @@
 <?php namespace Orbiagro\Repositories;
 
-use LogicException;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Repositories\Exceptions\DuplicateConfirmationException;
+use LogicException;
+use Orbiagro\Models\UserConfirmation;
+use Orbiagro\Repositories\Exceptions\DuplicateConfirmationException as DuplicateException;
 use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
-use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\UserConfirmationInterface;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserConfirmationRepository extends AbstractRepository implements UserConfirmationInterface
 {
+
+    /**
+     * @var UserConfirmation
+     */
+    protected $model;
 
     /**
      * @var ProfileRepositoryInterface
@@ -21,9 +27,9 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
     private $user;
 
     /**
-     * @param UserRepositoryInterface    $user
+     * @param UserRepositoryInterface $user
      * @param ProfileRepositoryInterface $profile
-     * @param Model                      $model
+     * @param Model $model
      */
     public function __construct(
         UserRepositoryInterface $user,
@@ -38,8 +44,7 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
     }
 
     /**
-     * @return Model
-     *
+     * @return Model|\Orbiagro\Models\User
      * @throws LogicException
      */
     public function create()
@@ -59,9 +64,8 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
 
     /**
      * @param $data
-     *
      * @return Model|null
-     * @throws DuplicateConfirmationException
+     * @throws DuplicateException
      */
     public function getConfirmation($data)
     {
@@ -71,11 +75,11 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
             return $confirmModel->first();
 
         } elseif ($confirmModel->count() > 1) {
-            $confirmModel->each(function ($confirm) {
+            $confirmModel->each(function (UserConfirmation $confirm) {
                 $confirm->delete();
             });
 
-            throw new DuplicateConfirmationException('Existen Confirmacion Duplicadas en el sistema.');
+            throw new DuplicateException('Existen Confirmaciones Duplicadas en el sistema.');
         }
 
         return null;
@@ -83,7 +87,6 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
 
     /**
      * @param Model $model
-     *
      * @return null|\Orbiagro\Models\User
      * @throws \Exception
      * @throws LogicException
@@ -101,9 +104,9 @@ class UserConfirmationRepository extends AbstractRepository implements UserConfi
 
             throw new LogicException(
                 'El usuario '
-                .$user->name
-                .'Correo: '.$user->email
-                .' no posee Confirmacion.'
+                . $user->name
+                . 'Correo: ' . $user->email
+                . ' no posee Confirmacion.'
             );
         }
 

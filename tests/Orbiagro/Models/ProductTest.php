@@ -1,26 +1,32 @@
 <?php namespace Tests\Orbiagro\Models;
 
-use \Mockery;
-use Tests\TestCase;
-use Orbiagro\Models\User;
+use Mockery;
+use Orbiagro\Mamarrachismo\CheckDollar;
+use Orbiagro\Models\Characteristic;
+use Orbiagro\Models\Direction;
+use Orbiagro\Models\Feature;
 use Orbiagro\Models\File;
-use Orbiagro\Models\Visit;
 use Orbiagro\Models\Image;
 use Orbiagro\Models\Maker;
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Feature;
-use Orbiagro\Models\Provider;
-use Orbiagro\Models\Direction;
-use Orbiagro\Models\SubCategory;
 use Orbiagro\Models\Nutritional;
-use Orbiagro\Models\Characteristic;
-use Orbiagro\Mamarrachismo\CheckDollar;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Provider;
+use Orbiagro\Models\QuantityType;
+use Orbiagro\Models\SubCategory;
+use Orbiagro\Models\User;
+use Orbiagro\Models\Visit;
 use Tests\Orbiagro\Traits\TearsDownMockery;
+use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
 
     use TearsDownMockery;
+
+    /**
+     * @var Product
+     */
+    protected $tester;
 
     /**
      * https://phpunit.de/manual/current/en/fixtures.html
@@ -183,6 +189,17 @@ class ProductTest extends TestCase
         $this->assertEquals('mocked', $this->mock->visits());
     }
 
+    public function testQuantityTypeRelationship()
+    {
+        $this->mock
+            ->shouldReceive('belongsTo')
+            ->once()
+            ->with(QuantityType::class)
+            ->andReturn('mocked');
+
+        $this->assertEquals('mocked', $this->mock->quantityType());
+    }
+
     public function testCorrectFormattedSlug()
     {
         $this->tester->slug = 'tetsuo kaneda tetsuo kaneda';
@@ -226,11 +243,8 @@ class ProductTest extends TestCase
     public function testCheckDollarMethod()
     {
         $dollar = Mockery::mock(CheckDollar::class);
-
         $dollar->shouldReceive('isValid')->andReturn(true);
-
         $dollar->dollar = new \stdClass;
-
         $dollar->dollar->promedio = 1;
 
         // pasandole el objeto al metodo
@@ -261,9 +275,8 @@ class ProductTest extends TestCase
 
         // invocando al metodo sin objeto:
         unset($this->tester->dollar);
-        $this->tester->setDollar($dollar);
 
-        $this->assertNotNull($this->tester->priceDollar());
+        $this->assertNotNull($this->tester->setDollar($dollar)->priceDollar());
     }
 
     public function testCheckPriceBsMethod()
@@ -315,14 +328,19 @@ class ProductTest extends TestCase
 
     public function testReadableQuantityMethodAttribute()
     {
-        $this->markTestIncomplete('No implementado');
+        $quantity       = new \stdClass;
+        $quantity->desc = 'Unidad';
+        /** @var \stdClass $tester */
+        $tester               = $this->tester;
+        $tester->quantityType = $quantity;
+
         $this->tester->quantity = 1;
-        $this->assertEquals('1 Unidad.', $this->tester->readableQuantity());
+        $this->assertEquals('1 Unidad', $this->tester->formattedQuantity());
         $this->tester->quantity = 2;
-        $this->assertEquals('2 Unidades.', $this->tester->readableQuantity());
+        $this->assertEquals('2 Unidades', $this->tester->formattedQuantity());
         $this->tester->quantity = 0;
-        $this->assertEquals('0 Unidades.', $this->tester->readableQuantity());
+        $this->assertEquals('0 Unidades', $this->tester->formattedQuantity());
         $this->tester->quantity = -1;
-        $this->assertEquals('0 Unidades.', $this->tester->readableQuantity());
+        $this->assertEquals('0 Unidades', $this->tester->formattedQuantity());
     }
 }

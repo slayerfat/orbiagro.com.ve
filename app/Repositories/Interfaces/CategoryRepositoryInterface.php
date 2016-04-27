@@ -14,7 +14,7 @@ interface CategoryRepositoryInterface
 
     /**
      * @param Collection $cats
-     * @param int        $quantity
+     * @param int $quantity
      *
      * @return Collection
      */
@@ -70,6 +70,7 @@ interface CategoryRepositoryInterface
     /**
      * Gets an associative array with
      * categories and subcategories.
+     *
      * @return array
      */
     public function getArraySortedWithSubCategories();

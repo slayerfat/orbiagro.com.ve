@@ -16,17 +16,18 @@ class NutritionalRequest extends Request
         [
             'methodType' => 'POST',
             'class'      => Product::class,
-            'routeParam' => 'products'
+            'routeParam' => 'products',
         ],
         [
             'methodType' => 'PATCH',
             'class'      => Nutritional::class,
-            'routeParam' => 'nutritionals'
-        ]
+            'routeParam' => 'nutritionals',
+        ],
     ];
 
     /**
      * Determine if the user is authorized to make this request.
+     *
      * @return bool
      */
     public function authorize()
@@ -46,7 +47,7 @@ class NutritionalRequest extends Request
     public function rules()
     {
         return [
-            'due' => 'required|date'
+            'due' => 'required|date',
         ];
     }
 }

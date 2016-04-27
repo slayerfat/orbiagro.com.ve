@@ -1,15 +1,16 @@
 <?php namespace Orbiagro\Http\Controllers;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Http\Requests\ProductRequest;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Mamarrachismo\VisitsService;
+use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProductRepositoryInterface;
-use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\QuantityTypeRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
 class ProductsController extends Controller
@@ -33,31 +34,41 @@ class ProductsController extends Controller
     private $subCatRepo;
 
     /**
+     * @var QuantityTypeRepositoryInterface
+     */
+    private $quantityTypeRepo;
+
+    /**
      * Create a new controller instance.
+     *
      * @param ProductRepositoryInterface $productRepo
      * @param CategoryRepositoryInterface $catRepo
      * @param SubCategoryRepositoryInterface $subCatRepo
+     * @param QuantityTypeRepositoryInterface $quantityTypeRepo
      */
     public function __construct(
         ProductRepositoryInterface $productRepo,
         CategoryRepositoryInterface $catRepo,
-        SubCategoryRepositoryInterface $subCatRepo
+        SubCategoryRepositoryInterface $subCatRepo,
+        QuantityTypeRepositoryInterface $quantityTypeRepo
     ) {
-        $rules = ['except' =>
-            [
-                'index',
-                'show',
-                'indexByCategory',
-                'indexBySubCategory'
-            ]
+        $rules = [
+            'except' =>
+                [
+                    'index',
+                    'show',
+                    'indexByCategory',
+                    'indexBySubCategory',
+                ],
         ];
 
         $this->middleware('auth', $rules);
         $this->middleware('user.unverified', $rules);
 
-        $this->catRepo     = $catRepo;
-        $this->subCatRepo  = $subCatRepo;
-        $this->productRepo = $productRepo;
+        $this->catRepo          = $catRepo;
+        $this->subCatRepo       = $subCatRepo;
+        $this->productRepo      = $productRepo;
+        $this->quantityTypeRepo = $quantityTypeRepo;
     }
 
     /**
@@ -68,9 +79,18 @@ class ProductsController extends Controller
      */
     public function index(VisitsService $visits)
     {
+        /** @var \Illuminate\Support\Collection $products */
         $products = $this->productRepo->getPaginated(20);
         $cats     = $this->catRepo->getAll();
         $subCats  = $this->subCatRepo->getAll();
+
+        // si existen productos y tiene image se asigna,
+        // de lo contrario se asigna la de un rubro
+        $image   = $products->random() ? $products->random()->images->first() ?
+            $products->random()->images->first()->small : $subCats->random()->image->small
+            : $subCats->random()->image->small;
+        $paths   = $this->makeOpenGraphImages($products, 4);
+        $paths[] = asset($image);
 
         $visitedProducts = $visits->getVisitedResources(
             $this->productRepo->getEmptyInstance()
@@ -79,6 +99,8 @@ class ProductsController extends Controller
         $this->seo()->setTitle('Productos en orbiagro.com.ve');
         $this->seo()->setDescription('Productos y Articulos en existencia en orbiagro.com.ve');
         $this->seo()->opengraph()->setUrl(route('products.index'));
+        $this->seo()->opengraph()->addImages($paths);
+        $this->seo()->twitter()->addImage(asset($image));
 
         return view('product.index', compact(
             'products',
@@ -91,7 +113,7 @@ class ProductsController extends Controller
     /**
      * Muestra el index segun el Categoria.
      *
-     * @param  int           $categoryId
+     * @param  int $categoryId
      * @param  VisitsService $visits
      *
      * @return View
@@ -102,29 +124,17 @@ class ProductsController extends Controller
     }
 
     /**
-     * Muestra el index segun el Rubro.
-     *
-     * @param  int           $subCategoryId
-     * @param  VisitsService $visits
-     *
-     * @return View
-     */
-    public function indexBySubCategory($subCategoryId, VisitsService $visits)
-    {
-        return $this->indexByParent('subCategory', $subCategoryId, $visits);
-    }
-
-    /**
      * Muestra el index segun la Categoria, Rubro, etc.
      *
-     * @param  string         $parent
-     * @param  int           $parentId
+     * @param  string $parent
+     * @param  int $parentId
      * @param  VisitsService $visits
      *
      * @return View
      */
     private function indexByParent($parent, $parentId, VisitsService $visits)
     {
+        /** @var \Orbiagro\Models\Product $products */
         $products = $this->productRepo->getByParentSlugOrId($parent, $parentId);
 
         $visitedProducts = $visits->getVisitedResources(
@@ -142,19 +152,19 @@ class ProductsController extends Controller
 
             $description = $cat->description;
         } elseif ($parent == 'subCategory') {
-            $subCats     = $this->subCatRepo->getAll();
+            $subCats = $this->subCatRepo->getAll();
 
             $description = $products->first()->subCategory->description;
         }
 
         $this->seo()->setTitle(
             'Productos de '
-            .$description
-            .' en orbiagro.com.ve'
+            . $description
+            . ' en orbiagro.com.ve'
         )->setDescription(
             'Productos y Articulos de '
-            .$description
-            .' en existencia en orbiagro.com.ve'
+            . $description
+            . ' en existencia en orbiagro.com.ve'
         );
 
         return view('product.index', compact(
@@ -166,7 +176,21 @@ class ProductsController extends Controller
     }
 
     /**
+     * Muestra el index segun el Rubro.
+     *
+     * @param  int $subCategoryId
+     * @param  VisitsService $visits
+     *
+     * @return View
+     */
+    public function indexBySubCategory($subCategoryId, VisitsService $visits)
+    {
+        return $this->indexByParent('subCategory', $subCategoryId, $visits);
+    }
+
+    /**
      * Show the form for creating a new resource.
+     *
      * @param MakerRepositoryInterface $maker
      * @return View|RedirectResponse
      */
@@ -178,13 +202,12 @@ class ProductsController extends Controller
             return redirect()->back();
         }
 
-        $makers = $maker->getLists();
+        $makers        = $maker->getLists();
+        $product       = $this->productRepo->getEmptyInstance();
+        $cats          = $this->catRepo->getArraySortedWithSubCategories();
+        $quantityTypes = $this->quantityTypeRepo->getLists();
 
-        $product = $this->productRepo->getEmptyInstance();
-
-        $cats = $this->catRepo->getArraySortedWithSubCategories();
-
-        return view('product.create', compact('product', 'makers', 'cats'));
+        return view('product.create', compact('product', 'makers', 'cats', 'quantityTypes'));
     }
 
     /**
@@ -207,7 +230,7 @@ class ProductsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int           $id
+     * @param  int $id
      * @param  VisitsService $visits
      * @return View
      */
@@ -226,18 +249,27 @@ class ProductsController extends Controller
         $this->seo()->setTitle(
             "{$product->title} - {$product->priceBs()}"
         )->setDescription(
-            $product->title.' en '.$product->subCategory->description
-            .', consigue mas en '.$product->subCategory->category->description
-            .' dentro de orbiagro.com.ve'
+            $product->title . ' en ' . $product->subCategory->description
+            . ', consigue mas en ' . $product->subCategory->category->description
+            . ' dentro de orbiagro.com.ve'
         );
 
+        $paths = [];
+
+        foreach ($product->images as $image) {
+            $paths[] = asset($image->small);
+        }
+
         $this->seo()->opengraph()->setUrl(route('products.show', $id));
+        $this->seo()->opengraph()->addImages($paths);
+        $this->seo()->twitter()->addImage(asset($product->images->first()->small));
 
         return view('product.show', compact('product', 'visitedProducts', 'isUserValid'));
     }
 
     /**
      * Show the form for editing the specified resource.
+     *
      * @param  int $id
      * @param MakerRepositoryInterface $maker
      * @return View
@@ -250,17 +282,17 @@ class ProductsController extends Controller
             return $this->redirectToroute('products.show', $id);
         }
 
-        $makers = $maker->getLists();
+        $makers        = $maker->getLists();
+        $cats          = $this->catRepo->getArraySortedWithSubCategories();
+        $quantityTypes = $this->quantityTypeRepo->getLists();
 
-        $cats = $this->catRepo->getArraySortedWithSubCategories();
-
-        return view('product.edit', compact('product', 'makers', 'cats'));
+        return view('product.edit', compact('product', 'makers', 'cats', 'quantityTypes'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int            $id
+     * @param  int $id
      * @param  ProductRequest $request
      * @return RedirectResponse
      */
@@ -268,14 +300,15 @@ class ProductsController extends Controller
     {
         $product = $this->productRepo->update($id, $request->all());
 
-        flash('El Producto ha sido actualizado con exito.');
+        flash('El Producto ha sido actualizado con éxito.');
+
         return redirect()->route('products.show', $product->slug);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)
@@ -286,42 +319,6 @@ class ProductsController extends Controller
             $product,
             'delete',
             'El Producto ha sido eliminado correctamente.'
-        );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return RedirectResponse
-     */
-    public function forceDestroy($id)
-    {
-        $product = $this->productRepo->getByIdWithTrashed($id);
-
-        return $this->destroyDeleteRestorePrototype(
-            $product,
-            'forceDelete',
-            'El Producto ha sido eliminado permanentemente.'
-        );
-    }
-
-    /**
-     * Restores the specified resource.
-     *
-     * @param  int  $id
-     * @return RedirectResponse
-     */
-    public function restore($id)
-    {
-        $product = $this->productRepo->getByIdWithTrashed($id);
-
-        return $this->destroyDeleteRestorePrototype(
-            $product,
-            'restore',
-            'El Producto ha sido restaurado exitosamente.',
-            'success',
-            'products.show'
         );
     }
 
@@ -358,9 +355,45 @@ class ProductsController extends Controller
     }
 
     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return RedirectResponse
+     */
+    public function forceDestroy($id)
+    {
+        $product = $this->productRepo->getByIdWithTrashed($id);
+
+        return $this->destroyDeleteRestorePrototype(
+            $product,
+            'forceDelete',
+            'El Producto ha sido eliminado permanentemente.'
+        );
+    }
+
+    /**
      * Restores the specified resource.
      *
-     * @param  int     $id
+     * @param  int $id
+     * @return RedirectResponse
+     */
+    public function restore($id)
+    {
+        $product = $this->productRepo->getByIdWithTrashed($id);
+
+        return $this->destroyDeleteRestorePrototype(
+            $product,
+            'restore',
+            'El Producto ha sido restaurado exitosamente.',
+            'success',
+            'products.show'
+        );
+    }
+
+    /**
+     * Restores the specified resource.
+     *
+     * @param  int $id
      * @param  Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
@@ -368,7 +401,7 @@ class ProductsController extends Controller
     public function heroDetails($id, Request $request)
     {
         $this->validate($request, [
-           'heroDetails' => 'required|string',
+            'heroDetails' => 'required|string',
         ]);
 
         $product = $this->productRepo->getById($id);

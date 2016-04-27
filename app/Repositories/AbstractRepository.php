@@ -2,9 +2,9 @@
 
 use Auth;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Orbiagro\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 abstract class AbstractRepository
@@ -13,7 +13,7 @@ abstract class AbstractRepository
     /**
      * El modelo a ser manipulado
      *
-     * @var Model
+     * @var Model|\Eloquent|\Illuminate\Database\Eloquent\SoftDeletes
      */
     protected $model;
 
@@ -146,6 +146,7 @@ abstract class AbstractRepository
      * y genera un flash de exito o fracaso.
      * adicionalmente ataja error de tabla con
      * hijos o genera exception cuando sea otro.
+     *
      * @param int $id
      * @param string $resource
      * @param string $child
@@ -163,6 +164,7 @@ abstract class AbstractRepository
      * y genera un flash de exito o fracaso.
      * adicionalmente ataja error de tabla con
      * hijos o genera exception cuando sea otro.
+     *
      * @param int $id
      * @param string $resource
      * @param string $child

@@ -1,11 +1,12 @@
 <?php namespace Orbiagro\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\Transformer;
 use Orbiagro\Mamarrachismo\ModelValidation;
-use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Transformer;
 
 /**
  * Orbiagro\Models\Promotion
@@ -22,9 +23,9 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read PromoType $type
- * @property-read \Illuminate\Database\Eloquent\Collection|Image[] $images
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Orbiagro\Models\PromoType $type
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Image[] $images
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion wherePromoTypeId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereTitle($value)
@@ -38,12 +39,16 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Promotion random()
+ * @mixin \Eloquent
  */
 class Promotion extends Model
 {
 
     use InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'title',
         'slug',
@@ -53,9 +58,9 @@ class Promotion extends Model
         'ends',
     ];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = ModelValidation::byLenght($value);
@@ -65,6 +70,10 @@ class Promotion extends Model
         }
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function setSlugAttribute($value)
     {
         if (ModelValidation::byLenght($value) !== null) {
@@ -74,9 +83,13 @@ class Promotion extends Model
         return $this->attributes['slug'] = null;
     }
 
+    /**
+     * @param $value
+     * @return null
+     */
     public function setBeginsAttribute($value)
     {
-        $date = \DateTime::createFromFormat('Y-m-d', $value);
+        $date = DateTime::createFromFormat('Y-m-d', $value);
 
         if ($date) {
             return $this->attributes['begins'] = $value;
@@ -85,9 +98,13 @@ class Promotion extends Model
         return $this->attributes['begins'] = null;
     }
 
+    /**
+     * @param $value
+     * @return null
+     */
     public function setEndsAttribute($value)
     {
-        $date = \DateTime::createFromFormat('Y-m-d', $value);
+        $date = DateTime::createFromFormat('Y-m-d', $value);
 
         if ($date) {
             return $this->attributes['ends'] = $value;
@@ -96,6 +113,10 @@ class Promotion extends Model
         return $this->attributes['ends'] = null;
     }
 
+    /**
+     * @param $value
+     * @return int|null|string
+     */
     public function setStaticAttribute($value)
     {
         if ($value > 0 && is_numeric($value)) {
@@ -105,6 +126,10 @@ class Promotion extends Model
         return $this->attributes['static'] = null;
     }
 
+    /**
+     * @param $value
+     * @return int|null|string
+     */
     public function setPercentageAttribute($value)
     {
         if ($value > 0 && is_numeric($value)) {
@@ -119,9 +144,10 @@ class Promotion extends Model
     }
 
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getTitleAttribute($value)
     {
         if ($value) {
@@ -131,44 +157,35 @@ class Promotion extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Scopes
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Belongs to Many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function products()
     {
         return $this->belongsToMany(Product::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Belongs To
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function type()
     {
         return $this->belongsTo(PromoType::class, 'promo_type_id', 'id');
     }
 
-    // --------------------------------------------------------------------------
-    // Polimorfica
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    // --------------------------------------------------------------------------
-    // Funciones publicas
-    // --------------------------------------------------------------------------
-
     /**
      * Devuelve el descuento estatico concadenado con Bs.
+     *
+     * @param null $otherNumber
+     * @return mixed|null|string
      */
     public function readableStatic($otherNumber = null)
     {
@@ -187,6 +204,8 @@ class Promotion extends Model
 
     /**
      * Devuelve el descuento en porcentaje concadenado con %.
+     *
+     * @return null|string
      */
     public function readablePercentage()
     {
@@ -199,6 +218,8 @@ class Promotion extends Model
 
     /**
      * Devuelve el descuento en numero ej: 100 => 1, 10 => 0.1.
+     *
+     * @return float|null
      */
     public function decimalPercentage()
     {
@@ -209,13 +230,11 @@ class Promotion extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Funciones protegidas
-    // --------------------------------------------------------------------------
-
     /**
      * chequea si el valor es punto flotante o no.
-     * @param mixed $value
+     *
+     * @param $value
+     * @return bool
      */
     protected function isFloat($value)
     {

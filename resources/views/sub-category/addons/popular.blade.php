@@ -19,10 +19,17 @@
         @foreach($subcat->products()->random()->take(6)->get() as $product)
           <div class="col-sm-2">
             <div class="thumbnail">
-              <img
-                src="{!! asset($product->image->medium) !!}"
-                alt="{{ $product->image->alt }}"
-                class="img-responsive"/>
+              @if ($product->image)
+                <img
+                  src="{!! asset($product->image->medium) !!}"
+                  alt="{{ $product->image->alt }}"
+                  class="img-responsive"/>
+              @else
+                <img
+                  src="{{ asset('sin_imagen.gif') }}"
+                  alt="{{ $product->title }}"
+                  class="img-responsive"/>
+              @endif
               <div class="caption">
                 <h4>
                   {!! link_to_action('ProductsController@show', $product->title, $product->slug) !!}

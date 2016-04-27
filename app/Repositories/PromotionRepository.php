@@ -1,13 +1,18 @@
 <?php namespace Orbiagro\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Models\Promotion;
 use Orbiagro\Models\PromoType;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
 use Orbiagro\Repositories\Interfaces\PromotionRepositoryInterface;
 
 class PromotionRepository extends AbstractRepository implements PromotionRepositoryInterface
 {
+    /**
+     * @var \Orbiagro\Models\PromoType
+     */
+    protected $promoType;
+
     /**
      * @param PromoType $promoType
      * @param Promotion $model
@@ -29,7 +34,7 @@ class PromotionRepository extends AbstractRepository implements PromotionReposit
         $typesId = $this->promoType->whereIn(
             'description',
             ['primavera', 'verano', 'otoño', 'invierno']
-        )->lists('id');
+        )->pluck('id');
 
         // selecciona las promociones existentes segun el tipo ya seleccionado
         $promotions = $this->model->whereIn('promo_type_id', $typesId)

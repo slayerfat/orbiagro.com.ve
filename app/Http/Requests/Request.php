@@ -5,6 +5,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class Request
+ *
  * @package Orbiagro\Http\Requests
  */
 abstract class Request extends FormRequest
@@ -31,21 +32,8 @@ abstract class Request extends FormRequest
     public function forbiddenResponse()
     {
         flash()->error('Ud. no tiene permisos para esta acción');
+
         return redirect()->back();
-    }
-
-    /**
-     * Regresa verdadero si el usuario esta autenticado.
-     *
-     * @return boolean
-     */
-    protected function isUserAuthenticated()
-    {
-        if ($this->auth->user()) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -60,6 +48,20 @@ abstract class Request extends FormRequest
         }
 
         if ($this->auth->user()->isAdmin()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Regresa verdadero si el usuario esta autenticado.
+     *
+     * @return boolean
+     */
+    protected function isUserAuthenticated()
+    {
+        if ($this->auth->user()) {
             return true;
         }
 

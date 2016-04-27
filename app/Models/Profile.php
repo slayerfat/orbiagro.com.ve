@@ -10,11 +10,12 @@ use Orbiagro\Mamarrachismo\ModelValidation;
  * @property string $description
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|User[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\User[] $users
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Profile whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Profile whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Profile whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Profile whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Profile extends Model
 {
@@ -24,17 +25,18 @@ class Profile extends Model
      */
     protected $fillable = ['description'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = ModelValidation::byLenght($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getDescriptionAttribute($value)
     {
         if ($value) {
@@ -44,9 +46,9 @@ class Profile extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function users()
     {
         return $this->hasMany(User::class);

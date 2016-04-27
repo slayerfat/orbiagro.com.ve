@@ -37,7 +37,7 @@ class PromotionRepositoryTest extends TestCase
                   ->once()
                   ->andReturnSelf();
 
-        $promoType->shouldReceive('lists')
+        $promoType->shouldReceive('pluck')
                   ->once()
                   ->andReturnNull();
 

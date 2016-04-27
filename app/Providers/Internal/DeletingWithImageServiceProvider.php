@@ -1,7 +1,6 @@
 <?php namespace Orbiagro\Providers\Internal;
 
 use Illuminate\Support\ServiceProvider;
-
 use Orbiagro\Mamarrachismo\Traits\Providers\ModelEventsTrait;
 use Orbiagro\Models\Category;
 use Orbiagro\Models\Maker;

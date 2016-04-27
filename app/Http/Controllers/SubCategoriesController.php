@@ -1,12 +1,12 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Requests;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Orbiagro\Mamarrachismo\VisitsService;
-use Orbiagro\Http\Requests\SubCategoryRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Orbiagro\Http\Requests;
+use Orbiagro\Http\Requests\SubCategoryRequest;
 use Orbiagro\Mamarrachismo\Traits\Controllers\CanSaveUploads;
+use Orbiagro\Mamarrachismo\VisitsService;
 use Orbiagro\Repositories\Interfaces\CategoryRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\SubCategoryRepositoryInterface;
 
@@ -51,14 +51,36 @@ class SubCategoriesController extends Controller
     public function index()
     {
         $subCats = $this->subCatRepo->getAll();
+        $paths   = $this->makeOpenGraphImages($subCats);
+
 
         $productsCollection = $this->getProductsInSubCat($subCats);
 
         $this->seo()->setTitle('Rubros en orbiagro.com.ve');
         $this->seo()->setDescription('Rubros en existencia en orbiagro.com.ve');
         $this->seo()->opengraph()->setUrl(route('subCats.index'));
+        $this->seo()->opengraph()->addImages($paths);
+        $this->seo()->twitter()->addImage(asset($subCats->random()->image->small));
 
         return view('sub-category.index', compact('subCats', 'productsCollection'));
+    }
+
+    /**
+     * Busca aleatoriamente una cantidad de productos y regresa la coleccion.
+     *
+     * @param  \Illuminate\Support\Collection $subCats Las categorias.
+     * @param  int $ammount La cantidad a tomar.
+     * @return \Illuminate\Support\Collection
+     */
+    private function getProductsInSubCat($subCats, $ammount = 12)
+    {
+        $collection = collect();
+
+        foreach ($subCats as $cat) {
+            $collection->push($cat->products()->random()->take($ammount)->get());
+        }
+
+        return $collection;
     }
 
     /**
@@ -123,16 +145,14 @@ class SubCategoriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @param  VisitsService $visits
      * @return View
      */
     public function show($id, VisitsService $visits)
     {
-        $subCat = $this->subCatRepo->getBySlugOrId($id);
-
-        $subCats = $this->subCatRepo->getSibblings($subCat);
-
+        $subCat   = $this->subCatRepo->getBySlugOrId($id);
+        $subCats  = $this->subCatRepo->getSibblings($subCat);
         $products = $this->subCatRepo->getProductsPaginated($subCat->id);
 
         $visits->setNewVisit($subCat);
@@ -143,6 +163,8 @@ class SubCategoriesController extends Controller
 
         // $this->seo()->setKeywords(); taxonomias
         $this->seo()->opengraph()->setUrl(route('subCats.show', $id));
+        $this->seo()->opengraph()->addImage(asset($subCat->image->small));
+        $this->seo()->twitter()->addImage(asset($subCat->image->small));
 
         return view('sub-category.show', compact('products', 'subCat', 'subCats'));
     }
@@ -150,7 +172,7 @@ class SubCategoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function edit($id)
@@ -165,7 +187,7 @@ class SubCategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int                $id
+     * @param  int $id
      * @param  SubCategoryRequest $request
      *
      * @return RedirectResponse
@@ -191,7 +213,7 @@ class SubCategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)
@@ -199,23 +221,5 @@ class SubCategoriesController extends Controller
         $this->subCatRepo->delete($id);
 
         return redirect()->route('subCats.index');
-    }
-
-    /**
-     * Busca aleatoriamente una cantidad de productos y regresa la coleccion.
-     *
-     * @param  \Illuminate\Support\Collection $subCats Las categorias.
-     * @param  int                            $ammount La cantidad a tomar.
-     * @return \Illuminate\Support\Collection
-     */
-    private function getProductsInSubCat($subCats, $ammount = 12)
-    {
-        $collection = collect();
-
-        foreach ($subCats as $cat) {
-            $collection->push($cat->products()->random()->take($ammount)->get());
-        }
-
-        return $collection;
     }
 }

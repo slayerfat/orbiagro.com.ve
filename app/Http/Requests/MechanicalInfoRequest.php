@@ -15,13 +15,13 @@ class MechanicalInfoRequest extends Request
         [
             'methodType' => 'POST',
             'class'      => Product::class,
-            'routeParam' => 'products'
+            'routeParam' => 'products',
         ],
         [
             'methodType' => 'PATCH',
             'class'      => MechanicalInfo::class,
-            'routeParam' => 'mechanicals'
-        ]
+            'routeParam' => 'mechanicals',
+        ],
     ];
 
     /**

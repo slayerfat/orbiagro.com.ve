@@ -1,13 +1,13 @@
 <?php namespace Orbiagro\Models;
 
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\ModelValidation;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Orbiagro\Mamarrachismo\ModelValidation;
+use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
 
 /**
  * Orbiagro\Models\User
@@ -21,13 +21,13 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string $deleted_at
- * @property-read Person $person
- * @property-read UserConfirmation $confirmation
- * @property-read \Illuminate\Database\Eloquent\Collection|Billing[] $billings
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $products
- * @property-read \Illuminate\Database\Eloquent\Collection|Visit[] $visits
- * @property-read Profile $profile
- * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $purchases
+ * @property-read \Orbiagro\Models\Person $person
+ * @property-read \Orbiagro\Models\UserConfirmation $confirmation
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Billing[] $billings
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
+ * @property-read \Orbiagro\Models\Profile $profile
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Product[] $purchases
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereProfileId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereName($value)
@@ -39,7 +39,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User admins()
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\User random()
- * @method static \Illuminate\Database\Eloquent\Builder|\Orbiagro\Models\User findOrFail($id, $columns = [])
+ * @mixin \Eloquent
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
@@ -67,9 +67,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $hidden = ['password', 'remember_token'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return mixed|null
+     */
     public function setPasswordAttribute($value)
     {
         if ($password = ModelValidation::byLenght($value, 6)) {
@@ -79,9 +80,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->attributes['password'] = null;
     }
 
-    // --------------------------------------------------------------------------
-    // Scopes
-    // --------------------------------------------------------------------------
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeAdmins($query)
     {
         $perfil = Profile::where('description', 'Administrador')->first();
@@ -89,60 +91,62 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $query->where('profile_id', $perfil->id);
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Has one
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function person()
     {
         return $this->hasOne(Person::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function confirmation()
     {
         return $this->hasOne(UserConfirmation::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Has Many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function billings()
     {
         return $this->hasMany(Billing::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function products()
     {
         return $this->hasMany(Product::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function visits()
     {
         return $this->hasMany(Visit::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Belongs To
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function profile()
     {
         return $this->belongsTo(Profile::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Belongs To Many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function purchases()
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity')->withTimestamps();
     }
 
-    // --------------------------------------------------------------------------
-    // Funciones Publicas
-    // --------------------------------------------------------------------------
     /**
      * @return boolean
      */
@@ -191,7 +195,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * chequea si el id del foreign key del producto es igual al id del usuario
      *
      * @param int $id el foreign key del producto.
-     *
      * @return boolean
      */
     public function isOwner($id)
@@ -217,7 +220,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * chequea si el id del foreign key del producto es igual al id del usuario
      *
      * @param int $id el foreign key del producto.
-     *
      * @return boolean
      */
     public function isOwnerOrAdmin($id)

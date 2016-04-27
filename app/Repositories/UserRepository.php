@@ -1,6 +1,7 @@
 <?php namespace Orbiagro\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder;
 use Orbiagro\Models\Person;
 use Orbiagro\Models\Product;
 use Orbiagro\Models\User;
@@ -53,10 +54,12 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      */
     public function getWithProductVisits($id)
     {
-        $user = $this->model->with(['visits' => function ($query) {
-            $query->where('visitable_type', Product::class)
-                  ->orderBy('updated_at', 'desc');
-        }])->where('name', $id)->orWhere('id', $id)->firstOrFail();
+        $user = $this->model->with([
+            'visits' => function (Builder $query) {
+                $query->where('visitable_type', Product::class)
+                    ->orderBy('updated_at', 'desc');
+            },
+        ])->where('name', $id)->orWhere('id', $id)->firstOrFail();
 
         return $user;
     }
@@ -72,31 +75,11 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     }
 
     /**
-     * @param $id
-     *
-     * @return bool
-     */
-    public function canUserManipulate($id)
-    {
-        $user = $this->getCurrentUser();
-
-        return $user->isOwnerOrAdmin($id);
-    }
-
-    /**
      * @return User
      */
     public function getEmptyUserInstance()
     {
         return $this->getNewInstance();
-    }
-
-    /**
-     * @return Person
-     */
-    public function getEmptyPersonInstance()
-    {
-        return new Person;
     }
 
     /**
@@ -120,23 +103,43 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
 
     /**
      * @param $id
+     *
+     * @return bool
+     */
+    public function canUserManipulate($id)
+    {
+        $user = $this->getCurrentUser();
+
+        return $user->isOwnerOrAdmin($id);
+    }
+
+    /**
+     * @param $id
      * @param array $data
      * @return User
      */
     public function storePerson($id, array $data)
     {
-        $user = $this->getById($id);
-
+        /** @var User $user */
+        $user   = $this->getById($id);
         $person = $this->getEmptyPersonInstance();
 
         $person->fill($data);
 
-        $person->gender_id = $data['gender_id'];
+        $person->gender_id      = $data['gender_id'];
         $person->nationality_id = $data['nationality_id'];
 
         $user->person()->save($person);
 
         return $user;
+    }
+
+    /**
+     * @return Person
+     */
+    public function getEmptyPersonInstance()
+    {
+        return new Person;
     }
 
     /**
@@ -146,11 +149,12 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      */
     public function updatePerson($id, array $data)
     {
+        /** @var User $user */
         $user = $this->getById($id);
 
         $user->person->fill($data);
 
-        $user->person->gender_id = $data['gender_id'];
+        $user->person->gender_id      = $data['gender_id'];
         $user->person->nationality_id = $data['nationality_id'];
 
         $user->person->update();

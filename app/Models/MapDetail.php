@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\ModelValidation;
-
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
 /**
@@ -17,7 +16,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read Direction $direction
+ * @property-read \Orbiagro\Models\Direction $direction
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereDirectionId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereLatitude($value)
@@ -27,17 +26,23 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\MapDetail whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class MapDetail extends Model
 {
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['latitude', 'longitude', 'zoom'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * Nos interesa saber las cordenadas antes de guardarlas.
+     *
+     * @param $value
+     */
     public function setLatitudeAttribute($value)
     {
         $this->attributes['latitude'] = ModelValidation::byNumeric($value);
@@ -47,6 +52,11 @@ class MapDetail extends Model
         }
     }
 
+    /**
+     * @see setLatitudeAttribute
+     *
+     * @param $value
+     */
     public function setLongitudeAttribute($value)
     {
         $this->attributes['longitude'] = ModelValidation::byNumeric($value);
@@ -56,6 +66,11 @@ class MapDetail extends Model
         }
     }
 
+    /**
+     * El api de google permite un maximo de zoom de 24 unidades.
+     *
+     * @param $value
+     */
     public function setZoomAttribute($value)
     {
         $this->attributes['zoom'] = ModelValidation::byNonNegative($value);
@@ -65,12 +80,9 @@ class MapDetail extends Model
         }
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-    // --------------------------------------------------------------------------
-    // belongs to
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function direction()
     {
         return $this->belongsTo(Direction::class);

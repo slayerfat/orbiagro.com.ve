@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Orbiagro\Models\Image;
 use Orbiagro\Mamarrachismo\Upload\Image as Upload;
+use Orbiagro\Models\Image;
 use Orbiagro\Models\Product;
 use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
 
@@ -43,6 +43,7 @@ class ImageRepository extends AbstractRepository implements ImageRepositoryInter
      */
     public function update($id, Request $request)
     {
+        /** @var Image $image */
         $image = $this->getById($id);
 
         $userId = $this->getImageableOwnerId($image);

@@ -1,7 +1,7 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Orbiagro\Http\Requests\ProviderRequest;
 use Orbiagro\Repositories\Interfaces\ProductProviderRepositoryInterface;
 
@@ -15,6 +15,7 @@ class ProvidersController extends Controller
 
     /**
      * Create a new controller instance.
+     *
      * @param ProductProviderRepositoryInterface $providerRepo
      */
     public function __construct(ProductProviderRepositoryInterface $providerRepo)
@@ -65,7 +66,7 @@ class ProvidersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function show($id)
@@ -78,7 +79,7 @@ class ProvidersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function edit($id)
@@ -91,7 +92,7 @@ class ProvidersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @param  ProviderRequest $request
      *
      * @return RedirectResponse
@@ -108,7 +109,7 @@ class ProvidersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)

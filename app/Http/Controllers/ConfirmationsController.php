@@ -71,8 +71,8 @@ class ConfirmationsController extends Controller
 
         flash()->info(
             'Nueva confirmación generada y enviada a '
-            .$user->email
-            .', por favor revise su correo electronico.'
+            . $user->email
+            . ', por favor revise su correo electronico.'
         );
 
         return redirect('/');

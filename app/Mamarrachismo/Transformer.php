@@ -14,6 +14,7 @@ class Transformer
     /**
      * la expresion regular para agarrar los numeros con coma
      * ej: 1.000,00
+     *
      * @var string
      */
     private $numberComaRegex = '/^-?(?P<numbers>\d+|\d{1,3}(?P<last>\.\d{3})+)(?P<decimal>\,(\s)?\d*)?$/';
@@ -21,9 +22,10 @@ class Transformer
     /**
      * la expresion regular para agarrar los numeros con coma
      * ej: 1000.00
+     *
      * @var string
      */
-    private $numberDotRegex  = '/^-?(?P<numbers>\d+|\d{1,3}(?P<last>\.\d{3})+)(?P<decimal>\.(\s)?\d*)?$/';
+    private $numberDotRegex = '/^-?(?P<numbers>\d+|\d{1,3}(?P<last>\.\d{3})+)(?P<decimal>\.(\s)?\d*)?$/';
 
     /**
      * atributo utilizado para guardar el resultado
@@ -46,139 +48,27 @@ class Transformer
     // --------------------------------------------------------------------------
 
     /**
-     * @return number
-     */
-    public function fromMillimeter()
-    {
-        return $this->number /= 10;
-    }
-
-    /**
-     * @return number
-     */
-    public function toMillimeter()
-    {
-        return $this->number *= 10;
-    }
-
-    /**
-     * @return number
-     */
-    public function fromMeter()
-    {
-        return $this->number *= 100;
-    }
-
-    // --------------------------------------------------------------------------
-    // Por Peso
-    // --------------------------------------------------------------------------
-    /**
-     * @return number
-     */
-    public function fromGram()
-    {
-        return $this->number /= 1000;
-    }
-
-    /**
-     * @return number
-     */
-    public function toGram()
-    {
-        return $this->number *= 1000;
-    }
-
-    /**
-     * @return number
-     */
-    public function fromTon()
-    {
-        return $this->number *= 1000;
-    }
-
-    /**
-     * @return number
-     */
-    public function toTon()
-    {
-        return $this->number /= 1000;
-    }
-
-    // --------------------------------------------------------------------------
-    // Manipulacion de numeros
-    // --------------------------------------------------------------------------
-
-    /**
-     * Chequea y devuelve el numero segun una cadena formateada.
-     * ej: 987.654,32 -> 987654.32
-     *
+     * @param  mixed $value el numero a transformar/convertir.
+     * @param  string $base la unidad base de medida.
+     * @param  string $traformTo la unidad final de medida.
      * @return mixed
      */
-    public function parseReadableToNumber()
+    public static function transform($value, $base, $traformTo = null)
     {
-        if (!$this->doRegex($this->numberComaRegex, $this->number)) {
-            return null;
+        $transformer = new Transformer($value);
+
+        if ($traformTo !== null) {
+            return $transformer->transformTo($traformTo);
         }
 
-        // se quitan los puntos del string.
-        $numbers = str_replace('.', '', $this->matches['numbers']);
-
-        $numbers = $numbers + 0;
-
-        if ($this->isMatchesANegativeNumber()) {
-            $numbers = $numbers * -1;
-        }
-
-        return $this->attachMatchesDecimal($numbers);
-    }
-
-    /**
-     * Chequea y devuelve una cadena formateada segun el numero.
-     * ej: 987654.32 -> 987.654,32
-     *
-     * @return mixed
-     */
-    public function parseNumberToReadable()
-    {
-        if (!$this->doRegex($this->numberDotRegex, $this->number)) {
-            return null;
-        }
-
-        // se invierte la cadena para poder poner los puntos.
-        $numbers = strrev($this->matches['numbers']);
-
-        // la variable que contendra la cadena.
-        $formatted = '';
-
-        // variable de control para poner el punto en el lugar correcto.
-        $control = 1;
-
-        // se itera a travez de los numeros:
-        for ($i = 1; $i <= strlen($numbers); $i++) {
-            if ($control % 4 == 0) {
-                $formatted .= '.'.$numbers[$i-1];
-                $control = 2;
-            } elseif ($control % 4 != 0) {
-                $formatted .= $numbers[$i-1];
-                $control++;
-            }
-        }
-
-        // se revierte a la forma original.
-        $numbers = strrev($formatted);
-
-        if ($this->isMatchesANegativeNumber()) {
-            $numbers = '-'.$numbers;
-        }
-
-        return $this->attachMatchesDecimal($numbers);
+        return $transformer->make($base);
     }
 
     /**
      * Metodo de apoyo para convertir numeros con unidades no base.
      * ej: toneladas a gramos.
      *
-     * @param  string $transformTo  hacia donde se va a cambiar
+     * @param  string $transformTo hacia donde se va a cambiar
      * @return mixed
      */
     public function transformTo($transformTo)
@@ -198,6 +88,34 @@ class Transformer
                 throw new \Exception("Error, transformacion necesita unidad de destino", 1);
 
         }
+    }
+
+    /**
+     * @return number
+     */
+    public function toMillimeter()
+    {
+        return $this->number *= 10;
+    }
+
+    // --------------------------------------------------------------------------
+    // Por Peso
+    // --------------------------------------------------------------------------
+
+    /**
+     * @return number
+     */
+    public function toGram()
+    {
+        return $this->number *= 1000;
+    }
+
+    /**
+     * @return number
+     */
+    public function toTon()
+    {
+        return $this->number /= 1000;
     }
 
     /**
@@ -235,48 +153,40 @@ class Transformer
         }
     }
 
-
-    // --------------------------------------------------------------------------
-    // Manipulacion de arrays
-    // --------------------------------------------------------------------------
     /**
-     * http://php.net/manual/en/function.preg-grep.php#111673
-     *
-     * regresa un array con los elementos que sean encontrados segun el patron
-     * nota: la busqueda se hace por el key del array
-     * ej: array['pito'] -> guacharaca
-     * ej: array['foo'] -> bar
-     *
-     * @param $pattern string la expresion regular.
-     * @param $input array el array a iterar.
-     *
-     * @return array
+     * @return number
      */
-    public function getArrayByPattern($pattern, $input, $flags = 0)
+    public function fromMillimeter()
     {
-        return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
+        return $this->number /= 10;
     }
 
-
     // --------------------------------------------------------------------------
-    // Metodos Estaticos
+    // Manipulacion de numeros
     // --------------------------------------------------------------------------
 
     /**
-     * @param  mixed  $value     el numero a transformar/convertir.
-     * @param  string $base      la unidad base de medida.
-     * @param  string $traformTo la unidad final de medida.
-     * @return mixed
+     * @return number
      */
-    public static function transform($value, $base, $traformTo = null)
+    public function fromMeter()
     {
-        $transformer = new Transformer($value);
+        return $this->number *= 100;
+    }
 
-        if ($traformTo !== null) {
-            return $transformer->transformTo($traformTo);
-        }
+    /**
+     * @return number
+     */
+    public function fromGram()
+    {
+        return $this->number /= 1000;
+    }
 
-        return $transformer->make($base);
+    /**
+     * @return number
+     */
+    public function fromTon()
+    {
+        return $this->number *= 1000;
     }
 
     /**
@@ -301,6 +211,34 @@ class Transformer
         return $transformer->getArrayByPattern($pattern, $input, $flags);
     }
 
+
+    // --------------------------------------------------------------------------
+    // Manipulacion de arrays
+    // --------------------------------------------------------------------------
+
+    /**
+     * http://php.net/manual/en/function.preg-grep.php#111673
+     *
+     * regresa un array con los elementos que sean encontrados segun el patron
+     * nota: la busqueda se hace por el key del array
+     * ej: array['pito'] -> guacharaca
+     * ej: array['foo'] -> bar
+     *
+     * @param $pattern string la expresion regular.
+     * @param $input array el array a iterar.
+     *
+     * @return array
+     */
+    public function getArrayByPattern($pattern, $input, $flags = 0)
+    {
+        return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
+    }
+
+
+    // --------------------------------------------------------------------------
+    // Metodos Estaticos
+    // --------------------------------------------------------------------------
+
     /**
      * invoca parseNumberToReadable;
      *
@@ -316,48 +254,49 @@ class Transformer
     }
 
     /**
-     * invoca parseNumberToReadable;
-     *
-     * @param mixed $value el numero a cambiar.
+     * Chequea y devuelve una cadena formateada segun el numero.
+     * ej: 987654.32 -> 987.654,32
      *
      * @return mixed
      */
-    public static function toNumber($value)
+    public function parseNumberToReadable()
     {
-        $transformer = new Transformer($value);
-
-        return $transformer->parseReadableToNumber();
-    }
-
-    // --------------------------------------------------------------------------
-    // Metodos privados
-    // --------------------------------------------------------------------------
-
-    /**
-     * cambia de 923.1 ---> 923,1 y viceversa.
-     *
-     * @param  mixed $number el numero a manipular
-     * @return mixed
-     */
-    private function attachMatchesDecimal($number)
-    {
-        // si no hay decimales se castea a int.
-        if (!isset($this->matches['decimal'])) {
-            return $number;
+        if (!$this->doRegex($this->numberDotRegex, $this->number)) {
+            return null;
         }
 
-        if (is_string($number)) {
-            $decimal = str_replace('.', ',', $this->matches['decimal']);
-            return "{$number}{$decimal}";
-        } elseif (!is_string($number)) {
-            $decimal = str_replace(',', '.', $this->matches['decimal']);
-            $number = "{$number}{$decimal}";
-            return (float)$number;
+        // se invierte la cadena para poder poner los puntos.
+        $numbers = strrev($this->matches['numbers']);
+
+        // la variable que contendra la cadena.
+        $formatted = '';
+
+        // variable de control para poner el punto en el lugar correcto.
+        $control = 1;
+
+        // se itera a travez de los numeros:
+        for ($i = 1; $i <= strlen($numbers); $i++) {
+            if ($control % 4 == 0) {
+                $formatted .= '.' . $numbers[$i - 1];
+                $control = 2;
+            } elseif ($control % 4 != 0) {
+                $formatted .= $numbers[$i - 1];
+                $control++;
+            }
         }
+
+        // se revierte a la forma original.
+        $numbers = strrev($formatted);
+
+        if ($this->isMatchesANegativeNumber()) {
+            $numbers = '-' . $numbers;
+        }
+
+        return $this->attachMatchesDecimal($numbers);
     }
 
     /**
-     * @param  string $regex  la expresion regular a comparar
+     * @param  string $regex la expresion regular a comparar
      * @param  int $number el numero a comparar
      *
      * @return mixed
@@ -388,5 +327,72 @@ class Transformer
         }
 
         return false;
+    }
+
+    // --------------------------------------------------------------------------
+    // Metodos privados
+    // --------------------------------------------------------------------------
+
+    /**
+     * cambia de 923.1 ---> 923,1 y viceversa.
+     *
+     * @param  mixed $number el numero a manipular
+     * @return mixed
+     */
+    private function attachMatchesDecimal($number)
+    {
+        // si no hay decimales se castea a int.
+        if (!isset($this->matches['decimal'])) {
+            return $number;
+        }
+
+        if (is_string($number)) {
+            $decimal = str_replace('.', ',', $this->matches['decimal']);
+
+            return "{$number}{$decimal}";
+        } elseif (!is_string($number)) {
+            $decimal = str_replace(',', '.', $this->matches['decimal']);
+            $number  = "{$number}{$decimal}";
+
+            return (float)$number;
+        }
+    }
+
+    /**
+     * invoca parseNumberToReadable;
+     *
+     * @param mixed $value el numero a cambiar.
+     *
+     * @return mixed
+     */
+    public static function toNumber($value)
+    {
+        $transformer = new Transformer($value);
+
+        return $transformer->parseReadableToNumber();
+    }
+
+    /**
+     * Chequea y devuelve el numero segun una cadena formateada.
+     * ej: 987.654,32 -> 987654.32
+     *
+     * @return mixed
+     */
+    public function parseReadableToNumber()
+    {
+        if (!$this->doRegex($this->numberComaRegex, $this->number)) {
+            return null;
+        }
+
+        // se quitan los puntos del string.
+        $numbers = str_replace('.', '', $this->matches['numbers']);
+
+        $numbers = $numbers + 0;
+
+        if ($this->isMatchesANegativeNumber()) {
+            $numbers = $numbers * -1;
+        }
+
+        return $this->attachMatchesDecimal($numbers);
     }
 }

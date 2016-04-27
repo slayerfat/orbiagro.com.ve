@@ -1,8 +1,8 @@
 <?php namespace Orbiagro\Models;
 
-use Storage;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Storage;
 
 /**
  * Orbiagro\Models\Image
@@ -21,7 +21,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read \ $imageable
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $imageable
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereImageableId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereImageableType($value)
@@ -36,24 +36,32 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Image whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class Image extends Model
 {
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'path',
         'original',
-        'small', 'medium',
+        'small',
+        'medium',
         'large',
         'mime',
-        'alt'
+        'alt',
     ];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * Determina si el archivo existe realmente antes de aceptarlo como dato.
+     *
+     * @param $value
+     * @return null
+     */
     public function setPathAttribute($value)
     {
         if ($this->fileExists($value)) {
@@ -63,15 +71,40 @@ class Image extends Model
         return $this->attributes['path'] = null;
     }
 
+    /**
+     * Determina si el archivo existe o no tanto en modo prueba como normal.
+     *
+     * @param $path
+     * @return bool
+     */
+    private function fileExists($path)
+    {
+        if (Storage::disk('public')->exists($path)) {
+            return true;
+        } elseif (Storage::disk('test')->exists($path)) {
+            return true;
+        } elseif (file_exists($path)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Genera un alt valido para esta imagen.
+     *
+     * @param $value
+     */
     public function setAltAttribute($value)
     {
         $this->attributes['alt'] = str_slug($value)
-        .' en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.';
+            . ' en orbiagro.com.ve: subastas, compra y venta de productos y articulos en Venezuela.';
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null
+     */
     public function getPathAttribute($value)
     {
         if ($value) {
@@ -82,28 +115,13 @@ class Image extends Model
     }
 
     /**
-     * Relacion polimorfica
-     * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-     *
      * Category, SubCategory, Feature, Maker, Product, Promotion
+     *
+     * @link http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo|\Illuminate\Database\Eloquent\Builder
      */
     public function imageable()
     {
         return $this->morphTo();
-    }
-
-    // --------------------------------------------------------------------------
-    // Private Methods
-    // --------------------------------------------------------------------------
-    private function fileExists($path)
-    {
-        if (Storage::disk('public')->exists($path)) {
-            return true;
-
-        } elseif (Storage::disk('test')->exists($path)) {
-            return true;
-        }
-
-        return false;
     }
 }

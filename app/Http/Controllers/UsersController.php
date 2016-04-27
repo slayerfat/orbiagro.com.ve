@@ -1,14 +1,15 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Requests;
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Orbiagro\Http\Requests;
 use Orbiagro\Http\Requests\UserRequest;
-use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\UserRepositoryInterface;
 
 /**
  * Class UsersController
+ *
  * @package Orbiagro\Http\Controllers
  */
 class UsersController extends Controller
@@ -64,7 +65,7 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  int    $id
+     * @param  int $id
      * @return View|RedirectResponse
      */
     public function productVisits($id)
@@ -94,6 +95,7 @@ class UsersController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     *
      * @param ProfileRepositoryInterface $profileRepo
      * @return View
      */
@@ -108,6 +110,7 @@ class UsersController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
      * @param UserRequest $request
      * @param ProfileRepositoryInterface $profileRepo
      * @return RedirectResponse
@@ -125,13 +128,14 @@ class UsersController extends Controller
         $profile->users()->save($user);
 
         flash()->success('El Usuario ha sido creado exitosamente');
+
         return redirect()->route('users.show', $user->name);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function show($id)
@@ -146,7 +150,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function showTrashed($id)
@@ -160,6 +164,7 @@ class UsersController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
      * @param  int $id
      * @param ProfileRepositoryInterface $profileRepo
      * @return View
@@ -170,6 +175,7 @@ class UsersController extends Controller
 
         if (!$this->userRepo->canUserManipulate($user->id)) {
             flash()->error('Ud. no tiene permisos para esta accion.');
+
             return redirect()->back();
         }
 
@@ -181,7 +187,7 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int         $id
+     * @param  int $id
      * @param  UserRequest $request
      *
      * @return RedirectResponse
@@ -206,13 +212,14 @@ class UsersController extends Controller
         $user->save();
 
         flash()->success('El Usuario ha sido actualizado correctamente.');
+
         return redirect()->route('users.show', $user->name);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)
@@ -246,7 +253,7 @@ class UsersController extends Controller
     /**
      * UX del usuario que vaya a eliminar su cuenta.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function preDestroy($id)
@@ -259,7 +266,7 @@ class UsersController extends Controller
     /**
      * Restores the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function restore($id)
@@ -267,6 +274,7 @@ class UsersController extends Controller
         $user = $this->userRepo->restore($id);
 
         flash()->success('El Usuario ha sido restaurado exitosamente.');
+
         return redirect()->route('users.show', $user->name);
     }
 }

@@ -1,9 +1,9 @@
 <?php namespace Orbiagro\Http\Controllers;
 
-use Orbiagro\Http\Requests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use Orbiagro\Http\Requests;
 use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
 
 class ProfilesController extends Controller
@@ -58,7 +58,7 @@ class ProfilesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'description' => 'required|unique:profiles|max:40|min:5'
+            'description' => 'required|unique:profiles|max:40|min:5',
         ]);
 
         $profile = $this->profileRepo->store($request->all());
@@ -71,7 +71,7 @@ class ProfilesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function show($id)
@@ -84,7 +84,7 @@ class ProfilesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return View
      */
     public function edit($id)
@@ -97,14 +97,14 @@ class ProfilesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int      $id
-     * @param  Request  $request
+     * @param  int $id
+     * @param  Request $request
      * @return RedirectResponse
      */
     public function update($id, Request $request)
     {
         $this->validate($request, [
-            'description' => 'required|max:40|min:5|unique:profiles,description,'.$id
+            'description' => 'required|max:40|min:5|unique:profiles,description,' . $id,
         ]);
 
         $profile = $this->profileRepo->update($id, $request->all());
@@ -117,7 +117,7 @@ class ProfilesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return RedirectResponse
      */
     public function destroy($id)

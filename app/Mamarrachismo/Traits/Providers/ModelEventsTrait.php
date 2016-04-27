@@ -10,6 +10,7 @@ trait ModelEventsTrait
      * @var Image
      */
     private $image;
+
     /**
      * crea el hook segun el modelo para ser asociado con
      * algun id de usuario al momento de ser creado o actualizado.

@@ -17,9 +17,9 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $created_by
  * @property integer $updated_by
  * @property string $deleted_at
- * @property-read \ $directionable
- * @property-read MapDetail $map
- * @property-read Parish $parish
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $directionable
+ * @property-read \Orbiagro\Models\MapDetail $map
+ * @property-read \Orbiagro\Models\Parish $parish
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereDirectionableId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereDirectionableType($value)
@@ -30,25 +30,30 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereUpdatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Direction whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class Direction extends Model
 {
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['parish_id', 'details'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setDetailsAttribute($value)
     {
         $this->attributes['details'] = ModelValidation::byLenght($value);
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getDetailsAttribute($value)
     {
         if ($value) {
@@ -58,30 +63,28 @@ class Direction extends Model
         return null;
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
     /**
      * Relacion polimorfica
+     *
      * http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo|\Illuminate\Database\Eloquent\Builder
      */
     public function directionable()
     {
         return $this->morphTo();
     }
 
-    // --------------------------------------------------------------------------
-    // Has One
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function map()
     {
         return $this->hasOne(MapDetail::class);
     }
 
-    // --------------------------------------------------------------------------
-    // belongs to
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function parish()
     {
         return $this->belongsTo(Parish::class);

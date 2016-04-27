@@ -8,8 +8,12 @@ class FeatureRepository extends AbstractRepository implements FeatureRepositoryI
 {
 
     /**
+     * @var Feature
+     */
+    protected $model;
+
+    /**
      * @param $productId
-     *
      * @return bool
      */
     public function validateCreateRequest($productId)
@@ -26,9 +30,8 @@ class FeatureRepository extends AbstractRepository implements FeatureRepositoryI
     }
 
     /**
-     * @param array   $data
+     * @param array $data
      * @param Product $product
-     *
      * @return Feature
      */
     public function create(array $data, Product $product)
@@ -43,7 +46,6 @@ class FeatureRepository extends AbstractRepository implements FeatureRepositoryI
     /**
      * @param $id
      * @param array $data
-     *
      * @return Feature
      */
     public function update($id, array $data)
@@ -59,11 +61,11 @@ class FeatureRepository extends AbstractRepository implements FeatureRepositoryI
 
     /**
      * @param $id
-     *
      * @return Feature|bool
      */
     public function delete($id)
     {
+        /** @var Feature $feature */
         $feature = $this->getById($id);
 
         if (!$this->canUserManipulate($feature->product->user_id)) {

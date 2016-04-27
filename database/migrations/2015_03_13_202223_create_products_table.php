@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateProductsTable extends Migration
 {
@@ -21,10 +21,12 @@ class CreateProductsTable extends Migration
             $table->foreign('maker_id')->references('id')->on('makers');
             $table->integer('sub_category_id')->unsigned();
             $table->foreign('sub_category_id')->references('id')->on('sub_categories');
+            $table->integer('quantity_type_id')->unsigned();
+            $table->foreign('quantity_type_id')->references('id')->on('quantity_types');
             $table->string('title');
             $table->text('description');
             $table->text('heroDetails')->nullable();
-            $table->double('price', 12, 2)->unsigned();
+            $table->double('price', 12, 2)->unsigned()->nullable();
             $table->integer('quantity')->unsigned();
             $table->string('slug');
             $table->timestamps();

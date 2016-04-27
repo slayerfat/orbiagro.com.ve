@@ -34,6 +34,7 @@ interface ProductRepositoryInterface
 
     /**
      * Checks if user is not disable to create a new product.
+     *
      * @return bool
      */
     public function isCurrentUserDisabled();

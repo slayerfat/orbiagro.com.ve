@@ -1,23 +1,23 @@
 <?php namespace Orbiagro\Http\Composers;
 
 use Illuminate\Contracts\View\View;
-
-use Orbiagro\Models\Product;
-use Orbiagro\Models\Category;
-use Orbiagro\Models\PromoType;
-use Orbiagro\Models\Promotion;
-use Orbiagro\Models\SubCategory;
 use Illuminate\View\View as Response;
+use Orbiagro\Models\Category;
+use Orbiagro\Models\Product;
+use Orbiagro\Models\Promotion;
+use Orbiagro\Models\PromoType;
+use Orbiagro\Models\SubCategory;
 
 /**
  * Class Carrusel
+ *
  * @package Orbiagro\Http\Composers
  */
 class Carrusel
 {
 
     /**
-     * @param  View   $view
+     * @param  View $view
      * @return Response
      */
     public function composeHomeCarruselImages(View $view)
@@ -37,12 +37,13 @@ class Carrusel
             ->take(3)
             ->get();
 
-        $item = Category::random()->first();
+        $item             = Category::random()->first();
         $item->controller = 'CategoriesController@show';
 
         $collection->push($item);
 
         $item = SubCategory::has('products')->random()->first();
+
         $item->controller = 'SubCategoriesController@show';
 
         $collection->push($item);

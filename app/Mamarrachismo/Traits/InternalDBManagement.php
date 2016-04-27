@@ -18,6 +18,7 @@ trait InternalDBManagement
 
     /**
      * el ID del usuario a asociar con algun modelo.
+     *
      * @var int
      */
     protected $userId;

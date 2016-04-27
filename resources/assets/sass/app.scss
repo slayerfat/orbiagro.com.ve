@@ -12,8 +12,9 @@
 @import 'breadcrumbs';
 @import 'ads';
 
-@import 'vendor/bower_components/slick.js/slick/slick';
-@import 'vendor/bower_components/slick.js/slick/slick-theme';
+// la libreria contiene elementos ambiguos, por ello se necesita la extension.
+@import 'vendor/bower_components/slick.js/slick/slick.scss';
+@import 'vendor/bower_components/slick.js/slick/slick-theme.scss';
 
 // fontawesome
 

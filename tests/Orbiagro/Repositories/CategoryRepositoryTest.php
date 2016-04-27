@@ -1,12 +1,10 @@
 <?php namespace Tests\Orbiagro\Repositories;
 
-use Exception;
-use Illuminate\Database\QueryException;
-use Mockery;
-use Tests\TestCase;
-use Orbiagro\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
+use Mockery;
+use Orbiagro\Models\Category;
 use Orbiagro\Repositories\CategoryRepository;
+use Tests\TestCase;
 
 class CategoryRepositoryTest extends TestCase
 {
@@ -14,7 +12,7 @@ class CategoryRepositoryTest extends TestCase
     public function testConstruct()
     {
         $mock = Mockery::mock(Category::class)
-                             ->makePartial();
+            ->makePartial();
 
         $catRepo = new CategoryRepository($mock);
 
@@ -27,9 +25,9 @@ class CategoryRepositoryTest extends TestCase
     public function testGetLists()
     {
         $mock = Mockery::mock(Category::class)
-                       ->makePartial();
+            ->makePartial();
 
-        $mock->shouldReceive('lists')
+        $mock->shouldReceive('pluck')
             ->once()
             ->with('description', 'id')
             ->andReturn('mocked');
@@ -61,7 +59,7 @@ class CategoryRepositoryTest extends TestCase
     public function testGetAll()
     {
         $cat = Mockery::mock(Category::class)
-                              ->makePartial();
+            ->makePartial();
 
         $cat->shouldReceive('has')
             ->once()
@@ -88,7 +86,7 @@ class CategoryRepositoryTest extends TestCase
     public function testGetRelatedProducts()
     {
         $cat = Mockery::mock(Category::class)
-                      ->makePartial();
+            ->makePartial();
 
         $catRepo = new CategoryRepository($cat);
 
@@ -105,7 +103,7 @@ class CategoryRepositoryTest extends TestCase
     public function testCreate()
     {
         $mock = Mockery::mock(Category::class)
-                      ->makePartial();
+            ->makePartial();
 
         $mock->shouldReceive('save')
             ->once()->andReturnNull();
@@ -123,7 +121,7 @@ class CategoryRepositoryTest extends TestCase
     public function testGetSubCats()
     {
         $mock = Mockery::mock(Category::class)
-                       ->makePartial();
+            ->makePartial();
 
         $mock->subCategories = 'mocked';
 
@@ -138,7 +136,7 @@ class CategoryRepositoryTest extends TestCase
     public function testUpdate()
     {
         $mock = Mockery::mock(Category::class)
-                       ->makePartial();
+            ->makePartial();
 
         $mock->shouldReceive('findOrFail')
             ->once()
@@ -164,11 +162,11 @@ class CategoryRepositoryTest extends TestCase
     public function testGetById()
     {
         $mock = Mockery::mock(Category::class)
-                       ->makePartial();
+            ->makePartial();
 
         $mock->shouldReceive('findOrFail')
-             ->once()
-             ->andReturn('mocked');
+            ->once()
+            ->andReturn('mocked');
 
         $mockRepo = new CategoryRepository($mock);
 

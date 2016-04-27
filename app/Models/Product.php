@@ -1,13 +1,15 @@
 <?php namespace Orbiagro\Models;
 
-use Orbiagro\Mamarrachismo\Transformer;
-use Orbiagro\Mamarrachismo\CheckDollar;
+use Carbon\Carbon;
+use ICanBoogie\Inflector;
 use Illuminate\Database\Eloquent\Model;
-use Orbiagro\Mamarrachismo\ModelValidation;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
+use Orbiagro\Mamarrachismo\CheckDollar;
+use Orbiagro\Mamarrachismo\ModelValidation;
 use Orbiagro\Mamarrachismo\Traits\CanSearchRandomly;
+use Orbiagro\Mamarrachismo\Traits\HasShortTitle;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
+use Orbiagro\Mamarrachismo\Transformer;
 
 /**
  * Orbiagro\Models\Product
@@ -16,6 +18,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $user_id
  * @property integer $maker_id
  * @property integer $sub_category_id
+ * @property integer $quantity_type_id
  * @property string $title
  * @property string $description
  * @property string $heroDetails
@@ -28,23 +31,27 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property integer $updated_by
  * @property \Carbon\Carbon $deleted_at
  * @property-read mixed $paginate
- * @property-read User $user
- * @property-read Maker $maker
- * @property-read SubCategory $subCategory
- * @property-read \Illuminate\Database\Eloquent\Collection|Feature[] $features
- * @property-read Characteristic $characteristics
- * @property-read MechanicalInfo $mechanical
- * @property-read Nutritional $nutritional
- * @property-read \Illuminate\Database\Eloquent\Collection|Promotion[] $promotions
- * @property-read \Illuminate\Database\Eloquent\Collection|User[] $purchases
- * @property-read \Illuminate\Database\Eloquent\Collection|Provider[] $providers
- * @property-read \Illuminate\Database\Eloquent\Collection|File[] $files
- * @property-read \Illuminate\Database\Eloquent\Collection|Image[] $images
- * @property-read \Illuminate\Database\Eloquent\Collection|Visit[] $visits
+ * @property-read \Orbiagro\Models\User $user
+ * @property-read \Orbiagro\Models\Maker $maker
+ * @property-read \Orbiagro\Models\SubCategory $subCategory
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Feature[] $features
+ * @property-read \Orbiagro\Models\Characteristic $characteristics
+ * @property-read \Orbiagro\Models\MechanicalInfo $mechanical
+ * @property-read \Orbiagro\Models\Nutritional $nutritional
+ * @property-read \Orbiagro\Models\QuantityType $quantityType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Promotion[] $promotions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\User[] $purchases
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Provider[] $providers
+ * @property-read \Orbiagro\Models\Direction $direction
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\File[] $files
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Image[] $images
+ * @property-read \Orbiagro\Models\Image $image
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Orbiagro\Models\Visit[] $visits
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereMakerId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereSubCategoryId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereQuantityTypeId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereTitle($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereHeroDetails($value)
@@ -58,22 +65,27 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product latest()
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Product random()
+ * @mixin \Eloquent
  */
 class Product extends Model
 {
 
     use SoftDeletes, InternalDBManagement, CanSearchRandomly, HasShortTitle;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'user_id',
         'maker_id',
         'sub_category_id',
+        'quantity_type_id',
         'title',
         'description',
         'heroDetails',
         'price',
         'quantity',
-        'slug'
+        'slug',
     ];
 
     /**
@@ -83,11 +95,14 @@ class Product extends Model
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * @var \Orbiagro\Mamarrachismo\CheckDollar
+     */
     protected $checkDollar;
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     */
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = ModelValidation::byLenght($value);
@@ -97,11 +112,18 @@ class Product extends Model
         }
     }
 
+    /**
+     * @param $value
+     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = ModelValidation::byLenght($value);
     }
 
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function setSlugAttribute($value)
     {
         if (ModelValidation::byLenght($value) !== null) {
@@ -111,11 +133,18 @@ class Product extends Model
         return $this->attributes['slug'] = null;
     }
 
+    /**
+     * @param $value
+     */
     public function setQuantityAttribute($value)
     {
         $this->attributes['quantity'] = (integer)ModelValidation::byNonNegative($value);
     }
 
+    /**
+     * @param $value
+     * @return float|mixed|null
+     */
     public function setPriceAttribute($value)
     {
         if (ModelValidation::byNonNegative($value)) {
@@ -130,9 +159,10 @@ class Product extends Model
         return $this->attributes['price'] = null;
     }
 
-    // --------------------------------------------------------------------------
-    // Accessors
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null|string
+     */
     public function getTitleAttribute($value)
     {
         if ($value) {
@@ -144,6 +174,7 @@ class Product extends Model
 
     /**
      * regresa los eventos paginados
+     *
      * @return object LengthAwarePaginator
      */
     public function getPaginateAttribute()
@@ -151,6 +182,10 @@ class Product extends Model
         return $this->get()->paginate(5);
     }
 
+    /**
+     * @param $value
+     * @return float|null
+     */
     public function getPriceAttribute($value)
     {
         if (isset($value) && $value > 0) {
@@ -161,70 +196,90 @@ class Product extends Model
     }
 
 
-    // --------------------------------------------------------------------------
-    // Scopes
-    // --------------------------------------------------------------------------
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return mixed
+     */
     public function scopeLatest($query)
     {
         return $query->orderBy('updated_at', 'desc');
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Belongs To
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function maker()
     {
         return $this->belongsTo(Maker::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Has Many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
+    public function quantityType()
+    {
+        return $this->belongsTo(QuantityType::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function features()
     {
         return $this->hasMany(Feature::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Has One
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function characteristics()
     {
         return $this->hasOne(Characteristic::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function mechanical()
     {
         return $this->hasOne(MechanicalInfo::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function nutritional()
     {
         return $this->hasOne(Nutritional::class);
     }
 
-    // --------------------------------------------------------------------------
-    // Belongs To Many
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function promotions()
     {
         return $this->belongsToMany(Promotion::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function purchases()
     {
         return $this->belongsToMany(User::class)
@@ -232,81 +287,77 @@ class Product extends Model
             ->withTimestamps();
     }
 
+    /**
+     * @return $this|\Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function providers()
     {
         return $this->belongsToMany(Provider::class)->withPivot('sku');
     }
 
-    // --------------------------------------------------------------------------
-    // Polymorphic
-    //
-    // Relacion polimorfica
-    // http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
-    //
-    // $a->product()->first()->direction()->save($b)
-    // en donde $a es una instancia de User y
-    // $b es una instancia de Direction
-    // --------------------------------------------------------------------------
+    /**
+     * Relacion polimorfica
+     * $a->product()->first()->direction()->save($b)
+     * en donde $a es una instancia de User y
+     * $b es una instancia de Direction
+     *
+     * @link http://www.easylaravelbook.com/blog/2015/01/21/creating-polymorphic-relations-in-laravel-5/
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function direction()
     {
         return $this->morphOne(Direction::class, 'directionable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function files()
     {
         return $this->morphMany(File::class, 'fileable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne|\Illuminate\Database\Eloquent\Builder
+     */
     public function image()
     {
         return $this->morphOne(Image::class, 'imageable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Illuminate\Database\Eloquent\Builder
+     */
     public function visits()
     {
         return $this->morphMany(Visit::class, 'visitable');
     }
 
-    // --------------------------------------------------------------------------
-    // Metodos Publicos
-    // --------------------------------------------------------------------------
+    /**
+     * @param \Orbiagro\Mamarrachismo\CheckDollar $checkDollar
+     * @return $this
+     */
     public function setDollar(CheckDollar $checkDollar)
     {
-        $this->CheckDollar = $checkDollar;
+        $this->checkDollar = $checkDollar;
 
         return $this;
     }
 
-    public function checkDollar(CheckDollar $checkDollar = null)
-    {
-        // si existe un parametro y es valido
-        if ($checkDollar !== null && $checkDollar->isValid()) {
-            return $checkDollar->dollar->promedio;
-
-            // no existe parametro pero existe como atributo
-        } elseif ($checkDollar === null && isset($this->CheckDollar)) {
-            if ($this->CheckDollar->isValid()) {
-                return $this->CheckDollar->dollar->promedio;
-            }
-
-            // no existe ni parametro ni atributo
-        } elseif ($checkDollar === null) {
-            $obj = new CheckDollar;
-
-            if ($obj->isValid()) {
-                $this->CheckDollar = $obj;
-                return $obj->dollar->promedio;
-            }
-        }
-
-        return null;
-    }
-
+    /**
+     * Determina el precio en dolares del producto.
+     *
+     * @param \Orbiagro\Mamarrachismo\CheckDollar|null $checkDollar
+     * @return null|string
+     */
     public function priceDollar(CheckDollar $checkDollar = null)
     {
         // si el objeto fue pasado como parametro
@@ -314,26 +365,64 @@ class Product extends Model
             $dollar = $this->checkDollar($checkDollar);
 
             // si el objeto existe como atributo
-        } elseif ($checkDollar === null && isset($this->CheckDollar)) {
-            $dollar = $this->checkDollar($this->CheckDollar);
+        } elseif ($checkDollar === null && isset($this->checkDollar)) {
+            $dollar = $this->checkDollar($this->checkDollar);
 
             // si no fue pasado ningun parametro
         } elseif ($checkDollar === null) {
-            $checkDollar = new CheckDollar;
+            $checkDollar = new CheckDollar(Carbon::now());
 
             $dollar = $this->checkDollar($checkDollar);
         }
 
         // si existe un $dollar y existe el precio del producto:
-        if ($dollar && isset($this->attributes['price'])) {
-            (int)$value = $this->attributes['price'] / $dollar;
+        if (isset($dollar) && isset($this->attributes['price'])) {
+            $value = $this->attributes['price'] / (int)$dollar;
 
-            return "\$ ".Transformer::toReadable($value);
+            return "\$ " . Transformer::toReadable($value);
         }
 
         return null;
     }
 
+    /**
+     * Determina y devuelve el promedio de dolar.
+     *
+     * @param \Orbiagro\Mamarrachismo\CheckDollar|null $checkDollar
+     * @return null
+     */
+    public function checkDollar(CheckDollar $checkDollar = null)
+    {
+        // si existe un parametro y es valido
+        if ($checkDollar !== null && $checkDollar->isValid()) {
+            return $checkDollar->dollar->promedio;
+
+            // no existe parametro pero existe como atributo
+        } elseif ($checkDollar === null && isset($this->checkDollar)) {
+            if ($this->checkDollar->isValid()) {
+                return $this->checkDollar->dollar->promedio;
+            }
+
+            // no existe ni parametro ni atributo
+        } elseif ($checkDollar === null) {
+            $obj = new CheckDollar(Carbon::now());
+
+            if ($obj->isValid()) {
+                $this->checkDollar = $obj;
+
+                return $obj->dollar->promedio;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Genera en formato legible el precio en Bolivares del producto.
+     *
+     * @param null $otherNumber
+     * @return mixed|null|string
+     */
     public function priceBs($otherNumber = null)
     {
         if ($otherNumber) {
@@ -349,6 +438,11 @@ class Product extends Model
         return "Bs. {$price}";
     }
 
+    /**
+     * Genera el precio en formato legible sin el Bs.
+     *
+     * @return null|string
+     */
     public function priceFormatted()
     {
         if (isset($this->attributes['price'])) {
@@ -370,5 +464,21 @@ class Product extends Model
     public function isForceDeleting()
     {
         return $this->forceDeleting;
+    }
+
+    /**
+     * @return string
+     */
+    public function formattedQuantity()
+    {
+        $inflector = Inflector::get('es');
+        $type      = $this->quantityType->desc;
+
+        if ($this->quantity <> 1) {
+            $type = $inflector->pluralize($this->quantityType->desc);
+        }
+
+        return $this->quantity . ' ' . $type;
+
     }
 }

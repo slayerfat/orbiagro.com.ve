@@ -1,5 +1,6 @@
 <?php namespace Orbiagro\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
 
@@ -13,7 +14,7 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @property \Carbon\Carbon $updated_at
  * @property integer $created_by
  * @property integer $updated_by
- * @property-read Product $product
+ * @property-read \Orbiagro\Models\Product $product
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereProductId($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereDue($value)
@@ -21,20 +22,25 @@ use Orbiagro\Mamarrachismo\Traits\InternalDBManagement;
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereCreatedBy($value)
  * @method static \Illuminate\Database\Query\Builder|\Orbiagro\Models\Nutritional whereUpdatedBy($value)
+ * @mixin \Eloquent
  */
 class Nutritional extends Model
 {
 
     use InternalDBManagement;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['due'];
 
-    // --------------------------------------------------------------------------
-    // Mutators
-    // --------------------------------------------------------------------------
+    /**
+     * @param $value
+     * @return null
+     */
     public function setDueAttribute($value)
     {
-        $date = \DateTime::createFromFormat('Y-m-d', $value);
+        $date = DateTime::createFromFormat('Y-m-d', $value);
 
         if ($date) {
             return $this->attributes['due'] = $value;
@@ -43,13 +49,9 @@ class Nutritional extends Model
         return $this->attributes['due'] = null;
     }
 
-    // --------------------------------------------------------------------------
-    // Relaciones
-    // --------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------
-    // Belongs To
-    // --------------------------------------------------------------------------
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder
+     */
     public function product()
     {
         return $this->belongsTo(Product::class);

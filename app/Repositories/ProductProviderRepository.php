@@ -11,7 +11,7 @@ class ProductProviderRepository extends AbstractRepository implements ProductPro
      */
     public function getLists()
     {
-        return $this->model->lists('name', 'id');
+        return $this->model->pluck('name', 'id');
     }
 
     /**
@@ -28,16 +28,6 @@ class ProductProviderRepository extends AbstractRepository implements ProductPro
     public function getAll()
     {
         return $this->model->with('products')->get();
-    }
-
-    /**
-     * @param  mixed $id
-     *
-     * @return Provider
-     */
-    public function getById($id)
-    {
-        return $this->model->with('products')->findOrFail($id);
     }
 
     /**
@@ -67,6 +57,16 @@ class ProductProviderRepository extends AbstractRepository implements ProductPro
         $provider->update();
 
         return $provider;
+    }
+
+    /**
+     * @param  mixed $id
+     *
+     * @return Provider
+     */
+    public function getById($id)
+    {
+        return $this->model->with('products')->findOrFail($id);
     }
 
     /**

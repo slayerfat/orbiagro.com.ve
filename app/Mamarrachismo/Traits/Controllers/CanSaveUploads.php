@@ -1,14 +1,15 @@
 <?php namespace Orbiagro\Mamarrachismo\Traits\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Log;
 use Orbiagro\Http\Requests\Request;
-use Illuminate\Database\Eloquent\Model;
+use Orbiagro\Mamarrachismo\Upload\File as FileUpload;
+use Orbiagro\Mamarrachismo\Upload\Image as ImageUpload;
+use Orbiagro\Mamarrachismo\Upload\Upload;
 use Orbiagro\Models\Image;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 // el abstracto de ImageUpload y FileUpload
-use Orbiagro\Mamarrachismo\Upload\Upload;
-use Orbiagro\Mamarrachismo\Upload\Image as ImageUpload;
-use Orbiagro\Mamarrachismo\Upload\File as FileUpload;
 
 trait CanSaveUploads
 {
@@ -17,7 +18,7 @@ trait CanSaveUploads
      * Crea una imagen de algun modelo relacionado.
      *
      * @param  Request $request
-     * @param  Model   $model
+     * @param  Model $model
      *
      * @return void
      */
@@ -32,7 +33,7 @@ trait CanSaveUploads
      * Crea varias imagenes de algun modelo relacionado.
      *
      * @param  Request $request
-     * @param  Model   $model
+     * @param  Model $model
      *
      * @return void
      */
@@ -47,7 +48,7 @@ trait CanSaveUploads
      * Crea un archivo de algun modelo relacionado.
      *
      * @param  Request $request
-     * @param  Model   $model
+     * @param  Model $model
      *
      * @return void
      */
@@ -61,9 +62,9 @@ trait CanSaveUploads
     /**
      * El prototipo interno para crear las imagenes y archivos.
      *
-     * @param  Model        $model    Eloquent Model asociado
+     * @param  Model $model Eloquent Model asociado
      *                                (el padre: padre[product]->hijo[image])
-     * @param  Upload       $uploader
+     * @param  Upload $uploader
      * @param  UploadedFile $file
      *
      * @return void
@@ -82,7 +83,7 @@ trait CanSaveUploads
      * Actualiza una imagen de algun modelo relacionado.
      *
      * @param  Request $request
-     * @param  Model   $model
+     * @param  Model $model
      * @return void
      */
     protected function updateImage(Request $request, Model $model)
@@ -105,7 +106,7 @@ trait CanSaveUploads
      * Actualiza un archivo de algun modelo relacionado.
      *
      * @param  Request $request
-     * @param  Model   $model
+     * @param  Model $model
      * @return void
      */
     protected function updateFile(Request $request, Model $model)
@@ -118,8 +119,8 @@ trait CanSaveUploads
     /**
      * Prototipo interno para actualizar imagenes y archivos.
      *
-     * @param  Model        $model
-     * @param  Upload       $uploader
+     * @param  Model $model
+     * @param  Upload $uploader
      * @param  UploadedFile $file
      *
      * @return void

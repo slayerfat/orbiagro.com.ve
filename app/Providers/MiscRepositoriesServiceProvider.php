@@ -1,20 +1,23 @@
 <?php namespace Orbiagro\Providers;
 
+use Illuminate\Support\ServiceProvider;
+use Orbiagro\Mamarrachismo\Upload\Image as Upload;
 use Orbiagro\Models\Image;
 use Orbiagro\Models\Maker;
 use Orbiagro\Models\Profile;
 use Orbiagro\Models\Promotion;
 use Orbiagro\Models\PromoType;
-use Illuminate\Support\ServiceProvider;
+use Orbiagro\Models\QuantityType;
 use Orbiagro\Repositories\ImageRepository;
+use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\MakerRepositoryInterface;
 use Orbiagro\Repositories\Interfaces\ProfileRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\PromotionRepositoryInterface;
+use Orbiagro\Repositories\Interfaces\QuantityTypeRepositoryInterface;
 use Orbiagro\Repositories\MakerRepository;
 use Orbiagro\Repositories\ProfileRepository;
 use Orbiagro\Repositories\PromotionRepository;
-use Orbiagro\Mamarrachismo\Upload\Image as Upload;
-use Orbiagro\Repositories\Interfaces\ImageRepositoryInterface;
-use Orbiagro\Repositories\Interfaces\PromotionRepositoryInterface;
+use Orbiagro\Repositories\QuantityTypeRepository;
 
 class MiscRepositoriesServiceProvider extends ServiceProvider
 {
@@ -40,6 +43,10 @@ class MiscRepositoriesServiceProvider extends ServiceProvider
 
         $this->app->bind(ProfileRepositoryInterface::class, function ($app) {
             return new ProfileRepository($app[Profile::class]);
+        });
+
+        $this->app->bind(QuantityTypeRepositoryInterface::class, function ($app) {
+            return new QuantityTypeRepository($app[QuantityType::class]);
         });
     }
 }
