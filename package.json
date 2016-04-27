@@ -30,6 +30,7 @@
   "author": "slayerfat@gmail.com",
   "license": "MIT",
   "dependencies": {
+    "bower": "^1.7.9",
     "country-data": "0.0.19"
   }
 }
